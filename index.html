@@ -224,7 +224,7 @@ label.disc { font-weight: 500; }
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><h1>Subscription Keeper</h1><span class="proto" title="Published version of this prototype" style="text-transform:none;letter-spacing:.02em">Prototype · Version 42 · Standalone copy · Oct 20</span><button class="loc" id="loc-btn" aria-label="Your location"></button><button class="loc" id="fb-btn">Give feedback</button></div>
+    <div class="brand"><h1>Subscription Keeper</h1><span class="proto" title="Published version of this prototype" style="text-transform:none;letter-spacing:.02em">Prototype · Version 43 · Standalone copy · Oct 20</span><button class="loc" id="loc-btn" aria-label="Your location"></button><button class="loc" id="fb-btn">Give feedback</button></div>
     <nav class="tabs" role="tablist" aria-label="Screens">
       <button role="tab" id="tab-home" data-view="home" aria-selected="true"><span class="long">My subscriptions</span><span class="short">Mine</span></button>
       <button role="tab" id="tab-explore" data-view="explore" aria-selected="false">Explore</button>
@@ -503,7 +503,8 @@ const measureOf = s => { const ms = measuresOf(s); return ms.find(m => m.id === 
 function switchMeasure(s, id) {
   const cur = measureOf(s), m = measuresOf(s).find(x => x.id === id); if (!m || m.id === cur.id) return;
   (s.usage ||= {})[cur.id] = { rate: s.rate, per: s.per }; s.measure = m.id;
-  const u = s.usage[m.id] || { rate: 0, per: m.amount ? "month" : "week" }; setUse(s, u.rate, m.amount ? "month" : u.per);
+  const u = s.usage[m.id] || { rate: 0, per: m.amount ? "month" : "week" }, waiting = s.needsUse;
+  setUse(s, u.rate, m.amount ? "month" : u.per); if (waiting) s.needsUse = true;  // switching tabs isn't the user entering usage
 }
 const useText = s => { const m = measureOf(s); if (m.amount) return `${fmtN(s.rate)} ${m.short}`;
   const u = m.id === "uses" && !MEASURES[s.svc]?.base ? "" : ` ${m.short}`;
@@ -517,8 +518,8 @@ function rate(s) {
   const v = svcOf(s);
   if (pausedNow(s)) return { key: "ok", label: "Paused", cpu: null, paused: true };
   if (needsPrice(s)) return { key: "ok", label: "Add your price", cpu: null, needs: true };
-  // Picked during onboarding: no usage yet, so don't call it unused.
-  if (s.needsUse) return { key: "ok", label: "Add how often you use it", cpu: null };
+  // No usage from the user yet (just added): no rating and no advice until they tell us (Cuong, 2026-10-20).
+  if (s.needsUse) return { key: "ok", label: "Add how often you use it", cpu: null, waiting: true };
   const m = measureOf(s);
   if (!m.rated) {
     const cpu = s.uses && v.value_model === "insurance" ? monthly(s) / s.uses : null;
@@ -647,7 +648,7 @@ function feedbackView() {
     const btn = document.getElementById("fb-send"); btn.disabled = true; msg("Sending…");
     try { const db = await claude.use("db"), user = await claude.use("user"); if (!db || !user) throw new Error("unavailable");
       const ref = db.doc("feedback/" + await user.id()), cur = await ref.get(), old = cur?.exists ? (cur.data()?.entries || []) : [];
-      await ref.set({ entries: [...old, { text, at: new Date().toISOString(), view: lastView, version: 42, subs: state.subs.length }].slice(-50), updated: new Date().toISOString() });
+      await ref.set({ entries: [...old, { text, at: new Date().toISOString(), view: lastView, version: 43, subs: state.subs.length }].slice(-50), updated: new Date().toISOString() });
       fbSent = true; document.getElementById("fb-text").value = ""; msg("Thanks, your feedback was sent.");
     } catch (err) { msg("Couldn't send from here. Please send your feedback to the person who shared this link."); }
     btn.disabled = false; });
@@ -1072,6 +1073,7 @@ function verdictText(s, r) {
   if (introActive(s) && s.uses && regularTotal(s) != null) { const cpu = monthlyOf(s, regularTotal(s)) / s.uses;
     return `Good deal for now. When the ${s.intro.kind === "trial" ? "trial" : "intro price"} ends, each use will cost ${money(cpu)}. Decide before ${fmtDate(s.intro.ends)}.`; }
   if (r.needs) return `Enter what you pay in the price check below so we can rate this subscription.`;
+  if (r.waiting) return `Tell us how often you use it under How you use it below. Once we know, we'll tell you whether it's worth what you pay and suggest ways to save.`;
   const v = svcOf(s), feats = featuresFor(v, s.plan), plan = planOf(v, s.plan);
   const cheaper = v.plans.filter(p => p.effective_monthly < (plan?.effective_monthly ?? 0)).sort((a, b) => a.effective_monthly - b.effective_monthly)[0];
   if (r.bundle) { const m = measureOf(s);
@@ -1379,7 +1381,7 @@ function openSheet(id) {
     root.replaceChildren(el(`<div class="scrim" id="scrim"></div>
       <aside class="sheet${first ? " enter" : ""}" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
         <div class="sheet-head">${logoHtml(v)}
-          <div><h2 id="sheet-title">${esc(s.name)}</h2><div class="small muted">${esc(catLabel(v.category))} · ${pausedNow(s) ? "paused" : "renews"} ${next.toLocaleDateString(undefined, { month: "short", day: "numeric" })}</div></div>
+          <div><h2 id="sheet-title">${esc(s.name)}</h2><div class="small muted">${esc(catLabel(v.category))} · ${pausedNow(s) ? "paused" : "renews"} ${next.toLocaleDateString(undefined, { month: "short", day: "numeric", ...(next.getFullYear() !== new Date().getFullYear() ? { year: "numeric" } : {}) })}</div></div>
           <button class="btn" id="close" aria-label="Close">Close</button></div>
         <div class="kv">
           <div class="stat"><div class="label">${introActive(s) ? (s.intro.kind === "trial" ? "Free trial" : "Intro price") : s.priceMine ? "You pay" : "Price"}</div><div class="value num">${money(total(s))}</div><div class="small muted">per ${s.cycle}${s.cycle === "year" ? ` (${money(monthly(s))}/mo)` : ""}${hh && (s.members || 1) > 1 && total(s) != null ? `<br>${s.members} people, ${money(monthly(s) / s.members)}/mo each` : ""}</div></div>
@@ -1551,6 +1553,8 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   if (state.histV !== 2) { genAll(); state.histV = 2; }
   state.chatgptFixed = true;
   if (!state.nflV) { state.subs.filter(s => s.svc === "amazon_prime" && !s.used.includes("nfl")).forEach(s => s.used = [...s.used, "nfl"]); state.nflV = 1; }
+  // Subscriptions added recently with no usage entered yet wait for the user's input before any rating (one-time check).
+  if (!state.needsV) { state.subs.filter(s => !s.example && !s.uses && !s.hist && s.start && dayDiff(s.start, today()) <= 45).forEach(s => s.needsUse = true); state.needsV = 1; }
   if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { if (!s.hist?.replace) genHistory(s); switchMeasure(s, "replace"); s.used = ["data_removal"]; }); state.cloakedV = 1; }
   save();
   render();
