@@ -40,7 +40,7 @@ button { cursor: pointer; }
 
 header.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
 .brand { display: flex; align-items: baseline; gap: 10px; }
-nav.tabs[hidden], .cat-item[hidden], .catalog[hidden], .w-h[hidden] { display: none !important; }
+form.fields [hidden], form.fields[hidden], #a-hint[hidden], nav.tabs[hidden], .cat-item[hidden], .catalog[hidden], .w-h[hidden] { display: none !important; }
 .proto { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 2px 8px; }
 nav.tabs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
 nav.tabs button { border: 0; background: none; padding: 7px 14px; border-radius: 8px; font-weight: 600; color: var(--muted); }
@@ -224,7 +224,7 @@ label.disc { font-weight: 500; }
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><h1>Subscription Keeper</h1><span class="proto" title="Published version of this prototype" style="text-transform:none;letter-spacing:.02em">Prototype · Version 41 · Standalone copy · Oct 19</span><button class="loc" id="loc-btn" aria-label="Your location"></button><button class="loc" id="fb-btn">Give feedback</button></div>
+    <div class="brand"><h1>Subscription Keeper</h1><span class="proto" title="Published version of this prototype" style="text-transform:none;letter-spacing:.02em">Prototype · Version 42 · Standalone copy · Oct 20</span><button class="loc" id="loc-btn" aria-label="Your location"></button><button class="loc" id="fb-btn">Give feedback</button></div>
     <nav class="tabs" role="tablist" aria-label="Screens">
       <button role="tab" id="tab-home" data-view="home" aria-selected="true"><span class="long">My subscriptions</span><span class="short">Mine</span></button>
       <button role="tab" id="tab-explore" data-view="explore" aria-selected="false">Explore</button>
@@ -400,7 +400,8 @@ const listTotal = s => { const b = listBase(s); return b ? b.price + extras(s) :
 const discountSum = s => (s.discounts || []).reduce((a, d) => a + (d.on ? d.amount : 0), 0);
 const regularTotal = s => { if (s.priceMine) return s.myTotal; if (s.svc === "custom") return s.price; const lt = listTotal(s); return lt == null ? null : addTax(s, Math.max(0, lt - discountSum(s))); };
 // Trials and intro prices: s.intro = { kind: "trial" | "intro", price, ends } applies until its end date, then the regular price takes over.
-const today = () => new Date().toISOString().slice(0, 10);
+// The user's own calendar day (not UTC), so evening users in the US don't see tomorrow's date.
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
 const introActive = s => !!(s.intro && s.intro.ends && s.intro.ends >= today());
 const daysUntil = d => Math.ceil((new Date(d + "T12:00:00") - Date.now()) / 864e5);
 const fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
@@ -433,7 +434,8 @@ function spans(s) {
 function nextRenewal(s) {
   const sp = spans(s), last = sp[sp.length - 1];
   if (!last || last[1] || pausedNow(s)) return null;
-  let n = 0, d = last[0]; while (d < today() && n < 1200) d = stepDate(last[0], s.cycle, ++n);
+  // The first charge is on the start date, so the next renewal is the first billing date after today.
+  let n = 0, d = last[0]; while (d <= today() && n < 1200) d = stepDate(last[0], s.cycle, ++n);
   return d;
 }
 // Charges so far: one per billing period in each active span (first charge on the span's start date).
@@ -626,7 +628,7 @@ function welcomeView() {
   $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
   $("w-country").addEventListener("change", () => { setLoc(); save(); render(); });
   $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile;
-    state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, start: pastStart(1, 1) })) };
+    state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, start: today(), day: +today().slice(8) })) };
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = 1; save(); view = "home"; render(); window.scrollTo(0, 0); });
@@ -645,7 +647,7 @@ function feedbackView() {
     const btn = document.getElementById("fb-send"); btn.disabled = true; msg("Sending…");
     try { const db = await claude.use("db"), user = await claude.use("user"); if (!db || !user) throw new Error("unavailable");
       const ref = db.doc("feedback/" + await user.id()), cur = await ref.get(), old = cur?.exists ? (cur.data()?.entries || []) : [];
-      await ref.set({ entries: [...old, { text, at: new Date().toISOString(), view: lastView, version: 41, subs: state.subs.length }].slice(-50), updated: new Date().toISOString() });
+      await ref.set({ entries: [...old, { text, at: new Date().toISOString(), view: lastView, version: 42, subs: state.subs.length }].slice(-50), updated: new Date().toISOString() });
       fbSent = true; document.getElementById("fb-text").value = ""; msg("Thanks, your feedback was sent.");
     } catch (err) { msg("Couldn't send from here. Please send your feedback to the person who shared this link."); }
     btn.disabled = false; });
@@ -877,43 +879,68 @@ function exploreDetail(v) {
 function addView() {
   const mine = new Set(state.subs.map(s => s.svc)), country = profile().country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no"), hidden = Object.keys(CATALOG).length - offered.length;
-  const f = el(`<div class="section-head"><h2>Add a subscription</h2><span class="small muted">Showing services offered in ${esc(countryName(country))}${hidden ? `. ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden.` : ""}</span></div>
-    <div class="catalog">${offered.map(v => `<button class="cat-item" data-svc="${v.id}" aria-pressed="${picked === v.id}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}
-      <button class="cat-item" data-svc="" aria-pressed="${picked === ""}"><span class="logo" style="background:#6b7785">+</span><span>Something else</span></button></div>
-    <form class="fields" id="add-form">
-      <label class="full">Name<input id="f-name" required placeholder="e.g. Peacock"></label>
+  const f = el(`<div class="section-head"><h2>Add a subscription</h2><span class="small muted">Two quick steps. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span></div>
+    <h3 style="margin:4px 0 8px">1. Which subscription?</h3>
+    <input id="a-q" type="search" placeholder="Search, e.g. Hulu, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:10px">
+    <div class="catalog" id="a-cat">${offered.map(v => `<button class="cat-item" data-svc="${v.id}" aria-pressed="${picked === v.id}" data-text="${esc((v.name + " " + catLabel(v.category)).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}
+      <button class="cat-item" data-svc="" aria-pressed="${picked === ""}" data-text=""><span class="logo" style="background:#6b7785">+</span><span>Something else</span></button></div>
+    <p class="muted" id="a-hint">Tap a subscription above to fill in the details.</p>
+    <form class="fields" id="add-form" hidden>
+      <h3 class="full" id="a-title" style="margin:0">2. Tell us about it</h3>
+      <label class="full" id="name-wrap">Name<input id="f-name" required placeholder="e.g. Peacock"></label>
+      <p class="full small muted" style="margin:0"><b style="color:var(--ink)">What you pay.</b> We filled in the list price; change it if you pay something different (with tax or a discount).</p>
       <label id="plan-wrap" hidden>Plan<select id="f-plan"></select></label>
       <label>Billed<select id="f-cycle"><option value="month">Monthly</option><option value="year">Yearly</option></select></label>
       <label>Price<input id="f-price" type="number" step="0.01" min="0" required placeholder="0.00"></label>
-      <label>Start date<input id="f-start" type="date" value="${today()}" max="${today()}"></label>
-      <label>How often you use it<span style="display:flex;gap:6px"><input id="f-uses" type="number" min="0" step="any" value="0"><select id="f-per" aria-label="Per">${Object.entries(PER).map(([k, x]) => `<option value="${k}" ${k === "month" ? "selected" : ""}>${x.label}</option>`).join("")}</select></span></label>
-      <div class="full" style="display:flex;gap:10px;justify-content:flex-end"><button class="btn primary" type="submit">Add subscription</button></div>
+      <label>When did you start (or when will you)?<input id="f-start" type="date" value="${today()}"></label>
+      <p class="full small" id="f-renew" style="margin:-4px 0 0;color:var(--accent)"></p>
+      <div class="full" style="display:grid;gap:8px;border-top:1px solid var(--line);padding-top:12px">
+        <b>How are you using it, or planning to?</b>
+        <span class="small muted">This is how we tell whether it's worth the money. A rough guess is fine, and you can change it anytime.</span>
+        <label style="font-weight:500"><span id="f-unit">How often you use it</span><span style="display:flex;gap:6px"><input id="f-uses" type="number" min="0" step="any" placeholder="e.g. 8"><select id="f-per" aria-label="Per">${Object.entries(PER).map(([k, x]) => `<option value="${k}" ${k === "month" ? "selected" : ""}>${x.label}</option>`).join("")}</select></span></label>
+        <label class="feature" style="color:var(--ink);font-weight:500;border:0;padding:0"><input type="checkbox" id="f-unsure">Not sure yet, I'll add this later</label>
+        <div id="f-feats" style="display:grid;gap:4px"></div>
+      </div>
+      <div class="full" style="display:flex;gap:10px;justify-content:flex-end"><button class="btn primary" type="submit" id="f-go">Add to my list</button></div>
     </form>`);
   const $ = id => document.getElementById(id);
-  const syncPrice = () => { const v = CATALOG[picked]; if (!v) return; const pl = planOf(v, $("f-plan").value), unknown = pl.effective_monthly == null && pl.price_monthly == null && pl.price_annual == null;
+  const renewText = () => { const st = $("f-start").value || today(), cyc = $("f-cycle").value; let d = st, n = 0; while (d <= today() && n < 1200) d = stepDate(st, cyc, ++n);
+    $("f-renew").textContent = `${st > today() ? `First charge on ${fmtDate(st)}, then ` : "Next "}renewal on ${fmtDate(st > today() ? stepDate(st, cyc, 1) : d)} (${cyc === "year" ? "yearly" : "monthly"}).`; };
+  const syncPrice = () => { const v = CATALOG[picked]; renewText(); if (!v) return; const pl = planOf(v, $("f-plan").value), unknown = pl.effective_monthly == null && pl.price_monthly == null && pl.price_annual == null;
     const t = unknown ? null : listTotal({ svc: picked, plan: pl.id, cycle: $("f-cycle").value, members: 1 }); $("f-price").value = t == null ? "" : t.toFixed(2);
-    $("f-price").placeholder = unknown ? "No list price, enter yours" : "0.00"; };
+    $("f-price").placeholder = unknown ? "No list price, enter yours" : "0.00";
+    // Features that matter, so tips can point to a cheaper plan that still has them.
+    const fs = featuresFor(v, pl.id); $("f-feats").innerHTML = fs.length ? `<span class="small muted" style="margin-top:6px">What matters to you? Check any that apply.</span>` + fs.map(x => `<label class="feature" style="color:var(--ink);font-weight:500;border:0;padding:0"><input type="checkbox" data-ff="${x.id}">${esc(x.name)}</label>`).join("") : ""; };
   const fill = (id) => {
     picked = id; const v = CATALOG[id];
     document.querySelectorAll(".cat-item").forEach(b => b.setAttribute("aria-pressed", b.dataset.svc === id));
-    $("plan-wrap").hidden = !v;
-    $("f-name").value = v ? v.name : ""; $("f-price").value = "";
-    if (v) { const p = planOf(v); $("f-plan").innerHTML = v.plans.map(x => `<option value="${x.id}" ${x.id === p.id ? "selected" : ""}>${esc(x.name)}</option>`).join(""); $("f-cycle").value = defaultCycle(p); syncPrice(); }
-    $("f-name").focus();
+    $("add-form").hidden = false; $("a-hint").hidden = true; $("plan-wrap").hidden = !v; $("name-wrap").hidden = !!v;
+    $("a-title").textContent = v ? `2. Tell us about your ${v.name}` : "2. Tell us about it";
+    $("f-go").textContent = v ? `Add ${v.name} to my list` : "Add to my list";
+    $("f-unit").textContent = v?.use_unit ? `How often? (one use = one ${v.use_unit})` : "How often you use it";
+    $("f-name").value = v ? v.name : ""; $("f-price").value = ""; $("f-feats").innerHTML = "";
+    if (v) { const p = planOf(v); $("f-plan").innerHTML = v.plans.map(x => `<option value="${x.id}" ${x.id === p.id ? "selected" : ""}>${esc(x.name)}</option>`).join(""); $("f-cycle").value = defaultCycle(p); }
+    syncPrice(); $("add-form").scrollIntoView({ behavior: "smooth", block: "start" }); if (!v) $("f-name").focus();
   };
   f.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => fill(b.dataset.svc)));
+  f.getElementById("a-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase(); document.querySelectorAll("#a-cat .cat-item").forEach(b => b.hidden = !!q && !!b.dataset.svc && !b.dataset.text.includes(q)); });
   f.getElementById("f-plan").addEventListener("change", () => { const p = planOf(CATALOG[picked], $("f-plan").value); $("f-cycle").value = defaultCycle(p); syncPrice(); });
   f.getElementById("f-cycle").addEventListener("change", syncPrice);
+  f.getElementById("f-start").addEventListener("change", renewText);
+  f.getElementById("f-unsure").addEventListener("change", e => { $("f-uses").disabled = $("f-per").disabled = e.target.checked; });
   f.getElementById("add-form").addEventListener("submit", e => {
     e.preventDefault();
-    const base = { name: $("f-name").value.trim(), cycle: $("f-cycle").value, price: parseFloat($("f-price").value) || 0,
-      start: $("f-start").value || today() };
+    const st = $("f-start").value || today();
+    const base = { name: $("f-name").value.trim(), cycle: $("f-cycle").value, price: parseFloat($("f-price").value) || 0, start: st, day: +st.slice(8) };
     const sub = CATALOG[picked] ? (() => { const { price, ...rest } = base; const n = newSub(picked, { ...rest, plan: $("f-plan").value });
       n.price = priceFor(planOf(CATALOG[picked], n.plan), n.cycle); const lt = listTotal(n);
       if (lt == null || Math.abs(lt - price) > 0.005) { n.priceMine = true; n.myTotal = price; } return n; })()
       : { id: "custom-" + Date.now(), svc: "custom", plan: null, used: [], ...base };
-    setUse(sub, parseFloat($("f-uses").value) || 0, $("f-per").value); state.subs.push(sub);
-    save(); picked = null; view = "home"; render();
+    const ff = [...document.querySelectorAll("[data-ff]:checked")].map(x => x.dataset.ff); if (ff.length) sub.used = ff;
+    const uses = parseFloat($("f-uses").value);
+    if ($("f-unsure").checked || isNaN(uses)) { sub.rate = 0; sub.uses = 0; sub.per = $("f-per").value; sub.needsUse = true; } else setUse(sub, uses, $("f-per").value);
+    if (sub.svc !== "custom") sub.measure = measuresOf(sub)[0].id;
+    state.subs.push(sub); save(); picked = null; view = "home"; render(); window.scrollTo(0, 0);
   });
   if (pendingPick) { const pk = pendingPick; pendingPick = null;
     setTimeout(() => { fill(pk.svc); const pl = planOf(CATALOG[pk.svc], pk.plan); $("f-plan").value = pl.id; $("f-cycle").value = defaultCycle(pl); syncPrice(); if (pk.price) $("f-price").value = (+pk.price).toFixed(2); }); }
