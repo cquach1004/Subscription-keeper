@@ -3,28 +3,32 @@
 <title>Subscription Keeper</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Figtree:wght@300;400;500;600;700&display=swap">
 <style>
 /* Layout: app shell, a narrow column with top tabs; phones get a bottom tab bar. Detail opens as a sheet. */
 :root {
-  --bg: #f3f5f7; --surface: #ffffff; --line: #dde3e8; --ink: #17222b; --muted: #5d6b77;
-  --accent: #2547d0; --accent-soft: #e6ebfd;
+  --bg: #f2f7fc; --surface: #ffffff; --line: #e1eaf3; --ink: #10202f; --muted: #5a6b7c;
+  --accent: #1a6fbf; --accent-soft: #e2f0fc; --sky: #8fcdfa; --sky-2: #c9e7fd; --sky-3: #5aa9e6;
+  --hero-ink: #0b2a47; --glass: rgba(255,255,255,.72); --lead-bg: linear-gradient(150deg, #1d6fb8, #3f9be0 70%, #7cc4f5);
   --good: #137a4b; --good-soft: #e1f4ea; --warn: #9a5b00; --warn-soft: #fbf0db; --bad: #b42333; --bad-soft: #fbe5e7;
-  --shadow: 0 10px 30px rgba(23,34,43,.12);
-  --f-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --shadow: 0 12px 34px rgba(16,50,90,.12); --card-shadow: 0 1px 2px rgba(16,50,90,.05), 0 8px 24px rgba(16,50,90,.06);
+  --f-display: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-serif: "Fraunces", "Iowan Old Style", Georgia, serif;
   --f-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-num: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --f-num: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #0f151b; --surface: #18212a; --line: #2a3640; --ink: #e7edf2; --muted: #95a3af;
-  --accent: #8aa2ff; --accent-soft: #1f2a4d;
+  --bg: #070d15; --surface: #111a25; --line: #213041; --ink: #eaf2fa; --muted: #93a6b9;
+  --accent: #7cc4ff; --accent-soft: #15304a; --sky: #2f7fc4; --sky-2: #163a5e; --sky-3: #5aa9e6;
+  --hero-ink: #f2f8ff; --glass: rgba(24,36,50,.72); --lead-bg: linear-gradient(150deg, #0f3d68, #1a5d96 70%, #2f7fc4);
   --good: #5fd39b; --good-soft: #143326; --warn: #f0b860; --warn-soft: #382a12; --bad: #ff8a95; --bad-soft: #3d1a1f;
-  --shadow: 0 10px 30px rgba(0,0,0,.45); color-scheme: dark; } }
+  --shadow: 0 12px 34px rgba(0,0,0,.5); --card-shadow: 0 1px 0 rgba(255,255,255,.03) inset; color-scheme: dark; } }
 :root[data-theme="dark"] {
-  --bg: #0f151b; --surface: #18212a; --line: #2a3640; --ink: #e7edf2; --muted: #95a3af;
-  --accent: #8aa2ff; --accent-soft: #1f2a4d;
+  --bg: #070d15; --surface: #111a25; --line: #213041; --ink: #eaf2fa; --muted: #93a6b9;
+  --accent: #7cc4ff; --accent-soft: #15304a; --sky: #2f7fc4; --sky-2: #163a5e; --sky-3: #5aa9e6;
+  --hero-ink: #f2f8ff; --glass: rgba(24,36,50,.72); --lead-bg: linear-gradient(150deg, #0f3d68, #1a5d96 70%, #2f7fc4);
   --good: #5fd39b; --good-soft: #143326; --warn: #f0b860; --warn-soft: #382a12; --bad: #ff8a95; --bad-soft: #3d1a1f;
-  --shadow: 0 10px 30px rgba(0,0,0,.45); color-scheme: dark; }
+  --shadow: 0 12px 34px rgba(0,0,0,.5); --card-shadow: 0 1px 0 rgba(255,255,255,.03) inset; color-scheme: dark; }
 
 * { box-sizing: border-box; }
 body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-body); }
@@ -219,18 +223,86 @@ details.nums table { margin-top: 6px; }
 .disc { display: flex; align-items: center; gap: 8px; font-size: 14px; }
 input[type=checkbox] { width: 18px; height: 18px; flex: none; padding: 0; accent-color: var(--accent); }
 label.disc { font-weight: 500; }
+
+/* Look (Cuong, 2026-10-20): modeled on the Cloaked app, in light blue. Soft sky glow behind the top of the page,
+   a serif greeting, big light numbers, borderless rounded cards, and a floating glass tab bar on phones. */
+body { position: relative; min-height: 100vh; overflow-x: hidden; margin: 0; }
+.stat, .card, .list, .upcoming { background-origin: border-box; }
+body::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 520px; z-index: -1; pointer-events: none;
+  background: radial-gradient(70% 90% at 0% 0%, var(--sky) 0%, transparent 70%), radial-gradient(60% 70% at 85% 10%, var(--sky-2) 0%, transparent 70%),
+    linear-gradient(180deg, transparent 55%, var(--bg)); }
+.wrap { padding-top: 22px; }
+header.top { margin-bottom: 8px; }
+header.top h1 { font: 600 17px var(--f-body); letter-spacing: 0; color: var(--hero-ink); }
+.proto, .loc { background: var(--glass); border-color: transparent; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.loc { padding: 6px 14px; }
+.hero { padding: 34px 0 26px; }
+.hero h2 { font: 300 clamp(40px, 9vw, 60px)/1.04 var(--f-serif); letter-spacing: -.02em; color: var(--hero-ink); }
+.hero p { margin: 10px 0 0; color: var(--hero-ink); opacity: .75; font-size: 16px; }
+.section-head h2 { font: 400 26px/1.15 var(--f-serif); letter-spacing: -.01em; }
+.section-head { margin: 26px 0 12px; }
+h3 { font-weight: 600; }
+.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+
+.stat, .list, .card, .upcoming, form.fields, .tbl-wrap, .cat-item, details.sec, .fresh { border-color: transparent; box-shadow: var(--card-shadow); }
+.stat, .list, .card, .upcoming, form.fields, .tbl-wrap { border-radius: 24px; }
+.stat { padding: 18px 20px; }
+.stat .label { text-transform: none; letter-spacing: 0; font-size: 15px; font-weight: 500; color: var(--ink); }
+.stat .value { font-size: 40px; font-weight: 300; line-height: 1.1; margin-top: 8px; }
+.stat.lead { background: var(--lead-bg); border-color: transparent; color: #fff; }
+.stat.lead .label { opacity: .9; }
+.stat.lead .value { font-size: 54px; }
+.stat.save .value { color: var(--good); }
+.summary { gap: 14px; }
+.kv .stat { border-radius: 18px; background: var(--bg); box-shadow: none; }
+.kv .stat .value { font-size: 26px; }
+.upcoming { padding: 18px 20px; }
+.row { padding: 15px 18px; }
+.row:hover, details.sec > summary:hover { background: var(--accent-soft); }
+.logo { border-radius: 12px; }
+.pill { padding: 4px 11px; font-weight: 600; }
+.btn { border-radius: 99px; padding: 9px 18px; border-color: transparent; background: var(--accent-soft); color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--surface); }
+.btn.ghost { background: none; }
+.x-cat { border-radius: 99px; box-shadow: var(--card-shadow); border-color: transparent; }
+.x-card { border-radius: 24px; }
+.x-card:hover { border-color: transparent; box-shadow: 0 0 0 2px var(--sky-3), var(--card-shadow); }
+.cat-item { border-radius: 16px; }
+details.sec { border-radius: 18px; background: var(--surface); }
+input, select { border-radius: 12px; border-color: var(--line); }
+.sheet { border-radius: 28px 0 0 28px; background: var(--bg); }
+.sheet .fresh, .sheet details.sec { background: var(--surface); }
+.verdict { border-radius: 18px; }
+.tip, .admin-note { border-radius: 16px; }
+.seg { border-radius: 99px; border-color: transparent; background: var(--accent-soft); }
+.seg button { border-radius: 99px; }
+
+nav.tabs { background: var(--glass); border-color: transparent; border-radius: 99px; box-shadow: var(--card-shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+nav.tabs button { border-radius: 99px; display: inline-flex; align-items: center; gap: 7px; }
+nav.tabs button[aria-selected="true"] { background: var(--accent); color: var(--surface); }
+nav.tabs svg { width: 18px; height: 18px; flex: none; }
+@media (max-width: 620px) {
+  .wrap { padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
+  nav.tabs { left: 14px; right: 14px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); padding: 6px; border-radius: 99px; box-shadow: var(--shadow);
+    border: 1px solid rgba(127,160,200,.25); }
+  nav.tabs button { flex-direction: column; gap: 3px; padding: 8px 4px; font-size: 12px; }
+  nav.tabs svg { width: 22px; height: 22px; }
+  .stat .value { font-size: 34px; }
+  .stat.lead .value { font-size: 48px; }
+  .sheet { border-radius: 0; }
+}
 @media (prefers-reduced-motion: no-preference) { .sheet.enter { animation: slide .2s ease-out; } @keyframes slide { from { transform: translateX(24px); opacity: .6; } } }
 </style>
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><h1>Subscription Keeper</h1><span class="proto" title="Published version of this prototype" style="text-transform:none;letter-spacing:.02em">Prototype · Version 45 · Standalone copy · Oct 20</span><button class="loc" id="loc-btn" aria-label="Your location"></button><button class="loc" id="fb-btn">Give feedback</button></div>
+    <div class="brand"><h1>Subscription Keeper</h1><span class="proto" title="Published version of this prototype" style="text-transform:none;letter-spacing:.02em">Prototype · Version 46 · Standalone copy · Oct 20</span><button class="loc" id="loc-btn" aria-label="Your location"></button><button class="loc" id="fb-btn">Give feedback</button></div>
     <nav class="tabs" role="tablist" aria-label="Screens">
-      <button role="tab" id="tab-home" data-view="home" aria-selected="true"><span class="long">My subscriptions</span><span class="short">Mine</span></button>
-      <button role="tab" id="tab-explore" data-view="explore" aria-selected="false">Explore</button>
-      <button role="tab" id="tab-overlaps" data-view="overlaps" aria-selected="false">Overlaps</button>
-      <button role="tab" id="tab-add" data-view="add" aria-selected="false">Add</button>
-      <button role="tab" id="tab-admin" data-view="admin" aria-selected="false" hidden>Admin</button>
+      <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg><span class="long">My subscriptions</span><span class="short">Mine</span></button>
+      <button role="tab" id="tab-explore" data-view="explore" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>Explore</button>
+      <button role="tab" id="tab-overlaps" data-view="overlaps" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg>Overlaps</button>
+      <button role="tab" id="tab-add" data-view="add" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/></svg>Add</button>
+      <button role="tab" id="tab-admin" data-view="admin" aria-selected="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 19.5 6v5.5c0 4.4-3.1 7.9-7.5 9-4.4-1.1-7.5-4.6-7.5-9V6z"/></svg>Admin</button>
     </nav>
   </header>
   <main id="view"></main>
@@ -664,11 +736,13 @@ function feedbackView() {
   return f;
 }
 let lastView = "home";
+function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
   const hasExamples = state.subs.some(s => s.example);
   const f = el(`
+    <section class="hero"><h2>${greeting()},<br>friend</h2><p>${state.subs.length ? `Here's where your ${state.subs.length} subscription${state.subs.length === 1 ? "" : "s"} stand.` : "Add what you pay for to get started."}</p></section>
     <section class="summary">
       <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year, ${state.subs.length} subscriptions</div></div>
       <div class="stat save"><div class="label">Could save up to / mo</div><div class="value num">${money(savings())}</div><div class="small muted">Unused + same-job overlaps</div></div>
