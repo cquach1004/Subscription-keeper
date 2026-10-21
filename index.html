@@ -376,6 +376,10 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .sam-sugg .chip { padding: 6px 12px; font-size: 13px; text-align: left; }
 .sam-form { display: flex; gap: 8px; }
 .sam-form input { flex: 1; min-width: 0; border-radius: 99px; padding: 10px 16px; }
+
+.legal { gap: 18px; }
+.legal h3 { margin: 0 0 4px; }
+.legal p { margin: 0; line-height: 1.6; }
 @media (prefers-reduced-motion: no-preference) { .sheet.enter { animation: slide .2s ease-out; } @keyframes slide { from { transform: translateX(24px); opacity: .6; } } }
 </style>
 
@@ -732,8 +736,8 @@ function render() {
   drawAvatar(document.getElementById("me-btn"));
   document.body.classList.toggle("short-band", view !== "home");
   if (view === "admin" && !admin.show) view = "home";
-  document.querySelector("nav.tabs").hidden = view === "welcome";
-  root.append({ home: homeView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, welcome: welcomeView, feedback: feedbackView, help: helpView }[view]());
+  document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
+  root.append({ home: homeView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, welcome: welcomeView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
 }
 
 function upcomingHtml() {
@@ -778,8 +782,10 @@ function welcomeView() {
     ${groups.map(c => `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog">${more.filter(v => v.category === c).map(tile).join("")}</div>`).join("")}
     <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)">
       <button class="btn primary" id="w-go">Start with 0 subscriptions</button>
-      <button class="btn ghost small" id="w-example">Just looking? Try it with example data</button>${state.subs.length ? `<button class="btn ghost small" id="w-cancel">Keep my current list</button>` : ""}</div>`);
+      <button class="btn ghost small" id="w-example">Just looking? Try it with example data</button>
+      <span class="small muted" style="flex-basis:100%">By continuing you agree to our <button type="button" class="btn ghost small" data-legal="terms" style="padding:0">Terms of Use</button> and <button type="button" class="btn ghost small" data-legal="privacy" style="padding:0">Privacy</button> (prototype drafts).</span>${state.subs.length ? `<button class="btn ghost small" id="w-cancel">Keep my current list</button>` : ""}</div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
+  f.querySelectorAll("[data-legal]").forEach(b => b.addEventListener("click", () => { lastView = "welcome"; openLegal(b.dataset.legal); }));
   const count = () => { $("w-go").textContent = `Start with ${picks.size} subscription${picks.size === 1 ? "" : "s"}`; };
   f.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => { const id = b.dataset.svc; picks.has(id) ? picks.delete(id) : picks.add(id); b.setAttribute("aria-pressed", picks.has(id)); count(); }));
   $("w-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase();
@@ -823,6 +829,44 @@ function feedbackView() {
   return f;
 }
 let lastView = "home";
+// Terms of Use and Privacy (Cuong, 2026-10-21): placeholder text for the prototype. The real app needs legal review.
+let legalTab = "terms";
+const LEGAL_DATE = "October 21, 2026";
+const LEGAL = {
+  terms: { title: "Terms of Use", sections: [
+    ["About this prototype", "Subscription Keeper is an early prototype shared for testing and feedback. Features, prices and these terms may change or be removed at any time, and the service may be unavailable without notice."],
+    ["What the app does", "Subscription Keeper helps you keep track of subscriptions you pay for, estimate the value you get from them, and compare plans and alternatives. It does not sign you up for, change, pay for or cancel any subscription. You stay responsible for managing your own accounts with each provider."],
+    ["Prices and information", "Prices, plans and features come from public sources such as official pricing pages, and some come from news or review sites. Prices change often, vary by location and may not include tax. We mark prices we couldn't confirm, but we can't guarantee that any information is accurate, complete or current. Always check with the provider before you buy or cancel."],
+    ["Not financial advice", "Ratings, value estimates, savings figures and suggestions are general information to help you decide. They are not financial, legal or tax advice."],
+    ["Sam, the AI assistant", "Sam uses artificial intelligence and can be wrong. Don't rely on Sam's answers for important decisions without checking them. Don't share passwords, card numbers or other sensitive details with Sam."],
+    ["Your use", "Use the app only for lawful, personal purposes. Don't try to disrupt it, misuse the feedback or support forms, or copy the catalog for commercial use."],
+    ["Third parties", "Names and logos of other companies belong to their owners and are shown only to identify their services. Subscription Keeper isn't affiliated with or endorsed by them. Links to other sites are provided for convenience; their terms and privacy policies apply there."],
+    ["No warranty and limits", "The prototype is provided \"as is\" without warranties of any kind. To the extent the law allows, we aren't liable for losses arising from your use of the app or reliance on its information."],
+    ["Changes and contact", "We may update these terms as the app develops; the date above shows the latest version. Questions? Use Give feedback or Report a problem in Help."]] },
+  privacy: { title: "Privacy", sections: [
+    ["The short version", "Your subscription list stays on your device. We don't sell your data, we don't show ads, and we never ask for your bank or card details."],
+    ["What stays on your device", "Your subscriptions, prices, usage, dates, location and settings (such as your first name, style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
+    ["What you choose to send us", "When you send feedback or report a problem, we receive what you write, plus the app version, the screen you were on, your device type and how many subscriptions you track (not the list itself). If you add an email address to a ticket, we use it only to reply. In the Claude app version, these are linked to your Claude account so only the Subscription Keeper team can read them."],
+    ["Sam, the AI assistant", "When you ask Sam a question in the Claude app, your question, your recent chat, your subscription list (names, prices, usage and renewal dates) and related catalog details are sent to Claude, Anthropic's AI, to write the answer, using your own Claude account. On the public website, Sam answers from the catalog on your device and nothing is sent."],
+    ["Usage exports", "If you load a ChatGPT or Claude data export to count your usage, the file is read on your device. Only the monthly counts are kept, and the file isn't uploaded."],
+    ["Location", "We use the country and state you choose to show the right services and prices. We don't track your device's location."],
+    ["Cookies and tracking", "The prototype doesn't use advertising or analytics trackers. It uses browser storage only to remember your list and settings."],
+    ["Your choices", "You can edit or delete anything in your list at any time, or remove everything by clearing this site's data in your browser. To ask us to delete feedback or tickets you've sent, use Report a problem."],
+    ["Children", "The app isn't meant for children under 13, and we don't knowingly collect their information."],
+    ["Changes and contact", "We'll update this page as the app develops; the date above shows the latest version. Questions? Use Give feedback or Report a problem in Help."]] } };
+function legalView() {
+  const L = LEGAL[legalTab];
+  const f = el(`<div class="section-head"><h2>Terms and privacy</h2><span class="small muted">Last updated ${LEGAL_DATE}</span></div>
+    <div class="admin-note" role="note" style="margin-bottom:14px"><b>Draft for the prototype.</b> This text is a placeholder and hasn't had legal review. The final terms and privacy policy will replace it before launch.</div>
+    <div class="seg" role="tablist" aria-label="Terms or privacy" style="margin-bottom:14px">${Object.entries(LEGAL).map(([k, x]) => `<button type="button" role="tab" data-lt="${k}" aria-pressed="${k === legalTab}" aria-selected="${k === legalTab}">${x.title}</button>`).join("")}</div>
+    <article class="card legal">${L.sections.map(([h, t]) => `<section><h3>${esc(h)}</h3><p>${esc(t)}</p></section>`).join("")}</article>
+    <p><button class="btn ghost small" id="legal-back">Back to the app</button></p>`);
+  f.querySelectorAll("[data-lt]").forEach(b => b.addEventListener("click", () => { legalTab = b.dataset.lt; render(); window.scrollTo(0, 0); }));
+  f.getElementById("legal-back").addEventListener("click", () => { view = lastView; render(); });
+  return f;
+}
+function openLegal(tab) { legalTab = tab || "terms"; if (!["help", "feedback", "legal"].includes(view)) lastView = view; view = "legal"; render(); window.scrollTo(0, 0); }
+
 // Help, Sam (AI chat) and support tickets (Cuong, 2026-10-21). No phone support for now.
 // Sam answers with Claude where the page can reach it (the Claude app); elsewhere it looks things up in the catalog.
 let samTurns = [], samCtl = null, samBusy = false;
@@ -945,7 +989,9 @@ function helpView() {
       <div class="full" style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap"><span class="small muted" id="tk-msg" role="status"></span><button class="btn primary" type="submit" id="tk-send">Submit ticket</button></div>
     </form>
     <div id="tk-mine"></div><div id="tk-owner"></div>
+    <p class="small muted">Read our <button class="btn ghost small" data-legal="terms">Terms of Use</button> and <button class="btn ghost small" data-legal="privacy">Privacy</button> (drafts).</p>
     <p><button class="btn ghost small" id="help-back">Back to the app</button></p>`);
+  f.querySelectorAll("[data-legal]").forEach(b => b.addEventListener("click", () => openLegal(b.dataset.legal)));
   const box = f.querySelector(".sam");
   queueMicrotask(() => drawSam(document.querySelector(".sam")));
   f.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => samAsk(b.dataset.q, document.querySelector(".sam"))));
@@ -1853,7 +1899,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 51 · Standalone copy · Oct 21", VERSION_NUM = 51;
+const APP_VERSION = "Prototype · Version 52 · Standalone copy · Oct 21", VERSION_NUM = 52;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
 let accountName = "";
 function firstName() { let n = ""; try { n = localStorage.getItem("sk-name") || ""; } catch {} return (n || accountName).trim().split(/\s+/)[0] || ""; }
@@ -1897,6 +1943,7 @@ function openMe() {
           <div class="me-item">${IC('<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>')}<span class="me-l">Dark mode</span>
             <div class="seg" role="group" aria-label="Dark mode">${THEMES.map(k => `<button type="button" data-t="${k}" aria-pressed="${k === t}">${k === "auto" ? "Auto" : k === "dark" ? "On" : "Off"}</button>`).join("")}</div></div>
           <button class="me-item chev" id="me-help">${IC('<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.2 2.4c-.5.2-.8.6-.8 1.1"/><circle cx="12" cy="16" r=".4" fill="currentColor"/>')}<span class="me-l">Help and Sam</span><span class="me-v">Ask a question or report a problem</span></button>
+          <button class="me-item chev" id="me-legal">${IC('<path d="M7 3.5h7.5L18.5 7.5V20.5H7z"/><path d="M14 3.5v4.5h4.5M9.5 12h6M9.5 15.5h6"/>')}<span class="me-l">Terms and privacy</span></button>
           <button class="me-item chev" id="me-fb">${IC('<path d="M4.5 5.5h15v10h-9l-4.5 3.5v-3.5h-1.5z"/>')}<span class="me-l">Give feedback</span></button>
         </div>
         <div><h3 style="margin:0 0 10px">Style</h3><div class="styles">${Object.entries(STYLES).map(([k, x]) => `<button type="button" class="style-opt" data-style="${k}" aria-pressed="${k === stylePref()}">
@@ -1916,6 +1963,7 @@ function openMe() {
     root.querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-theme", b.dataset.t); } catch {} applyTheme(b.dataset.t); draw(false); }));
     document.getElementById("me-loc").addEventListener("click", () => { close(); view = "settings"; render(); window.scrollTo(0, 0); });
     document.getElementById("me-help").addEventListener("click", () => { close(); if (!["help", "feedback"].includes(view)) lastView = view; view = "help"; render(); window.scrollTo(0, 0); });
+    document.getElementById("me-legal").addEventListener("click", () => { close(); openLegal("terms"); });
     document.getElementById("me-fb").addEventListener("click", () => { close(); if (view !== "feedback") lastView = view; fbSent = false; view = "feedback"; render(); window.scrollTo(0, 0); });
     if (first) document.getElementById("me-close").focus();
   };
