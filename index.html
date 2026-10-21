@@ -7,7 +7,7 @@
 <style>
 /* Layout: app shell, a narrow column with top tabs; phones get a bottom tab bar. Detail opens as a sheet. */
 :root {
-  --bg: #f2f5fa; --surface: #ffffff; --line: #e0e6f0; --ink: #101a2e; --muted: #56627a;
+  --bg: #e9edf3; --surface: #ffffff; --line: #d6dde8; --ink: #0d1626; --muted: #46526a;
   --accent: #1e3a8a; --accent-soft: #e4eaf8; --sky: #0b1d45; --sky-2: #1e3a8a; --sky-3: #3b5bb5;
   --hero-ink: #ffffff; --glass: rgba(255,255,255,.14); --lead-bg: linear-gradient(150deg, #0b1d45, #1e3a8a 65%, #3355b5); --lead-ink: #ffffff;
   --band: linear-gradient(160deg, #081634 0%, #13296b 45%, #2a4a9e 100%); --tabbar: rgba(255,255,255,.88);
@@ -231,9 +231,14 @@ label.disc { font-weight: 500; }
    a serif greeting, big light numbers, borderless rounded cards, and a floating glass tab bar on phones. */
 body { position: relative; min-height: 100vh; overflow-x: hidden; margin: 0; }
 .stat, .card, .list, .upcoming { background-origin: border-box; }
-body::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 430px; z-index: -1; pointer-events: none;
-  background: var(--band); -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent); mask-image: linear-gradient(180deg, #000 62%, transparent); }
-body.short-band::before { height: var(--band-h, 160px); -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 28px), transparent); }
+body::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 600px; z-index: -1; pointer-events: none; background: var(--band);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,.75) 58%, rgba(0,0,0,.35) 78%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,.75) 58%, rgba(0,0,0,.35) 78%, transparent 100%); }
+/* Other screens: a navy band behind the header only, fading out before the page title. */
+body.short-band::before { display: none; }
+body.short-band header.top { position: relative; margin-bottom: 44px; }
+body.short-band header.top::before { content: ""; position: absolute; left: -100vw; right: -100vw; top: -60px; bottom: -44px; z-index: -1; pointer-events: none; background: var(--band);
+  -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 60px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 60px), transparent); }
 .wrap { padding-top: 22px; }
 header.top { margin-bottom: 8px; display: grid; grid-template-columns: 1fr auto; align-items: center; }
 header.top nav.tabs { grid-column: 1 / -1; justify-self: start; }
@@ -666,7 +671,6 @@ function render() {
   document.getElementById("tab-admin").hidden = !admin.show;
   drawAvatar(document.getElementById("me-btn"));
   document.body.classList.toggle("short-band", view !== "home");
-  document.body.style.setProperty("--band-h", Math.round(document.querySelector("header.top").getBoundingClientRect().bottom + window.scrollY + 20) + "px");
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome";
   root.append({ home: homeView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, welcome: welcomeView, feedback: feedbackView }[view]());
@@ -1275,7 +1279,7 @@ function valueChart(s) {
   const vs = valueSeries(s), v = svcOf(s), m = measureOf(s), ms = measuresOf(s);
   const seg = ms.length > 1 ? `<div class="seg" role="group" aria-label="Measure value by">${ms.map(x => `<button type="button" data-measure="${x.id}" aria-pressed="${x.id === m.id}">${esc(x.tab || (x.id === "uses" && !MEASURES[s.svc]?.base ? "Uses" : x.short[0].toUpperCase() + x.short.slice(1)))}</button>`).join("")}</div>` : "";
   if (!vs) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">${s.start ? "Add what you pay to see how your usage compares with the cost." : "Add a start date (under Start date and pauses) to see how your usage compares with the cost."}</p>` };
-  if (vs.rows.length < 2) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">You started today. Check back after your first month.</p>` };
+  if (vs.rows.length < 2) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">Your chart starts after your first month. Had it longer? Set your real start date under Start date and pauses.</p>` };
   const W = 400, H = 196, L = 44, R = 50, T = 18, B = 24, span = Math.max(1, dayDiff(vs.from, vs.to));
   const top = Math.max(...vs.rows.map(r => Math.max(r.cost, r.value)), 1);
   const raw = top / 4, p10 = 10 ** Math.floor(Math.log10(raw)), step = [1, 2, 2.5, 5, 10].map(m => m * p10).find(x => x >= raw), ymax = Math.ceil(top / step) * step;
@@ -1625,7 +1629,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 48 · Standalone copy · Oct 21", VERSION_NUM = 48;
+const APP_VERSION = "Prototype · Version 49 · Standalone copy · Oct 21", VERSION_NUM = 49;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
 let accountName = "";
 function firstName() { let n = ""; try { n = localStorage.getItem("sk-name") || ""; } catch {} return (n || accountName).trim().split(/\s+/)[0] || ""; }
