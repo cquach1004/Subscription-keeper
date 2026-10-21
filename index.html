@@ -356,13 +356,33 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .style-opt .nm { padding: 8px 12px 10px; display: grid; gap: 1px; }
 .style-opt .nm b { font-size: 15px; }
 .style-opt .nm span { font-size: 12px; color: var(--muted); line-height: 1.3; }
+
+/* Help and Sam */
+.top-btns { display: flex; gap: 10px; align-items: center; }
+.help-btn { background: rgba(255,255,255,.14); }
+:root[data-style="crisp"] .help-btn, :root[data-style="paper"] .help-btn { background: var(--surface); color: var(--accent); border-color: var(--line); }
+.sam { gap: 12px; }
+.sam-head { display: flex; align-items: center; gap: 12px; }
+.sam-av { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 600 14px var(--f-body); color: #fff; background: linear-gradient(150deg, #5b7bd5, #1e3a8a); }
+.sam-av.lg { width: 44px; height: 44px; font-size: 18px; }
+.sam-log { display: grid; gap: 10px; max-height: 420px; overflow-y: auto; padding: 2px; }
+.sam-msg { display: flex; gap: 8px; align-items: flex-end; }
+.sam-msg.me { justify-content: flex-end; }
+.sam-b { max-width: 82%; padding: 10px 14px; border-radius: 18px; font-size: 15px; line-height: 1.45; }
+.sam-msg.bot .sam-b { background: var(--accent-soft); color: var(--ink); border-bottom-left-radius: 6px; }
+.sam-msg.me .sam-b { background: var(--accent); color: var(--surface); border-bottom-right-radius: 6px; white-space: pre-wrap; }
+.sam-b p { margin: 0 0 6px; } .sam-b p:last-child { margin: 0; } .sam-b ul { margin: 4px 0; padding-left: 18px; }
+.sam [hidden] { display: none !important; }
+.sam-sugg .chip { padding: 6px 12px; font-size: 13px; text-align: left; }
+.sam-form { display: flex; gap: 8px; }
+.sam-form input { flex: 1; min-width: 0; border-radius: 99px; padding: 10px 16px; }
 @media (prefers-reduced-motion: no-preference) { .sheet.enter { animation: slide .2s ease-out; } @keyframes slide { from { transform: translateX(24px); opacity: .6; } } }
 </style>
 
 <div class="wrap">
   <header class="top">
     <div class="brand"><h1>Subscription Keeper</h1></div>
-    <button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button>
+    <div class="top-btns"><button class="avatar help-btn" id="help-btn" aria-label="Help and Sam, your assistant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6.5h14v9.5H11l-4.5 3.5V16H5z"/><path d="M9.2 9.6a2.8 2.8 0 1 1 3.6 2.7c-.5.2-.8.6-.8 1.1"/><circle cx="12" cy="14.6" r=".4" fill="currentColor"/></svg></button><button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button></div>
     <nav class="tabs" role="tablist" aria-label="Screens">
       <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg><span class="long">My subscriptions</span><span class="short">Mine</span></button>
       <button role="tab" id="tab-explore" data-view="explore" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>Explore</button>
@@ -713,7 +733,7 @@ function render() {
   document.body.classList.toggle("short-band", view !== "home");
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome";
-  root.append({ home: homeView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, welcome: welcomeView, feedback: feedbackView }[view]());
+  root.append({ home: homeView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, welcome: welcomeView, feedback: feedbackView, help: helpView }[view]());
 }
 
 function upcomingHtml() {
@@ -803,6 +823,170 @@ function feedbackView() {
   return f;
 }
 let lastView = "home";
+// Help, Sam (AI chat) and support tickets (Cuong, 2026-10-21). No phone support for now.
+// Sam answers with Claude where the page can reach it (the Claude app); elsewhere it looks things up in the catalog.
+let samTurns = [], samCtl = null, samBusy = false;
+try { samTurns = JSON.parse(sessionStorage.getItem("sk-sam") || "[]"); } catch {}
+const saveSam = () => { try { sessionStorage.setItem("sk-sam", JSON.stringify(samTurns.slice(-20))); } catch {} };
+const SAM_SUGGEST = ["Which of my subscriptions is the worst value?", "What are cheaper alternatives to Netflix?", "How much do I spend on video each month?", "Are there free options from my library?"];
+const FAQ = [
+  ["How do I add a subscription?", "Open the Add tab, search for the service, then tell us what you pay, when you started and how often you use it. If we don't list it, add it as a custom one."],
+  ["How do you decide if something is good value?", "We divide what you pay each month by how often you use it, and compare that cost per use with a typical range for that kind of service. Until you tell us how often you use something, we don't rate it or give advice."],
+  ["Where do the prices come from?", "From official pricing pages, checked by our team. Prices we couldn't confirm on an official page are marked as unconfirmed, and you can always enter what you actually pay."],
+  ["Can you cancel a subscription for me?", "Not yet. Each subscription's details show its official page, where you can manage or cancel it. Ask Sam for the usual steps."],
+  ["Who can see my list?", "Your list is stored in this browser only. Nobody else sees it, including us. Feedback and support tickets you send are read only by the Subscription Keeper team."],
+  ["Is there a phone line?", "Not at this time. Ask Sam, or report a problem below and the team will follow up."]];
+const TICKET_TOPICS = ["Something isn't working", "A price or detail is wrong", "My list or data", "Other"];
+
+function samMd(t) {
+  let out = "", list = false;
+  esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").split("\n").forEach(l => { const li = /^\s*[-•*] /.test(l);
+    if (li && !list) { out += "<ul>"; list = true; } if (!li && list) { out += "</ul>"; list = false; }
+    if (li) out += `<li>${l.replace(/^\s*[-•*] /, "")}</li>`; else if (l.trim()) out += `<p>${l}</p>`; });
+  return out + (list ? "</ul>" : "");
+}
+const samPrice = v => { const ps = v.plans.filter(p => p.effective_monthly != null); if (!ps.length) return "price not listed";
+  const lo = Math.min(...ps.map(p => p.effective_monthly)); return lo === 0 ? "free option" : `from ${money(lo)}/mo`; };
+function samMatches(q) {
+  const t = q.toLowerCase(), words = t.split(/[^a-z0-9+]+/).filter(w => w.length >= 4);
+  const all = Object.values(CATALOG).filter(v => availability(v.id, profile().country) !== "no");
+  const named = all.filter(v => { const n = v.name.toLowerCase().replace(/\s*\(.*\)/, ""); return t.includes(n) || n.split(/[^a-z0-9+]+/).some(w => w.length >= 4 && words.includes(w)); });
+  const cats = [...new Set(all.map(v => v.category))].filter(c => t.includes(catLabel(c).toLowerCase()) || t.includes(String(c).replace(/_/g, " ")));
+  return { named: named.slice(0, 8), cats };
+}
+// What Sam knows: the person's list and the catalog entries their question touches. Kept small on purpose.
+function samContext(q) {
+  const { named, cats } = samMatches(q + " " + samTurns.slice(-4).map(x => x.content).join(" "));
+  const mine = state.subs.map(s => { const r = rate(s), v = svcOf(s);
+    return `- ${s.name} (${catLabel(v.category)}): ${money(monthly(s))}/mo${s.cycle === "year" ? " billed yearly" : ""}; ${s.needsUse ? "usage not entered yet, so no rating" : `uses: ${useText(s)}; rating: ${r.label}`}${pausedNow(s) ? "; paused" : ""}; renews ${fmtDate(nextRenewal(s) || today())}`
+      + (CATALOG[s.svc] ? `; alternatives: ${alternativesOf(s).slice(0, 3).map(a => `${a.name} (${a.monthly == null ? "price not listed" : money(a.monthly) + "/mo"}${a.verified ? "" : ", unconfirmed"})`).join(", ") || "none listed"}` : "; custom entry, not in our catalog"); }).join("\n");
+  const svcLine = v => `- ${v.name} [${catLabel(v.category)}]: ${v.plans.map(p => `${p.name} ${p.effective_monthly == null ? "price not listed" : money(p.effective_monthly) + "/mo"}${p.verified === false ? " (unconfirmed)" : ""}`).join("; ") || "no plans listed"}`
+    + `${v.kind === "free" ? "; free" : ""}${v.best_for ? `; best for: ${v.best_for}` : ""}${altTo(v).length ? `; alternative to: ${altTo(v).map(id => CATALOG[id].name).join(", ")}` : ""}${v.official_url ? `; site: ${v.official_url}` : ""}`;
+  const extra = new Map(); named.forEach(v => extra.set(v.id, v));
+  named.forEach(v => Object.values(CATALOG).filter(x => altTo(x).includes(v.id)).slice(0, 6).forEach(x => extra.set(x.id, x)));
+  cats.forEach(c => Object.values(CATALOG).filter(x => x.category === c).slice(0, 12).forEach(x => extra.set(x.id, x)));
+  return `Person's location: ${locationLabel()}. Currency: ${currency()}. Today: ${today()}.
+Their subscriptions (${state.subs.length}, ${money(state.subs.reduce((a, s) => a + monthly(s), 0))}/mo in total):
+${mine || "- none yet"}
+Catalog entries related to the question:
+${[...extra.values()].slice(0, 30).map(svcLine).join("\n") || "- none matched"}
+Categories we cover: ${[...new Set(Object.values(CATALOG).map(v => catLabel(v.category)))].join(", ")}.`;
+}
+const SAM_RULES = `You are Sam, the friendly assistant inside Subscription Keeper, an app that helps everyday people track subscriptions, see what they actually use, and find cheaper options.
+Rules:
+- Answer questions about the person's subscriptions, prices, plans and alternatives (including free public options like libraries). Keep answers short: a few sentences or a short list.
+- Use only the data provided below for prices and plans. Never invent a price. Say "unconfirmed" when the data marks a price that way. If the data doesn't have it, say so.
+- Don't judge a subscription's value when its usage isn't entered yet; suggest entering usage first.
+- You can't change their list, cancel services or see their bank. Point them to the service's official site for cancelling.
+- For app bugs or technical problems, suggest "Report a problem" on this Help page, which logs a ticket with the service desk. There is no phone support.
+- Plain text only. You may use **bold** and "- " bullets. No headings, no tables.`;
+
+function samLocal(q) {
+  const t = q.toLowerCase(), { named, cats } = samMatches(q);
+  if (/(bug|error|crash|broken|not working|doesn'?t work|won'?t load|glitch|stuck)/.test(t)) return "Sorry about that. Please use **Report a problem** below so the team can look into it. Include what you tapped and what you expected to happen.";
+  if (/(cancel|unsubscribe)/.test(t) && named[0]) return `To cancel ${named[0].name}, sign in to your account on ${named[0].official_url ? named[0].official_url.replace(/^https?:\/\//, "").replace(/\/.*$/, "") : "their website"} and look for membership or billing settings. I can't cancel it for you.`;
+  if (named.length) return named.slice(0, 2).map(v => { const alts = Object.values(CATALOG).filter(x => altTo(x).includes(v.id)).slice(0, 4);
+    return `**${v.name}**: ${v.plans.filter(p => p.effective_monthly != null).slice(0, 4).map(p => `${p.name} ${money(p.effective_monthly)}/mo${p.verified === false ? " (unconfirmed)" : ""}`).join(", ") || "no listed price"}.`
+      + (alts.length ? `\nAlternatives:\n${alts.map(x => `- ${x.name}: ${samPrice(x)}`).join("\n")}` : ""); }).join("\n\n");
+  if (/(spend|total|cost me|pay)/.test(t) && state.subs.length) { const top = state.subs.slice().sort((a, b) => monthly(b) - monthly(a)).slice(0, 3);
+    return `You pay **${money(state.subs.reduce((a, s) => a + monthly(s), 0))}** a month across ${state.subs.length} subscriptions. The biggest are ${top.map(s => `${s.name} (${money(monthly(s))})`).join(", ")}.`; }
+  if (cats.length) return `Here's some of what we list in ${catLabel(cats[0])}:\n${Object.values(CATALOG).filter(x => x.category === cats[0]).slice(0, 6).map(x => `- ${x.name}: ${samPrice(x)}`).join("\n")}`;
+  return "In this version I can look up prices and alternatives. Try asking about a service by name, like \"alternatives to Netflix\", or a category like \"music\".";
+}
+async function samAsk(q, box) {
+  if (samBusy || !q.trim()) return;
+  samTurns.push({ role: "user", content: q.trim() }); samBusy = true; drawSam(box);
+  const bubble = box.querySelector(".sam-msg.pending .sam-b");
+  let sample = null; try { sample = typeof claude !== "undefined" ? await claude.use("sample") : null; } catch {}
+  let answer = "";
+  if (sample) {
+    samCtl = new AbortController();
+    try {
+      const input = [{ role: "user", content: SAM_RULES + "\n\nData:\n" + samContext(q) }, ...samTurns.slice(-10)];
+      const r = await sample(input, { cache: false, modelTier: "quick", signal: samCtl.signal, onText: ({ text }) => { if (bubble) bubble.innerHTML = samMd(text); } });
+      answer = r.text + (r.truncated ? "\n\n(Answer cut short. Try a narrower question.)" : "");
+    } catch (e) {
+      if (e.code === "cancelled") answer = e.text || "(Stopped.)";
+      else if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(e.code)) answer = samLocal(q);
+      else if (e.code === "rate_limited") answer = (e.text ? e.text + "\n\n" : "") + "I'm getting a lot of questions right now. Please try again in a little while.";
+      else answer = (e.text ? e.text + "\n\n" : "") + "Something went wrong on my side. Please try again, or use Report a problem if it keeps happening.";
+    }
+  } else answer = samLocal(q);
+  samTurns.push({ role: "assistant", content: answer }); samBusy = false; samCtl = null; saveSam(); drawSam(box);
+}
+function drawSam(box) {
+  const log = box.querySelector(".sam-log");
+  log.innerHTML = `<div class="sam-msg bot"><span class="sam-av" aria-hidden="true">S</span><div class="sam-b"><p>Hi${firstName() ? ` ${esc(firstName())}` : ""}, I'm Sam. Ask me about your subscriptions, prices, or cheaper and free alternatives.</p></div></div>`
+    + samTurns.map(t => t.role === "user" ? `<div class="sam-msg me"><div class="sam-b">${esc(t.content)}</div></div>` : `<div class="sam-msg bot"><span class="sam-av" aria-hidden="true">S</span><div class="sam-b">${samMd(t.content)}</div></div>`).join("")
+    + (samBusy ? `<div class="sam-msg bot pending"><span class="sam-av" aria-hidden="true">S</span><div class="sam-b"><p class="muted">Sam is thinking…</p></div></div>` : "");
+  box.querySelector(".sam-sugg").hidden = samTurns.length > 0 || samBusy;
+  box.querySelector("#sam-send").hidden = samBusy; box.querySelector("#sam-stop").hidden = !samBusy;
+  log.scrollTop = log.scrollHeight;
+}
+function helpView() {
+  const f = el(`<div class="section-head"><h2>Help</h2><span class="small muted">Ask Sam, browse common questions, or report a problem.</span></div>
+    <section class="card sam" aria-label="Chat with Sam">
+      <div class="sam-head"><span class="sam-av lg" aria-hidden="true">S</span><div><h3>Sam</h3><div class="small muted">Your subscription assistant</div></div>
+        ${samTurns.length ? `<button class="btn ghost small" id="sam-clear" style="margin-left:auto">New chat</button>` : ""}</div>
+      <div class="sam-log" role="log" aria-live="polite"></div>
+      <div class="sam-sugg chips">${SAM_SUGGEST.map(s => `<button type="button" class="chip x-cat" data-q="${esc(s)}">${esc(s)}</button>`).join("")}</div>
+      <form class="sam-form" id="sam-form"><input id="sam-q" placeholder="Ask Sam a question" aria-label="Ask Sam a question" autocomplete="off" maxlength="600">
+        <button class="btn primary" id="sam-send" type="submit">Send</button><button class="btn" id="sam-stop" type="button" hidden>Stop</button></form>
+      <p class="note" style="margin:0">Sam is an AI and can make mistakes. Prices come from our catalog; check the official page before you sign up or cancel.</p>
+    </section>
+    <div class="section-head"><h2>Common questions</h2></div>
+    <div class="cards">${FAQ.map(([q, a]) => `<details class="sec"><summary><h3 style="flex:1">${esc(q)}</h3></summary><div class="sec-body"><p style="margin:0">${esc(a)}</p></div></details>`).join("")}</div>
+    <div class="section-head" id="ticket-head"><h2>Report a problem</h2><span class="small muted">Something not working? Log a ticket and our support team will follow up. There's no phone support at this time.</span></div>
+    <form class="fields" id="tk-form">
+      <label>What's it about?<select id="tk-topic">${TICKET_TOPICS.map(t => `<option>${esc(t)}</option>`).join("")}</select></label>
+      <label>Email for replies<input id="tk-email" type="email" placeholder="Optional" autocomplete="email"></label>
+      <label class="full">What happened?<textarea id="tk-text" rows="4" required maxlength="3000" placeholder="What did you tap, and what did you expect to happen?" style="width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink)"></textarea></label>
+      <p class="note full" style="margin:0">We'll include the app version, the screen you were on and your device type, to help us look into it. Your subscription list isn't sent.</p>
+      <div class="full" style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap"><span class="small muted" id="tk-msg" role="status"></span><button class="btn primary" type="submit" id="tk-send">Submit ticket</button></div>
+    </form>
+    <div id="tk-mine"></div><div id="tk-owner"></div>
+    <p><button class="btn ghost small" id="help-back">Back to the app</button></p>`);
+  const box = f.querySelector(".sam");
+  queueMicrotask(() => drawSam(document.querySelector(".sam")));
+  f.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => samAsk(b.dataset.q, document.querySelector(".sam"))));
+  f.getElementById("sam-form").addEventListener("submit", e => { e.preventDefault(); const i = document.getElementById("sam-q"); const q = i.value; i.value = ""; samAsk(q, document.querySelector(".sam")); });
+  f.getElementById("sam-stop").addEventListener("click", () => samCtl?.abort());
+  f.getElementById("sam-clear")?.addEventListener("click", () => { samCtl?.abort(); samTurns = []; saveSam(); render(); });
+  f.getElementById("help-back").addEventListener("click", () => { view = lastView; render(); });
+  const msg = t => { const m = document.getElementById("tk-msg"); if (m) m.innerHTML = t; };
+  f.getElementById("tk-form").addEventListener("submit", async e => { e.preventDefault();
+    const $ = id => document.getElementById(id), text = $("tk-text").value.trim(); if (!text) return;
+    const d = new Date(), tk = { id: `SK-${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`,
+      topic: $("tk-topic").value, text, email: $("tk-email").value.trim(), at: d.toISOString(), status: "Open", version: VERSION_NUM, view: lastView, device: navigator.userAgent.slice(0, 160), subs: state.subs.length };
+    $("tk-send").disabled = true; msg("Sending…");
+    try { const db = typeof claude !== "undefined" && await claude.use("db"), user = typeof claude !== "undefined" && await claude.use("user"); if (!db || !user) throw new Error("unavailable");
+      const ref = db.doc("tickets/" + await user.id()), cur = await ref.get(), old = cur?.exists ? (cur.data()?.entries || []) : [];
+      await ref.set({ entries: [...old, tk].slice(-50), updated: tk.at });
+      $("tk-text").value = ""; msg(`Ticket <b>${tk.id}</b> logged. We'll follow up${tk.email ? " by email" : " here"}.`); drawTickets();
+    } catch (err) {
+      const body = `Ticket ${tk.id}\nTopic: ${tk.topic}\n${tk.text}\n\nApp version ${tk.version}, screen: ${tk.view}\nDevice: ${tk.device}`;
+      msg(`This version can't send tickets yet. <button type="button" class="btn small" id="tk-copy">Copy details</button> and send them to the person who shared this app.`);
+      document.getElementById("tk-copy")?.addEventListener("click", () => navigator.clipboard?.writeText(body).then(() => msg("Copied. Paste it into an email to the person who shared this app."), () => {}));
+    }
+    $("tk-send").disabled = false; });
+  queueMicrotask(drawTickets);
+  return f;
+}
+// Your own tickets, and for the owner, every ticket (the service desk isn't connected yet, so they wait here).
+async function drawTickets() {
+  try { if (typeof claude === "undefined") return; const db = await claude.use("db"), user = await claude.use("user"); if (!db || !user) return;
+    const row = (t, who) => `<div class="card" style="gap:4px"><div class="small muted">${esc(t.id)} · ${esc(fmtDate(t.at.slice(0, 10)))} · ${esc(t.topic)}${who ? ` · <span data-who="${esc(who)}"></span>` : ""}${t.email && who ? ` · ${esc(t.email)}` : ""} <span class="pill ok">${esc(t.status || "Open")}</span></div><div class="tk-t">${esc(t.text)}</div></div>`;
+    const mine = (await db.doc("tickets/" + await user.id()).get())?.data()?.entries || [];
+    const m = document.getElementById("tk-mine"); if (m) m.innerHTML = mine.length ? `<div class="section-head"><h3>Your tickets</h3></div><div class="cards">${mine.slice().reverse().map(t => row(t)).join("")}</div>` : "";
+    if (!(await user.isOwner())) return;
+    const snap = await db.collection("tickets").get(), all = snap.docs.flatMap(d => (d.data().entries || []).map(t => ({ ...t, who: d.id }))).sort((a, b) => b.at.localeCompare(a.at));
+    const ps = all.length ? await user.profiles([...new Set(all.map(t => t.who))]) : {};
+    const o = document.getElementById("tk-owner"); if (!o) return;
+    o.innerHTML = `<div class="section-head" style="margin-top:22px"><h2>Tickets received</h2><span class="small muted">${all.length} so far. Only you see this list until a service desk is connected.</span></div><div class="cards">${all.map(t => row(t, t.who)).join("") || `<p class="muted">None yet.</p>`}</div>`;
+    o.querySelectorAll("[data-who]").forEach(s => { s.textContent = ps[s.dataset.who]?.name || "Someone"; });
+  } catch (e) {}
+}
+
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
@@ -1669,7 +1853,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 50 · Standalone copy · Oct 21", VERSION_NUM = 50;
+const APP_VERSION = "Prototype · Version 51 · Standalone copy · Oct 21", VERSION_NUM = 51;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
 let accountName = "";
 function firstName() { let n = ""; try { n = localStorage.getItem("sk-name") || ""; } catch {} return (n || accountName).trim().split(/\s+/)[0] || ""; }
@@ -1712,6 +1896,7 @@ function openMe() {
           <button class="me-item chev" id="me-loc">${IC('<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>')}<span class="me-l">Location</span><span class="me-v">${esc(locationLabel())}</span></button>
           <div class="me-item">${IC('<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>')}<span class="me-l">Dark mode</span>
             <div class="seg" role="group" aria-label="Dark mode">${THEMES.map(k => `<button type="button" data-t="${k}" aria-pressed="${k === t}">${k === "auto" ? "Auto" : k === "dark" ? "On" : "Off"}</button>`).join("")}</div></div>
+          <button class="me-item chev" id="me-help">${IC('<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.2 2.4c-.5.2-.8.6-.8 1.1"/><circle cx="12" cy="16" r=".4" fill="currentColor"/>')}<span class="me-l">Help and Sam</span><span class="me-v">Ask a question or report a problem</span></button>
           <button class="me-item chev" id="me-fb">${IC('<path d="M4.5 5.5h15v10h-9l-4.5 3.5v-3.5h-1.5z"/>')}<span class="me-l">Give feedback</span></button>
         </div>
         <div><h3 style="margin:0 0 10px">Style</h3><div class="styles">${Object.entries(STYLES).map(([k, x]) => `<button type="button" class="style-opt" data-style="${k}" aria-pressed="${k === stylePref()}">
@@ -1730,12 +1915,14 @@ function openMe() {
     root.querySelectorAll(".style-opt").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-style", b.dataset.style); } catch {} applyTheme(themePref()); draw(false); }));
     root.querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-theme", b.dataset.t); } catch {} applyTheme(b.dataset.t); draw(false); }));
     document.getElementById("me-loc").addEventListener("click", () => { close(); view = "settings"; render(); window.scrollTo(0, 0); });
+    document.getElementById("me-help").addEventListener("click", () => { close(); if (!["help", "feedback"].includes(view)) lastView = view; view = "help"; render(); window.scrollTo(0, 0); });
     document.getElementById("me-fb").addEventListener("click", () => { close(); if (view !== "feedback") lastView = view; fbSent = false; view = "feedback"; render(); window.scrollTo(0, 0); });
     if (first) document.getElementById("me-close").focus();
   };
   draw(true);
 }
 document.getElementById("me-btn").addEventListener("click", openMe);
+document.getElementById("help-btn").addEventListener("click", () => { if (!["help", "feedback"].includes(view)) lastView = view; view = "help"; render(); window.scrollTo(0, 0); });
 document.getElementById("view").innerHTML = `<p class="muted">Loading service prices…</p>`;
 fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
   .then(d => Promise.all(["alternatives.json", "explore-extra.json", "location-prices.json", "regional.json"].map(f => fetch(f).then(r => r.ok ? r.json() : {}).catch(() => ({})))).then(xs => [d, xs])).then(([d, xs]) => {
