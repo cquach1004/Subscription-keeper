@@ -206,15 +206,21 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 /* Spending donut (Home) and overlap bars. Categorical slots are the validated dataviz default, light and dark. */
 :root { --pie-1: #2a78d6; --pie-2: #eb6834; --pie-3: #1baf7a; --pie-4: #eda100; --pie-5: #e87ba4; --pie-6: #008300; --pie-7: #6250d6; --pie-8: #e34948; --pie-other: #8a8f98; }
 :root[data-mode="dark"] { --pie-1: #3987e5; --pie-2: #d95926; --pie-3: #199e70; --pie-4: #c98500; --pie-5: #d55181; --pie-6: #008300; --pie-7: #9085e9; --pie-8: #e66767; --pie-other: #6f7480; }
-.pie-card { margin-bottom: 22px; }
-.trend-card { margin-bottom: 22px; }
-.trend { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; padding: 10px 0; border-top: 1px solid var(--line); }
+.pie-card { margin-bottom: 14px; }
+.trend-card { margin-bottom: 14px; }
+.trend { border-top: 1px solid var(--line); }
 .trend:first-of-type { border-top: 0; }
-.trend .logo { width: 36px; height: 36px; font-size: 13px; }
-.trend .t-top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
-.trend b { display: block; font-size: 15px; margin: 2px 0; }
-.trend p { margin: 0; font-size: 13px; color: var(--muted); }
-.trend.more { display: none; } .trend-card.all .trend.more { display: grid; }
+.trend > summary { list-style: none; display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; padding: 8px 0; cursor: pointer; }
+.trend > summary::-webkit-details-marker { display: none; }
+.trend .logo { width: 32px; height: 32px; font-size: 12px; border-radius: 9px; }
+.trend .t-main { min-width: 0; display: grid; gap: 3px; }
+.trend .t-top { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.trend .t-top .pill { font-size: 11px; padding: 1px 7px; }
+.trend b { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.trend p { margin: 0 0 10px 42px; font-size: 13px; color: var(--muted); }
+.trend.more { display: none; } .trend-card.all .trend.more { display: block; }
+details.home-how > summary { cursor: pointer; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+details.home-how:not([open]) > summary { margin-bottom: 0; }
 .stat.bench .value.more { color: var(--bad); } .stat.bench .value.less { color: var(--good); }
 .bench-bars { display: grid; grid-template-columns: auto 1fr; gap: 4px 8px; align-items: center; margin: 8px 0 6px; font-size: 12px; color: var(--muted); }
 .bench-bars i { display: block; height: 6px; border-radius: 3px; min-width: 3px; }
@@ -227,12 +233,14 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 .pie-mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; }
 .pie-mid b { font-size: 24px; letter-spacing: -.02em; } .pie-mid span { font-size: 12px; color: var(--muted); }
 .pie-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-.pie-legend li { display: grid; grid-template-columns: 12px 1fr auto 42px; gap: 10px; align-items: center; padding: 5px 6px; border-radius: 8px; font-size: 14px; cursor: default; }
+.pie-legend li { display: grid; grid-template-columns: 12px 1fr auto 38px; gap: 10px; align-items: center; padding: 3px 6px; border-radius: 8px; font-size: 14px; cursor: default; }
 .pie-legend li.on { background: var(--accent-soft); }
 .pie-legend .sw { width: 12px; height: 12px; border-radius: 4px; }
 .pie-legend .pct { color: var(--muted); font-size: 12px; text-align: right; }
 .pie-legend .n { color: var(--muted); font-size: 12px; }
-@media (max-width: 560px) { .pie-wrap { grid-template-columns: 1fr; justify-items: center; } .pie-legend { width: 100%; } }
+@media (max-width: 560px) { .pie-wrap { grid-template-columns: 136px 1fr; gap: 12px; } .pie-box { width: 136px; height: 136px; } .pie-mid b { font-size: 17px; } .pie-mid span { font-size: 11px; }
+  .pie-legend li { grid-template-columns: 10px 1fr auto; gap: 6px; padding: 2px 0; font-size: 12px; } .pie-legend .pct, .pie-legend .n { display: none; } .pie-legend .sw { width: 10px; height: 10px; border-radius: 3px; } }
+
 .ov-sum { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
 .ov-sum .big { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
 .ov-key { display: flex; gap: 14px; font-size: 12px; color: var(--muted); }
@@ -430,6 +438,19 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .legal h3 { margin: 0 0 4px; }
 .legal p { margin: 0; line-height: 1.6; }
 @media (prefers-reduced-motion: no-preference) { .sheet.enter { animation: slide .2s ease-out; } @keyframes slide { from { transform: translateX(24px); opacity: .6; } } }
+/* Phones: tighter Home (Cuong, v56: less white space, less text). */
+@media (max-width: 620px) {
+  .hero { padding: 14px 0 12px; } .hero h2 { font-size: 34px; }
+  .summary { gap: 10px; margin-bottom: 14px; }
+  .summary .stat { padding: 12px 14px; } .summary .stat .label { font-size: 13px; } .summary .stat .value { font-size: 28px; margin-top: 4px; }
+  .summary .stat.lead .value { font-size: 36px; }
+  .bench-bars { margin: 6px 0 4px; }
+  .section-head { margin: 18px 0 8px; } .section-head h2 { font-size: 22px; }
+  .card { padding: 14px; }
+  .row { padding: 9px 14px; gap: 10px; row-gap: 2px; } .row .logo { width: 36px; height: 36px; }
+  .row .sub { display: none; } .row .pill { font-size: 11px; padding: 1px 8px; }
+  .row .price .sub { display: block; font-size: 11px; } .row .price .num { font-size: 15px; }
+}
 </style>
 
 <div class="wrap">
@@ -589,17 +610,21 @@ let admin = (() => { try { return JSON.parse(localStorage.getItem(ADMIN_KEY)); }
 const saveAdmin = () => { try { localStorage.setItem(ADMIN_KEY, JSON.stringify(admin)); } catch (e) {} };
 // "You vs average" score card (Cuong, 2026-10-22). Monthly subscription spend from public surveys, in each country's currency.
 // No survey of family spending was found, so family figures are estimates (twice the adult average) until an admin sets them.
-const BENCH_GROUPS = { adult: "Average adult", family: "Average family" };
+const BENCH_GROUPS = { adult: "Average adult", family: "Average family", student: "Average student", senior: "Average senior" };
 const BENCH = {
   US: { adult: { amt: 90, src: "CNET survey with YouGov, 2,440 US adults, May 2025", url: "https://thedesk.net/2025/05/cnet-subscription-survey-2025/" } },
   GB: { adult: { amt: 65.5, src: "Aqua survey, 2,000 UK adults, June-July 2025", url: "https://www.aquacard.co.uk/building-better-credit/subscription-spending-in-2025" } },
-  AU: { adult: { amt: 136, src: "ING survey, 2,045 Australian adults, March 2026 (average per subscriber)", url: "https://newsroom.ing.com.au/?p=3230" } } };
+  AU: { adult: { amt: 136, src: "ING survey, 2,045 Australian adults, March 2026 (average per subscriber)", url: "https://newsroom.ing.com.au/?p=3230" },
+    senior: { amt: 82, src: "ING survey, March 2026: Baby Boomers' average", url: "https://newsroom.ing.com.au/?p=3230" } } };
+// Seniors without a survey: Bango (2,500 US subscribers, Dec 2022) found boomers pay for 3 subscriptions vs 5 for younger adults, so 3/5 of the adult average.
+// No survey of student spending was found; that group stays empty until an admin sets it.
 function benchFor(country, group) {
   const a = admin.bench?.[country]?.[group];
   if (a != null) return { amt: a, src: "Set by our team", admin: true };
   const b = BENCH[country]; if (!b) return null;
   if (b[group]) return b[group];
   if (group === "family" && b.adult) return { amt: b.adult.amt * 2, est: true, src: `Estimate: twice the adult average (${b.adult.src})`, url: b.adult.url };
+  if (group === "senior" && b.adult) return { amt: Math.round(b.adult.amt * 0.6), est: true, src: "Estimate: 3/5 of the adult average (Bango, Dec 2022: boomers keep 3 subscriptions vs 5)", url: "https://bango.com/subscription-squeeze-two-thirds-of-americans-cant-pay-any-more-for-subscription-services/" };
   return null;
 }
 const benchGroup = () => BENCH_GROUPS[profile().group] ? profile().group : "adult";
@@ -1101,12 +1126,12 @@ async function drawTickets() {
 function benchHtml(total) {
   const g = benchGroup(), b = benchFor(profile().country, g), cname = countryName(profile().country);
   const pick = `<select id="bench-grp" class="bench-grp" aria-label="Compare me with">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<option value="${k}" ${k === g ? "selected" : ""}>${n}</option>`).join("")}</select>`;
-  if (!b) return `<div class="stat bench"><div class="label">You vs average</div><div class="small muted" style="margin:8px 0">We don't have survey numbers for ${esc(cname)} yet.</div>${pick}</div>`;
+  if (!b) return `<div class="stat bench"><div class="label">You vs average</div><div class="small muted" style="margin:8px 0">No ${esc(BENCH_GROUPS[g].replace("Average ", ""))} average for ${esc(cname)} yet.</div>${pick}</div>`;
   const pct = Math.round((total - b.amt) / b.amt * 100), more = pct > 0, max = Math.max(total, b.amt, 1);
-  return `<div class="stat bench"><div class="label">You vs ${esc(BENCH_GROUPS[g].toLowerCase())}</div>
+  return `<div class="stat bench"><div class="label">vs ${esc(BENCH_GROUPS[g].toLowerCase())}</div>
     <div class="value num ${pct === 0 ? "" : more ? "more" : "less"}">${pct === 0 ? "Same" : `${Math.abs(pct)}% ${more ? "more" : "less"}`}</div>
     <div class="bench-bars"><span>You</span><i style="width:${(total / max * 100).toFixed(1)}%;background:var(--accent)"></i><span>Avg</span><i style="width:${(b.amt / max * 100).toFixed(1)}%;background:var(--muted)"></i></div>
-    <div class="small muted">Average in ${esc(cname)}: ${money(b.amt)}/mo${b.est ? " (estimate)" : ""}. ${b.url ? `<a href="${esc(b.url)}" target="_blank" rel="noopener" style="color:var(--accent)" title="${esc(b.src)}">Source</a>` : esc(b.src)}</div>
+    <div class="small muted">${esc(profile().country)} avg ${money(b.amt)}${b.est ? "*" : ""} · ${b.url ? `<a href="${esc(b.url)}" target="_blank" rel="noopener" style="color:var(--accent)" title="${esc(b.src)}">Source</a>` : "Our team"}</div>
     <div style="margin-top:6px">${pick}</div></div>`;
 }
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
@@ -1115,23 +1140,23 @@ function homeView() {
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
   const hasExamples = state.subs.some(s => s.example);
   const f = el(`
-    <section class="hero"><h2>${greeting()}${firstName() ? `,<br>${esc(firstName())}` : ""}</h2><p>${state.subs.length ? `Here's where your ${state.subs.length} subscription${state.subs.length === 1 ? "" : "s"} stand.` : "Add what you pay for to get started."}</p></section>
+    <section class="hero"><h2>${greeting()}${firstName() ? `,<br>${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
     <section class="summary">
-      <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year, ${state.subs.length} subscriptions</div></div>
-      <div class="stat save"><div class="label">Could save up to / mo</div><div class="value num">${money(savings())}</div><div class="small muted">Unused + same-job overlaps</div></div>
+      <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year · ${state.subs.length} subscriptions</div></div>
+      <div class="stat save"><div class="label">Could save / mo</div><div class="value num">${money(savings())}</div><div class="small muted">Unused and overlaps</div></div>
       ${benchHtml(total)}
     </section>
     ${pieHtml()}
     ${trendHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <div class="section-head"><h2>Value this month</h2>
-      <span class="small muted">${state.subs.some(needsPrice) ? `${state.subs.filter(needsPrice).length} need your price. ` : ""}${hasExamples ? "Real prices, example usage. Tap a row to change it." : "Tap a row to change how often you use it."}</span></div>
+      <span class="small muted">${state.subs.some(needsPrice) ? `${state.subs.filter(needsPrice).length} need your price. ` : ""}${hasExamples ? "Example usage. Tap to edit." : "Tap a row to edit."}</span></div>
     <div class="list">${subs.map(rowHtml).join("") || `<p class="muted" style="padding:16px;margin:0">No subscriptions yet. Add your first one from the Add tab.</p>`}</div>
-    <p class="note" style="margin-top:14px">Value is cost per use: the monthly price divided by how many times a month you use it, compared with a typical range for that kind of service. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}
-      <button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
+    <details class="note home-how" style="margin-top:12px"><summary>How we rate value</summary>Value is cost per use: the monthly price divided by how many times a month you use it, compared with a typical range for that kind of service. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>
+    <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
-  f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show all ${c.querySelectorAll(".trend").length}`; });
+  f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
@@ -1202,11 +1227,12 @@ function trendHtml() {
   const c = profile().country, mine = new Set(state.subs.map(s => s.svc));
   const items = TRENDS.filter(x => !x.country || x.country === c).sort((a, b) => mine.has(b.svc) - mine.has(a.svc) || b.date.localeCompare(a.date));
   if (!items.length) return "";
-  return `<section class="card trend-card"><div class="section-head" style="margin:0"><h3>What's trending</h3><span class="small muted">Price changes and news</span></div>
+  return `<section class="card trend-card"><h3 style="margin:0">What's trending</h3>
     <div>${items.map((x, i) => { const v = CATALOG[x.svc] || { id: x.svc || "", name: x.name, color: x.color || "#6b7785", mark: x.mark || (x.name || "?").slice(0, 2) };
-      return `<div class="trend${i >= 3 ? " more" : ""}">${logoHtml(v)}<div style="min-width:0"><div class="t-top"><span class="pill ${TREND_KIND[x.kind][1]}">${TREND_KIND[x.kind][0]}</span>${mine.has(x.svc) ? `<span class="pill great">On your list</span>` : ""}<span>${x.checked ? "Checked " : ""}${x.date.length === 7 ? new Date(x.date + "-15T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" }) : fmtDate(x.date)}</span></div>
-        <b>${esc(x.title)}</b><p>${esc(x.text)} <a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.src)}</a></p></div></div>`; }).join("")}</div>
-    ${items.length > 3 ? `<button class="btn ghost small" id="trend-all" style="justify-self:start;padding-left:0">Show all ${items.length}</button>` : ""}</section>`;
+      const when = x.date.length === 7 ? new Date(x.date + "-15T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" }) : new Date(x.date + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      return `<details class="trend${i >= 3 ? " more" : ""}"><summary>${logoHtml(v)}<span class="t-main"><b>${esc(x.title)}</b><span class="t-top"><span class="pill ${TREND_KIND[x.kind][1]}">${TREND_KIND[x.kind][0]}</span>${mine.has(x.svc) ? `<span class="pill great">Yours</span>` : ""}<span>${when}</span></span></span></summary>
+        <p>${esc(x.text)} <a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.src)}</a></p></details>`; }).join("")}</div>
+    ${items.length > 3 ? `<button class="btn ghost small" id="trend-all" style="justify-self:start;padding-left:0">Show ${items.length - 3} more</button>` : ""}</section>`;
 }
 let pieRows = [];
 function pieHtml() {
@@ -1219,7 +1245,7 @@ function pieHtml() {
     const d = `M${pt(a0, R)} A${R} ${R} 0 ${big} 1 ${pt(a1, R)} L${pt(a1, R0)} A${R0} ${R0} 0 ${big} 0 ${pt(a0, R0)}Z`; a0 = a1;
     return `<path d="${d}" data-i="${i}" fill="var(--pie-${r.other ? "other" : i + 1})"/>`; }).join("");
   const pct = r => Math.round(r.amt / tot * 100) || "<1";
-  return `<section class="card pie-card"><div class="section-head" style="margin:0"><h3>Where your money goes</h3><span class="small muted">Each month, by category</span></div>
+  return `<section class="card pie-card"><h3 style="margin:0">Spending by category</h3>
     <div class="pie-wrap"><div class="pie-box"><svg viewBox="0 0 190 190" role="img" aria-label="Monthly spending by category">${paths}</svg>
       <div class="pie-mid"><b class="num">${money(tot)}</b><span>a month</span></div><div class="ctip" role="status"></div></div>
       <ul class="pie-legend">${rows.map((r, i) => `<li data-i="${i}"><span class="sw" style="background:var(--pie-${r.other ? "other" : i + 1})"></span>
@@ -2061,7 +2087,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 55 · Standalone copy · Oct 22", VERSION_NUM = 55;
+const APP_VERSION = "Prototype · Version 56 · Standalone copy · Oct 22", VERSION_NUM = 56;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
@@ -2105,7 +2131,7 @@ function openMe() {
             <input id="me-name" value="${esc(firstName())}" placeholder="For your greeting" autocomplete="given-name" style="width:150px;text-align:right"></label>
           <button class="me-item chev" id="me-loc">${IC('<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>')}<span class="me-l">Location</span><span class="me-v">${esc(locationLabel())}</span></button>
           <div class="me-item">${IC('<circle cx="9" cy="8.5" r="3"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c.9-3 3-4.6 5.5-4.6s4.6 1.6 5.5 4.6M14.5 14.6c2.6-.4 4.9 1 5.8 4.4"/>')}<span class="me-l">Compare me with</span>
-            <div class="seg" role="group" aria-label="Compare me with">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<button type="button" data-grp="${k}" aria-pressed="${k === benchGroup()}">${k === "adult" ? "Adult" : "Family"}</button>`).join("")}</div></div>
+            <select id="me-grp" aria-label="Compare me with" style="margin-left:auto">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<option value="${k}" ${k === benchGroup() ? "selected" : ""}>${n.replace("Average ", "").replace(/^./, c => c.toUpperCase())}</option>`).join("")}</select></div>
           <div class="me-item">${IC('<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>')}<span class="me-l">Dark mode</span>
             <div class="seg" role="group" aria-label="Dark mode">${THEMES.map(k => `<button type="button" data-t="${k}" aria-pressed="${k === t}">${k === "auto" ? "Auto" : k === "dark" ? "On" : "Off"}</button>`).join("")}</div></div>
           <button class="me-item chev" id="me-help">${IC('<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.2 2.4c-.5.2-.8.6-.8 1.1"/><circle cx="12" cy="16" r=".4" fill="currentColor"/>')}<span class="me-l">Help and Sam</span><span class="me-v">Ask a question or report a problem</span></button>
@@ -2126,7 +2152,7 @@ function openMe() {
       drawAvatar(document.getElementById("me-av")); drawAvatar(document.getElementById("me-btn")); document.getElementById("me-title").textContent = firstName() || "Your profile"; });
     document.getElementById("me-name").addEventListener("change", () => render());
     root.querySelectorAll(".style-opt").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-style", b.dataset.style); } catch {} applyTheme(themePref()); draw(false); }));
-    root.querySelectorAll("[data-grp]").forEach(b => b.addEventListener("click", () => { state.profile = { ...profile(), group: b.dataset.grp }; save(); draw(false); render(); }));
+    document.getElementById("me-grp").addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
     root.querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-theme", b.dataset.t); } catch {} applyTheme(b.dataset.t); draw(false); }));
     document.getElementById("me-loc").addEventListener("click", () => { close(); view = "settings"; render(); window.scrollTo(0, 0); });
     document.getElementById("me-help").addEventListener("click", () => { close(); if (!["help", "feedback"].includes(view)) lastView = view; view = "help"; render(); window.scrollTo(0, 0); });
