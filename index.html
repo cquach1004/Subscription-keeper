@@ -1268,7 +1268,7 @@ function overlapsView() {
     return { ...o, d, subs: [...subs.values()].sort((a, b) => (monthly(b.sub) || 0) - (monthly(a.sub) || 0)) }; });
   const max = Math.max(1, ...list.flatMap(o => o.subs.map(x => monthly(x.sub) || 0)));
   const drops = new Map(list.filter(o => o.d).map(o => [o.d.id, o.d])), save = [...drops.values()].reduce((a, s) => a + (monthly(s) || 0), 0);
-  const f = el(`<div class="section-head"><h2>Things you pay for twice</h2><span class="small muted">${list.length ? `${list.length} found. Tap a service to open it.` : ""}</span></div>
+  const f = el(`<div class="section-head"><h2>Things you pay twice or more</h2><span class="small muted">${list.length ? `${list.length} found. Tap a service to open it.` : ""}</span></div>
     ${list.length ? `<div class="card ov-sum"><div><div class="small muted">Drop one in each overlap and save up to</div><div class="big num">${money(save)}<span class="small muted" style="font-weight:500"> /mo</span></div></div>
       <div class="ov-key"><span><i style="background:var(--c-value)"></i>Keep</span><span><i style="background:var(--c-cost)"></i>Could drop</span></div></div>` : ""}
     <div class="cards">${list.map(o => `<article class="card">
@@ -2169,7 +2169,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 58 · Standalone copy · Oct 22", VERSION_NUM = 58;
+const APP_VERSION = "Prototype · Version 59 · Standalone copy · Oct 22", VERSION_NUM = 59;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
