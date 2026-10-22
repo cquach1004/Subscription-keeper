@@ -487,6 +487,15 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 @media (max-width: 620px) { .bars { height: 130px; gap: 1px; } .bar-v { font-size: 9px; letter-spacing: -.04em; } }
 .help-contact[hidden] { display: none; }
 .help-contact { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.vid-card { margin-bottom: 14px; }
+.vids { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.vid { display: grid; gap: 8px; color: inherit; text-decoration: none; min-width: 0; }
+.vid-th { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: linear-gradient(150deg, #0b1d45, #1e3a8a 65%, #3355b5); display: grid; place-items: center; }
+.vid-th img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.vid-play { position: relative; width: 48px; height: 34px; border-radius: 10px; background: #e62117; display: grid; place-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+.vid-play svg { width: 24px; height: 24px; }
+.vid-t { display: grid; gap: 2px; } .vid-t b { font-size: 14px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.vid:hover .vid-t b { color: var(--accent); }
 </style>
 
 <div class="wrap">
@@ -1244,6 +1253,7 @@ function homeView() {
     </section>
     <div class="charts">${monthBarsHtml()}${pieHtml()}</div>
     ${trendHtml()}
+    ${videosHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <div class="section-head"><h2>Value this month</h2>
       <span class="small muted">${state.subs.some(needsPrice) ? `${state.subs.filter(needsPrice).length} need your price. ` : ""}${hasExamples ? "Example usage. Tap to edit." : "Tap a row to edit."}</span></div>
@@ -1329,6 +1339,16 @@ function trendHtml() {
       return `<details class="trend${i >= 3 ? " more" : ""}"><summary>${logoHtml(v)}<span class="t-main"><b>${esc(x.title)}</b><span class="t-top"><span class="pill ${TREND_KIND[x.kind][1]}">${TREND_KIND[x.kind][0]}</span>${mine.has(x.svc) ? `<span class="pill great">Yours</span>` : ""}<span>${when}</span></span></span></summary>
         <p>${esc(x.text)} <a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.src)}</a></p></details>`; }).join("")}</div>
     ${items.length > 3 ? `<button class="btn ghost small" id="trend-all" style="justify-self:start;padding-left:0">Show ${items.length - 3} more</button>` : ""}</section>`;
+}
+// Videos on ways to save (Cuong, v63, to bring people back). Titles and channels checked on YouTube 2026-10-22.
+// Thumbnails load where the page allows outside images (the public site); elsewhere the tile shows a plain play card.
+const VIDEOS = [
+  { id: "BzyCf7_1FyI", title: "Consumer Reports: Cut your subscriptions, save your wallet", channel: "KCRA 3" },
+  { id: "nDQPVCUmPNY", title: "How to save money on streaming services without losing favorites", channel: "KHOU 11" }];
+function videosHtml() {
+  return `<section class="card vid-card"><h3 style="margin:0">Watch: ways to save</h3><div class="vids">${VIDEOS.map(x => `<a class="vid" href="https://www.youtube.com/watch?v=${x.id}" target="_blank" rel="noopener">
+    <span class="vid-th"><img src="https://i.ytimg.com/vi/${x.id}/hqdefault.jpg" alt="" loading="lazy" onerror="this.remove()"><span class="vid-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z" fill="#fff"/></svg></span></span>
+    <span class="vid-t"><b>${esc(x.title)}</b><span class="small muted">${esc(x.channel)} · YouTube</span></span></a>`).join("")}</div></section>`;
 }
 let pieRows = [];
 function pieHtml() {
@@ -2183,7 +2203,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 62 · Standalone copy · Oct 22", VERSION_NUM = 62;
+const APP_VERSION = "Prototype · Version 63 · Standalone copy · Oct 22", VERSION_NUM = 63;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
