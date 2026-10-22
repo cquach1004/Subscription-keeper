@@ -207,6 +207,18 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 :root { --pie-1: #2a78d6; --pie-2: #eb6834; --pie-3: #1baf7a; --pie-4: #eda100; --pie-5: #e87ba4; --pie-6: #008300; --pie-7: #6250d6; --pie-8: #e34948; --pie-other: #8a8f98; }
 :root[data-mode="dark"] { --pie-1: #3987e5; --pie-2: #d95926; --pie-3: #199e70; --pie-4: #c98500; --pie-5: #d55181; --pie-6: #008300; --pie-7: #9085e9; --pie-8: #e66767; --pie-other: #6f7480; }
 .pie-card { margin-bottom: 22px; }
+.trend-card { margin-bottom: 22px; }
+.trend { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; padding: 10px 0; border-top: 1px solid var(--line); }
+.trend:first-of-type { border-top: 0; }
+.trend .logo { width: 36px; height: 36px; font-size: 13px; }
+.trend .t-top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.trend b { display: block; font-size: 15px; margin: 2px 0; }
+.trend p { margin: 0; font-size: 13px; color: var(--muted); }
+.trend.more { display: none; } .trend-card.all .trend.more { display: grid; }
+.stat.bench .value.more { color: var(--bad); } .stat.bench .value.less { color: var(--good); }
+.bench-bars { display: grid; grid-template-columns: auto 1fr; gap: 4px 8px; align-items: center; margin: 8px 0 6px; font-size: 12px; color: var(--muted); }
+.bench-bars i { display: block; height: 6px; border-radius: 3px; min-width: 3px; }
+.bench-grp { font-size: 12px; padding: 2px 6px; border-radius: 8px; max-width: 100%; }
 .pie-wrap { display: grid; grid-template-columns: 190px 1fr; gap: 20px; align-items: center; }
 .pie-box { position: relative; width: 190px; height: 190px; }
 .pie-box svg { width: 100%; height: 100%; display: block; overflow: visible; }
@@ -575,6 +587,22 @@ const locationLabel = () => [regionName(), countryName(profile().country)].filte
 const ADMIN_KEY = "sk-admin-v1";
 let admin = (() => { try { return JSON.parse(localStorage.getItem(ADMIN_KEY)); } catch (e) { return null; } })() || { show: false, availability: {}, regionPrices: {}, handled: [] };
 const saveAdmin = () => { try { localStorage.setItem(ADMIN_KEY, JSON.stringify(admin)); } catch (e) {} };
+// "You vs average" score card (Cuong, 2026-10-22). Monthly subscription spend from public surveys, in each country's currency.
+// No survey of family spending was found, so family figures are estimates (twice the adult average) until an admin sets them.
+const BENCH_GROUPS = { adult: "Average adult", family: "Average family" };
+const BENCH = {
+  US: { adult: { amt: 90, src: "CNET survey with YouGov, 2,440 US adults, May 2025", url: "https://thedesk.net/2025/05/cnet-subscription-survey-2025/" } },
+  GB: { adult: { amt: 65.5, src: "Aqua survey, 2,000 UK adults, June-July 2025", url: "https://www.aquacard.co.uk/building-better-credit/subscription-spending-in-2025" } },
+  AU: { adult: { amt: 136, src: "ING survey, 2,045 Australian adults, March 2026 (average per subscriber)", url: "https://newsroom.ing.com.au/?p=3230" } } };
+function benchFor(country, group) {
+  const a = admin.bench?.[country]?.[group];
+  if (a != null) return { amt: a, src: "Set by our team", admin: true };
+  const b = BENCH[country]; if (!b) return null;
+  if (b[group]) return b[group];
+  if (group === "family" && b.adult) return { amt: b.adult.amt * 2, est: true, src: `Estimate: twice the adult average (${b.adult.src})`, url: b.adult.url };
+  return null;
+}
+const benchGroup = () => BENCH_GROUPS[profile().group] ? profile().group : "adult";
 // Regional providers (regional.json) list the states they serve; they're hidden for people outside those states.
 const servesHere = v => !v?.service_states || !profile().region || v.service_states.includes(profile().region);
 const availability = (svc, country) => admin.availability[svc]?.[country] ?? (CATALOG[svc]?.service_states ? (country === "US" && servesHere(CATALOG[svc]) ? "yes" : "no")
@@ -1070,6 +1098,17 @@ async function drawTickets() {
   } catch (e) {}
 }
 
+function benchHtml(total) {
+  const g = benchGroup(), b = benchFor(profile().country, g), cname = countryName(profile().country);
+  const pick = `<select id="bench-grp" class="bench-grp" aria-label="Compare me with">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<option value="${k}" ${k === g ? "selected" : ""}>${n}</option>`).join("")}</select>`;
+  if (!b) return `<div class="stat bench"><div class="label">You vs average</div><div class="small muted" style="margin:8px 0">We don't have survey numbers for ${esc(cname)} yet.</div>${pick}</div>`;
+  const pct = Math.round((total - b.amt) / b.amt * 100), more = pct > 0, max = Math.max(total, b.amt, 1);
+  return `<div class="stat bench"><div class="label">You vs ${esc(BENCH_GROUPS[g].toLowerCase())}</div>
+    <div class="value num ${pct === 0 ? "" : more ? "more" : "less"}">${pct === 0 ? "Same" : `${Math.abs(pct)}% ${more ? "more" : "less"}`}</div>
+    <div class="bench-bars"><span>You</span><i style="width:${(total / max * 100).toFixed(1)}%;background:var(--accent)"></i><span>Avg</span><i style="width:${(b.amt / max * 100).toFixed(1)}%;background:var(--muted)"></i></div>
+    <div class="small muted">Average in ${esc(cname)}: ${money(b.amt)}/mo${b.est ? " (estimate)" : ""}. ${b.url ? `<a href="${esc(b.url)}" target="_blank" rel="noopener" style="color:var(--accent)" title="${esc(b.src)}">Source</a>` : esc(b.src)}</div>
+    <div style="margin-top:6px">${pick}</div></div>`;
+}
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
@@ -1080,9 +1119,10 @@ function homeView() {
     <section class="summary">
       <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year, ${state.subs.length} subscriptions</div></div>
       <div class="stat save"><div class="label">Could save up to / mo</div><div class="value num">${money(savings())}</div><div class="small muted">Unused + same-job overlaps</div></div>
-      <div class="stat"><div class="label">Overlaps found</div><div class="value num">${activeOverlaps().length}</div><div class="small muted">Features you pay for twice</div></div>
+      ${benchHtml(total)}
     </section>
     ${pieHtml()}
+    ${trendHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <div class="section-head"><h2>Value this month</h2>
       <span class="small muted">${state.subs.some(needsPrice) ? `${state.subs.filter(needsPrice).length} need your price. ` : ""}${hasExamples ? "Real prices, example usage. Tap a row to change it." : "Tap a row to change how often you use it."}</span></div>
@@ -1091,6 +1131,8 @@ function homeView() {
       <button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
+  f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show all ${c.querySelectorAll(".trend").length}`; });
+  f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
   f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
@@ -1143,6 +1185,28 @@ function spendByCat() {
   if (rows.length <= 8) return rows;
   const rest = rows.slice(7);
   return [...rows.slice(0, 7), { label: "Everything else", amt: rest.reduce((a, r) => a + r.amt, 0), subs: rest.flatMap(r => r.subs), other: true }];
+}
+// "What's trending": recent price changes and news, researched from the web (2026-10-22). Each item names its source.
+// Items with a country show only to people there. The weekly price check should refresh this list.
+const TRENDS = [
+  { date: "2026-09-29", kind: "new", svc: "chatgpt", title: "ChatGPT adds a Pro 500 plan", text: "Pro is now split into Pro 100, Pro 200 and a new top Pro 500 tier.", src: "Our price check", url: "https://chatgpt.com/pricing" },
+  { date: "2026-09-23", kind: "up", svc: "disney_plus", country: "US", title: "Disney+ Premium up 13% to $21.49", text: "Premium went from $18.99 to $21.49 a month; Basic with ads from $11.99 to $12.49.", src: "9to5Google", url: "https://9to5google.com/2026/09/23/disney-plus-price-hike-september-2026/" },
+  { date: "2026-09-03", kind: "up", svc: "netflix", country: "GB", title: "Netflix UK raises prices again", text: "Standard with ads £5.99 to £7.99, Premium £18.99 to £20.99. Existing members move over after a month's notice.", src: "MoneySavingExpert", url: "https://www.moneysavingexpert.com/news/2026/09/netflix-hiking-prices-again/" },
+  { date: "2026-08-28", kind: "up", svc: "apple_one", country: "US", title: "Apple One up $2 a month", text: "Individual $21.95, Family $27.95, Premier $39.95.", src: "Our price check", url: "https://www.apple.com/apple-one/" },
+  { date: "2026-08", kind: "up", svc: "peacock", country: "US", title: "Peacock Premium up to $12.99", text: "Premium with ads $10.99 to $12.99; Premium Plus $16.99 to $19.99.", src: "Yahoo Tech", url: "https://tech.yahoo.com/streaming/articles/streaming-price-hike-tracker-much-150929260.html" },
+  { date: "2026-08", kind: "up", name: "Apple TV", color: "#111111", mark: "tv", country: "US", title: "Apple TV up to $14.99", text: "Monthly $12.99 to $14.99; yearly $99.99 to $119.99.", src: "Yahoo Tech", url: "https://tech.yahoo.com/streaming/articles/streaming-price-hike-tracker-much-150929260.html" },
+  { date: "2026-07", kind: "news", svc: "youtube_premium", country: "US", title: "Peacock coming to YouTube Premium in 2027", text: "Peacock is set to be included with YouTube Premium starting next year. Worth knowing if you pay for both.", src: "Yahoo Tech", url: "https://tech.yahoo.com/streaming/articles/streaming-price-hike-tracker-much-150929260.html" },
+  { date: "2026-10-22", checked: true, kind: "popular", svc: "netflix", title: "Netflix is still the most popular", text: "About 325 million subscribers worldwide, ahead of Amazon Prime (200 million) and HBO Max (140 million).", src: "FlixPatrol", url: "https://flixpatrol.com/streaming-services/subscribers/" }];
+const TREND_KIND = { up: ["Price up", "poor"], down: ["Price down", "great"], new: ["New plan", "ok"], news: ["News", "ok"], popular: ["Popular", "great"] };
+function trendHtml() {
+  const c = profile().country, mine = new Set(state.subs.map(s => s.svc));
+  const items = TRENDS.filter(x => !x.country || x.country === c).sort((a, b) => mine.has(b.svc) - mine.has(a.svc) || b.date.localeCompare(a.date));
+  if (!items.length) return "";
+  return `<section class="card trend-card"><div class="section-head" style="margin:0"><h3>What's trending</h3><span class="small muted">Price changes and news</span></div>
+    <div>${items.map((x, i) => { const v = CATALOG[x.svc] || { id: x.svc || "", name: x.name, color: x.color || "#6b7785", mark: x.mark || (x.name || "?").slice(0, 2) };
+      return `<div class="trend${i >= 3 ? " more" : ""}">${logoHtml(v)}<div style="min-width:0"><div class="t-top"><span class="pill ${TREND_KIND[x.kind][1]}">${TREND_KIND[x.kind][0]}</span>${mine.has(x.svc) ? `<span class="pill great">On your list</span>` : ""}<span>${x.checked ? "Checked " : ""}${x.date.length === 7 ? new Date(x.date + "-15T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" }) : fmtDate(x.date)}</span></div>
+        <b>${esc(x.title)}</b><p>${esc(x.text)} <a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.src)}</a></p></div></div>`; }).join("")}</div>
+    ${items.length > 3 ? `<button class="btn ghost small" id="trend-all" style="justify-self:start;padding-left:0">Show all ${items.length}</button>` : ""}</section>`;
 }
 let pieRows = [];
 function pieHtml() {
@@ -1500,6 +1564,12 @@ function adminView() {
         ${canSave ? `<div class="small muted">Saving records ${esc(plan.name)} at ${money((preTax(s, s.myTotal) - extras(s)) * (s.cycle === "year" ? 1 : 12))}/yr for one member in ${esc(regionName())}, after taking out ${n - 1} extra ${n - 1 === 1 ? "member" : "members"}.</div>` : ""}
         <div class="actions">${canSave ? `<button class="btn primary" data-act="save">Save as ${esc(regionName())} price</button>` : ""}
           <button class="btn" data-act="dismiss">Dismiss</button></div></article>`; }).join("") || `<p class="muted" style="margin:0">No reports right now. One appears when someone enters a price that differs from the catalog.</p>`}</div>
+    <div class="section-head"><h3>Spending averages</h3><span class="small muted">Used by the "You vs average" card on Home. Per month, local currency.</span></div>
+    <div class="tbl-wrap" style="margin-bottom:22px"><table class="tbl"><thead><tr><th>Country</th><th>Group</th><th>Average / mo</th><th>Source</th><th></th></tr></thead><tbody>
+      ${[...new Set([...Object.keys(BENCH), ...Object.keys(admin.bench || {}), p.country])].flatMap(c => Object.entries(BENCH_GROUPS).map(([g, gn]) => { const b = benchFor(c, g);
+        return `<tr><td>${esc(countryName(c))}</td><td>${gn}</td><td><input type="number" min="0" step="0.01" data-bench="${c}:${g}" value="${b ? (+b.amt).toFixed(2) : ""}" placeholder="Not set" style="width:110px"> <span class="small muted">${esc(COUNTRIES[c]?.[1] || "")}</span></td>
+          <td class="small" style="white-space:normal;min-width:200px">${b ? esc(b.src) : "No survey found"}</td><td>${b?.admin ? `<button class="btn ghost small" data-bench-reset="${c}:${g}">Use survey</button>` : ""}</td></tr>`; })).join("")}
+    </tbody></table></div>
     <div class="section-head"><h3>Catalog</h3>
       <label style="display:flex;flex-direction:row;align-items:center;gap:8px">Availability in<select id="a-country" style="width:auto">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === adminCountry ? "selected" : ""}>${n}</option>`).join("")}</select></label></div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Service</th><th>Prices checked</th><th>Status</th><th>Varies by state</th><th>State prices on file</th><th>Offered here?</th><th>Pricing page</th></tr></thead><tbody>
@@ -1522,6 +1592,9 @@ function adminView() {
     admin.handled.push(`${s.id}:${s.myTotal}:${p.region}`); saveAdmin(); render();
   }));
   f.getElementById("a-country").addEventListener("change", e => { adminCountry = e.target.value; render(); });
+  f.querySelectorAll("[data-bench]").forEach(i => i.addEventListener("change", () => { const [c, g] = i.dataset.bench.split(":"), n = parseFloat(i.value);
+    admin.bench ||= {}; admin.bench[c] ||= {}; if (isNaN(n) || n < 0) delete admin.bench[c][g]; else admin.bench[c][g] = n; saveAdmin(); setTimeout(render); }));
+  f.querySelectorAll("[data-bench-reset]").forEach(b => b.addEventListener("click", () => { const [c, g] = b.dataset.benchReset.split(":"); delete admin.bench?.[c]?.[g]; saveAdmin(); render(); }));
   f.querySelectorAll("[data-avail]").forEach(sel => sel.addEventListener("change", () => {
     (admin.availability[sel.dataset.avail] ||= {})[adminCountry] = sel.value; saveAdmin(); }));
   return f;
@@ -1988,7 +2061,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 54 · Standalone copy · Oct 22", VERSION_NUM = 54;
+const APP_VERSION = "Prototype · Version 55 · Standalone copy · Oct 22", VERSION_NUM = 55;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
@@ -2031,6 +2104,8 @@ function openMe() {
           <label class="me-item" style="display:flex;color:var(--ink);font-size:15px">${IC('<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>')}<span class="me-l">First name</span>
             <input id="me-name" value="${esc(firstName())}" placeholder="For your greeting" autocomplete="given-name" style="width:150px;text-align:right"></label>
           <button class="me-item chev" id="me-loc">${IC('<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>')}<span class="me-l">Location</span><span class="me-v">${esc(locationLabel())}</span></button>
+          <div class="me-item">${IC('<circle cx="9" cy="8.5" r="3"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c.9-3 3-4.6 5.5-4.6s4.6 1.6 5.5 4.6M14.5 14.6c2.6-.4 4.9 1 5.8 4.4"/>')}<span class="me-l">Compare me with</span>
+            <div class="seg" role="group" aria-label="Compare me with">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<button type="button" data-grp="${k}" aria-pressed="${k === benchGroup()}">${k === "adult" ? "Adult" : "Family"}</button>`).join("")}</div></div>
           <div class="me-item">${IC('<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>')}<span class="me-l">Dark mode</span>
             <div class="seg" role="group" aria-label="Dark mode">${THEMES.map(k => `<button type="button" data-t="${k}" aria-pressed="${k === t}">${k === "auto" ? "Auto" : k === "dark" ? "On" : "Off"}</button>`).join("")}</div></div>
           <button class="me-item chev" id="me-help">${IC('<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.2 2.4c-.5.2-.8.6-.8 1.1"/><circle cx="12" cy="16" r=".4" fill="currentColor"/>')}<span class="me-l">Help and Sam</span><span class="me-v">Ask a question or report a problem</span></button>
@@ -2051,6 +2126,7 @@ function openMe() {
       drawAvatar(document.getElementById("me-av")); drawAvatar(document.getElementById("me-btn")); document.getElementById("me-title").textContent = firstName() || "Your profile"; });
     document.getElementById("me-name").addEventListener("change", () => render());
     root.querySelectorAll(".style-opt").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-style", b.dataset.style); } catch {} applyTheme(themePref()); draw(false); }));
+    root.querySelectorAll("[data-grp]").forEach(b => b.addEventListener("click", () => { state.profile = { ...profile(), group: b.dataset.grp }; save(); draw(false); render(); }));
     root.querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-theme", b.dataset.t); } catch {} applyTheme(b.dataset.t); draw(false); }));
     document.getElementById("me-loc").addEventListener("click", () => { close(); view = "settings"; render(); window.scrollTo(0, 0); });
     document.getElementById("me-help").addEventListener("click", () => { close(); if (!["help", "feedback"].includes(view)) lastView = view; view = "help"; render(); window.scrollTo(0, 0); });
