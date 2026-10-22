@@ -440,7 +440,7 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 @media (prefers-reduced-motion: no-preference) { .sheet.enter { animation: slide .2s ease-out; } @keyframes slide { from { transform: translateX(24px); opacity: .6; } } }
 /* Phones: tighter Home (Cuong, v56: less white space, less text). */
 @media (max-width: 620px) {
-  .hero { padding: 14px 0 12px; } .hero h2 { font-size: 34px; }
+  .hero { padding: 14px 0 12px; } .hero h2 { font-size: 30px; }
   .summary { gap: 10px; margin-bottom: 14px; }
   .summary .stat { padding: 12px 14px; } .summary .stat .label { font-size: 13px; } .summary .stat .value { font-size: 28px; margin-top: 4px; }
   .summary .stat.lead .value { font-size: 36px; }
@@ -470,6 +470,14 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .vb-other .chip { background: var(--surface); color: inherit; cursor: pointer; }
 @media (max-width: 760px) { .vb { grid-template-columns: 1fr; gap: 10px; } }
 @media (max-width: 620px) { .save-top { margin-top: 8px; padding: 6px 8px; } }
+.spark { margin-top: 12px; max-width: 220px; }
+.spark svg { width: 100%; height: 34px; display: block; overflow: visible; }
+.spark polyline { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
+.spark circle { fill: currentColor; }
+.spark-x { display: grid; grid-template-columns: repeat(3, 1fr); font-size: 11px; opacity: .85; margin-top: 2px; }
+.spark-x span { display: grid; text-align: center; }
+.spark-x b { font-weight: 600; }
+.spark-d { font-size: 12px; margin-top: 4px; opacity: .9; }
 </style>
 
 <div class="wrap">
@@ -1153,6 +1161,28 @@ async function drawTickets() {
   } catch (e) {}
 }
 
+// What all subscriptions cost in a calendar month ("YYYY-MM"): nothing before the start date, the hold fee while paused,
+// the intro price while it lasts, otherwise the regular monthly amount (yearly plans spread evenly, as in "You pay each month").
+function costInMonth(s, ym) {
+  const mid = ym + "-15", end = ym + "-31";
+  if (s.start && s.start > end) return 0;
+  const pz = (s.pauses || []).find(p => p.from && p.from <= mid && (!p.to || p.to > mid));
+  if (pz) return pz.fee || 0;
+  if (introActive(s) && s.intro.ends > mid) return s.intro.kind === "trial" ? 0 : monthlyOf(s, s.intro.price) || 0;
+  return monthlyOf(s, regularTotal(s)) || 0;
+}
+function trendSpark() {
+  if (!state.subs.length) return "";
+  const now = new Date(), months = [-2, -1, 0].map(k => { const d = new Date(now.getFullYear(), now.getMonth() + k, 15); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; }), vals = months.map(m => state.subs.reduce((a, s) => a + costInMonth(s, m), 0));
+  const W = 150, H = 34, lo = Math.min(...vals), hi = Math.max(...vals), span = hi - lo || 1;
+  const pts = vals.map((v, i) => [W * (1 + 2 * i) / 6, hi === lo ? H / 2 : 5 + (1 - (v - lo) / span) * (H - 10)]);
+  const name = m => new Date(m + "-15T12:00:00").toLocaleDateString(undefined, { month: "short" });
+  const diff = vals[2] - vals[0];
+  return `<div class="spark" title="${months.map((m, i) => `${name(m)} ${money(vals[i])}`).join(", ")}">
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Last 3 months: ${months.map((m, i) => `${name(m)} ${money(vals[i])}`).join(", ")}"><polyline points="${pts.map(p => p.map(n => n.toFixed(1)).join(",")).join(" ")}"/>${pts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3"/>`).join("")}</svg>
+    <div class="spark-x">${months.map((m, i) => `<span>${name(m)}<b class="num">${moneyShort(vals[i])}</b></span>`).join("")}</div>
+    <div class="spark-d">${Math.abs(diff) < 0.5 ? `Same as ${name(months[0])}` : `${diff > 0 ? "▲ Up" : "▼ Down"} ${money(Math.abs(diff))} since ${name(months[0])}`}</div></div>`;
+}
 function saveHtml(total) {
   const list = dropList(), amt = savings(), top = list[0], pct = total ? Math.round(amt / total * 100) : 0;
   return `<div class="stat save"><div class="label">Could save / mo</div><div class="value num">${money(amt)}</div>
@@ -1192,9 +1222,9 @@ function homeView() {
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
   const hasExamples = state.subs.some(s => s.example);
   const f = el(`
-    <section class="hero"><h2>${greeting()}${firstName() ? `,<br>${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
+    <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
     <section class="summary">
-      <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year · ${state.subs.length} subscriptions</div></div>
+      <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year · ${state.subs.length} subscriptions</div>${trendSpark()}</div>
       ${saveHtml(total)}
       ${benchHtml(total)}
     </section>
@@ -2139,7 +2169,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 57 · Standalone copy · Oct 22", VERSION_NUM = 57;
+const APP_VERSION = "Prototype · Version 58 · Standalone copy · Oct 22", VERSION_NUM = 58;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
