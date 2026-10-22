@@ -451,6 +451,25 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
   .row .sub { display: none; } .row .pill { font-size: 11px; padding: 1px 8px; }
   .row .price .sub { display: block; font-size: 11px; } .row .price .num { font-size: 15px; }
 }
+.save-top { display: grid; gap: 2px; margin-top: 10px; padding: 8px 10px; width: 100%; text-align: left; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: inherit; font: inherit; cursor: pointer; }
+.save-top .st-row { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; font-size: 14px; }
+.save-top .st-row b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.save-top .logo { width: 24px; height: 24px; border-radius: 7px; font-size: 10px; }
+.vb-bar { display: flex; gap: 2px; height: 10px; border-radius: 5px; overflow: hidden; margin: 0 0 12px; }
+.vb-bar i { display: block; min-width: 4px; }
+.vb { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start; }
+.vb-lane { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--lane); border-radius: 14px; padding: 10px 12px; display: grid; gap: 2px; min-width: 0; }
+.vb-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.vb-head .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--lane); }
+.vb-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 6px 4px; border: 0; border-radius: 10px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.vb-item:hover { background: var(--accent-soft); }
+.vb-item .logo { width: 30px; height: 30px; border-radius: 8px; font-size: 11px; }
+.vb-nm { display: grid; min-width: 0; } .vb-nm b { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vb-other { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 12px; }
+.vb-other > span { flex-basis: 100%; }
+.vb-other .chip { background: var(--surface); color: inherit; cursor: pointer; }
+@media (max-width: 760px) { .vb { grid-template-columns: 1fr; gap: 10px; } }
+@media (max-width: 620px) { .save-top { margin-top: 8px; padding: 6px 8px; } }
 </style>
 
 <div class="wrap">
@@ -809,11 +828,22 @@ function droppable(o) {
   if (!mains.length) return null;
   return mains.sort((a, b) => (rate(a).cpu ?? 1e9) - (rate(b).cpu ?? 1e9)).pop();
 }
-function savings() {
+// Subscriptions you could drop: unused monthly ones plus the weaker one in each same-job overlap. Biggest first.
+function dropList() {
   const drop = new Map();
   state.subs.forEach(s => { if (rate(s).key === "unused" && s.cycle === "month") drop.set(s.id, s); });
   activeOverlaps().forEach(o => { const d = droppable(o); if (d) drop.set(d.id, d); });
-  return [...drop.values()].reduce((a, s) => a + monthly(s), 0);
+  return [...drop.values()].sort((a, b) => (monthly(b) || 0) - (monthly(a) || 0));
+}
+function savings() { return dropList().reduce((a, s) => a + (monthly(s) || 0), 0); }
+// Value board buckets (Cuong, v57): only subscriptions rated on value. Protection plans, perks cards, storage plans,
+// and ones still missing a price or usage are "not rated", since they pay off in convenience or reduced risk.
+function valueBucket(s) {
+  const r = rate(s);
+  if (r.key === "great") return "great";
+  if (r.key === "poor" || r.key === "unused") return "costly";
+  if (r.key === "ok" && !r.model && !r.paused && !r.needs && !r.waiting && !(r.fixed && r.label === "Add a comparison")) return "fair";
+  return null;
 }
 
 const el = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content; };
@@ -1123,6 +1153,28 @@ async function drawTickets() {
   } catch (e) {}
 }
 
+function saveHtml(total) {
+  const list = dropList(), amt = savings(), top = list[0], pct = total ? Math.round(amt / total * 100) : 0;
+  return `<div class="stat save"><div class="label">Could save / mo</div><div class="value num">${money(amt)}</div>
+    ${amt ? `<div class="small muted">${pct}% of what you pay</div>` : `<div class="small muted">Nothing to cut right now</div>`}
+    ${top ? `<button class="save-top" data-id="${top.id}"><span class="small muted">Review first</span><span class="st-row">${logoHtml(svcOf(top))}<b>${esc(top.name)}</b></span><span class="small muted"><b class="num" style="color:var(--good)">${total ? Math.round(monthly(top) / total * 100) : 0}% saving</b> · ${money(monthly(top))}/mo · ${rate(top).key === "unused" ? "unused" : "overlaps"}</span></button>` : ""}</div>`;
+}
+function valueBoardHtml() {
+  const B = { great: ["Great value", "var(--good)"], fair: ["Fair value", "var(--accent)"], costly: ["Costly", "var(--warn)"] };
+  const groups = { great: [], fair: [], costly: [] }, other = [];
+  state.subs.forEach(s => { const b = valueBucket(s); (b ? groups[b] : other).push(s); });
+  Object.values(groups).forEach(g => g.sort((a, b) => (monthly(b) || 0) - (monthly(a) || 0)));
+  const sum = g => g.reduce((a, s) => a + (monthly(s) || 0), 0), all = sum(Object.values(groups).flat());
+  const why = s => { const r = rate(s); return r.key === "unused" ? "Not used" : r.cpu != null ? `${money(r.cpu)} per ${measureOf(s).per1}` : r.label; };
+  const rated = Object.values(groups).some(g => g.length);
+  return `${rated ? `<div class="vb-bar" role="img" aria-label="${Object.entries(groups).map(([k, g]) => `${B[k][0]} ${money(sum(g))} a month`).join(", ")}">${Object.entries(groups).filter(([, g]) => g.length).map(([k, g]) => `<i style="flex:${sum(g).toFixed(2)};background:${B[k][1]}"></i>`).join("")}</div>
+    <div class="vb">${Object.entries(groups).map(([k, g]) => `<section class="vb-lane" style="--lane:${B[k][1]}">
+      <div class="vb-head"><span class="dot"></span><b>${B[k][0]}</b><span class="small muted">${g.length} · ${money(sum(g))}/mo${all ? ` · ${Math.round(sum(g) / all * 100)}%` : ""}</span></div>
+      ${g.map(s => `<button class="vb-item" data-id="${s.id}">${logoHtml(svcOf(s))}<span class="vb-nm"><b>${esc(s.name)}</b>${k === "costly" ? `<span class="small" style="color:var(--warn)">${esc(why(s))}</span>` : ""}</span><span class="num small">${money(monthly(s))}</span></button>`).join("") || `<p class="small muted" style="margin:4px 0">None</p>`}
+    </section>`).join("")}</div>`
+    : state.subs.length ? `<p class="muted" style="margin:0 0 10px">Tell us how often you use each one to see which are worth it.</p>` : `<p class="muted">No subscriptions yet. Add your first one from the Add tab.</p>`}
+    ${other.length ? `<div class="vb-other"><span class="small muted">${rated ? "Not rated on value (protection, perks, or missing details):" : ""}</span>${other.map(s => `<button class="chip" data-id="${s.id}" title="${esc(rate(s).label)}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div>` : ""}`;
+}
 function benchHtml(total) {
   const g = benchGroup(), b = benchFor(profile().country, g), cname = countryName(profile().country);
   const pick = `<select id="bench-grp" class="bench-grp" aria-label="Compare me with">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<option value="${k}" ${k === g ? "selected" : ""}>${n}</option>`).join("")}</select>`;
@@ -1143,7 +1195,7 @@ function homeView() {
     <section class="hero"><h2>${greeting()}${firstName() ? `,<br>${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
     <section class="summary">
       <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year · ${state.subs.length} subscriptions</div></div>
-      <div class="stat save"><div class="label">Could save / mo</div><div class="value num">${money(savings())}</div><div class="small muted">Unused and overlaps</div></div>
+      ${saveHtml(total)}
       ${benchHtml(total)}
     </section>
     ${pieHtml()}
@@ -1151,10 +1203,10 @@ function homeView() {
     ${PHASE1 ? "" : upcomingHtml()}
     <div class="section-head"><h2>Value this month</h2>
       <span class="small muted">${state.subs.some(needsPrice) ? `${state.subs.filter(needsPrice).length} need your price. ` : ""}${hasExamples ? "Example usage. Tap to edit." : "Tap a row to edit."}</span></div>
-    <div class="list">${subs.map(rowHtml).join("") || `<p class="muted" style="padding:16px;margin:0">No subscriptions yet. Add your first one from the Add tab.</p>`}</div>
+    ${valueBoardHtml()}
     <details class="note home-how" style="margin-top:12px"><summary>How we rate value</summary>Value is cost per use: the monthly price divided by how many times a month you use it, compared with a typical range for that kind of service. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
-  f.querySelectorAll(".row").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
+  f.querySelectorAll(".row, .vb-item, .vb-other .chip, .save-top").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
@@ -2087,7 +2139,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 56 · Standalone copy · Oct 22", VERSION_NUM = 56;
+const APP_VERSION = "Prototype · Version 57 · Standalone copy · Oct 22", VERSION_NUM = 57;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
