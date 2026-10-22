@@ -480,12 +480,11 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .bars-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .bars { position: relative; display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 2px; height: 170px; align-items: end; }
 .bar-col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; min-width: 0; cursor: default; }
-.bar-col i { display: block; width: min(28px, 70%); border-radius: 4px 4px 0 0; background: var(--accent); opacity: .45; transition: opacity .15s; }
-.bar-col i.now, .bar-col.on i { opacity: 1; }
-.bar-v { font-size: 11px; line-height: 16px; min-height: 16px; white-space: nowrap; color: var(--ink); }
+.bar-col i { display: block; width: min(28px, 72%); border-radius: 4px 4px 0 0; background: var(--accent); }
+.bar-col i.now { background: var(--c-cost); }
+.bar-v { font-size: 10px; letter-spacing: -.02em; line-height: 16px; min-height: 16px; white-space: nowrap; color: var(--ink); }
 .bar-x { font-size: 11px; line-height: 16px; margin-top: 2px; color: var(--muted); }
-.bars .ctip { min-width: 120px; }
-@media (max-width: 620px) { .bars { height: 130px; } }
+@media (max-width: 620px) { .bars { height: 130px; gap: 1px; } .bar-v { font-size: 9px; letter-spacing: -.04em; } }
 </style>
 
 <div class="wrap">
@@ -1192,19 +1191,9 @@ function monthBarsHtml() {
   const avg = rows.reduce((a, r) => a + r.v, 0) / rows.length, diff = rows[last].v - (rows[last - 1]?.v ?? rows[last].v);
   return `<section class="card bars-card"><div class="bars-head"><h3 style="margin:0">Monthly spending</h3><span class="small muted">${rows.length > 1 ? `Last ${rows.length} months · avg ${moneyShort(avg)}` : "This month"}</span></div>
     <div class="bars" role="img" aria-label="${rows.map(r => `${name(r.m, { month: "short", year: "numeric" })} ${money(r.v)}`).join(", ")}" style="--n:${rows.length}">
-      ${rows.map((r, i) => `<div class="bar-col" data-i="${i}"><span class="bar-v num">${i === last || i === hi ? moneyShort(r.v) : ""}</span><i class="${i === last ? "now" : ""}" style="height:max(2px, calc((100% - 34px) * ${(r.v / max).toFixed(3)}))"></i><span class="bar-x">${rows.length > 6 ? name(r.m).slice(0, 1) : name(r.m)}</span></div>`).join("")}
-      <div class="ctip" role="status"></div></div>
+      ${rows.map((r, i) => `<div class="bar-col" data-i="${i}"><span class="bar-v num">${moneyShort(r.v)}</span><i class="${i === last ? "now" : ""}" style="height:max(2px, calc((100% - 34px) * ${(r.v / max).toFixed(3)}))"></i><span class="bar-x">${rows.length > 6 ? name(r.m).slice(0, 1) : name(r.m)}</span></div>`).join("")}
+</div>
     ${rows.length > 1 ? `<div class="small muted">${Math.abs(diff) < 0.5 ? `Same as last month` : `${diff > 0 ? "Up" : "Down"} ${money(Math.abs(diff))} from ${name(rows[last - 1].m, { month: "long" })}`}</div>` : ""}</section>`;
-}
-function barsWire(f) {
-  const box = f.querySelector(".bars"); if (!box) return;
-  const tip = box.querySelector(".ctip"), cols = box.querySelectorAll(".bar-col");
-  const off = () => { tip.style.display = "none"; cols.forEach(c => c.classList.remove("on")); };
-  cols.forEach(c => { c.addEventListener("pointerenter", () => { const r = barRows[+c.dataset.i]; cols.forEach(x => x.classList.toggle("on", x === c));
-    tip.innerHTML = `<div style="font-weight:600">${new Date(r.m + "-15T12:00:00").toLocaleDateString(undefined, { month: "long", year: "numeric" })}</div><div class="r"><span>Paid</span><b class="num">${money(r.v)}</b></div>`;
-    tip.style.display = "block"; const bx = box.getBoundingClientRect(), cx = c.getBoundingClientRect();
-    tip.style.left = Math.max(0, Math.min(cx.left - bx.left + cx.width / 2 - tip.offsetWidth / 2, bx.width - tip.offsetWidth)) + "px"; tip.style.top = "-8px"; });
-    c.addEventListener("pointerleave", off); });
 }
 function saveHtml(total) {
   const list = dropList(), amt = savings(), top = list[0], pct = total ? Math.round(amt / total * 100) : 0;
@@ -1260,7 +1249,7 @@ function homeView() {
     <details class="note home-how" style="margin-top:12px"><summary>How we rate value</summary>Value is cost per use: the monthly price divided by how many times a month you use it, compared with a typical range for that kind of service. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip, .save-top").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
-  pieWire(f); barsWire(f);
+  pieWire(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; save(); render(); });
@@ -2192,7 +2181,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 60 · Standalone copy · Oct 22", VERSION_NUM = 60;
+const APP_VERSION = "Prototype · Version 61 · Standalone copy · Oct 22", VERSION_NUM = 61;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
