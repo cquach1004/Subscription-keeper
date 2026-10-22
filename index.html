@@ -496,6 +496,17 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .vid-play svg { width: 24px; height: 24px; }
 .vid-t { display: grid; gap: 2px; } .vid-t b { font-size: 14px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .vid:hover .vid-t b { color: var(--accent); }
+.legend .sq { width: 10px; height: 10px; border-radius: 3px; vertical-align: -1px; }
+.legend .dash { width: 14px; height: 0; border-top: 2px dashed var(--ink); border-radius: 0; vertical-align: middle; }
+.vbars { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 2px; height: 170px; margin: 4px 0 2px; }
+.vbar { display: flex; flex-direction: column; min-width: 0; }
+.vplot { position: relative; flex: 1; margin-top: 16px; }
+.vplot i { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: min(26px, 72%); border-radius: 4px 4px 0 0; min-height: 2px; }
+.vbar.part .vplot i { opacity: .55; }
+.vlab { position: absolute; left: 0; right: 0; text-align: center; font-size: 10px; letter-spacing: -.02em; white-space: nowrap; color: var(--ink); }
+.vcost { position: absolute; left: 4%; right: 4%; height: 0; border-top: 2px dashed var(--ink); }
+.vx { font-size: 11px; color: var(--muted); text-align: center; line-height: 16px; margin-top: 2px; }
+@media (max-width: 620px) { .vbars { height: 140px; gap: 1px; } .vlab { font-size: 9px; letter-spacing: -.04em; } }
 </style>
 
 <div class="wrap">
@@ -1854,53 +1865,36 @@ function valueChart(s) {
   const seg = ms.length > 1 ? `<div class="seg" role="group" aria-label="Measure value by">${ms.map(x => `<button type="button" data-measure="${x.id}" aria-pressed="${x.id === m.id}">${esc(x.tab || (x.id === "uses" && !MEASURES[s.svc]?.base ? "Uses" : x.short[0].toUpperCase() + x.short.slice(1)))}</button>`).join("")}</div>` : "";
   if (!vs) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">${s.start || PHASE1 ? "Add what you pay to see how your usage compares with the cost." : "Add a start date (under Start date and pauses) to see how your usage compares with the cost."}</p>` };
   if (vs.rows.length < 2) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">Your chart starts after your first month.${PHASE1 ? "" : " Had it longer? Set your real start date under Start date and pauses."}</p>` };
-  const W = 400, H = 196, L = 44, R = 50, T = 18, B = 24, span = Math.max(1, dayDiff(vs.from, vs.to));
-  const top = Math.max(...vs.rows.map(r => Math.max(r.cost, r.value)), 1);
-  const raw = top / 4, p10 = 10 ** Math.floor(Math.log10(raw)), step = [1, 2, 2.5, 5, 10].map(m => m * p10).find(x => x >= raw), ymax = Math.ceil(top / step) * step;
-  const X = d => L + dayDiff(vs.from, d) / span * (W - L - R), Y = n => T + (1 - n / ymax) * (H - T - B);
-  const line = key => vs.rows.map(r => `${X(r.d).toFixed(1)},${Y(r[key]).toFixed(1)}`).join(" ");
-  let g = "";
-  vs.rows.forEach(r => { if (r.paused) g += `<rect x="${X(r.from).toFixed(1)}" y="${T}" width="${(X(r.d) - X(r.from)).toFixed(1)}" height="${H - T - B}" fill="var(--c-pause)"/>`; });
-  vs.rows.forEach(r => { if (r.flag && !r.paused) g += `<rect x="${X(r.from).toFixed(1)}" y="${T}" width="${(X(r.d) - X(r.from)).toFixed(1)}" height="${H - T - B}" fill="var(--c-flag)"/><rect x="${X(r.from).toFixed(1)}" y="${H - B - 3}" width="${(X(r.d) - X(r.from)).toFixed(1)}" height="3" fill="var(--warn)"/>`; });
-  const pz = vs.rows.find(r => r.paused); if (pz) g += `<text class="ax" x="${(X(pz.from) + 4).toFixed(1)}" y="${T + 12}">Paused</text>`;
-  for (let y = 0; y <= ymax + 1e-9; y += step) g += `<line x1="${L}" x2="${W - R}" y1="${Y(y).toFixed(1)}" y2="${Y(y).toFixed(1)}" stroke="var(--line)" stroke-width="1"/><text class="ax" x="${L - 6}" y="${(Y(y) + 4).toFixed(1)}" text-anchor="end">${moneyShort(y)}</text>`;
-  const every = vs.rows.length > 8 ? 2 : 1;
-  vs.rows.slice(0, -1).forEach((r, k) => { if (k % every || X(vs.to) - X(r.d) < 30) return; g += `<text class="ax" x="${X(r.d).toFixed(1)}" y="${H - 6}" text-anchor="middle">${monthName(r.d)}</text>`; });
-  g += `<text class="ax" x="${X(vs.to).toFixed(1)}" y="${H - 6}" text-anchor="middle">Today</text>`;
-  const end = vs.rows.at(-1), lab = [["cost", "Paid", end.cost]];
-  if (vs.worth) lab.push(["value", "Value", end.value]);
-  if (vs.worth) g += `<polyline points="${line("value")}" fill="none" stroke="var(--c-value)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
-  g += `<polyline points="${line("cost")}" fill="none" stroke="var(--c-cost)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
-  let ys = lab.map(l => Y(l[2]) + 4); if (ys.length === 2 && Math.abs(ys[0] - ys[1]) < 14) { const m = (ys[0] + ys[1]) / 2, up = ys[0] < ys[1] ? -1 : 1; ys = [m + up * 7, m - up * 7]; }
-  lab.forEach(([k, name, n], i) => { g += `<circle cx="${X(vs.to).toFixed(1)}" cy="${Y(n).toFixed(1)}" r="4" fill="var(--c-${k})" stroke="var(--surface)" stroke-width="2"/><text class="lbl" x="${(X(vs.to) + 8).toFixed(1)}" y="${ys[i].toFixed(1)}">${name}</text>`; });
-  if (vs.cross) { const cx = X(vs.cross.d), cy = Y(vs.cross.y), tx = Math.min(W - R - 34, Math.max(L + 34, cx));
-    g += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="var(--ink)" stroke="var(--surface)" stroke-width="2"/><text class="lbl" x="${tx.toFixed(1)}" y="${(cy - 10).toFixed(1)}" text-anchor="middle">Broke even</text>`; }
-  g += `<g class="xh" style="display:none"><line y1="${T}" y2="${H - B}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3"/>${vs.worth ? `<circle r="4" class="xv" fill="var(--c-value)" stroke="var(--surface)" stroke-width="2"/>` : ""}<circle r="4" class="xc" fill="var(--c-cost)" stroke="var(--surface)" stroke-width="2"/></g>`;
-  g += `<rect class="hit" x="${L}" y="0" width="${W - L - R + 10}" height="${H}" fill="transparent"/>`;
+  // Month by month (Cuong, v65): value each month vs what that month cost, so a slowdown shows even after a strong start.
+  const mon = vs.rows.slice(1).map((r, i) => ({ r, cost: r.spent, val: vs.worth ? Math.max(0, r.value - vs.rows[i].value) : null, partial: r === vs.rows.at(-1) && dayDiff(r.from, r.d) < 27 }));
+  const win = !m.amount && vs.need != null && vs.need < 1 ? 12 : 3;  // a few uses a year (roadside calls) is judged over a year, not 3 months
+  const full = mon.filter(x => !x.partial && !x.r.paused), last3 = full.slice(-win), early = full.slice(0, -win);
+  const avg = (xs, k) => xs.length ? xs.reduce((a, x) => a + x[k], 0) / xs.length : 0;
+  const aV = avg(last3, "val"), aC = avg(last3, "cost"), worthN = last3.filter(x => x.val >= x.cost).length;
+  const slowed = vs.worth && early.length >= 2 && avg(early, "val") > 0 ? 1 - aV / avg(early, "val") : 0;
+  const recentHtml = vs.worth && last3.length ? `<span class="small">${win === 12 ? `Over the last <b>${last3.length} month${last3.length === 1 ? "" : "s"}</b> it gave` : `Worth it in <b>${worthN} of the last ${last3.length} month${last3.length === 1 ? "" : "s"}</b>:`} about <b>${money(aV)}</b> of value a month for <b>${money(aC)}</b> paid.${slowed > 0.25 ? ` <b style="color:var(--warn)">Your use has slowed: value is down ${Math.round(slowed * 100)}% from earlier months.</b>` : ""}</span>` : "";
+  if (m.fixed) { const recent = vs.rows.filter(r => r.from && !r.paused).slice(-3);
+    vs.quiet = recent.length === 3 && recent.every(r => r.uses < 0.5); vs.altName = altOf(s)?.name; }
   const since = vs.from === s.start ? `since you started in ${monthName(vs.from)}` : `over the last 12 months`;
   const unit = m.short, yr = !m.amount && vs.need != null && vs.need < 1;
-  if (m.fixed) { const top = Math.max(...vs.rows.map(r => r.uses || 0), 1), a = altOf(s);
-    vs.rows.forEach(r => { if (r.uses > 0) { const h = Math.max(2, r.uses / top * 34), x0 = X(r.from) + 3, w = Math.max(2, X(r.d) - X(r.from) - 6);
-      g = `<rect x="${x0.toFixed(1)}" y="${(H - B - h).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="var(--muted)" opacity=".35"/>` + g; } });
-    const big = vs.rows.reduce((b, r) => r.uses > (b?.uses || 0) ? r : b, null);
-    if (big) g += `<text class="ax" x="${((X(big.from) + X(big.d)) / 2).toFixed(1)}" y="${(H - B - Math.max(2, big.uses / top * 34) - 4).toFixed(1)}" text-anchor="middle">${fmtN(Math.round(big.uses))} removed</text>`;
-    const recent = vs.rows.filter(r => r.from && !r.paused).slice(-3);
-    vs.quiet = recent.length === 3 && recent.every(r => r.uses < 0.5);
-    vs.altName = a?.name; }
   const head = m.fixed ? `<span>${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone costs <b>${money(vs.worth)} a month</b>${vs.altName ? ` (${esc(vs.altName)})` : ""}. ${esc(s.name)} costs <b>${money(vs.reg)}</b>.</span>
-       <span class="small">${vs.ahead >= 0 ? `<b>${money(vs.ahead)}</b> less than buying removal alone` : `<b>${money(-vs.ahead)}</b> more than buying removal alone`} ${since}.</span>${vs.quiet ? `<span class="small" style="color:var(--warn);font-weight:600">No removals in the last 3 months. Check that ${esc(s.name)}'s scans are still running.</span>` : ""}`
+       ${recentHtml}${vs.quiet ? `<span class="small" style="color:var(--warn);font-weight:600">No removals in the last 3 months. Check that ${esc(s.name)}'s scans are still running.</span>` : ""}`
     : m.bundle ? `<span>It pays for itself at about <b>${fmtN(Math.round(vs.need * 10) / 10)} orders under $35 a month</b>${m.fixedAdd ? `, counting ${m.counted.map(partText).join(" and ")}` : ""}. ${vs.usualAvg != null ? `In a usual month you average <b>${fmtN(Math.round(vs.usualAvg * 10) / 10)}</b>` : `You averaged <b>${fmtN(Math.round(vs.avg * 10) / 10)}</b>`}.</span>
-       <span class="small">${vs.ahead >= 0 ? `Saved <b>${money(vs.ahead)}</b> more than it cost` : `Cost <b>${money(-vs.ahead)}</b> more than it saved`} ${since}${vs.cross ? `. Broke even around ${fmtDate(vs.cross.d)}` : ""}.</span>`
+       ${recentHtml}`
     : !vs.worth
     ? `<span>You've paid <b>${money(vs.cost)}</b> ${since}.</span><span class="small muted">${esc(MODEL_LABEL[v.value_model] || "This plan")}s aren't measured by how often you use them, so this shows cost only.</span>`
     : m.amount ? `<span>It pays for itself with about <b>${fmtN(Math.round(vs.need * 10) / 10)} ${Math.round(vs.need * 10) === 10 ? m.per1 : unit}</b>. You have <b>${fmtN(s.rate)}</b>.</span>
-       <span class="small">${vs.ahead >= 0 ? `Ahead by <b>${money(vs.ahead)}</b> ${since}` : `Behind by <b>${money(-vs.ahead)}</b> ${since}`}${vs.cross ? `. Broke even around ${fmtDate(vs.cross.d)}` : ""}.</span>`
+       ${recentHtml}`
     : `<span>It pays for itself at about <b>${fmtN(Math.round(vs.need * (yr ? 12 : 1) * 10) / 10)} ${unit} a ${yr ? "year" : "month"}</b>. ${vs.usualAvg != null ? `In a usual month you average <b>${fmtN(Math.round(vs.usualAvg * (yr ? 12 : 1) * 10) / 10)}</b>, or ${fmtN(Math.round(vs.avg * (yr ? 12 : 1) * 10) / 10)} counting the ${vs.flagged} flagged month${vs.flagged === 1 ? "" : "s"}` : s.hist?.[m.id] ? `You averaged <b>${fmtN(Math.round(vs.avg * (yr ? 12 : 1) * 10) / 10)}</b> over this period` : `You're at <b>${fmtN(pausedNow(s) ? 0 : Math.round(s.uses * (yr ? 12 : 1) * 10) / 10)}</b>${pausedNow(s) ? " while paused" : ""}`}.</span>
-       <span class="small">${vs.ahead >= 0 ? `Ahead by <b>${money(vs.ahead)}</b> ${since}` : `Behind by <b>${money(-vs.ahead)}</b> ${since}`}${vs.cross ? `. Broke even around ${fmtDate(vs.cross.d)}` : vs.ahead >= 0 ? ", ahead from the first month" : ""}.</span>`;
-  const meta = !vs.worth ? `${moneyShort(vs.cost)} paid` : `<span class="pill ${vs.ahead >= 0 ? "great" : "poor"}">${vs.ahead >= 0 ? "Ahead" : "Behind"} ${moneyShort(Math.abs(vs.ahead))}</span>`;
+       ${recentHtml}`;
+  const ratio = aC ? aV / aC : 0;
+  const meta = !vs.worth ? `${moneyShort(vs.cost)} paid` : !last3.length ? "" : `<span class="pill ${ratio >= 1 ? "great" : ratio >= 0.75 ? "ok" : "poor"}">${ratio >= 1 ? "Worth it lately" : ratio >= 0.75 ? "Borderline lately" : "Not worth it lately"}</span>`;
   const body = `${seg}<div class="vc-head">${head}</div>
-    <div class="legend"><span><i style="background:var(--c-cost)"></i>What you paid</span>${vs.worth ? `<span><i style="background:var(--c-value)"></i>${m.fixed ? `What ${esc(m.jobName)} alone would cost` : m.bundle ? `What you'd pay without ${esc(s.name)}` : `Value from your ${unit}`}</span>` : ""}${m.fixed ? `<span><i style="background:var(--muted);opacity:.35;height:8px"></i>Listings removed</span>` : ""}${vs.flagged ? `<span><i style="background:var(--warn)"></i>Flagged month</span>` : ""}${vs.rows.some(r => r.paused) ? `<span><i style="background:var(--muted);opacity:.4;height:8px"></i>Paused</span>` : ""}</div>
-    <div class="chart" data-chart="1"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Running total of what you paid${vs.worth ? " and the value of your uses" : ""} ${since}">${g}</svg><div class="ctip"></div></div>
+    <div class="legend">${vs.worth ? `<span><i class="sq" style="background:var(--good)"></i>Value, worth it</span><span><i class="sq" style="background:var(--c-cost)"></i>Value, less than you paid</span><span><i class="dash"></i>What you paid that month</span>` : `<span><i class="sq" style="background:var(--accent)"></i>What you paid each month</span>`}</div>
+    ${(() => { const top = Math.max(1, ...mon.map(x => Math.max(x.cost, x.val || 0))), pct = n => (n / top * 100).toFixed(1);
+      return `<div class="vbars" style="--n:${mon.length}" role="img" aria-label="${mon.map(x => `${monthName(x.r.from)}: ${x.r.paused ? "paused" : vs.worth ? `value ${money(x.val)}, paid ${money(x.cost)}` : `paid ${money(x.cost)}`}`).join("; ")}">${mon.map(x => { const v = vs.worth ? x.val : x.cost, ok = !vs.worth || x.val >= x.cost;
+        return `<div class="vbar${x.partial ? " part" : ""}"><div class="vplot">${x.r.paused ? `<span class="vlab" style="bottom:2px">Paused</span>` : `<i style="height:${pct(v)}%;background:${!vs.worth ? "var(--accent)" : ok ? "var(--good)" : "var(--c-cost)"}"></i><span class="vlab num" style="bottom:calc(${pct(v)}% + 2px)">${moneyShort(v)}</span>`}${vs.worth && !x.r.paused ? `<b class="vcost" style="bottom:${pct(x.cost)}%"></b>` : ""}</div><span class="vx">${monthName(x.r.from).slice(0, 3)}${x.partial ? "*" : ""}</span></div>`; }).join("")}</div>
+      ${mon.at(-1)?.partial ? `<p class="note" style="margin:0">* This month so far.</p>` : ""}`; })()}
     <p class="note" style="margin:0">${m.bundle ? `Value is a ${money(m.worth)} shipping fee on each order under $35${m.counted.length ? `, plus ${m.counted.map(p => p.months ? partText(p) : `${money(p.monthly)} a month for ${p.name}`).join(" and ")} because ${m.counted.length > 1 ? "they matter" : "it matters"} to you${m.included.length ? ` (${m.included.map(p => p.name).join(" and ")} comes with Prime Video, so it isn't counted twice)` : ""}` : ""}. Orders of $35 or more ship free without Prime, so they aren't counted.${(s.members || 1) > 1 ? ` Orders include everyone in your household (${s.members} people), and Prime Video counts once for the household.` : " If family members share your Prime, count their orders too and add them under Plan and price."} Check other features under Features that matter to me to count them. ` : m.fixed ? `Value is what you'd pay for ${esc(m.jobName)} on its own, for each month you were subscribed. Removals don't change it; they show the service is working. You can change the comparison under How you use it. ` : vs.worth ? `Each ${m.per1} counts as worth ${money(vs.worth)}${m.own ? ", the value you set" : m.id === "people" ? `, what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own` : m.id === "uses" && !MEASURES[s.svc]?.base ? (v.value_model === "perks" ? "" : `, the cost per use where we'd call ${esc(v.name)} costly`) : ", our estimate"}. You can change this under How you use it. ` : ""}${s.hist?.[m.id] ? `Monthly ${esc(m.short)} come from ${Object.values(s.histSrc?.[m.id] || {}).includes("sync") ? `your ${esc(SYNC[s.svc]?.name || "")} data export (pulled ${esc(fmtDate(s.syncInfo?.at))})` : `your history${s.histTest ? " (test data for this prototype)" : ""}`}; months without an entry use your current rate.` : `This uses ${m.amount ? "today's number" : "your current rate"}, ${esc(useText(s))}, for every month you weren't paused${s.example ? ", and that usage is an example" : ""}.`}${s.cycle === "year" ? " Yearly charges are spread evenly across the months." : ""}</p>
     <details class="nums"><summary>See the numbers</summary><div class="tbl-wrap"><table class="tbl"><tr><th>Month</th><th>${esc(m.short[0].toUpperCase() + m.short.slice(1))}</th><th>Paid</th>${vs.worth ? "<th>Value</th>" : ""}<th>Total paid</th>${vs.worth ? "<th>Total value</th>" : ""}</tr>
       ${vs.rows.slice(1).map(r => `<tr><td>${monthName(r.from)}${r.paused ? " (paused)" : r.intro ? " (intro)" : ""}</td><td class="num">${fmtN(Math.round(r.uses * 10) / 10)}</td><td class="num">${money(r.spent)}</td>${vs.worth ? `<td class="num">${money(r.uses * vs.worth)}</td>` : ""}<td class="num">${money(r.cost)}</td>${vs.worth ? `<td class="num">${money(r.value)}</td>` : ""}</tr>`).join("")}</table></div></details>`;
@@ -2203,7 +2197,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 64 · Standalone copy · Oct 22", VERSION_NUM = 64;
+const APP_VERSION = "Prototype · Version 65 · Standalone copy · Oct 22", VERSION_NUM = 65;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
