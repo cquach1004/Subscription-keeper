@@ -203,6 +203,43 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 .chart .ax { fill: var(--muted); font-size: 11px; }
 .chart .lbl { fill: var(--ink); font-size: 12px; font-weight: 600; }
 .ctip { position: absolute; top: 0; pointer-events: none; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 10px; padding: 8px 10px; font-size: 12px; min-width: 150px; display: none; z-index: 2; }
+/* Spending donut (Home) and overlap bars. Categorical slots are the validated dataviz default, light and dark. */
+:root { --pie-1: #2a78d6; --pie-2: #eb6834; --pie-3: #1baf7a; --pie-4: #eda100; --pie-5: #e87ba4; --pie-6: #008300; --pie-7: #6250d6; --pie-8: #e34948; --pie-other: #8a8f98; }
+:root[data-mode="dark"] { --pie-1: #3987e5; --pie-2: #d95926; --pie-3: #199e70; --pie-4: #c98500; --pie-5: #d55181; --pie-6: #008300; --pie-7: #9085e9; --pie-8: #e66767; --pie-other: #6f7480; }
+.pie-card { margin-bottom: 22px; }
+.pie-wrap { display: grid; grid-template-columns: 190px 1fr; gap: 20px; align-items: center; }
+.pie-box { position: relative; width: 190px; height: 190px; }
+.pie-box svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.pie-box path { stroke: var(--surface); stroke-width: 2; stroke-linejoin: round; cursor: pointer; transition: opacity .15s; }
+.pie-box.hl path:not(.on) { opacity: .28; }
+.pie-mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; }
+.pie-mid b { font-size: 24px; letter-spacing: -.02em; } .pie-mid span { font-size: 12px; color: var(--muted); }
+.pie-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.pie-legend li { display: grid; grid-template-columns: 12px 1fr auto 42px; gap: 10px; align-items: center; padding: 5px 6px; border-radius: 8px; font-size: 14px; cursor: default; }
+.pie-legend li.on { background: var(--accent-soft); }
+.pie-legend .sw { width: 12px; height: 12px; border-radius: 4px; }
+.pie-legend .pct { color: var(--muted); font-size: 12px; text-align: right; }
+.pie-legend .n { color: var(--muted); font-size: 12px; }
+@media (max-width: 560px) { .pie-wrap { grid-template-columns: 1fr; justify-items: center; } .pie-legend { width: 100%; } }
+.ov-sum { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+.ov-sum .big { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
+.ov-key { display: flex; gap: 14px; font-size: 12px; color: var(--muted); }
+.ov-key i, .ov-bar i { display: inline-block; border-radius: 4px; }
+.ov-key i { width: 12px; height: 12px; vertical-align: -2px; margin-right: 6px; }
+.ov-head { display: flex; align-items: center; gap: 12px; }
+.ov-head h3 { margin: 0; flex: 1; min-width: 0; }
+.ov-logos { display: flex; flex-shrink: 0; }
+.ov-logos .logo { box-shadow: 0 0 0 3px var(--surface); }
+.ov-logos .logo + .logo { margin-left: -12px; }
+.ov-rows { display: grid; gap: 6px; }
+.ov-row { display: grid; grid-template-columns: minmax(90px, 30%) 1fr auto; gap: 10px; align-items: center; background: none; border: 0; padding: 4px 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.ov-row .nm { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ov-bar { height: 14px; display: flex; align-items: center; }
+.ov-bar i { height: 14px; min-width: 4px; }
+.ov-row .amt { font-size: 13px; white-space: nowrap; text-align: right; }
+.ov-row .drop { color: var(--c-cost); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; display: block; }
+details.ov-why > summary { cursor: pointer; font-size: 13px; color: var(--accent); font-weight: 600; }
+details.ov-why p { margin: 8px 0 0; font-size: 14px; }
 .ctip .r { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
 .ctip i { display: inline-block; width: 10px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
 .seg { display: flex; flex-wrap: wrap; gap: 4px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 3px; justify-self: start; }
@@ -874,7 +911,7 @@ try { samTurns = JSON.parse(sessionStorage.getItem("sk-sam") || "[]"); } catch {
 const saveSam = () => { try { sessionStorage.setItem("sk-sam", JSON.stringify(samTurns.slice(-20))); } catch {} };
 const SAM_SUGGEST = ["Which of my subscriptions is the worst value?", "What are cheaper alternatives to Netflix?", "How much do I spend on video each month?", "Are there free options from my library?"];
 const FAQ = [
-  ["How do I add a subscription?", "Open the Add tab, search for the service, then tell us what you pay, when you started and how often you use it. If we don't list it, add it as a custom one."],
+  ["How do I add a subscription?", "Open the Add tab, search for the service, then tell us what you pay and how often you use it. If we don't list it, add it as a custom one."],
   ["How do you decide if something is good value?", "We divide what you pay each month by how often you use it, and compare that cost per use with a typical range for that kind of service. Until you tell us how often you use something, we don't rate it or give advice."],
   ["Where do the prices come from?", "From official pricing pages, checked by our team. Prices we couldn't confirm on an official page are marked as unconfirmed, and you can always enter what you actually pay."],
   ["Can you cancel a subscription for me?", "Not yet. Each subscription's details show its official page, where you can manage or cancel it. Ask Sam for the usual steps."],
@@ -1045,13 +1082,15 @@ function homeView() {
       <div class="stat save"><div class="label">Could save up to / mo</div><div class="value num">${money(savings())}</div><div class="small muted">Unused + same-job overlaps</div></div>
       <div class="stat"><div class="label">Overlaps found</div><div class="value num">${activeOverlaps().length}</div><div class="small muted">Features you pay for twice</div></div>
     </section>
-    ${upcomingHtml()}
+    ${pieHtml()}
+    ${PHASE1 ? "" : upcomingHtml()}
     <div class="section-head"><h2>Value this month</h2>
       <span class="small muted">${state.subs.some(needsPrice) ? `${state.subs.filter(needsPrice).length} need your price. ` : ""}${hasExamples ? "Real prices, example usage. Tap a row to change it." : "Tap a row to change how often you use it."}</span></div>
     <div class="list">${subs.map(rowHtml).join("") || `<p class="muted" style="padding:16px;margin:0">No subscriptions yet. Add your first one from the Add tab.</p>`}</div>
     <p class="note" style="margin-top:14px">Value is cost per use: the monthly price divided by how many times a month you use it, compared with a typical range for that kind of service. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}
       <button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
+  pieWire(f);
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
   f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
@@ -1066,23 +1105,73 @@ function rowHtml(s) {
     : r.needs ? `No list price for ${locationLabel()}` : s.needsUse ? `${plan?.name || ""} plan` : r.model ? `${plan?.name || ""} plan` : `Not used, ${useText(s)}`;
   return `<button class="row" data-id="${s.id}">
     ${logoHtml(v)}
-    <span style="min-width:0"><div class="name">${esc(s.name)}${introActive(s) ? `<span class="tag">${s.intro.kind === "trial" ? "Trial" : "Intro price"}</span>` : ""}</div><div class="sub">${esc(usage)}</div></span>
+    <span style="min-width:0"><div class="name">${esc(s.name)}${introActive(s) && !PHASE1 ? `<span class="tag">${s.intro.kind === "trial" ? "Trial" : "Intro price"}</span>` : ""}</div><div class="sub">${esc(usage)}</div></span>
     <span class="pill ${r.key}">${r.label}</span>
     <span class="price"><div class="num">${money(total(s))}</div><div class="sub">/${s.cycle === "year" ? "yr" : "mo"}${(s.members || 1) > 1 ? `, ${s.members} people` : ""}${s.priceMine ? ", your price" : ""}</div></span>
   </button>`;
 }
 
+// Overlaps as a picture: each overlap shows its services' monthly cost as bars on one shared scale,
+// with the one you could drop in the cost color. The advice text sits behind "Why?".
 function overlapsView() {
-  const list = activeOverlaps();
-  const f = el(`<div class="section-head"><h2>Things you pay for twice</h2><span class="small muted">${list.length} found in your list</span></div>
-    <div class="cards">${list.map(o => {
-      const d = droppable(o);
-      return `<article class="card">
-        <div class="section-head" style="margin:0"><h3>${esc(o.label)}</h3>${d ? `<span class="pill great">Save up to ${money(monthly(d))}/mo</span>` : ""}</div>
-        <div class="chips">${o.members.map(m => { const v = svcOf(m.sub); return `<span class="chip" title="${esc(m.feature)}">${logoHtml(v, "dot")}${esc(m.sub.name)}<span class="muted small">· ${esc(m.feature)}</span></span>`; }).join("")}</div>
-        <div class="tip"><b>Suggestion:</b> ${esc(o.advice)}${d ? ` In your list, ${esc(d.name)} is the one to look at first.` : ""}</div>
-      </article>`; }).join("") || `<p class="muted">No overlaps in your list right now.</p>`}</div>`);
+  const list = activeOverlaps().map(o => { const d = droppable(o), subs = new Map();
+    o.members.forEach(m => { const x = subs.get(m.sub.id) || { sub: m.sub, feats: [] }; x.feats.push(m.feature); subs.set(m.sub.id, x); });
+    return { ...o, d, subs: [...subs.values()].sort((a, b) => (monthly(b.sub) || 0) - (monthly(a.sub) || 0)) }; });
+  const max = Math.max(1, ...list.flatMap(o => o.subs.map(x => monthly(x.sub) || 0)));
+  const drops = new Map(list.filter(o => o.d).map(o => [o.d.id, o.d])), save = [...drops.values()].reduce((a, s) => a + (monthly(s) || 0), 0);
+  const f = el(`<div class="section-head"><h2>Things you pay for twice</h2><span class="small muted">${list.length ? `${list.length} found. Tap a service to open it.` : ""}</span></div>
+    ${list.length ? `<div class="card ov-sum"><div><div class="small muted">Drop one in each overlap and save up to</div><div class="big num">${money(save)}<span class="small muted" style="font-weight:500"> /mo</span></div></div>
+      <div class="ov-key"><span><i style="background:var(--c-value)"></i>Keep</span><span><i style="background:var(--c-cost)"></i>Could drop</span></div></div>` : ""}
+    <div class="cards">${list.map(o => `<article class="card">
+        <div class="ov-head"><span class="ov-logos">${o.subs.slice(0, 4).map(x => logoHtml(svcOf(x.sub))).join("")}</span><h3>${esc(o.label)}</h3>${o.d ? `<span class="pill great">Save ${money(monthly(o.d))}/mo</span>` : ""}</div>
+        <div class="ov-rows">${o.subs.map(x => { const m = monthly(x.sub) || 0, dr = o.d?.id === x.sub.id;
+          return `<button class="ov-row" data-id="${x.sub.id}" aria-label="${esc(x.sub.name)}, ${money(m)} a month${dr ? ", could drop" : ""}"><span class="nm">${esc(x.sub.name)}</span>
+            <span class="ov-bar"><i style="width:${(m / max * 100).toFixed(1)}%;background:var(${dr ? "--c-cost" : "--c-value"})"></i></span>
+            <span class="amt num">${money(m)}/mo${dr ? `<span class="drop">Could drop</span>` : ""}</span></button>`; }).join("")}</div>
+        <details class="ov-why"><summary>Why?</summary><p>${o.subs.map(x => `<b>${esc(x.sub.name)}</b>: ${esc([...new Set(x.feats)].join(", "))}`).join(". ")}.</p>${o.advice ? `<p class="muted">${esc(o.advice)}</p>` : ""}</details>
+      </article>`).join("") || `<p class="muted">No overlaps in your list right now.</p>`}</div>`);
+  f.querySelectorAll(".ov-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   return f;
+}
+
+// Home donut: monthly spend by category, biggest first. Beyond 8 slices the smallest fold into "Everything else".
+function spendByCat() {
+  const m = {};
+  state.subs.forEach(s => { const amt = monthly(s) || 0; if (amt <= 0) return; const c = svcOf(s).category || "other";
+    (m[c] ||= { label: catLabel(c), amt: 0, subs: [] }); m[c].amt += amt; m[c].subs.push(s.name); });
+  const rows = Object.values(m).sort((a, b) => b.amt - a.amt);
+  if (rows.length <= 8) return rows;
+  const rest = rows.slice(7);
+  return [...rows.slice(0, 7), { label: "Everything else", amt: rest.reduce((a, r) => a + r.amt, 0), subs: rest.flatMap(r => r.subs), other: true }];
+}
+let pieRows = [];
+function pieHtml() {
+  const rows = spendByCat(), tot = rows.reduce((a, r) => a + r.amt, 0);
+  pieRows = rows.map(r => ({ l: r.label, a: r.amt, s: r.subs, p: Math.round(r.amt / tot * 100) || "<1" }));
+  if (rows.length < 2 || !tot) return "";
+  const C = 95, R = 92, R0 = 60, pt = (a, r) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`;
+  let a0 = -Math.PI / 2;
+  const paths = rows.map((r, i) => { const a1 = a0 + r.amt / tot * 2 * Math.PI, big = a1 - a0 > Math.PI ? 1 : 0;
+    const d = `M${pt(a0, R)} A${R} ${R} 0 ${big} 1 ${pt(a1, R)} L${pt(a1, R0)} A${R0} ${R0} 0 ${big} 0 ${pt(a0, R0)}Z`; a0 = a1;
+    return `<path d="${d}" data-i="${i}" fill="var(--pie-${r.other ? "other" : i + 1})"/>`; }).join("");
+  const pct = r => Math.round(r.amt / tot * 100) || "<1";
+  return `<section class="card pie-card"><div class="section-head" style="margin:0"><h3>Where your money goes</h3><span class="small muted">Each month, by category</span></div>
+    <div class="pie-wrap"><div class="pie-box"><svg viewBox="0 0 190 190" role="img" aria-label="Monthly spending by category">${paths}</svg>
+      <div class="pie-mid"><b class="num">${money(tot)}</b><span>a month</span></div><div class="ctip" role="status"></div></div>
+      <ul class="pie-legend">${rows.map((r, i) => `<li data-i="${i}"><span class="sw" style="background:var(--pie-${r.other ? "other" : i + 1})"></span>
+        <span>${esc(r.label)} <span class="n">${r.subs.length}</span></span><b class="num">${money(r.amt)}</b><span class="pct num">${pct(r)}%</span></li>`).join("")}</ul></div></section>`;
+}
+function pieWire(f) {
+  const box = f.querySelector(".pie-box"); if (!box) return;
+  const rows = pieRows, tip = box.querySelector(".ctip"), lis = f.querySelectorAll(".pie-legend li");
+  const on = (i, e) => { box.classList.toggle("hl", i != null);
+    box.querySelectorAll("path").forEach(p => p.classList.toggle("on", +p.dataset.i === i)); lis.forEach(l => l.classList.toggle("on", +l.dataset.i === i));
+    if (i == null || !e) { tip.style.display = "none"; return; }
+    const r = rows[i]; tip.innerHTML = `<div style="font-weight:600;margin-bottom:4px">${esc(r.l)}</div><div class="r"><span>${r.p}% of your spend</span><b class="num">${money(r.a)}/mo</b></div><div class="muted" style="margin-top:4px;max-width:200px;white-space:normal">${esc(r.s.join(", "))}</div>`;
+    tip.style.display = "block"; const rc = box.getBoundingClientRect();
+    tip.style.left = Math.max(-20, Math.min(e.clientX - rc.left + 12, rc.width - tip.offsetWidth + 60)) + "px"; tip.style.top = (e.clientY - rc.top + 12) + "px"; };
+  box.querySelectorAll("path").forEach(p => { p.addEventListener("pointermove", e => on(+p.dataset.i, e)); p.addEventListener("pointerleave", () => on(null)); });
+  lis.forEach(l => { l.addEventListener("pointerenter", () => on(+l.dataset.i)); l.addEventListener("pointerleave", () => on(null)); });
 }
 
 // Explore: browse the catalog before subscribing. Plans, features, trials and discounts all come from services.json.
@@ -1264,8 +1353,8 @@ function addView() {
       <label id="plan-wrap" hidden>Plan<select id="f-plan"></select></label>
       <label>Billed<select id="f-cycle"><option value="month">Monthly</option><option value="year">Yearly</option></select></label>
       <label>Price<input id="f-price" type="number" step="0.01" min="0" required placeholder="0.00"></label>
-      <label>When did you start (or when will you)?<input id="f-start" type="date" value="${today()}"></label>
-      <p class="full small" id="f-renew" style="margin:-4px 0 0;color:var(--accent)"></p>
+      <label ${PHASE1 ? "hidden" : ""}>When did you start (or when will you)?<input id="f-start" type="date" value="${today()}"></label>
+      <p class="full small" id="f-renew" style="margin:-4px 0 0;color:var(--accent)" ${PHASE1 ? "hidden" : ""}></p>
       <div class="full" style="display:grid;gap:8px;border-top:1px solid var(--line);padding-top:12px">
         <b>How are you using it, or planning to?</b>
         <span class="small muted">This is how we tell whether it's worth the money. A rough guess is fine, and you can change it anytime.</span>
@@ -1548,8 +1637,8 @@ function valueSeries(s) {
 function valueChart(s) {
   const vs = valueSeries(s), v = svcOf(s), m = measureOf(s), ms = measuresOf(s);
   const seg = ms.length > 1 ? `<div class="seg" role="group" aria-label="Measure value by">${ms.map(x => `<button type="button" data-measure="${x.id}" aria-pressed="${x.id === m.id}">${esc(x.tab || (x.id === "uses" && !MEASURES[s.svc]?.base ? "Uses" : x.short[0].toUpperCase() + x.short.slice(1)))}</button>`).join("")}</div>` : "";
-  if (!vs) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">${s.start ? "Add what you pay to see how your usage compares with the cost." : "Add a start date (under Start date and pauses) to see how your usage compares with the cost."}</p>` };
-  if (vs.rows.length < 2) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">Your chart starts after your first month. Had it longer? Set your real start date under Start date and pauses.</p>` };
+  if (!vs) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">${s.start || PHASE1 ? "Add what you pay to see how your usage compares with the cost." : "Add a start date (under Start date and pauses) to see how your usage compares with the cost."}</p>` };
+  if (vs.rows.length < 2) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">Your chart starts after your first month.${PHASE1 ? "" : " Had it longer? Set your real start date under Start date and pauses."}</p>` };
   const W = 400, H = 196, L = 44, R = 50, T = 18, B = 24, span = Math.max(1, dayDiff(vs.from, vs.to));
   const top = Math.max(...vs.rows.map(r => Math.max(r.cost, r.value)), 1);
   const raw = top / 4, p10 = 10 ** Math.floor(Math.log10(raw)), step = [1, 2, 2.5, 5, 10].map(m => m * p10).find(x => x >= raw), ymax = Math.ceil(top / step) * step;
@@ -1604,7 +1693,7 @@ function valueChart(s) {
 }
 function monthlyHtml(s) {
   const vs = valueSeries(s), m = measureOf(s);
-  if (!vs || vs.rows.length < 2) return { meta: "", body: `<p class="small muted" style="margin:0">Add a start date and price to see your months.</p>` };
+  if (!vs || vs.rows.length < 2) return { meta: "", body: `<p class="small muted" style="margin:0">${PHASE1 ? "Your months show up here after your first month." : "Add a start date and price to see your months."}</p>` };
   const rows = vs.rows.slice(1).reverse(), mine = rows.filter(r => r.src === "you").length, fl = rows.filter(r => r.flag).length;
   const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} export` : "Your usual rate";
   return { meta: [mine ? `${mine} edited` : "", fl ? `${fl} flagged` : ""].filter(Boolean).join(", ") || "Not edited",
@@ -1812,7 +1901,7 @@ function openSheet(id) {
           ${s.priceMine ? `<div class="note">Using your price${b && b.basis !== "estimate" && Math.abs(diff) > 0.005 ? `, ${money(Math.abs(diff))} ${diff > 0 ? "above" : "below"} the list price for ${n === 1 ? "one person" : `${n} people`}${taxed(s) ? ", before tax" : ""}` : b && b.basis !== "estimate" && taxed(s) ? ". Before tax it matches the list price" : !b || b.basis === "estimate" ? `. It goes to our team for review so we can add ${esc(b ? where : countryName(profile().country))} prices` : ""}.</div>` : ""}
         </div>`; })() : ""}
         `)}
-        ${sec("dates", "Start date and pauses", datesMeta, `
+        ${PHASE1 ? "" : sec("dates", "Start date and pauses", datesMeta, `
         <div class="start-row">
           <label>Started on<input id="s-start" type="date" value="${s.start || ""}" max="${today()}"></label>
           <div class="small">${!s.start ? "Add a start date to see renewals and what you've paid."
@@ -1821,7 +1910,7 @@ function openSheet(id) {
         </div>
         ${pauseHtml(s)}
         `)}
-        ${sec("deals", "Trials and discounts", dealsMeta, dealHtml(s, v))}
+        ${PHASE1 ? "" : sec("deals", "Trials and discounts", dealsMeta, dealHtml(s, v))}
         ${feats.length ? sec("features", "Features that matter to me", `${s.used.length} of ${feats.length}`, `<p class="small muted" style="margin:0">Check what you care about. Features you leave unchecked never lower the rating; we only use them to point out a cheaper plan or service that covers what you checked.</p>` + feats.map(ft => `<label class="feature" style="color:var(--ink);font-weight:500"><input type="checkbox" id="feat-${ft.id}" data-f="${ft.id}" ${s.used.includes(ft.id) ? "checked" : ""}>${esc(ft.name)}</label>`).join("")
           // Features only on other plans, so people can see what upgrading would add (e.g. CNBC Pro articles on CNBC+).
           + (() => { const other = v.features.filter(f => !feats.includes(f)); return other.length ? `<p class="small muted" style="margin:4px 0 0">On other plans: ${other.map(f => `${esc(f.name)} (${esc(v.plans.filter(p => f.plans === "all" || f.plans.includes(p.id)).map(p => p.name).join(", "))})`).join("; ")}. Change your plan under Plan and price to check these.</p>` : ""; })()) : ""}
@@ -1899,7 +1988,9 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 53 · Standalone copy · Oct 21", VERSION_NUM = 53;
+const APP_VERSION = "Prototype · Version 54 · Standalone copy · Oct 22", VERSION_NUM = 54;
+// Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
+const PHASE1 = true;
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
 let accountName = "";
 function firstName() { let n = ""; try { n = localStorage.getItem("sk-name") || ""; } catch {} return (n || accountName).trim().split(/\s+/)[0] || ""; }
