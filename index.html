@@ -268,7 +268,20 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .sv-sum { display: flex; gap: 10px 28px; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 18px; }
 .sv-sum .big { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
 .co { display: grid; gap: 10px; }
-.co-head { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+details.fold > summary { list-style: none; cursor: pointer; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary::after { content: ""; width: 8px; height: 8px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); margin: 0 4px 4px 2px; transition: transform .15s; flex: none; }
+details.fold[open] > summary::after { transform: rotate(-135deg); margin-bottom: -4px; }
+details.fold[open] > summary { margin-bottom: 4px; }
+details.fold.card { display: block; } details.fold[open].card > * + * { margin-top: 10px; }
+.ov-t { flex: 1; min-width: 0; display: grid; } .ov-t h3 { margin: 0; }
+.fold-all { padding: 2px 6px; margin-left: 4px; }
+details.fold.card { padding: 12px 14px; }
+details.fold .co-nm b, .ov-t h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+@media (max-width: 560px) { details.fold > summary .logo { width: 32px; height: 32px; border-radius: 9px; font-size: 12px; } details.fold > summary .pill { font-size: 11px; padding: 3px 8px; }
+  details.fold > summary { gap: 8px; } .ov-logos .logo + .logo { margin-left: -14px; } }
+.fold-open { padding-left: 0; }
+.co-head { display: grid; grid-template-columns: auto 1fr auto auto; gap: 10px; align-items: center; background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .co-nm { display: grid; min-width: 0; } .co-nm b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .co-rows { display: grid; gap: 10px; }
 .co-row { display: grid; grid-template-columns: minmax(96px, 32%) 1fr auto; gap: 4px 10px; align-items: center; }
@@ -1611,25 +1624,38 @@ function rowHtml(s) {
 // with the one you could drop in the cost color. The advice text sits behind "Why?".
 // Cheaper options as a price line per subscription: the line runs from $0 to what you pay (the orange tick),
 // each option is a dot at its price, and the green stretch between them is the saving.
+// Savings cards start folded (testers found the tab too busy, v83). Which ones are open is kept while the page is open.
+const foldOpen = new Set();
+const foldAllBtn = g => `<button class="btn ghost small fold-all" data-all="${g}">Expand all</button>`;
+function wireFolds(f) {
+  // f is a fragment that empties once it's on the page, so handlers look the cards up in the document.
+  let root = f; queueMicrotask(() => root = document);
+  const sync = g => { const b = root.querySelector(`[data-all="${g}"]`), ds = [...root.querySelectorAll(`[data-group^="${g}"] > details.fold`)];
+    if (b) b.textContent = ds.length && ds.every(d => d.open) ? "Collapse all" : "Expand all"; };
+  f.querySelectorAll("details.fold").forEach(d => d.addEventListener("toggle", () => { d.open ? foldOpen.add(d.dataset.fold) : foldOpen.delete(d.dataset.fold); sync(d.parentElement.dataset.group.replace(/\d+$/, "")); }));
+  f.querySelectorAll("[data-all]").forEach(b => { sync(b.dataset.all); b.onclick = () => { const ds = [...root.querySelectorAll(`[data-group^="${b.dataset.all}"] > details.fold`)], open = !ds.every(d => d.open);
+    ds.forEach(d => { d.open = open; open ? foldOpen.add(d.dataset.fold) : foldOpen.delete(d.dataset.fold); }); sync(b.dataset.all); }; });
+}
 function cheaperHtml() {
   const list = savingsBySub(), amt = savingsTotal(list), withOpts = list.filter(x => x.opts.length).sort((a, b) => b.best - a.best);
   const card = x => { const mo = monthly(x.sub) || 0;
-    return `<article class="card co">
-      <button class="co-head" data-id="${x.sub.id}">${logoHtml(svcOf(x.sub))}<span class="co-nm"><b>${esc(x.sub.name)}</b><span class="small muted">You pay ${money(mo)}/mo</span></span><span class="pill great">Save up to ${money(x.best)}/mo</span></button>
+    return `<details class="card co fold" data-fold="co:${x.sub.id}" ${foldOpen.has("co:" + x.sub.id) ? "open" : ""}>
+      <summary class="co-head">${logoHtml(svcOf(x.sub))}<span class="co-nm"><b>${esc(x.sub.name)}</b><span class="small muted">${money(mo)}/mo now</span></span><span class="pill great">Save ${money(x.best)}/mo</span></summary>
       <div class="co-rows">${x.opts.map(o => `<div class="co-row" ${o.alt ? `data-alt="${o.alt}"` : ""} aria-label="${esc(o.name)}, ${money(o.price)} a month, saves ${money(o.save)}">
           <span class="co-lbl"><b>${esc(o.name)}</b><span class="small muted">${esc(o.kind)}${o.unconfirmed ? " · price not confirmed" : ""}</span></span>
           <span class="co-track"><span class="co-in"><i class="co-gap" style="left:${(o.price / mo * 100).toFixed(1)}%"></i><i class="co-dot" style="left:${(o.price / mo * 100).toFixed(1)}%"></i><i class="co-you"></i></span></span>
           <span class="co-amt num">${o.price === 0 ? "Free" : `${money(o.price)}/mo`}<span class="co-save">Save ${money(o.save)}</span></span>
           ${o.note ? `<span class="co-note small muted">${esc(o.note)}</span>` : ""}</div>`).join("")}</div>
       <div class="co-scale small muted"><span>$0</span><span>You pay ${money(mo)}</span></div>
-    </article>`; };
+      <button class="btn ghost small fold-open" data-id="${x.sub.id}">Open ${esc(x.sub.name)}</button>
+    </details>`; };
   return `<div class="section-head"><h2>Ways to pay less</h2></div>
     <div class="card sv-sum"><div><div class="small muted">Could save up to</div><div class="big num">${money(amt)}<span class="small muted" style="font-weight:500"> /mo</span></div><div class="small muted">${money(amt * 12)} a year</div></div>
       <p class="small muted" style="margin:0;max-width:420px">From cheaper options and dropping one of each thing you pay twice. Each subscription is counted once, at its biggest saving.${hardList().length ? ` Not counted: ${esc(hardList().map(s => s.name).join(", "))}, marked hard to switch.` : ""}</p></div>
-    <div class="section-head"><h2>Cheaper options</h2><span class="small muted">${withOpts.length ? "Biggest saving first. Tap a name to open it." : ""}</span></div>
+    <div class="section-head"><h2>Cheaper options</h2>${withOpts.length ? `<span class="small muted">Biggest saving first. Tap one to see the options. ${foldAllBtn("co")}</span>` : ""}</div>
     ${withOpts.length ? `<div class="co-key small muted"><span><i class="k-you"></i>What you pay</span><span><i class="k-dot"></i>Cheaper option</span><span><i class="k-gap"></i>Saving</span></div>
-      <div class="cards">${withOpts.slice(0, 6).map(card).join("")}</div>
-      ${withOpts.length > 6 ? `<details class="co-more"><summary class="small">Show ${withOpts.length - 6} more</summary><div class="cards">${withOpts.slice(6).map(card).join("")}</div></details>` : ""}
+      <div class="cards fold-group" data-group="co">${withOpts.slice(0, 6).map(card).join("")}</div>
+      ${withOpts.length > 6 ? `<details class="co-more"><summary class="small">Show ${withOpts.length - 6} smaller saving${withOpts.length === 7 ? "" : "s"}</summary><div class="cards fold-group" data-group="co2">${withOpts.slice(6).map(card).join("")}</div></details>` : ""}
       <p class="small muted">Prices are list prices. Other services are rarely exact matches, so open one to see what you'd give up.</p>`
       : `<p class="muted">${state.subs.length ? "No cheaper options for your subscriptions right now." : "Add your subscriptions to see cheaper options."}</p>`}`;
 }
@@ -1639,19 +1665,20 @@ function overlapsView() {
     return { ...o, d, subs: [...subs.values()].sort((a, b) => (monthly(b.sub) || 0) - (monthly(a.sub) || 0)) }; });
   const max = Math.max(1, ...list.flatMap(o => o.subs.map(x => monthly(x.sub) || 0)));
   const drops = new Map(list.filter(o => o.d).map(o => [o.d.id, o.d])), save = [...drops.values()].reduce((a, s) => a + (monthly(s) || 0), 0);
-  const f = el(`${cheaperHtml()}<div class="section-head" style="margin-top:28px"><h2>Things you pay twice or more</h2><span class="small muted">${list.length ? `${list.length} found. Tap a service to open it.` : ""}</span></div>
+  const f = el(`${cheaperHtml()}<div class="section-head" style="margin-top:28px"><h2>Things you pay twice or more</h2>${list.length ? `<span class="small muted">${list.length} found. Tap one to see what overlaps. ${foldAllBtn("ov")}</span>` : ""}</div>
     ${list.length ? `<div class="card ov-sum"><div><div class="small muted">Drop one in each overlap and save up to</div><div class="big num">${money(save)}<span class="small muted" style="font-weight:500"> /mo</span></div></div>
       <div class="ov-key"><span><i style="background:var(--c-value)"></i>Keep</span><span><i style="background:var(--c-cost)"></i>Could drop</span></div></div>` : ""}
-    <div class="cards">${list.map(o => `<article class="card">
-        <div class="ov-head"><span class="ov-logos">${o.subs.slice(0, 4).map(x => logoHtml(svcOf(x.sub))).join("")}</span><h3>${esc(o.label)}</h3>${o.d ? `<span class="pill great">Save ${money(monthly(o.d))}/mo</span>` : ""}</div>
+    <div class="cards fold-group" data-group="ov">${list.map(o => `<details class="card fold" data-fold="ov:${esc(o.tag)}" ${foldOpen.has("ov:" + o.tag) ? "open" : ""}>
+        <summary class="ov-head"><span class="ov-logos">${o.subs.slice(0, 3).map(x => logoHtml(svcOf(x.sub))).join("")}</span><span class="ov-t"><h3>${esc(o.label)}</h3><span class="small muted">${o.subs.length} services · ${money(o.subs.reduce((a, x) => a + (monthly(x.sub) || 0), 0))}/mo</span></span>${o.d ? `<span class="pill great">Save ${money(monthly(o.d))}/mo</span>` : ""}</summary>
         <div class="ov-rows">${o.subs.map(x => { const m = monthly(x.sub) || 0, dr = o.d?.id === x.sub.id;
           return `<button class="ov-row" data-id="${x.sub.id}" aria-label="${esc(x.sub.name)}, ${money(m)} a month${dr ? ", could drop" : ""}"><span class="nm">${esc(x.sub.name)}</span>
             <span class="ov-bar"><i style="width:${(m / max * 100).toFixed(1)}%;background:var(${dr ? "--c-cost" : "--c-value"})"></i></span>
             <span class="amt num">${money(m)}/mo${dr ? `<span class="drop">Could drop</span>` : ""}</span></button>`; }).join("")}</div>
         <details class="ov-why"><summary>Why?</summary><p>${o.subs.map(x => `<b>${esc(x.sub.name)}</b>: ${esc([...new Set(x.feats)].join(", "))}`).join(". ")}.</p>${o.advice ? `<p class="muted">${esc(o.advice)}</p>` : ""}</details>
-      </article>`).join("") || `<p class="muted">No overlaps in your list right now.</p>`}</div>`);
+      </details>`).join("") || `<p class="muted">No overlaps in your list right now.</p>`}</div>`);
   f.querySelectorAll(".ov-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
-  f.querySelectorAll(".co-head").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  f.querySelectorAll(".fold-open").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  wireFolds(f);
   f.querySelectorAll(".co-row[data-alt]").forEach(b => b.addEventListener("click", () => { exploreOpen = b.dataset.alt; view = "explore"; render(); window.scrollTo(0, 0); }));
   return f;
 }
@@ -2565,7 +2592,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 82 · Standalone copy · Oct 23", VERSION_NUM = 82;
+const APP_VERSION = "Prototype · Version 83 · Standalone copy · Oct 23", VERSION_NUM = 83;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
