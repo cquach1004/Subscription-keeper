@@ -276,6 +276,16 @@ details.ov-why p { margin: 8px 0 0; font-size: 14px; }
 .mrow select { grid-column: 1 / -1; width: auto; justify-self: start; padding: 5px 8px; font-size: 13px; }
 .mval { display: flex; align-items: center; gap: 6px; }
 .mval input { width: 84px; padding: 6px 8px; }
+.slide { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 14px; }
+.slide input[type=range] { padding: 0; border: 0; background: none; height: 28px; accent-color: var(--accent); cursor: pointer; }
+.slide input.usual { opacity: .55; }
+.slide output { min-width: 3.4em; text-align: right; font-size: 20px; font-weight: 600; }
+.slide-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+.mrow .slide { grid-column: 1 / -1; }
+.mrow .slide output { font-size: 16px; }
+.mrow .slide-ends { display: none; }
+.mact { display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+.mrow .mact select { grid-column: auto; }
 details.nums > summary { cursor: pointer; font-size: 13px; color: var(--accent); font-weight: 600; }
 details.nums table { margin-top: 6px; }
 .pz { display: grid; gap: 6px; padding-block: 6px; border-top: 1px solid var(--line); }
@@ -534,11 +544,11 @@ const COLORS = { spotify: ["#1db954","Sp"], netflix: ["#e50914","N"], icloud: ["
   southwest_card: ["#304cb2","SW"], mcafee: ["#c01818","Mc"], cloaked: ["#5b3fd1","Ck"], youtube_premium: ["#ff0033","YT"],
   amazon_prime: ["#1a8cd8","P"], disney_plus: ["#113ccf","D+"], hbo_max: ["#5822b4","HB"], google_ai_pro: ["#4285f4","G"], apple_one: ["#555555","A1"] };
 
-// Sample usage for the example rows: [service, uses this month, feature ids in use, renewal day].
+// Sample usage for the example rows: [service, usage in that service's unit and period (see USAGE_BY_CAT), feature ids in use, renewal day].
 const SAMPLE = [
-  ["spotify", 26, ["ad_free","offline"], 4], ["netflix", 5, ["ad_free","hd"], 12], ["icloud", 120, ["storage","family"], 1],
-  ["m365", 9, ["apps","onedrive"], 22], ["evernote", 2, ["sync"], 8], ["chatgpt", 4, ["models"], 15], ["claude", 18, ["models","projects"], 19],
-  ["wsj", 11, ["articles"], 27], ["cnbc", 1, ["live"], 3], ["aaa", 0, [], 10], ["southwest_card", 40, ["bag"], 6],
+  ["spotify", 9, ["ad_free","offline"], 4], ["netflix", 4, ["ad_free","hd"], 12], ["icloud", 120, ["storage","family"], 1],
+  ["m365", 9, ["apps","onedrive"], 22], ["evernote", 2, ["sync"], 8], ["chatgpt", 5, ["models"], 15], ["claude", 15, ["models","projects"], 19],
+  ["wsj", 3, ["articles"], 27], ["cnbc", 1, ["live"], 3], ["aaa", 0, [], 10], ["southwest_card", 480, ["bag"], 6],
   ["mcafee", 3, ["antivirus"], 18], ["cloaked", 6, ["aliases"], 25]
 ];
 // Brand logos (Simple Icons, CC0 paths) for services that have one; others fall back to a lettered tile.
@@ -612,7 +622,7 @@ function seed() {
       ...(id === "wsj" ? { intro: { kind: "intro", price: 4, ends: stepDate(start, "month", 12) } } : {}),
       // Cuong's ChatGPT: started Mar 15, 2026 at $21.20/mo (with tax), paused in September, restarted this month.
       ...(id === "chatgpt" ? { start: "2026-03-15", priceMine: true, myTotal: 21.2, pauses: [{ from: "2026-09-15", to: "2026-10-15", fee: 0, restartFee: 0 }] } : {}) });
-    setUse(sub, uses, sub.per); return sub; }) };
+    setUse(sub, uses, measureOf(sub).per); return sub; }) };
 }
 function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { return null; } }
 function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
@@ -764,26 +774,41 @@ const PER = { day: { label: "a day", f: 30.4 }, week: { label: "a week", f: 4.35
 function setUse(s, rate, per) { delete s.needsUse; s.rate = Math.max(0, rate); s.per = per; s.uses = Math.round(s.rate * PER[per].f * 10) / 10;
   if (s.measure) (s.usage ||= {})[s.measure] = { rate: s.rate, per }; }
 const fmtN = n => Number.isInteger(n) ? String(n) : n < 10 ? n.toFixed(1) : String(Math.round(n));
-// Ways to measure value. Every service has its catalog measure ("uses"); some add hours or people sharing a family plan.
-// s.measure picks one, s.usage keeps what was entered for each, and s.worth holds the user's own value per unit.
-// Hourly values are our estimates; a person sharing is worth what they'd pay alone for the named plan.
-const hrs = (one, worth) => ({ id: "hours", one, short: "hours", per1: "hour", worth });
-const ppl = plan => ({ id: "people", one: "person sharing it (you included)", short: "people", per1: "person", amount: true, plan });
-const MEASURES = {
-  spotify: { extra: [hrs("hour listened", 0.5), ppl("individual")] },
-  youtube_premium: { extra: [hrs("hour watched", 0.5), ppl("individual")] },
-  netflix: { extra: [hrs("hour watched", 1.5)] }, disney_plus: { extra: [hrs("hour watched", 1.5)] }, hbo_max: { extra: [hrs("hour watched", 1.5)] },
+// One way to measure usage per subscription (Cuong, v66): a unit and a time period that fit the category, entered with a slider.
+// id keys s.usage and s.hist; it stays "uses" when the unit is the catalog's own, so earlier entries carry over.
+// worth is what one unit is worth; without it the catalog benchmark (set per catalog unit) is used. Per-hour and per-prompt values are our estimates.
+const U = (id, label, one, short, per, max, x = {}) => ({ id, label, one, short, per1: one, per, max, step: max > 400 ? 10 : 1, ...x });
+const DAYS = U("uses", "Days used a month", "day", "days", "month", 31);
+const COST_ONLY = { id: "uses", costOnly: true, per: "month", one: "use", short: "uses", per1: "use" };
+const USAGE_BY_CAT = {
+  music: U("hours", "Listening hours a week", "listening hour", "listening hours", "week", 100, { per1: "hour", worth: 0.5, note: "Count everyone on the account together." }),
+  video: U("hours", "Hours watched a week", "hour watched", "hours watched", "week", 100, { per1: "hour", worth: 1.5, note: "Count everyone on the account together." }),
+  ai: U("prompts", "Prompts a day", "prompt", "prompts", "day", 100, { worth: 0.1, note: "A prompt is one message you send." }),
+  news: U("uses", "Articles read a week", "article", "articles", "week", 100, { worth: 2 }),
+  productivity: DAYS, bundle: DAYS, finance: DAYS, small_business: DAYS, dating: DAYS, default: DAYS,
+  storage: U("uses", "GB stored", "GB", "GB", "month", 2000, { amount: true, worth: 0.015, note: "Everyone sharing the plan together." }),
+  shopping: U("uses", "Orders a month", "order", "orders", "month", 100), food: U("uses", "Orders a month", "order", "orders", "month", 100),
+  fitness: U("uses", "Visits a month", "visit", "visits", "month", 31),
+  gaming: U("hours", "Hours played a week", "hour played", "hours played", "week", 100, { per1: "hour" }),
+  education: U("hours", "Hours of learning a week", "hour", "hours", "week", 100),
+  child_care: U("uses", "Days of care a month", "day", "days", "month", 31), elder_care: U("uses", "Days of care a month", "day", "days", "month", 31),
+  auto: U("uses", "Roadside calls a year", "roadside call", "roadside calls", "year", 10, { per1: "call" }),
+  travel: U("uses", "Perks used a year, in dollars", "dollar of perks", "dollars of perks", "year", 1000, { per1: "dollar", worth: 1 }),
+  // Protection plans and essentials are judged as plans, not by how often they're used.
+  privacy: COST_ONLY, home_security: COST_ONLY, home: COST_ONLY, tech_support: COST_ONLY, lawn_pest: COST_ONLY, internet: COST_ONLY, mobile: COST_ONLY, pets: COST_ONLY, beauty: COST_ONLY, passwords: COST_ONLY,
+};
+const USAGE_BY_SVC = {
+  youtube_premium: { worth: 0.5 },
+  // Pro articles (Pro plan only) are worth what an article is at WSJ's "poor" benchmark ($2), the same scale the catalog uses for WSJ.
+  cnbc: s => s.plan === "pro" ? U("articles", "Pro articles read a week", "Pro article", "Pro articles", "week", 100, { per1: "article", worth: 2 }) : U("uses", "Hours watched a week", "hour watched", "hours watched", "week", 100, { per1: "hour" }),
   // Prime: what you'd pay without it. Shipping fee per order under $35 (non-Prime orders of $35+ ship free, more slowly),
   // plus standalone prices for parts you care about. $6.99 and $35 from news reports (KAAL Nov 2025, NBC); Prime Video only is a catalog plan.
-  amazon_prime: { extra: [{ id: "saves", tab: "What it saves", one: "order under $35 by anyone in your household (it would have had a shipping fee)", short: "orders", per1: "order", bundle: true, worth: 6.99,
+  amazon_prime: U("saves", "Orders under $35 a month", "order under $35", "orders under $35", "month", 100, { per1: "order", bundle: true, worth: 6.99,
+    note: "Count orders by anyone in your household. Orders of $35 or more ship free without Prime, so leave them out.",
     // Thursday Night Football streams on Prime Video, so it's worth Prime Video on its own during the season (Sep to Dec), and nothing extra when video already counts.
-    parts: [{ feature: "video", name: "Prime Video on its own", monthly: 8.99 }, { feature: "nfl", name: "Thursday Night Football", monthly: 8.99, months: [9, 10, 11, 12], within: "video" }] }, hrs("hour streamed", 1.5)], first: "saves" },
-  chatgpt: { extra: [hrs("hour of use", 1.5)] }, claude: { extra: [hrs("hour of use", 1.5)] }, google_ai_pro: { extra: [hrs("hour of use", 1.5)] },
-  m365: { extra: [ppl("personal")] }, apple_one: { extra: [ppl("individual")] },
-  icloud: { base: { one: "GB stored (everyone sharing it)", short: "GB", per1: "GB", amount: true, worth: 0.015 }, extra: [ppl("50gb")] },
-  // Pro articles (Pro plan only) are worth what an article is at WSJ's "poor" benchmark ($2), the same scale the catalog uses for WSJ.
-  cnbc: { extra: [{ id: "articles", tab: "Pro articles", one: "Pro article read", short: "articles", per1: "article", worth: 2, plans: ["pro"] }] },
-  cloaked: { extra: [{ id: "replace", tab: "Removal alone", one: "listing removed from a data broker", short: "removals", per1: "removal", fixed: true, job: "data_removal", jobName: "data broker removal" }], first: "replace" },
+    parts: [{ feature: "video", name: "Prime Video on its own", monthly: 8.99 }, { feature: "nfl", name: "Thursday Night Football", monthly: 8.99, months: [9, 10, 11, 12], within: "video" }] }),
+  cloaked: U("replace", "Listings removed a month", "listing removed", "listings removed", "month", 100, { per1: "removal", fixed: true, job: "data_removal", jobName: "data broker removal" }),
+  uber_one: U("uses", "Trips a month", "trip", "trips", "month", 100),
 };
 // Replacement cost: when someone keeps a service for one job, it's worth what that job costs on its own.
 // Prices from review sites (security.org), checked 2026-10-18, not yet confirmed on the official pages.
@@ -797,26 +822,32 @@ const ALTERNATIVES = {
 const partText = p => p.months ? `${money(p.monthly)} a month in football season (Sep to Dec) for ${p.name} (it streams on Prime Video)` : `${money(p.monthly)} for ${p.name}`;
 const altOf = s => { const m = measureOf(s), alts = ALTERNATIVES[m.job] || []; return alts[s.alt || 0] || alts[0]; };
 function measuresOf(s) {
-  const v = svcOf(s), b = v.benchmark, cfg = MEASURES[s.svc] || {}, ratio = b ? b.good_at_or_below / b.poor_at_or_above : 1 / 3;
-  const base = { id: "uses", one: v.use_unit, short: v.value_model === "perks" ? "dollars of perks" : "uses", per1: v.value_model === "perks" ? "dollar" : "use",
-    worth: v.value_model === "perks" ? 1 : b ? b.poor_at_or_above : null, rated: v.value_model === "usage", ...(cfg.base || {}) };
-  if (cfg.base) base.rated = true;
-  const list = [base, ...(cfg.extra || []).filter(m => !m.plans || m.plans.includes(s.plan)).map(m => ({ ...m, rated: true, worth: m.plan ? planOf(v, m.plan)?.effective_monthly ?? null : m.fixed ? (ALTERNATIVES[m.job]?.[s.alt || 0] || ALTERNATIVES[m.job]?.[0])?.monthly ?? null : m.worth }))];
-  if (cfg.first) list.sort((a, b) => (b.id === cfg.first) - (a.id === cfg.first));
-  return list
-    .map(m => { const own = s.worth?.[m.id], worth = own ?? m.worth, on = (m.parts || []).filter(p => (s.used || []).includes(p.feature)), parts = on.filter(p => !(p.within && on.some(q => q.feature === p.within)));
-      return { ...m, own: own != null, worth, good: worth == null ? null : worth * ratio, ...(m.bundle ? { counted: parts, included: on.filter(p => !parts.includes(p)), fixedAdd: parts.reduce((a, p) => a + p.monthly * (p.months ? p.months.length / 12 : 1), 0) } : {}) }; });
+  const v = svcOf(s), b = v.benchmark, o = USAGE_BY_SVC[s.svc], cat = USAGE_BY_CAT[v.category] || USAGE_BY_CAT.default;
+  const m = typeof o === "function" ? o(s) : o?.id ? o : { ...cat, ...(o || {}) }, ratio = b ? b.good_at_or_below / b.poor_at_or_above : 1 / 3;
+  const listWorth = m.fixed ? (ALTERNATIVES[m.job]?.[s.alt || 0] || ALTERNATIVES[m.job]?.[0])?.monthly ?? null : m.worth ?? (m.id === "uses" && b ? b.poor_at_or_above : null);
+  const own = s.worth?.[m.id], worth = own ?? listWorth, on = (m.parts || []).filter(p => (s.used || []).includes(p.feature)), parts = on.filter(p => !(p.within && on.some(q => q.feature === p.within)));
+  return [{ ...m, rated: !m.costOnly && (v.value_model === "usage" || v.value_model === "storage" || !!m.fixed), bench: !m.fixed && m.worth == null && listWorth != null, own: own != null, worth, good: worth == null ? null : worth * ratio,
+    ...(m.bundle ? { counted: parts, included: on.filter(p => !parts.includes(p)), fixedAdd: parts.reduce((a, p) => a + p.monthly * (p.months ? p.months.length / 12 : 1), 0) } : {}) }];
 }
-const measureOf = s => { const ms = measuresOf(s); return ms.find(m => m.id === s.measure) || ms[0]; };
-function switchMeasure(s, id) {
-  const cur = measureOf(s), m = measuresOf(s).find(x => x.id === id); if (!m || m.id === cur.id) return;
-  (s.usage ||= {})[cur.id] = { rate: s.rate, per: s.per }; s.measure = m.id;
-  const u = s.usage[m.id] || { rate: 0, per: m.amount ? "month" : "week" }, waiting = s.needsUse;
-  setUse(s, u.rate, m.amount ? "month" : u.per); if (waiting) s.needsUse = true;  // switching tabs isn't the user entering usage
+const measureOf = s => measuresOf(s)[0];
+const unitOf = (m, n) => n === 1 ? m.one : m.short;
+const useText = s => { const m = measureOf(s); if (m.costOnly) return "Not measured by use";
+  if (m.per1 === "dollar") return `${money(s.rate)} of perks a ${m.per}`;
+  return m.amount ? `${fmtN(s.rate)} ${m.short}` : `${fmtN(s.rate)} ${unitOf(m, s.rate)} a ${m.per}`; };
+// The usage slider runs from 0 to the measure's top ("100+": the top means that much or more).
+const slideText = (m, n) => (m.per1 === "dollar" ? "$" : "") + (n >= m.max ? `${fmtN(Math.max(n, m.max))}${n > m.max ? "" : "+"}` : fmtN(n));
+const slider = (m, n, attrs) => `<div class="slide"><input type="range" min="0" max="${m.max}" step="${m.step}" value="${Math.min(n, m.max)}" ${attrs}><output class="num">${slideText(m, n)}</output>
+  <div class="slide-ends" aria-hidden="true"><span>0</span><span>${m.per1 === "dollar" ? "$" : ""}${fmtN(m.max)}+</span></div></div>`;
+// v66: entries carry over when the unit is the same; otherwise example rows get example numbers and real ones ask again.
+function migrateUse(s) {
+  const m = measureOf(s), prev = s.usage?.[m.id] || (s.measure === m.id ? { rate: s.rate, per: s.per } : null), sample = SAMPLE.find(x => x[0] === s.svc);
+  let waiting = s.needsUse; s.measure = m.id;
+  if (m.costOnly) { setUse(s, 0, m.per); return; }
+  if (prev) setUse(s, Math.round(prev.rate * PER[prev.per || "month"].f / PER[m.per].f * 10) / 10, m.per);
+  else if (sample && (s.example || s.histTest) && !s.syncInfo) { setUse(s, sample[1], m.per); genHistory(s); }
+  else { s.rate = 0; s.uses = 0; s.per = m.per; waiting = true; }
+  if (waiting) s.needsUse = true;
 }
-const useText = s => { const m = measureOf(s); if (m.amount) return `${fmtN(s.rate)} ${m.short}`;
-  const u = m.id === "uses" && !MEASURES[s.svc]?.base ? "" : ` ${m.short}`;
-  return `${fmtN(s.rate)}${u} ${PER[s.per].label}` + (s.per === "month" || s.uses === 0 ? "" : ` (about ${fmtN(s.uses)} a month)`); };
 const money = n => n == null ? "—" : new Intl.NumberFormat(undefined, { style: "currency", currency: currency() }).format(n);
 const svcOf = s => CATALOG[s.svc] || { color: "#6b7785", mark: s.name.slice(0, 2), category: "Other", use_unit: "uses", value_model: "usage",
   benchmark: { good_at_or_below: 1, poor_at_or_above: 3 }, features: [], plans: [], tips: [] };
@@ -827,8 +858,8 @@ function rate(s) {
   if (pausedNow(s)) return { key: "ok", label: "Paused", cpu: null, paused: true };
   if (needsPrice(s)) return { key: "ok", label: "Add your price", cpu: null, needs: true };
   // No usage from the user yet (just added): no rating and no advice until they tell us (Cuong, 2026-10-20).
-  if (s.needsUse) return { key: "ok", label: "Add how often you use it", cpu: null, waiting: true };
   const m = measureOf(s);
+  if (s.needsUse && !m.costOnly) return { key: "ok", label: "Add how often you use it", cpu: null, waiting: true };
   if (!m.rated) {
     const cpu = s.uses && v.value_model === "insurance" ? monthly(s) / s.uses : null;
     return { key: "ok", label: MODEL_LABEL[v.value_model] || "Plan", cpu, model: v.value_model };
@@ -921,7 +952,7 @@ function upcomingHtml() {
 
 // First visit: each person picks their own subscriptions (Cuong shares the prototype for feedback, 2026-10-19).
 // Nothing is shared between viewers: lists live in this browser only.
-const FRESH = () => ({ subs: [], histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
+const FRESH = () => ({ subs: [], unitsV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
 function welcomeView() {
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
@@ -954,7 +985,7 @@ function welcomeView() {
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, start: today(), day: +today().slice(8) })) };
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = 1; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = 1; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
@@ -1275,7 +1306,7 @@ function homeView() {
   pieWire(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
-  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; save(); render(); });
+  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = 1; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
   f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
   return f;
@@ -1575,7 +1606,7 @@ function addView() {
       <div class="full" style="display:grid;gap:8px;border-top:1px solid var(--line);padding-top:12px">
         <b>How are you using it, or planning to?</b>
         <span class="small muted">This is how we tell whether it's worth the money. A rough guess is fine, and you can change it anytime.</span>
-        <label style="font-weight:500"><span id="f-unit">How often you use it</span><span style="display:flex;gap:6px"><input id="f-uses" type="number" min="0" step="any" placeholder="e.g. 8"><select id="f-per" aria-label="Per">${Object.entries(PER).map(([k, x]) => `<option value="${k}" ${k === "month" ? "selected" : ""}>${x.label}</option>`).join("")}</select></span></label>
+        <div id="f-use" style="display:grid;gap:4px"></div>
         <label class="feature" style="color:var(--ink);font-weight:500;border:0;padding:0"><input type="checkbox" id="f-unsure">Not sure yet, I'll add this later</label>
         <div id="f-feats" style="display:grid;gap:4px"></div>
       </div>
@@ -1589,23 +1620,29 @@ function addView() {
     $("f-price").placeholder = unknown ? "No list price, enter yours" : "0.00";
     // Features that matter, so tips can point to a cheaper plan that still has them.
     const fs = featuresFor(v, pl.id); $("f-feats").innerHTML = fs.length ? `<span class="small muted" style="margin-top:6px">What matters to you? Check any that apply.</span>` + fs.map(x => `<label class="feature" style="color:var(--ink);font-weight:500;border:0;padding:0"><input type="checkbox" data-ff="${x.id}">${esc(x.name)}</label>`).join("") : ""; };
+  // The usage slider for the service being added, in its own unit (custom entries count days used a month).
+  const useBox = () => { const m = measuresOf({ svc: picked || "custom", name: "", plan: CATALOG[picked] ? $("f-plan").value || planOf(CATALOG[picked]).id : null })[0];
+    $("f-use").innerHTML = m.costOnly ? `<span class="small muted">Plans like this aren't judged by how often you use them, so there's nothing to enter.</span>`
+      : `<label for="f-uses" style="font-weight:500">${esc(m.label)}</label>${slider(m, 0, 'id="f-uses"')}${m.note ? `<span class="note">${esc(m.note)}</span>` : ""}`;
+    $("f-unsure").closest("label").hidden = !!m.costOnly;
+    const u = $("f-uses"); if (u) { u.disabled = $("f-unsure").checked; u.oninput = () => { u.dataset.touched = 1; u.nextElementSibling.textContent = slideText(m, +u.value); }; } };
   const fill = (id) => {
     picked = id; const v = CATALOG[id];
     document.querySelectorAll(".cat-item").forEach(b => b.setAttribute("aria-pressed", b.dataset.svc === id));
     $("add-form").hidden = false; $("a-hint").hidden = true; $("plan-wrap").hidden = !v; $("name-wrap").hidden = !!v;
     $("a-title").textContent = v ? `2. Tell us about your ${v.name}` : "2. Tell us about it";
     $("f-go").textContent = v ? `Add ${v.name} to my list` : "Add to my list";
-    $("f-unit").textContent = v?.use_unit ? `How often? (one use = one ${v.use_unit})` : "How often you use it";
+    useBox();
     $("f-name").value = v ? v.name : ""; $("f-price").value = ""; $("f-feats").innerHTML = "";
     if (v) { const p = planOf(v); $("f-plan").innerHTML = v.plans.map(x => `<option value="${x.id}" ${x.id === p.id ? "selected" : ""}>${esc(x.name)}</option>`).join(""); $("f-cycle").value = defaultCycle(p); }
     syncPrice(); $("add-form").scrollIntoView({ behavior: "smooth", block: "start" }); if (!v) $("f-name").focus();
   };
   f.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => fill(b.dataset.svc)));
   f.getElementById("a-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase(); document.querySelectorAll("#a-cat .cat-item").forEach(b => b.hidden = !!q && !!b.dataset.svc && !b.dataset.text.includes(q)); });
-  f.getElementById("f-plan").addEventListener("change", () => { const p = planOf(CATALOG[picked], $("f-plan").value); $("f-cycle").value = defaultCycle(p); syncPrice(); });
+  f.getElementById("f-plan").addEventListener("change", () => { const p = planOf(CATALOG[picked], $("f-plan").value); $("f-cycle").value = defaultCycle(p); syncPrice(); useBox(); });
   f.getElementById("f-cycle").addEventListener("change", syncPrice);
   f.getElementById("f-start").addEventListener("change", renewText);
-  f.getElementById("f-unsure").addEventListener("change", e => { $("f-uses").disabled = $("f-per").disabled = e.target.checked; });
+  f.getElementById("f-unsure").addEventListener("change", e => { const u = $("f-uses"); if (u) u.disabled = e.target.checked; });
   f.getElementById("add-form").addEventListener("submit", e => {
     e.preventDefault();
     const st = $("f-start").value || today();
@@ -1615,9 +1652,9 @@ function addView() {
       if (lt == null || Math.abs(lt - price) > 0.005) { n.priceMine = true; n.myTotal = price; } return n; })()
       : { id: "custom-" + Date.now(), svc: "custom", plan: null, used: [], ...base };
     const ff = [...document.querySelectorAll("[data-ff]:checked")].map(x => x.dataset.ff); if (ff.length) sub.used = ff;
-    const uses = parseFloat($("f-uses").value);
-    if ($("f-unsure").checked || isNaN(uses)) { sub.rate = 0; sub.uses = 0; sub.per = $("f-per").value; sub.needsUse = true; } else setUse(sub, uses, $("f-per").value);
-    if (sub.svc !== "custom") sub.measure = measuresOf(sub)[0].id;
+    const fm = measuresOf(sub)[0], u = $("f-uses"); sub.measure = fm.id;
+    if (fm.costOnly) setUse(sub, 0, fm.per);
+    else if ($("f-unsure").checked || !u?.dataset.touched) { sub.rate = 0; sub.uses = 0; sub.per = fm.per; sub.needsUse = true; } else setUse(sub, +u.value, fm.per);
     state.subs.push(sub); save(); picked = null; view = "home"; render(); window.scrollTo(0, 0);
   });
   if (pendingPick) { const pk = pendingPick; pendingPick = null;
@@ -1797,30 +1834,24 @@ const monthName = d => new Date(d + "T12:00:00").toLocaleDateString(undefined, {
 // genHistory makes test data for the prototype: seasonal swings and noise around today's rate, rare events for
 // protection plans, lumpy months for perks, and slow growth for storage. It is seeded per subscription so it's stable.
 const rng = seed => () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-const HOURS_PER_USE = { spotify: 1.5, youtube_premium: 1, chatgpt: 1, claude: 1, google_ai_pro: 1, netflix: 2, disney_plus: 2, hbo_max: 2, amazon_prime: 1 };
 function genHistory(s) {
-  const v = svcOf(s), r = rng([...(s.svc + s.id)].reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 7)), base0 = s.usage?.uses ? s.usage.uses.rate * PER[s.usage.uses.per].f : s.uses;
-  const old = s.hist || {}; s.hist = {};
-  for (const m of measuresOf(s)) {
-    if (m.id === "people") continue;
-    const cur = s.usage?.[m.id];
-    let base = cur ? cur.rate * PER[cur.per].f : m.id === "hours" ? base0 * (HOURS_PER_USE[s.svc] || 1.5) : base0;
-    if (!base && v.value_model === "insurance") base = 0.12;
-    if (!base && v.value_model === "usage") base = 3;
-    const h = s.hist[m.id] = {}, events = new Set([Math.floor(r() * 12), r() < 0.5 ? Math.floor(r() * 12) : -1]);
-    for (let k = 11; k >= 0; k--) {
-      const key = addMonths(-k).slice(0, 7), mon = +key.slice(5) - 1, season = 1 + 0.22 * Math.cos(mon / 12 * 2 * Math.PI);
-      let n = m.fixed ? (k === 11 ? 25 + Math.floor(r() * 25) : r() < 0.25 ? 0 : Math.floor(r() * 6) + 1)
-        : m.amount ? base * (1 - k * 0.025) * (0.97 + 0.06 * r())
-        : v.value_model === "insurance" && m.id === "uses" && base < 1 ? (events.has(k) ? 1 : 0)
-        : v.value_model === "perks" ? (r() < 0.3 ? base * (2 + 3 * r()) : base * 0.4 * r())
-        : base * season * (0.55 + 0.9 * r());
-      h[key] = s.histSrc?.[m.id]?.[key] === "you" ? old[m.id][key] : m.amount ? Math.round(n) : n < 10 ? Math.round(n * 10) / 10 : Math.round(n);
-    }
-    if (!cur && m.id === "hours") (s.usage ||= {}).hours = { rate: Math.round(base), per: "month" };
-    if (!cur && m.fixed) (s.usage ||= {})[m.id] = { rate: 3, per: "month" };
+  const v = svcOf(s), m = measureOf(s), r = rng([...(s.svc + s.id)].reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 7));
+  const old = s.hist || {}; s.hist = {}; s.histTest = true;
+  if (m.costOnly) return;
+  let base = s.uses;
+  if (!base && v.value_model === "insurance") base = 0.12;
+  if (!base && v.value_model === "usage") base = 3;
+  const h = s.hist[m.id] = {}, events = new Set([Math.floor(r() * 12), r() < 0.5 ? Math.floor(r() * 12) : -1]);
+  for (let k = 11; k >= 0; k--) {
+    const key = addMonths(-k).slice(0, 7), mon = +key.slice(5) - 1, season = 1 + 0.22 * Math.cos(mon / 12 * 2 * Math.PI);
+    let n = m.fixed ? (k === 11 ? 25 + Math.floor(r() * 25) : r() < 0.25 ? 0 : Math.floor(r() * 6) + 1)
+      : m.amount ? base * (1 - k * 0.025) * (0.97 + 0.06 * r())
+      : v.value_model === "insurance" && base < 1 ? (events.has(k) ? 1 : 0)
+      : v.value_model === "perks" ? (r() < 0.3 ? base * (2 + 3 * r()) : base * 0.4 * r())
+      : base * season * (0.55 + 0.9 * r());
+    h[key] = s.histSrc?.[m.id]?.[key] === "you" ? old[m.id][key] : m.amount ? Math.round(n) : n < 10 ? Math.round(n * 10) / 10 : Math.round(n);
   }
-  s.histTest = true;
+  if (m.fixed && !s.uses) setUse(s, 3, m.per);
 }
 // Test data also moves start dates that are under a year old back 13 months, so every chart has a full year.
 // ChatGPT keeps Cuong's real dates (started Mar 15, 2026).
@@ -1862,12 +1893,12 @@ function valueSeries(s) {
 }
 function valueChart(s) {
   const vs = valueSeries(s), v = svcOf(s), m = measureOf(s), ms = measuresOf(s);
-  const seg = ms.length > 1 ? `<div class="seg" role="group" aria-label="Measure value by">${ms.map(x => `<button type="button" data-measure="${x.id}" aria-pressed="${x.id === m.id}">${esc(x.tab || (x.id === "uses" && !MEASURES[s.svc]?.base ? "Uses" : x.short[0].toUpperCase() + x.short.slice(1)))}</button>`).join("")}</div>` : "";
+  const seg = "";  // one measure per subscription since v66
   if (!vs) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">${s.start || PHASE1 ? "Add what you pay to see how your usage compares with the cost." : "Add a start date (under Start date and pauses) to see how your usage compares with the cost."}</p>` };
   if (vs.rows.length < 2) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">Your chart starts after your first month.${PHASE1 ? "" : " Had it longer? Set your real start date under Start date and pauses."}</p>` };
   // Month by month (Cuong, v65): value each month vs what that month cost, so a slowdown shows even after a strong start.
   const mon = vs.rows.slice(1).map((r, i) => ({ r, cost: r.spent, val: vs.worth ? Math.max(0, r.value - vs.rows[i].value) : null, partial: r === vs.rows.at(-1) && dayDiff(r.from, r.d) < 27 }));
-  const win = !m.amount && vs.need != null && vs.need < 1 ? 12 : 3;  // a few uses a year (roadside calls) is judged over a year, not 3 months
+  const win = m.per === "year" ? 12 : 3;  // things counted per year (roadside calls) are judged over a year, not 3 months
   const full = mon.filter(x => !x.partial && !x.r.paused), last3 = full.slice(-win), early = full.slice(0, -win);
   const avg = (xs, k) => xs.length ? xs.reduce((a, x) => a + x[k], 0) / xs.length : 0;
   const aV = avg(last3, "val"), aC = avg(last3, "cost"), worthN = last3.filter(x => x.val >= x.cost).length;
@@ -1876,16 +1907,16 @@ function valueChart(s) {
   if (m.fixed) { const recent = vs.rows.filter(r => r.from && !r.paused).slice(-3);
     vs.quiet = recent.length === 3 && recent.every(r => r.uses < 0.5); vs.altName = altOf(s)?.name; }
   const since = vs.from === s.start ? `since you started in ${monthName(vs.from)}` : `over the last 12 months`;
-  const unit = m.short, yr = !m.amount && vs.need != null && vs.need < 1;
+  const unit = m.short, pp = n => fmtN(Math.round(n / PER[m.per].f * 10) / 10);  // monthly figures in the measure's period
   const head = m.fixed ? `<span>${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone costs <b>${money(vs.worth)} a month</b>${vs.altName ? ` (${esc(vs.altName)})` : ""}. ${esc(s.name)} costs <b>${money(vs.reg)}</b>.</span>
        ${recentHtml}${vs.quiet ? `<span class="small" style="color:var(--warn);font-weight:600">No removals in the last 3 months. Check that ${esc(s.name)}'s scans are still running.</span>` : ""}`
     : m.bundle ? `<span>It pays for itself at about <b>${fmtN(Math.round(vs.need * 10) / 10)} orders under $35 a month</b>${m.fixedAdd ? `, counting ${m.counted.map(partText).join(" and ")}` : ""}. ${vs.usualAvg != null ? `In a usual month you average <b>${fmtN(Math.round(vs.usualAvg * 10) / 10)}</b>` : `You averaged <b>${fmtN(Math.round(vs.avg * 10) / 10)}</b>`}.</span>
        ${recentHtml}`
     : !vs.worth
-    ? `<span>You've paid <b>${money(vs.cost)}</b> ${since}.</span><span class="small muted">${esc(MODEL_LABEL[v.value_model] || "This plan")}s aren't measured by how often you use them, so this shows cost only.</span>`
+    ? `<span>You've paid <b>${money(vs.cost)}</b> ${since}.</span><span class="small muted">${MODEL_LABEL[v.value_model] ? esc(MODEL_LABEL[v.value_model]) + "s" : "Plans like this"} aren't measured by how often you use them, so this shows cost only.</span>`
     : m.amount ? `<span>It pays for itself with about <b>${fmtN(Math.round(vs.need * 10) / 10)} ${Math.round(vs.need * 10) === 10 ? m.per1 : unit}</b>. You have <b>${fmtN(s.rate)}</b>.</span>
        ${recentHtml}`
-    : `<span>It pays for itself at about <b>${fmtN(Math.round(vs.need * (yr ? 12 : 1) * 10) / 10)} ${unit} a ${yr ? "year" : "month"}</b>. ${vs.usualAvg != null ? `In a usual month you average <b>${fmtN(Math.round(vs.usualAvg * (yr ? 12 : 1) * 10) / 10)}</b>, or ${fmtN(Math.round(vs.avg * (yr ? 12 : 1) * 10) / 10)} counting the ${vs.flagged} flagged month${vs.flagged === 1 ? "" : "s"}` : s.hist?.[m.id] ? `You averaged <b>${fmtN(Math.round(vs.avg * (yr ? 12 : 1) * 10) / 10)}</b> over this period` : `You're at <b>${fmtN(pausedNow(s) ? 0 : Math.round(s.uses * (yr ? 12 : 1) * 10) / 10)}</b>${pausedNow(s) ? " while paused" : ""}`}.</span>
+    : `<span>It pays for itself at about <b>${pp(vs.need)} ${unit} a ${m.per}</b>. ${vs.usualAvg != null ? `In a usual month you average <b>${pp(vs.usualAvg)} a ${m.per}</b>, or ${pp(vs.avg)} counting the ${vs.flagged} flagged month${vs.flagged === 1 ? "" : "s"}` : s.hist?.[m.id] ? `You averaged <b>${pp(vs.avg)} a ${m.per}</b> over this period` : `You're at <b>${pausedNow(s) ? 0 : fmtN(s.rate)} a ${m.per}</b>${pausedNow(s) ? " while paused" : ""}`}.</span>
        ${recentHtml}`;
   const ratio = aC ? aV / aC : 0;
   const meta = !vs.worth ? `${moneyShort(vs.cost)} paid` : !last3.length ? "" : `<span class="pill ${ratio >= 1 ? "great" : ratio >= 0.75 ? "ok" : "poor"}">${ratio >= 1 ? "Worth it lately" : ratio >= 0.75 ? "Borderline lately" : "Not worth it lately"}</span>`;
@@ -1895,8 +1926,8 @@ function valueChart(s) {
       return `<div class="vbars" style="--n:${mon.length}" role="img" aria-label="${mon.map(x => `${monthName(x.r.from)}: ${x.r.paused ? "paused" : vs.worth ? `value ${money(x.val)}, paid ${money(x.cost)}` : `paid ${money(x.cost)}`}`).join("; ")}">${mon.map(x => { const v = vs.worth ? x.val : x.cost, ok = !vs.worth || x.val >= x.cost;
         return `<div class="vbar${x.partial ? " part" : ""}"><div class="vplot">${x.r.paused ? `<span class="vlab" style="bottom:2px">Paused</span>` : `<i style="height:${pct(v)}%;background:${!vs.worth ? "var(--accent)" : ok ? "var(--good)" : "var(--c-cost)"}"></i><span class="vlab num" style="bottom:calc(${pct(v)}% + 2px)">${moneyShort(v)}</span>`}${vs.worth && !x.r.paused ? `<b class="vcost" style="bottom:${pct(x.cost)}%"></b>` : ""}</div><span class="vx">${monthName(x.r.from).slice(0, 3)}${x.partial ? "*" : ""}</span></div>`; }).join("")}</div>
       ${mon.at(-1)?.partial ? `<p class="note" style="margin:0">* This month so far.</p>` : ""}`; })()}
-    <p class="note" style="margin:0">${m.bundle ? `Value is a ${money(m.worth)} shipping fee on each order under $35${m.counted.length ? `, plus ${m.counted.map(p => p.months ? partText(p) : `${money(p.monthly)} a month for ${p.name}`).join(" and ")} because ${m.counted.length > 1 ? "they matter" : "it matters"} to you${m.included.length ? ` (${m.included.map(p => p.name).join(" and ")} comes with Prime Video, so it isn't counted twice)` : ""}` : ""}. Orders of $35 or more ship free without Prime, so they aren't counted.${(s.members || 1) > 1 ? ` Orders include everyone in your household (${s.members} people), and Prime Video counts once for the household.` : " If family members share your Prime, count their orders too and add them under Plan and price."} Check other features under Features that matter to me to count them. ` : m.fixed ? `Value is what you'd pay for ${esc(m.jobName)} on its own, for each month you were subscribed. Removals don't change it; they show the service is working. You can change the comparison under How you use it. ` : vs.worth ? `Each ${m.per1} counts as worth ${money(vs.worth)}${m.own ? ", the value you set" : m.id === "people" ? `, what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own` : m.id === "uses" && !MEASURES[s.svc]?.base ? (v.value_model === "perks" ? "" : `, the cost per use where we'd call ${esc(v.name)} costly`) : ", our estimate"}. You can change this under How you use it. ` : ""}${s.hist?.[m.id] ? `Monthly ${esc(m.short)} come from ${Object.values(s.histSrc?.[m.id] || {}).includes("sync") ? `your ${esc(SYNC[s.svc]?.name || "")} data export (pulled ${esc(fmtDate(s.syncInfo?.at))})` : `your history${s.histTest ? " (test data for this prototype)" : ""}`}; months without an entry use your current rate.` : `This uses ${m.amount ? "today's number" : "your current rate"}, ${esc(useText(s))}, for every month you weren't paused${s.example ? ", and that usage is an example" : ""}.`}${s.cycle === "year" ? " Yearly charges are spread evenly across the months." : ""}</p>
-    <details class="nums"><summary>See the numbers</summary><div class="tbl-wrap"><table class="tbl"><tr><th>Month</th><th>${esc(m.short[0].toUpperCase() + m.short.slice(1))}</th><th>Paid</th>${vs.worth ? "<th>Value</th>" : ""}<th>Total paid</th>${vs.worth ? "<th>Total value</th>" : ""}</tr>
+    <p class="note" style="margin:0">${m.bundle ? `Value is a ${money(m.worth)} shipping fee on each order under $35${m.counted.length ? `, plus ${m.counted.map(p => p.months ? partText(p) : `${money(p.monthly)} a month for ${p.name}`).join(" and ")} because ${m.counted.length > 1 ? "they matter" : "it matters"} to you${m.included.length ? ` (${m.included.map(p => p.name).join(" and ")} comes with Prime Video, so it isn't counted twice)` : ""}` : ""}. Orders of $35 or more ship free without Prime, so they aren't counted.${(s.members || 1) > 1 ? ` Orders include everyone in your household (${s.members} people), and Prime Video counts once for the household.` : " If family members share your Prime, count their orders too and add them under Plan and price."} Check other features under Features that matter to me to count them. ` : m.fixed ? `Value is what you'd pay for ${esc(m.jobName)} on its own, for each month you were subscribed. Removals don't change it; they show the service is working. You can change the comparison under How you use it. ` : vs.worth ? `Each ${m.per1} counts as worth ${money(vs.worth)}${m.own ? ", the value you set" : m.id === "people" ? `, what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own` : m.bench ? `, the cost per ${esc(m.per1)} where we'd call ${esc(v.name)} costly` : ", our estimate"}. You can change this under How you use it. ` : ""}${s.hist?.[m.id] ? `Monthly ${esc(m.short)} come from ${Object.values(s.histSrc?.[m.id] || {}).includes("sync") ? `your ${esc(SYNC[s.svc]?.name || "")} data export (pulled ${esc(fmtDate(s.syncInfo?.at))})` : `your history${s.histTest ? " (test data for this prototype)" : ""}`}; months without an entry use your current rate.` : `This uses ${m.amount ? "today's number" : "your current rate"}, ${esc(useText(s))}, for every month you weren't paused${s.example ? ", and that usage is an example" : ""}.`}${s.cycle === "year" ? " Yearly charges are spread evenly across the months." : ""}</p>
+    <details class="nums"><summary>See the numbers</summary><div class="tbl-wrap"><table class="tbl"><tr><th>Month</th><th>${esc(m.short[0].toUpperCase() + m.short.slice(1))} that month</th><th>Paid</th>${vs.worth ? "<th>Value</th>" : ""}<th>Total paid</th>${vs.worth ? "<th>Total value</th>" : ""}</tr>
       ${vs.rows.slice(1).map(r => `<tr><td>${monthName(r.from)}${r.paused ? " (paused)" : r.intro ? " (intro)" : ""}</td><td class="num">${fmtN(Math.round(r.uses * 10) / 10)}</td><td class="num">${money(r.spent)}</td>${vs.worth ? `<td class="num">${money(r.uses * vs.worth)}</td>` : ""}<td class="num">${money(r.cost)}</td>${vs.worth ? `<td class="num">${money(r.value)}</td>` : ""}</tr>`).join("")}</table></div></details>`;
   return { meta, body, seg };
 }
@@ -1906,10 +1937,11 @@ function monthlyHtml(s) {
   const rows = vs.rows.slice(1).reverse(), mine = rows.filter(r => r.src === "you").length, fl = rows.filter(r => r.flag).length;
   const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} export` : "Your usual rate";
   return { meta: [mine ? `${mine} edited` : "", fl ? `${fl} flagged` : ""].filter(Boolean).join(", ") || "Not edited",
-    body: `<p class="small muted" style="margin:0">Correct any month, and flag months that weren't typical so your average isn't thrown off. Leave a month empty to use your usual rate (${esc(useText(s))}).</p>
+    body: `<p class="small muted" style="margin:0">Slide to correct any month (${esc((m.label || m.short).toLowerCase())}), and flag months that weren't typical so your average isn't thrown off. Months you haven't changed use your usual rate (${esc(useText(s))}).</p>
     <div class="months">${rows.map(r => `<div class="mrow${r.flag ? " flagged" : ""}"><div><b>${new Date(r.from + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })}</b><div class="note">${src(r)}</div></div>
-      ${r.paused ? `<span class="small muted">Paused, no usage counted</span>` : `<span class="mval"><input type="number" min="0" step="any" data-hm="${r.key}" value="${r.src === "rate" ? "" : fmtN(+(s.hist[m.id][r.key]))}" placeholder="${fmtN(s.uses)}" aria-label="${esc(m.short)} in ${r.key}"><span class="small muted">${esc(m.short)}</span></span>
-      <select data-hf="${r.key}" aria-label="Flag ${r.key}"><option value="">Typical month</option>${Object.entries(FLAGS).map(([k, l]) => `<option value="${k}" ${r.flag === k ? "selected" : ""}>${l}</option>`).join("")}</select>`}</div>`).join("")}</div>
+      ${r.paused ? `<span class="small muted">Paused, no usage counted</span>` : `<div class="mact">${r.src === "you" ? `<button class="btn ghost small" data-hm-clear="${r.key}">Use my usual</button>` : ""}<select data-hf="${r.key}" aria-label="Flag ${r.key}"><option value="">Typical month</option>${Object.entries(FLAGS).map(([k, l]) => `<option value="${k}" ${r.flag === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>
+      ${slider(m, r.src === "rate" ? s.rate : Math.round(+s.hist[m.id][r.key] / PER[m.per].f * 10) / 10, `data-hm="${r.key}" aria-label="${esc(m.label)} in ${r.key}"${r.src === "rate" ? ' class="usual"' : ""}`)}
+      `}</div>`).join("")}</div>
     ${m.amount ? "" : `<p class="note" style="margin:0">Months run from your billing date. ${SYNC[s.svc] ? "Months filled from your data export are marked; your own corrections still win." : "Later, services you connect could fill these in for you, and your own corrections would still win."}</p>`}${syncHtml(s)}` };
 }
 // Real usage from the service's own data export (Cuong asked, 2026-10-19). ChatGPT and Claude have no public API for a
@@ -1923,8 +1955,8 @@ function syncHtml(s) {
   const c = SYNC[s.svc]; if (!c) return "";
   const info = s.syncInfo;
   return `<div class="card" style="gap:8px;margin-top:4px"><b>Pull your real ${esc(c.name)} usage</b>
-    <p class="small muted" style="margin:0">${esc(c.how)} Then choose the .zip file (or the conversations.json inside it) here. We count the days you sent at least one message. The file is read in this browser only and only the day counts are kept.</p>
-    ${info ? `<p class="small" style="margin:0">Last pulled ${esc(fmtDate(info.at))}: ${info.days} active days from ${esc(fmtDate(info.first))} to ${esc(fmtDate(info.last))}, ${info.convs} conversations.</p>` : ""}
+    <p class="small muted" style="margin:0">${esc(c.how)} Then choose the .zip file (or the conversations.json inside it) here. We count your prompts (each message you sent). The file is read in this browser only and only the counts per day are kept.</p>
+    ${info ? `<p class="small" style="margin:0">Last pulled ${esc(fmtDate(info.at))}: ${info.prompts != null ? `${fmtN(info.prompts)} prompts on ` : ""}${info.days} active days from ${esc(fmtDate(info.first))} to ${esc(fmtDate(info.last))}, ${info.convs} conversations.</p>` : ""}
     <label class="btn small" style="justify-self:start;cursor:pointer">${info ? "Pull again from a newer export" : "Choose export file"}<input type="file" id="sync-file" accept=".zip,.json,application/zip,application/json" hidden></label>
     <span class="small muted" id="sync-msg" role="status"></span></div>`;
 }
@@ -1936,30 +1968,29 @@ async function readExport(file) {
     const entry = Object.values(zip.files).find(f => /(^|\/)conversations\.json$/i.test(f.name)); if (!entry) throw new Error("No conversations.json in this zip.");
     text = await entry.async("string"); } else text = await file.text();
   const convs = JSON.parse(text); if (!Array.isArray(convs)) throw new Error("This doesn't look like a conversations export.");
-  const day = d => { const x = new Date(d); return isNaN(x) ? null : `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`; }, days = new Set();  // local calendar day
+  const day = d => { const x = new Date(d); return isNaN(x) ? null : `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`; }, days = new Set(), count = {};  // local calendar day
   // ChatGPT: messages sit in a "mapping" tree with create_time in seconds. Claude: chat_messages with sender "human" and ISO created_at.
   const kind = convs.some(c => c.mapping) ? "chatgpt" : convs.some(c => c.chat_messages) ? "claude" : null;
   if (!kind) throw new Error("This doesn't look like a ChatGPT or Claude export.");
   for (const c of convs) {
-    if (kind === "chatgpt") Object.values(c.mapping || {}).forEach(n => { const m = n?.message; if (m?.author?.role === "user" && m.create_time) { const d = day(m.create_time * 1000); if (d) days.add(d); } });
-    else (c.chat_messages || []).forEach(m => { if (m.sender === "human" && m.created_at) { const d = day(m.created_at); if (d) days.add(d); } });
+    if (kind === "chatgpt") Object.values(c.mapping || {}).forEach(n => { const m = n?.message; if (m?.author?.role === "user" && m.create_time) { const d = day(m.create_time * 1000); if (d) { days.add(d); count[d] = (count[d] || 0) + 1; } } });
+    else (c.chat_messages || []).forEach(m => { if (m.sender === "human" && m.created_at) { const d = day(m.created_at); if (d) { days.add(d); count[d] = (count[d] || 0) + 1; } } });
   }
-  return { kind, days, convs: convs.length };
+  return { kind, days, count, convs: convs.length };
 }
 async function applyExport(s, file) {
   const r = await readExport(file);
   if (r.kind !== s.svc) throw new Error(`This is a ${SYNC[r.kind].name} export, not ${SYNC[s.svc].name}.`);
   if (!r.days.size) throw new Error("No messages found in this export.");
-  if (measureOf(s).id !== "uses") switchMeasure(s, "uses");
-  const vs = valueSeries(s), sorted = [...r.days].sort();
-  (s.hist ||= {}).uses ||= {}; (s.histSrc ||= {}).uses ||= {};
+  const m = measureOf(s), id = m.id, vs = valueSeries(s), sorted = [...r.days].sort();
+  (s.hist ||= {})[id] ||= {}; (s.histSrc ||= {})[id] ||= {};
   let last = null;
-  vs.rows.slice(1).forEach(row => { if (s.histSrc.uses[row.key] === "you") return;
-    const n = [...r.days].filter(d => d >= row.from && d < row.d).length, f = dayDiff(row.from, row.d) / 30.44;
+  vs.rows.slice(1).forEach(row => { if (s.histSrc[id][row.key] === "you") return;
+    const n = Object.entries(r.count).reduce((a, [d, c]) => a + (d >= row.from && d < row.d ? c : 0), 0), f = dayDiff(row.from, row.d) / 30.44;
     // A month still in progress is stored as its pace for a full month, since the chart scales each month by its length.
-    s.hist.uses[row.key] = f >= 0.95 ? n : Math.round(n / Math.max(f, 0.1) * 10) / 10; s.histSrc.uses[row.key] = "sync"; if (f >= 0.95) last = n; });
-  if (last != null) setUse(s, last, "month");
-  s.syncInfo = { at: today(), days: r.days.size, convs: r.convs, first: sorted[0], last: sorted.at(-1) }; s.example = false;
+    s.hist[id][row.key] = f >= 0.95 ? n : Math.round(n / Math.max(f, 0.1) * 10) / 10; s.histSrc[id][row.key] = "sync"; if (f >= 0.95) last = n; });
+  if (last != null) setUse(s, Math.round(last / PER[m.per].f * 10) / 10, m.per);
+  s.syncInfo = { at: today(), days: r.days.size, prompts: Object.values(r.count).reduce((a, c) => a + c, 0), convs: r.convs, first: sorted[0], last: sorted.at(-1) }; s.example = false;
 }
 // Alternatives: services that do the same main job, from the catalog plus a few the catalog doesn't carry yet.
 // APP_TAGS adds matching tags the catalog lacks, used only here (not in Overlaps). Features compare by tag, so this is a rough match.
@@ -2059,13 +2090,9 @@ function openSheet(id) {
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
         ${sec("usage", "How you use it", esc(useText(s)), `
-        ${ms.length > 1 ? `<div class="small muted" style="margin-bottom:-6px">Measure value by</div>${vc.seg}` : ""}
-        <div><p class="small muted" style="margin:0 0 8px">${m.amount ? `Count each ${esc(m.one)}.` : `One ${esc(m.per1)} = one ${esc(m.one)}.`}</p>
-          <div class="counter"><button class="btn" id="minus" aria-label="One less">−</button>
-            <input id="s-rate" type="number" min="0" step="any" value="${fmtN(s.rate)}" aria-label="Number of ${esc(m.short)}">
-            ${m.amount ? `<span class="muted">${esc(m.short)}</span>` : `<select id="s-per" aria-label="Per">${Object.entries(PER).map(([k, x]) => `<option value="${k}" ${k === s.per ? "selected" : ""}>${x.label}</option>`).join("")}</select>`}
-            <button class="btn primary" id="plus" aria-label="One more">+ 1</button></div>
-          <p class="small muted" style="margin:6px 0 0">${s.per === "month" || !s.uses ? "" : `That's about ${fmtN(s.uses)} a month.`}</p></div>
+        ${m.costOnly ? `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
+          ${slider(m, s.rate, 'id="s-rate"')}
+          ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}
         ${m.fixed ? `<label>Compare with<select id="s-alt">${(ALTERNATIVES[m.job] || []).map((a, i) => `<option value="${i}" ${(s.alt || 0) === i && !m.own ? "selected" : ""}>${esc(a.name)} · ${money(a.monthly)}/mo</option>`).join("")}${m.own ? `<option selected>Your own price · ${money(m.worth)}/mo</option>` : ""}</select></label>
           <div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Or enter what ${esc(m.jobName)} alone would cost you</label>
           <input id="s-worth" type="number" min="0" step="0.01" value="${m.worth == null ? "" : (+m.worth).toFixed(2)}"><span class="small muted">${currency()}/mo</span>${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use the list</button>` : ""}</div>
@@ -2077,9 +2104,9 @@ function openSheet(id) {
         : m.worth != null || m.rated ? `<div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Each ${esc(m.per1)} is worth</label>
           <input id="s-worth" type="number" min="0" step="0.01" value="${m.worth == null ? "" : (+m.worth).toFixed(m.worth < 0.1 ? 3 : 2)}"><span class="small muted">${currency()} to you</span>
           ${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use our estimate</button>` : ""}</div>
-          <p class="note" style="margin:-6px 0 0">${m.own ? "You set this value." : m.id === "people" ? `Our estimate: what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own.` : m.id === "uses" && !MEASURES[s.svc]?.base ? "From our benchmark: above this, each use costs more than it's worth." : "Our estimate. Change it to what it's worth to you."} The chart and rating use it.</p>` : ""}
+          <p class="note" style="margin:-6px 0 0">${m.own ? "You set this value." : m.id === "people" ? `Our estimate: what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own.` : m.bench ? `From our benchmark: above this, each ${esc(m.per1)} costs more than it's worth.` : "Our estimate. Change it to what it's worth to you."} The chart and rating use it.</p>` : ""}
         `)}
-        ${sec("months", "Usage by month", mo.meta, mo.body)}
+        ${m.costOnly ? "" : sec("months", "Usage by month", mo.meta, mo.body)}
         ${sec("alts", "Alternatives", al.meta, al.body)}
         ${sec("price", "Plan and price", priceMeta, `
         ${v.plans.length ? `<label>Your plan<select id="s-plan">${v.plans.map(p => `<option value="${p.id}" ${p.id === s.plan ? "selected" : ""}>${esc(p.name)} · ${money(p.effective_monthly)}/mo${p.verified ? "" : " (estimate)"}</option>`).join("")}</select></label>` : ""}
@@ -2134,17 +2161,16 @@ function openSheet(id) {
     const close = () => { root.replaceChildren(); render(); };
     root.querySelector("#scrim").onclick = close; root.querySelector("#close").onclick = close;
     const use = (rate, per = s.per) => { setUse(s, rate, per); s.example = false; save(); setTimeout(draw); };
-    root.querySelector("#plus").onclick = () => use(s.rate + 1);
-    root.querySelector("#minus").onclick = () => use(Math.max(0, s.rate - 1));
-    root.querySelector("#s-rate").onchange = e => use(parseFloat(e.target.value) || 0);
-    const sp = root.querySelector("#s-per"); if (sp) sp.onchange = e => use(s.rate, e.target.value);
-    root.querySelectorAll("[data-measure]").forEach(b => b.onclick = () => { switchMeasure(s, b.dataset.measure); save(); draw(); });
+    const sr = root.querySelector("#s-rate");
+    if (sr) { sr.oninput = () => sr.nextElementSibling.textContent = slideText(m, +sr.value); sr.onchange = () => use(+sr.value, m.per); }
     root.querySelectorAll("[data-alt]").forEach(b => b.onclick = () => { exploreOpen = b.dataset.alt; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
     root.querySelector("[data-alt-all]")?.addEventListener("click", () => { exploreOpen = null; exploreCat = "mine-alts"; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
-    root.querySelectorAll("[data-hm]").forEach(inp => inp.onchange = () => { const id = measureOf(s).id, k = inp.dataset.hm, n = parseFloat(inp.value);
-      (s.hist ||= {})[id] ||= {}; (s.histSrc ||= {})[id] ||= {};
-      if (isNaN(n)) { delete s.hist[id][k]; delete s.histSrc[id][k]; } else { s.hist[id][k] = Math.max(0, n); s.histSrc[id][k] = "you"; }
-      s.example = false; save(); setTimeout(draw); });
+    // Month sliders show the measure's period (say, prompts a day); history keeps each month's total.
+    const setMonth = (k, n) => { const m = measureOf(s), id = m.id; (s.hist ||= {})[id] ||= {}; (s.histSrc ||= {})[id] ||= {};
+      if (n == null) { delete s.hist[id][k]; delete s.histSrc[id][k]; } else { s.hist[id][k] = Math.round(n * PER[m.per].f * 10) / 10; s.histSrc[id][k] = "you"; }
+      s.example = false; save(); setTimeout(draw); };
+    root.querySelectorAll("[data-hm]").forEach(inp => { inp.oninput = () => { inp.classList.remove("usual"); inp.nextElementSibling.textContent = slideText(measureOf(s), +inp.value); }; inp.onchange = () => setMonth(inp.dataset.hm, +inp.value); });
+    root.querySelectorAll("[data-hm-clear]").forEach(b => b.onclick = () => setMonth(b.dataset.hmClear, null));
     root.querySelector("#sync-file")?.addEventListener("change", async e => { const file = e.target.files[0], msg = t => { const m = root.querySelector("#sync-msg"); if (m) m.textContent = t; }; if (!file) return;
       msg("Reading your export…"); try { await applyExport(s, file); save(); draw(); } catch (err) { msg(err.message === "zip" ? "Couldn't open the zip here. Unzip it and choose conversations.json instead." : err.message || "Couldn't read that file."); } });
     root.querySelectorAll("[data-hf]").forEach(sel => sel.onchange = () => { s.flags ||= {}; if (sel.value) s.flags[sel.dataset.hf] = { why: sel.value }; else delete s.flags[sel.dataset.hf]; save(); setTimeout(draw); });
@@ -2197,7 +2223,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 65 · Standalone copy · Oct 22", VERSION_NUM = 65;
+const APP_VERSION = "Prototype · Version 66 · Standalone copy · Oct 23", VERSION_NUM = 66;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2301,7 +2327,8 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   if (!state.nflV) { state.subs.filter(s => s.svc === "amazon_prime" && !s.used.includes("nfl")).forEach(s => s.used = [...s.used, "nfl"]); state.nflV = 1; }
   // Subscriptions added recently with no usage entered yet wait for the user's input before any rating (one-time check).
   if (!state.needsV) { state.subs.filter(s => !s.example && !s.uses && !s.hist && s.start && dayDiff(s.start, today()) <= 45).forEach(s => s.needsUse = true); state.needsV = 1; }
-  if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { if (!s.hist?.replace) genHistory(s); switchMeasure(s, "replace"); s.used = ["data_removal"]; }); state.cloakedV = 1; }
+  if (!state.unitsV) { state.subs.forEach(migrateUse); state.unitsV = 1; }
+  if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { s.measure = "replace"; if (!s.hist?.replace) genHistory(s); s.used = ["data_removal"]; }); state.cloakedV = 1; }
   save();
   render();
 }).catch(() => { document.getElementById("view").innerHTML = `<p class="muted">Service prices didn't load. Reload the page to try again.</p>`; });
