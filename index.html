@@ -475,6 +475,28 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .vb-item:hover { background: var(--accent-soft); }
 .vb-item .logo { width: 30px; height: 30px; border-radius: 8px; font-size: 11px; }
 .vb-nm { display: grid; min-width: 0; } .vb-nm b { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.u-pies { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.u-pie { gap: 8px; padding: 14px; }
+.u-pie-head { display: flex; align-items: center; gap: 8px; } .u-pie-head .dot { width: 10px; height: 10px; border-radius: 50%; }
+.u-pie-body { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: center; }
+@media (min-width: 901px) { .u-pie-body { grid-template-columns: 1fr; justify-items: center; } .u-legend { width: 100%; } }
+.u-donut { position: relative; width: 110px; height: 110px; } .u-donut svg { width: 100%; height: 100%; display: block; }
+.u-donut path { stroke: var(--surface); stroke-width: 2; stroke-linejoin: round; }
+.u-donut .pie-mid b { font-size: 20px; } .u-donut .pie-mid span { font-size: 11px; }
+.u-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 13px; min-width: 0; }
+.u-legend li { display: flex; justify-content: space-between; gap: 8px; }
+.u-legend button, .u-open { border: 0; background: none; padding: 0; color: var(--ink); font: inherit; text-align: left; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.u-open { font-weight: 600; }
+.u-list { gap: 0; padding-block: 4px; }
+.u-row { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.u-row:last-child { border-bottom: 0; }
+.u-row .slide { grid-column: 1 / -1; }
+.u-row .slide-ends { display: none; }
+.u-nm { display: grid; min-width: 0; }
+.u-how { margin-top: 14px; }
+@media (max-width: 900px) { .u-pies { grid-template-columns: 1fr; } }
+.a-cats { margin-bottom: 12px; }
+@media (max-width: 560px) { .a-cats { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding: 2px 16px; } .a-cats::-webkit-scrollbar { display: none; } .a-cats .chip { flex: none; } }
 .vb-other { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 12px; }
 .vb-other > span { flex-basis: 100%; }
 .vb-other .chip { background: var(--surface); color: inherit; cursor: pointer; }
@@ -524,8 +546,8 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
     <div class="brand"><h1>Subscription Keeper</h1></div>
     <div class="top-btns"><button class="avatar help-btn" id="help-btn" aria-label="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6.5h14v9.5H11l-4.5 3.5V16H5z"/><path d="M9.2 9.6a2.8 2.8 0 1 1 3.6 2.7c-.5.2-.8.6-.8 1.1"/><circle cx="12" cy="14.6" r=".4" fill="currentColor"/></svg></button><button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button></div>
     <nav class="tabs" role="tablist" aria-label="Screens">
-      <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg><span class="long">My subscriptions</span><span class="short">Mine</span></button>
-      <button role="tab" id="tab-explore" data-view="explore" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>Explore</button>
+      <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg>Overview</button>
+      <button role="tab" id="tab-usage" data-view="usage" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3.5 16.5a8.5 8.5 0 1 1 17 0"/><path d="M12 16.5l4.2-5.2"/></svg>Usage</button>
       <button role="tab" id="tab-overlaps" data-view="overlaps" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg>Overlaps</button>
       <button role="tab" id="tab-add" data-view="add" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/></svg>Add</button>
       <button role="tab" id="tab-admin" data-view="admin" aria-selected="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 19.5 6v5.5c0 4.4-3.1 7.9-7.5 9-4.4-1.1-7.5-4.6-7.5-9V6z"/></svg>Admin</button>
@@ -918,14 +940,14 @@ const el = (html) => { const t = document.createElement("template"); t.innerHTML
 const esc = (t) => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
 function render() {
-  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === view));
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === (view === "explore" ? "add" : view)));
   const root = document.getElementById("view"); root.replaceChildren();
   document.getElementById("tab-admin").hidden = !admin.show;
   drawAvatar(document.getElementById("me-btn"));
   document.body.classList.toggle("short-band", view !== "home");
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
-  root.append({ home: homeView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, welcome: welcomeView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
+  root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, welcome: welcomeView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
 }
 
 function upcomingHtml() {
@@ -1281,6 +1303,63 @@ function benchHtml(total) {
     <div class="small muted">${esc(profile().country)} avg ${money(b.amt)}${b.est ? "*" : ""} · ${b.url ? `<a href="${esc(b.url)}" target="_blank" rel="noopener" style="color:var(--accent)" title="${esc(b.src)}">Source</a>` : "Our team"}</div>
     <div style="margin-top:6px">${pick}</div></div>`;
 }
+// Usage page (Cuong, v67): last month's value in three donuts (Great, Fair, Costly), then a slider per subscription for this month.
+// The slider's setting when a month ends becomes that month's usage (closeMonths).
+const periodKeys = s => { const rows = valueSeries(s)?.rows.slice(1) || [];
+  return { cur: rows.at(-1)?.key || today().slice(0, 7), prev: rows.at(-2)?.key || null, prevRow: rows.at(-2) || null }; };
+function lastMonthOf(s) {
+  const m = measureOf(s), { prev, prevRow } = periodKeys(s);
+  if (!prevRow || prevRow.paused || m.costOnly || s.needsUse || needsPrice(s)) return null;
+  const used = s.hist?.[m.id]?.[prev] ?? s.uses, b = valueBucket({ ...s, uses: used });
+  return b ? { s, bucket: b, cost: prevRow.spent } : null;
+}
+const BUCKETS = { great: ["Great value", "var(--good)"], fair: ["Fair value", "var(--accent)"], costly: ["Costly", "var(--warn)"] };
+function bucketDonut(k, items, total) {
+  const [name, col] = BUCKETS[k], sum = items.reduce((a, x) => a + x.cost, 0), C = 60, R = 57, R0 = 40, pt = (a, r) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`;
+  let a0 = -Math.PI / 2;
+  const arcs = total ? items.map((x, i) => { const a1 = a0 + Math.min(x.cost / total, 0.9999) * 2 * Math.PI, big = a1 - a0 > Math.PI ? 1 : 0;
+    const d = `M${pt(a0, R)} A${R} ${R} 0 ${big} 1 ${pt(a1, R)} L${pt(a1, R0)} A${R0} ${R0} 0 ${big} 0 ${pt(a0, R0)}Z`; a0 = a1;
+    return `<path d="${d}" fill="color-mix(in srgb, ${col} ${Math.max(45, 100 - i * 14)}%, var(--surface))"><title>${esc(x.s.name)}: ${money(x.cost)}</title></path>`; }).join("") : "";
+  return `<section class="card u-pie"><div class="u-pie-head"><span class="dot" style="background:${col}"></span><b>${name}</b></div>
+    <div class="u-pie-body"><div class="u-donut"><svg viewBox="0 0 120 120" role="img" aria-label="${name}: ${items.length} subscriptions, ${money(sum)}, ${total ? Math.round(sum / total * 100) : 0}% of last month's spending">
+      <circle cx="60" cy="60" r="48.5" fill="none" stroke="var(--line)" stroke-width="17"/>${arcs}</svg>
+      <div class="pie-mid"><b class="num">${total ? Math.round(sum / total * 100) : 0}%</b><span>${money(sum)}</span></div></div>
+    <ul class="u-legend">${items.map(x => `<li><button data-id="${x.s.id}">${esc(x.s.name)}</button><span class="num">${money(x.cost)}</span></li>`).join("") || `<li class="muted">None</li>`}</ul></div></section>`;
+}
+function usageView() {
+  const last = state.subs.map(lastMonthOf).filter(Boolean), total = last.reduce((a, x) => a + x.cost, 0);
+  const by = k => last.filter(x => x.bucket === k).sort((a, b) => b.cost - a.cost);
+  const unrated = state.subs.filter(s => !last.some(x => x.s === s));
+  const live = state.subs.filter(s => !measureOf(s).costOnly).sort((a, b) => (monthly(b) || 0) - (monthly(a) || 0));
+  const prevName = new Date(addMonths(-1) + "T12:00:00").toLocaleDateString(undefined, { month: "long" }), curName = new Date().toLocaleDateString(undefined, { month: "long" });
+  const row = s => { const m = measureOf(s), { cur } = periodKeys(s), h = s.hist?.[m.id]?.[cur], n = s.needsUse ? 0 : h != null ? Math.round(h / PER[m.per].f * 10) / 10 : s.rate, r = rate(s);
+    return `<div class="u-row" data-sub="${s.id}">${logoHtml(svcOf(s))}<div class="u-nm"><button class="u-open" data-id="${s.id}">${esc(s.name)}</button><span class="small muted">${esc(m.label)}</span></div>
+      <span class="pill ${r.key}">${esc(r.label)}</span>${slider(m, n, `data-u="${s.id}" aria-label="${esc(m.label)}, ${esc(s.name)}"`)}</div>`; };
+  const f = el(`<div class="section-head"><h2>Usage</h2><span class="small muted">How last month went, and what you're using this month.</span></div>
+    <h3 style="margin:4px 0 10px">${esc(prevName)}: what your money bought</h3>
+    ${last.length ? `<div class="u-pies">${Object.keys(BUCKETS).map(k => bucketDonut(k, by(k), total)).join("")}</div>
+      <p class="note" style="margin:8px 0 0">Each ring is that group's share of the ${money(total)} you paid last month for rated subscriptions.</p>`
+      : `<p class="muted">Nothing to show for last month yet. Once a month ends with your usage set, it shows here.</p>`}
+    ${unrated.length ? `<div class="vb-other"><span class="small muted">Not rated for last month (protection plans, paused, new, or missing usage or price):</span>${unrated.map(s => `<button class="chip" data-id="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div>` : ""}
+    <div class="section-head" style="margin-top:26px"><h2 style="font-size:20px">${esc(curName)} so far</h2><span class="small muted">Slide to match how you're using each one. Whatever a slider shows when the month ends is saved as that month's usage.</span></div>
+    ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Add tab.</p>`}
+    <details class="note home-how u-how" style="margin-top:12px"><summary>How we rate value</summary>Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>`);
+  f.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  f.querySelectorAll("[data-u]").forEach(inp => { const s = state.subs.find(x => x.id === inp.dataset.u), m = measureOf(s);
+    inp.oninput = () => { inp.nextElementSibling.textContent = slideText(m, +inp.value); };
+    inp.onchange = () => { const { cur } = periodKeys(s), n = +inp.value; setUse(s, n, m.per); s.example = false;
+      ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(n * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you";
+      save(); const r = rate(s), pill = inp.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; }; });
+  return f;
+}
+// Months that ended since the last visit, with no entry of their own, keep the usage that was set when they ended.
+function closeMonths() { const t = today();
+  state.subs.forEach(s => { const m = measureOf(s); if (m.costOnly) return;
+    if (!s.closedAt) { s.closedAt = t; return; }
+    const rows = valueSeries(s)?.rows.slice(1, -1) || [];  // the last row is the month in progress
+    if (!s.needsUse) rows.forEach(r => { if (r.d > s.closedAt && r.d <= t && !r.paused && s.hist?.[m.id]?.[r.key] == null) {
+      ((s.hist ||= {})[m.id] ||= {})[r.key] = s.uses; ((s.histSrc ||= {})[m.id] ||= {})[r.key] = "kept"; } });
+    s.closedAt = t; }); }
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
@@ -1297,10 +1376,6 @@ function homeView() {
     ${trendHtml()}
     ${videosHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
-    <div class="section-head"><h2>Value this month</h2>
-      <span class="small muted">${state.subs.some(needsPrice) ? `${state.subs.filter(needsPrice).length} need your price. ` : ""}${hasExamples ? "Example usage. Tap to edit." : "Tap a row to edit."}</span></div>
-    ${valueBoardHtml()}
-    <details class="note home-how" style="margin-top:12px"><summary>How we rate value</summary>Value is cost per use: the monthly price divided by how many times a month you use it, compared with a typical range for that kind of service. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip, .save-top").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
@@ -1452,6 +1527,7 @@ function overlapsWith(v) {
 }
 function exploreView() {
   if (exploreOpen && CATALOG[exploreOpen]) return exploreDetail(CATALOG[exploreOpen]);
+  return addView();  // since v67 browsing lives on the Add page; the old grid below is kept for later phases
   const country = profile().country, inCatalog = country === catalogCountry(), mine = new Set(state.subs.map(s => s.svc));
   // Regional providers outside the user's state stay in the list; the region dropdown decides whether they show.
   const list = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no" || (v.service_states && country === "US" && !admin.availability[v.id]?.[country]));
@@ -1537,7 +1613,7 @@ function exploreDetail(v) {
     .sort((a, b) => alts.includes(b.id) - alts.includes(a.id));
   const ov = mine ? [] : overlapsWith(v);
   const cell = (n, unit) => n == null ? `<span class="muted">—</span>` : `<span class="num">${fmt(n)}</span><span class="muted">/${unit}</span>`;
-  const f = el(`<button class="btn ghost" id="x-back">← All services</button>
+  const f = el(`<button class="btn ghost" id="x-back">← Back to Add</button>
     <div class="sheet-head" style="margin:8px 0 16px">${logoHtml(v)}<div><h2>${esc(v.name)}</h2><div class="small muted">${esc(catLabel(v.category))} · prices ${fr.label.toLowerCase()} (checked ${esc(checkedOn(v))})${v.official_url ? ` · <a href="${esc(v.official_url)}" target="_blank" rel="noopener" style="color:var(--accent)">Official pricing page</a>` : ""}</div></div></div>
     ${mine ? `<p class="tip" style="margin:0 0 16px"><b>On your list</b> on the ${esc(planOf(v, mine.plan).name)} plan. <button class="btn ghost small" id="x-mine">Open it</button></p>` : ""}
     ${ov.length ? `<p class="admin-note" style="margin:0 0 16px">You already pay for this kind of service: ${esc(ov.join(", "))}. Check the Overlaps tab before adding another.</p>` : ""}
@@ -1566,7 +1642,7 @@ function exploreDetail(v) {
     ${(v.recent_changes || []).length ? `<h3 style="margin-bottom:8px">Recent price changes</h3><div class="card" style="margin-bottom:20px">${v.recent_changes.map(c => `<div class="small"><b>${esc(c.date)}</b>: ${esc(c.summary)}</div>`).join("")}</div>` : ""}
     ${compareHtml(v)}
     ${similar.length ? `<h3 style="margin-bottom:8px">Similar services</h3><div class="x-grid">${similar.map(x => `<button class="card x-card" data-svc="${x.id}"><div class="x-top">${logoHtml(x)}<div><b>${esc(x.name)}</b><div class="small muted">${inCatalog ? (fromPrice(x) ? `From ${money(fromPrice(x))}/mo` : priceTxt(fromPrice(x))) : esc(catLabel(x.category))}</div>${alts.includes(x.id) ? `<div class="small muted">Alternative</div>` : ""}</div></div></button>`).join("")}</div>` : ""}`);
-  f.getElementById("x-back").addEventListener("click", () => { exploreOpen = null; render(); });
+  f.getElementById("x-back").addEventListener("click", () => { exploreOpen = null; view = "add"; render(); });
   f.getElementById("x-mine")?.addEventListener("click", () => openSheet(mine.id));
   f.querySelectorAll(".x-card").forEach(c => c.addEventListener("click", () => { exploreOpen = c.dataset.svc; render(); window.scrollTo(0, 0); }));
   f.querySelectorAll("[data-add]").forEach(b => b.addEventListener("click", () => {
@@ -1588,11 +1664,14 @@ function exploreDetail(v) {
 function addView() {
   const mine = new Set(state.subs.map(s => s.svc)), country = profile().country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no"), hidden = Object.keys(CATALOG).length - offered.length;
-  const f = el(`<div class="section-head"><h2>Add a subscription</h2><span class="small muted">Two quick steps. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span></div>
+  const cats = [...new Set(offered.map(v => v.category))].sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
+  const f = el(`<div class="section-head"><h2>Add a subscription</h2><span class="small muted">Browse by category or search. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span></div>
     <h3 style="margin:4px 0 8px">1. Which subscription?</h3>
     <input id="a-q" type="search" placeholder="Search, e.g. Hulu, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:10px">
-    <div class="catalog" id="a-cat">${offered.map(v => `<button class="cat-item" data-svc="${v.id}" aria-pressed="${picked === v.id}" data-text="${esc((v.name + " " + catLabel(v.category)).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}
+    <div class="chips a-cats" role="group" aria-label="Category">${["all", "mine-alts", "public", ...cats].map(c => `<button class="chip x-cat" data-cat="${c}" aria-pressed="${exploreCat === c}">${c === "all" ? "All" : c === "mine-alts" ? "Alternatives To Mine" : c === "public" ? "Free Public Services" : esc(catLabel(c))}</button>`).join("")}</div>
+    <div class="catalog" id="a-cat">${offered.map(v => `<button class="cat-item" data-svc="${v.id}" data-cat="${v.category}" data-alt-mine="${altFor(v).length ? 1 : 0}" data-public="${v.provider_type ? 1 : 0}" aria-pressed="${picked === v.id}" data-text="${esc((v.name + " " + catLabel(v.category) + " " + v.features.map(x => x.name).join(" ")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}
       <button class="cat-item" data-svc="" aria-pressed="${picked === ""}" data-text=""><span class="logo" style="background:#6b7785">+</span><span>Something else</span></button></div>
+    <p class="muted" id="a-none" hidden>No services match. Try another word or category, or choose Something else.</p>
     <p class="muted" id="a-hint">Tap a subscription above to fill in the details.</p>
     <form class="fields" id="add-form" hidden>
       <h3 class="full" id="a-title" style="margin:0">2. Tell us about it</h3>
@@ -1630,7 +1709,8 @@ function addView() {
     picked = id; const v = CATALOG[id];
     document.querySelectorAll(".cat-item").forEach(b => b.setAttribute("aria-pressed", b.dataset.svc === id));
     $("add-form").hidden = false; $("a-hint").hidden = true; $("plan-wrap").hidden = !v; $("name-wrap").hidden = !!v;
-    $("a-title").textContent = v ? `2. Tell us about your ${v.name}` : "2. Tell us about it";
+    $("a-title").innerHTML = v ? `2. Tell us about your ${esc(v.name)} <button type="button" class="btn ghost small" id="a-compare">Compare plans and features</button>` : "2. Tell us about it";
+    if (v) $("a-compare").onclick = () => { exploreOpen = v.id; view = "explore"; render(); window.scrollTo(0, 0); };
     $("f-go").textContent = v ? `Add ${v.name} to my list` : "Add to my list";
     useBox();
     $("f-name").value = v ? v.name : ""; $("f-price").value = ""; $("f-feats").innerHTML = "";
@@ -1638,7 +1718,15 @@ function addView() {
     syncPrice(); $("add-form").scrollIntoView({ behavior: "smooth", block: "start" }); if (!v) $("f-name").focus();
   };
   f.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => fill(b.dataset.svc)));
-  f.getElementById("a-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase(); document.querySelectorAll("#a-cat .cat-item").forEach(b => b.hidden = !!q && !!b.dataset.svc && !b.dataset.text.includes(q)); });
+  const applyAdd = () => { const q = ($("a-q")?.value || "").trim().toLowerCase(); let n = 0;
+    document.querySelectorAll("#a-cat .cat-item").forEach(b => { if (!b.dataset.svc) { b.hidden = exploreCat !== "all" && !q; return; }
+      const ok = (exploreCat === "all" || b.dataset.cat === exploreCat || (exploreCat === "mine-alts" && b.dataset.altMine === "1") || (exploreCat === "public" && b.dataset.public === "1")) && (!q || b.dataset.text.includes(q));
+      b.hidden = !ok; n += ok; });
+    $("a-none").hidden = n > 0; };
+  f.getElementById("a-q").addEventListener("input", applyAdd);
+  f.querySelectorAll(".a-cats .x-cat").forEach(b => b.addEventListener("click", () => { exploreCat = b.dataset.cat;
+    document.querySelectorAll(".a-cats .x-cat").forEach(x => x.setAttribute("aria-pressed", x.dataset.cat === exploreCat)); applyAdd(); }));
+  setTimeout(applyAdd);
   f.getElementById("f-plan").addEventListener("change", () => { const p = planOf(CATALOG[picked], $("f-plan").value); $("f-cycle").value = defaultCycle(p); syncPrice(); useBox(); });
   f.getElementById("f-cycle").addEventListener("change", syncPrice);
   f.getElementById("f-start").addEventListener("change", renewText);
@@ -1935,7 +2023,7 @@ function monthlyHtml(s) {
   const vs = valueSeries(s), m = measureOf(s);
   if (!vs || vs.rows.length < 2) return { meta: "", body: `<p class="small muted" style="margin:0">${PHASE1 ? "Your months show up here after your first month." : "Add a start date and price to see your months."}</p>` };
   const rows = vs.rows.slice(1).reverse(), mine = rows.filter(r => r.src === "you").length, fl = rows.filter(r => r.flag).length;
-  const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} export` : "Your usual rate";
+  const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} export` : r.src === "kept" ? "Saved at month end" : "Your usual rate";
   return { meta: [mine ? `${mine} edited` : "", fl ? `${fl} flagged` : ""].filter(Boolean).join(", ") || "Not edited",
     body: `<p class="small muted" style="margin:0">Slide to correct any month (${esc((m.label || m.short).toLowerCase())}), and flag months that weren't typical so your average isn't thrown off. Months you haven't changed use your usual rate (${esc(useText(s))}).</p>
     <div class="months">${rows.map(r => `<div class="mrow${r.flag ? " flagged" : ""}"><div><b>${new Date(r.from + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })}</b><div class="note">${src(r)}</div></div>
@@ -2164,7 +2252,7 @@ function openSheet(id) {
     const sr = root.querySelector("#s-rate");
     if (sr) { sr.oninput = () => sr.nextElementSibling.textContent = slideText(m, +sr.value); sr.onchange = () => use(+sr.value, m.per); }
     root.querySelectorAll("[data-alt]").forEach(b => b.onclick = () => { exploreOpen = b.dataset.alt; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
-    root.querySelector("[data-alt-all]")?.addEventListener("click", () => { exploreOpen = null; exploreCat = "mine-alts"; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
+    root.querySelector("[data-alt-all]")?.addEventListener("click", () => { exploreOpen = null; exploreCat = "mine-alts"; view = "add"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
     // Month sliders show the measure's period (say, prompts a day); history keeps each month's total.
     const setMonth = (k, n) => { const m = measureOf(s), id = m.id; (s.hist ||= {})[id] ||= {}; (s.histSrc ||= {})[id] ||= {};
       if (n == null) { delete s.hist[id][k]; delete s.histSrc[id][k]; } else { s.hist[id][k] = Math.round(n * PER[m.per].f * 10) / 10; s.histSrc[id][k] = "you"; }
@@ -2221,9 +2309,9 @@ function openSheet(id) {
   document.onkeydown = e => { if (e.key === "Escape" && root.firstChild) { root.replaceChildren(); render(); } };
 }
 
-document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "explore") exploreOpen = null; view = b.dataset.view; render(); }));
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 66 · Standalone copy · Oct 23", VERSION_NUM = 66;
+const APP_VERSION = "Prototype · Version 67 · Standalone copy · Oct 23", VERSION_NUM = 67;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2328,6 +2416,7 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   // Subscriptions added recently with no usage entered yet wait for the user's input before any rating (one-time check).
   if (!state.needsV) { state.subs.filter(s => !s.example && !s.uses && !s.hist && s.start && dayDiff(s.start, today()) <= 45).forEach(s => s.needsUse = true); state.needsV = 1; }
   if (!state.unitsV) { state.subs.forEach(migrateUse); state.unitsV = 1; }
+  closeMonths();
   if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { s.measure = "replace"; if (!s.hist?.replace) genHistory(s); s.used = ["data_removal"]; }); state.cloakedV = 1; }
   save();
   render();
