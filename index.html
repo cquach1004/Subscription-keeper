@@ -935,20 +935,29 @@ function activeOverlaps() {
     .map(([tag, members]) => ({ tag, label: TAGS[tag]?.label || tag, advice: TAGS[tag]?.advice || "", members }))
     .sort((a, b) => b.members.filter(m => m.main).length - a.members.filter(m => m.main).length || b.members.length - a.members.length);
 }
-// Which subscription an overlap would let you drop: the main-job holder with the worst value (or the only one).
+// How hard it is to leave a service (Cuong, v71): years of notes, passwords or photos make a cheaper rival not worth the move.
+// Defaults by category; the user can change it per subscription (s.switch). Hard ones are never counted as easy savings.
+const SWITCH = { easy: "Easy", some: "Some work", hard: "Hard" };
+const SWITCH_BY_CAT = { passwords: "hard", storage: "hard", productivity: "hard", small_business: "hard", music: "some", ai: "some", finance: "some", gaming: "some", education: "some", privacy: "some", internet: "some", dating: "some" };
+const SWITCH_BY_SVC = { cloaked: "hard" };  // masked emails and numbers are spread across your accounts
+const switchOf = s => s.switch || SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy";
+const isHard = s => switchOf(s) === "hard";
+// Which subscription an overlap would let you drop: the main-job holder with the worst value (or the only one), skipping hard-to-switch ones.
 function droppable(o) {
-  const mains = o.members.filter(m => m.main).map(m => m.sub);
+  const mains = o.members.filter(m => m.main && !isHard(m.sub)).map(m => m.sub);
   if (!mains.length) return null;
   return mains.sort((a, b) => (rate(a).cpu ?? 1e9) - (rate(b).cpu ?? 1e9)).pop();
 }
 // Subscriptions you could drop: unused monthly ones plus the weaker one in each same-job overlap. Biggest first.
 function dropList() {
   const drop = new Map();
-  state.subs.forEach(s => { if (rate(s).key === "unused" && s.cycle === "month") drop.set(s.id, s); });
+  state.subs.forEach(s => { if (rate(s).key === "unused" && s.cycle === "month" && !isHard(s)) drop.set(s.id, s); });
   activeOverlaps().forEach(o => { const d = droppable(o); if (d) drop.set(d.id, d); });
   return [...drop.values()].sort((a, b) => (monthly(b) || 0) - (monthly(a) || 0));
 }
 function savings() { return dropList().reduce((a, s) => a + (monthly(s) || 0), 0); }
+// Savings that would mean moving your data: hard-to-switch ones that are unused or in a same-job overlap.
+function hardList() { return state.subs.filter(s => isHard(s) && ((rate(s).key === "unused" && s.cycle === "month") || activeOverlaps().some(o => o.members.some(m => m.main && m.sub === s)))); }
 // Value board buckets (Cuong, v57): only subscriptions rated on value. Protection plans, perks cards, storage plans,
 // and ones still missing a price or usage are "not rated", since they pay off in convenience or reduced risk.
 function valueBucket(s) {
@@ -1296,7 +1305,8 @@ function monthBarsHtml() {
 function saveHtml(total) {
   const list = dropList(), amt = savings(), top = list[0], pct = total ? Math.round(amt / total * 100) : 0;
   return `<div class="stat save"><div class="label">Could save / mo</div><div class="value num">${money(amt)}</div>
-    ${amt ? `<div class="small muted">${pct}% of what you pay</div>` : `<div class="small muted">Nothing to cut right now</div>`}
+    ${amt ? `<div class="small muted">${pct}% of what you pay</div>` : `<div class="small muted">Nothing easy to cut right now</div>`}
+    ${hardList().length ? `<div class="small muted" title="${esc(hardList().map(s => s.name).join(", "))}">+ ${money(hardList().reduce((a, s) => a + (monthly(s) || 0), 0))} more if you move your data</div>` : ""}
     ${top ? `<button class="save-top" data-id="${top.id}"><span class="small muted">Review first</span><span class="st-row">${logoHtml(svcOf(top))}<b>${esc(top.name)}</b></span><span class="small muted"><b class="num" style="color:var(--good)">${total ? Math.round(monthly(top) / total * 100) : 0}% saving</b> · ${money(monthly(top))}/mo · ${rate(top).key === "unused" ? "unused" : "overlaps"}</span></button>` : ""}</div>`;
 }
 function valueBoardHtml() {
@@ -1924,9 +1934,10 @@ function verdictText(s, r) {
   if (r.model === "insurance") return `You pay for protection, not daily use. Check the Overlaps tab to see if another subscription already covers the same things.`;
   if (r.model === "storage") return `Judge this by how much you store. Pick the smallest plan that fits your photos and backups.`;
   if (r.model === "perks") return `Each month, set the dollar value of the perks you used (free bags, points, credits). If they add up to less than ${money(monthly(s))} a month, the fee isn't paying off.`;
-  if (r.key === "unused") return `You haven't used it this month. Cancelling saves ${money(monthly(s) * 12)} a year.`;
+  if (r.key === "unused") return isHard(s) ? `You haven't used it this month. Before you cancel, export what you've stored in it; cancelling would save ${money(monthly(s) * 12)} a year.` : `You haven't used it this month. Cancelling saves ${money(monthly(s) * 12)} a year.`;
   // A cheaper plan only counts here if it keeps every feature the user checked (e.g. CNBC+ lacks the Pro articles Cuong reads).
   if (r.key === "poor") { const fits = cheaper && s.used.every(id => featuresFor(v, cheaper.id).some(f => f.id === id));
+    if (isHard(s)) return `Each ${measureOf(s).per1 || "use"} costs ${money(r.cpu)}, but moving everything you've stored would be hard. Save without switching: ${fits ? `the ${cheaper.name} plan is ${money(cheaper.effective_monthly)}/mo and keeps what matters to you` : "look for yearly billing or a discount"}.`;
     return `Each ${measureOf(s).per1 || "use"} costs ${money(r.cpu)}.${fits ? ` The ${cheaper.name} plan is ${money(cheaper.effective_monthly)}/mo.` : " Look for an annual plan or a free alternative."}`; }
   const covers = cheaper && s.used.every(id => featuresFor(v, cheaper.id).some(f => f.id === id));
   if (feats.length - s.used.length >= 3 && covers) return `Good use. ${cheaper.name} at ${money(cheaper.effective_monthly)}/mo includes all ${s.used.length} features that matter to you.`;
@@ -2155,7 +2166,7 @@ function altsHtml(s) {
       </div>`; };
   const top = alts.slice(0, 4), rest = alts.slice(4);
   return { meta: `${alts.length} option${alts.length === 1 ? "" : "s"}${cheaper ? `, ${cheaper} cheaper` : ""}`,
-    body: `<p class="small muted" style="margin:0">Closest matches first, then partial and free options, cheapest first within each. They're rarely exact matches, so check what you'd give up. Prices are US list prices checked ${esc(checkedOn(alts[0].v) || "")}.</p>
+    body: `${isHard(s) ? `<p class="admin-note" style="margin:0">${esc(s.name)} is marked hard to switch, so these would mean moving your data. Check whether one can import from ${esc(s.name)} before you decide.</p>` : ""}<p class="small muted" style="margin:0">Closest matches first, then partial and free options, cheapest first within each. They're rarely exact matches, so check what you'd give up. Prices are US list prices checked ${esc(checkedOn(alts[0].v) || "")}.</p>
     ${top.map(card).join("")}
     ${rest.length ? `<details class="alt-more"><summary class="small" style="color:var(--accent);cursor:pointer;padding:8px 0">Show ${rest.length} more</summary>${rest.map(card).join("")}</details>` : ""}
     <button class="btn ghost small" data-alt-all style="justify-self:start;padding-left:0">See all alternatives in Explore</button>` };
@@ -2227,6 +2238,9 @@ function openSheet(id) {
           ${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use our estimate</button>` : ""}</div>
           <p class="note" style="margin:-6px 0 0">${m.own ? "You set this value." : m.id === "people" ? `Our estimate: what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own.` : m.checks ? "What one roadside call is worth to you, about what you'd pay for it without a membership." : m.bench ? `From our benchmark: above this, each ${esc(m.per1)} costs more than it's worth.` : "Our estimate. Change it to what it's worth to you."} The chart and rating use it.</p>` : ""}
         `)}
+        ${sec("switch", "How hard to switch?", SWITCH[switchOf(s)], `<p class="small muted" style="margin:0">If you've stored years of notes, passwords, photos or playlists here, moving to a cheaper service may not be worth the savings. Hard ones are left out of Could save and we suggest ways to pay less without switching.</p>
+          <div class="seg" role="group" aria-label="How hard to switch">${Object.entries(SWITCH).map(([k, l]) => `<button type="button" data-switch="${k}" aria-pressed="${switchOf(s) === k}">${l}</button>`).join("")}</div>
+          <p class="note" style="margin:0">${s.switch ? `You set this.${s.switch !== (SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy") ? ` <button class="btn ghost small" data-switch="">Use the default (${SWITCH[SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy"]})</button>` : ""}` : `Our default for ${esc(catLabel(svcOf(s).category))}. Change it if it's different for you.`}</p>`)}
         ${m.costOnly ? "" : sec("months", "Usage by month", mo.meta, mo.body)}
         ${sec("alts", "Alternatives", al.meta, al.body)}
         ${sec("price", "Plan and price", priceMeta, `
@@ -2285,6 +2299,7 @@ function openSheet(id) {
     const sr = root.querySelector("#s-rate");
     if (sr) { sr.oninput = () => sr.nextElementSibling.textContent = slideText(m, +sr.value); sr.onchange = () => use(+sr.value, m.per); }
     wireChecks(root, () => setTimeout(draw));
+    root.querySelectorAll("[data-switch]").forEach(b => b.onclick = () => { if (b.dataset.switch) s.switch = b.dataset.switch; else delete s.switch; save(); setTimeout(draw); });
     root.querySelectorAll("[data-alt]").forEach(b => b.onclick = () => { exploreOpen = b.dataset.alt; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
     root.querySelector("[data-alt-all]")?.addEventListener("click", () => { exploreOpen = null; exploreCat = "mine-alts"; view = "add"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
     // Month sliders show the measure's period (say, prompts a day); history keeps each month's total.
@@ -2345,7 +2360,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 70 · Standalone copy · Oct 23", VERSION_NUM = 70;
+const APP_VERSION = "Prototype · Version 71 · Standalone copy · Oct 23", VERSION_NUM = 71;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
