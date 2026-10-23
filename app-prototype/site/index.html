@@ -499,6 +499,31 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 
 /* Help and Sam */
 .top-btns { display: flex; gap: 10px; align-items: center; }
+/* v99 (Cuong): subscription search in the header on every page, left of Help. On phones it's a round button that widens over the title. */
+.top-search { position: relative; }
+.top-search svg { position: absolute; left: 12px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); pointer-events: none; color: #fff; }
+.top-search input { width: 230px; height: 42px; border-radius: 21px; border: 2px solid rgba(255,255,255,.55); background: rgba(255,255,255,.14); color: #fff; padding: 0 14px 0 38px; font: 15px var(--f-body); box-shadow: 0 4px 14px rgba(0,0,0,.18); }
+.top-search input::placeholder { color: rgba(255,255,255,.8); }
+.top-search input::-webkit-search-cancel-button { filter: invert(1); }
+:root[data-style="crisp"] .top-search input, :root[data-style="paper"] .top-search input { background: var(--surface); color: var(--ink); border-color: var(--line); }
+:root[data-style="crisp"] .top-search input::placeholder, :root[data-style="paper"] .top-search input::placeholder { color: var(--muted); }
+:root[data-style="crisp"] .top-search svg, :root[data-style="paper"] .top-search svg { color: var(--accent); }
+:root[data-style="crisp"] .top-search input::-webkit-search-cancel-button, :root[data-style="paper"] .top-search input::-webkit-search-cancel-button { filter: none; }
+.tq-res { position: absolute; right: 0; top: 50px; width: min(360px, calc(100vw - 32px)); max-height: min(70vh, 520px); overflow: auto; z-index: 30; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.22); padding: 6px; }
+.tq-res h4 { margin: 8px 10px 4px; font: 600 12px var(--f-body); color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.tq-row { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; background: none; padding: 8px 10px; border-radius: 10px; text-align: left; color: var(--ink); font: inherit; cursor: pointer; }
+.tq-row:hover, .tq-row:focus-visible { background: var(--accent-soft); outline: none; }
+.tq-row .logo { width: 30px; height: 30px; font-size: 12px; border-radius: 8px; flex: none; }
+.tq-row span { min-width: 0; } .tq-row b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tq-empty { padding: 10px; }
+@media (max-width: 640px) {
+  .top-search input { width: 42px; padding: 0; cursor: pointer; } .top-search input::placeholder { color: transparent; }
+  header.top.searching .brand { display: none; } header.top.searching .top-btns { grid-column: 1 / -1; }
+  header.top.searching .top-search { flex: 1; } .tq-res { left: 0; right: auto; width: calc(100vw - 32px); } header.top.searching .top-search input { width: 100%; padding: 0 14px 0 38px; cursor: text; }
+  header.top.searching .top-search input::placeholder { color: rgba(255,255,255,.8); }
+  :root[data-style="crisp"] header.top.searching .top-search input::placeholder, :root[data-style="paper"] header.top.searching .top-search input::placeholder { color: var(--muted); }
+}
 .help-btn { background: rgba(255,255,255,.14); }
 :root[data-style="crisp"] .help-btn, :root[data-style="paper"] .help-btn { background: var(--surface); color: var(--accent); border-color: var(--line); }
 .sam { gap: 12px; }
@@ -629,7 +654,7 @@ details.az[hidden] { display: none; }
 <div class="wrap">
   <header class="top">
     <div class="brand"><h1>Subscription Keeper</h1></div>
-    <div class="top-btns"><button class="avatar help-btn" id="help-btn" aria-label="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6.5h14v9.5H11l-4.5 3.5V16H5z"/><path d="M9.2 9.6a2.8 2.8 0 1 1 3.6 2.7c-.5.2-.8.6-.8 1.1"/><circle cx="12" cy="14.6" r=".4" fill="currentColor"/></svg></button><button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button></div>
+    <div class="top-btns"><div class="top-search" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><input id="tq" type="search" placeholder="Search subscriptions" aria-label="Search subscriptions" autocomplete="off" aria-controls="tq-res" aria-expanded="false"><div class="tq-res" id="tq-res" hidden></div></div><button class="avatar help-btn" id="help-btn" aria-label="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6.5h14v9.5H11l-4.5 3.5V16H5z"/><path d="M9.2 9.6a2.8 2.8 0 1 1 3.6 2.7c-.5.2-.8.6-.8 1.1"/><circle cx="12" cy="14.6" r=".4" fill="currentColor"/></svg></button><button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button></div>
     <nav class="tabs" role="tablist" aria-label="Screens">
       <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg>Overview</button>
       <button role="tab" id="tab-usage" data-view="usage" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3.5 16.5a8.5 8.5 0 1 1 17 0"/><path d="M12 16.5l4.2-5.2"/></svg>Usage</button>
@@ -2846,7 +2871,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 98 · Standalone copy · Oct 23", VERSION_NUM = 98;
+const APP_VERSION = "Prototype · Version 99 · Standalone copy · Oct 23", VERSION_NUM = 99;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2928,6 +2953,34 @@ function openMe() {
   draw(true);
 }
 document.getElementById("me-btn").addEventListener("click", openMe);
+// Header search (v99): the user's own subscriptions first (opens its details), then services from Explore offered where they live.
+(() => {
+  const inp = document.getElementById("tq"), res = document.getElementById("tq-res"), head = inp.closest("header.top");
+  const norm = x => (x || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const score = (name, q) => { const n = norm(name); return n.startsWith(q) ? 0 : n.split(" ").some(w => w.startsWith(q)) ? 1 : q.length < 4 ? -1 : n.includes(q) ? 2 : n.replace(/ /g, "").includes(q.replace(/ /g, "")) ? 3 : -1; };
+  const rank = (items, q, name, cat) => items.map(x => { let r = score(name(x), q); if (r < 0 && cat && q.length >= 4 && norm(cat(x)).split(" ").some(w => w.startsWith(q))) r = 4; return [r, x]; }).filter(([r]) => r >= 0).sort((a, b) => a[0] - b[0] || name(a[1]).localeCompare(name(b[1]))).map(([, x]) => x);
+  const close = (keepOpen) => { res.hidden = true; inp.setAttribute("aria-expanded", "false"); if (!keepOpen) head.classList.remove("searching"); };
+  const go = fn => { inp.value = ""; close(); inp.blur(); fn(); };
+  function show() {
+    const q = norm(inp.value); if (!q) { close(true); return; }
+    const mine = rank(state.subs, q, s => s.name, s => catLabel(svcOf(s).category)).slice(0, 6), have = new Set(state.subs.map(s => s.svc)), country = profile().country;
+    const more = rank(Object.values(CATALOG).filter(v => v.id !== "custom" && !have.has(v.id) && availability(v.id, country) !== "no"), q, v => v.name, v => catLabel(v.category)).slice(0, 8);
+    const per = s => s.cycle === "year" ? "yr" : "mo";
+    res.innerHTML = (mine.length ? `<h4>Your subscriptions</h4>${mine.map(s => `<button class="tq-row" data-tq-sub="${s.id}">${logoHtml(svcOf(s))}<span><b>${esc(s.name)}</b><span class="small muted">${total(s) == null ? "Add your price" : `${money(total(s))}/${per(s)}`} · ${esc(rate(s).label)}</span></span></button>`).join("")}` : "")
+      + (more.length ? `<h4>Explore</h4>${more.map(v => `<button class="tq-row" data-tq-svc="${v.id}">${logoHtml(v)}<span><b>${esc(v.name)}</b><span class="small muted">${esc(catLabel(v.category))} · ${fromPrice(v) ? "From " : ""}${priceTxt(fromPrice(v))}</span></span></button>`).join("")}` : "")
+      || `<div class="tq-empty small muted">Nothing matches "${esc(inp.value.trim())}". Try another name, or add it from Explore.</div>`;
+    res.hidden = false; inp.setAttribute("aria-expanded", "true");
+    res.querySelectorAll("[data-tq-sub]").forEach(b => b.onclick = () => go(() => openSheet(b.dataset.tqSub)));
+    res.querySelectorAll("[data-tq-svc]").forEach(b => b.onclick = () => go(() => { exploreOpen = b.dataset.tqSvc; view = "explore"; render(); window.scrollTo(0, 0); }));
+  }
+  inp.addEventListener("focus", () => { head.classList.add("searching"); if (inp.value) show(); });
+  inp.addEventListener("input", show);
+  inp.addEventListener("keydown", e => { const rows = [...res.querySelectorAll(".tq-row")];
+    if (e.key === "Enter") { e.preventDefault(); rows[0]?.click(); } else if (e.key === "Escape") { inp.value = ""; close(); inp.blur(); } else if (e.key === "ArrowDown" && rows.length) { e.preventDefault(); rows[0].focus(); } });
+  res.addEventListener("keydown", e => { const rows = [...res.querySelectorAll(".tq-row")], i = rows.indexOf(document.activeElement);
+    if (e.key === "ArrowDown") { e.preventDefault(); rows[Math.min(rows.length - 1, i + 1)]?.focus(); } else if (e.key === "ArrowUp") { e.preventDefault(); (i > 0 ? rows[i - 1] : inp).focus(); } else if (e.key === "Escape") { close(); inp.focus(); } });
+  document.addEventListener("pointerdown", e => { if (!e.target.closest(".top-search")) close(); });
+})();
 document.getElementById("help-btn").addEventListener("click", () => { if (!["help", "feedback"].includes(view)) lastView = view; view = "help"; render(); window.scrollTo(0, 0); });
 document.getElementById("view").innerHTML = `<p class="muted">Loading service prices…</p>`;
 fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
