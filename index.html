@@ -284,6 +284,8 @@ details.ov-why p { margin: 8px 0 0; font-size: 14px; }
 .mrow .slide { grid-column: 1 / -1; }
 .mrow .slide output { font-size: 16px; }
 .mrow .slide-ends { display: none; }
+.checks { display: grid; gap: 6px; margin-top: 8px; } .checks .feature { color: var(--ink); font-weight: 500; border: 0; padding: 0; display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.mrow .checks, .u-row .checks { grid-column: 1 / -1; margin-top: 2px; }
 .mact { display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
 .mrow .mact select { grid-column: auto; }
 details.nums > summary { cursor: pointer; font-size: 13px; color: var(--accent); font-weight: 600; }
@@ -831,6 +833,13 @@ const USAGE_BY_SVC = {
     parts: [{ feature: "video", name: "Prime Video on its own", monthly: 8.99 }, { feature: "nfl", name: "Thursday Night Football", monthly: 8.99, months: [9, 10, 11, 12], within: "video" }] }),
   cloaked: U("replace", "Listings removed a month", "listing removed", "listings removed", "month", 100, { per1: "removal", fixed: true, job: "data_removal", jobName: "data broker removal" }),
   uber_one: U("uses", "Trips a month", "trip", "trips", "month", 100),
+  // AAA (Cuong, v68): tick what you used each month, nothing ticked by default. A year with at least one roadside call counts as worth it.
+  aaa: U("uses", "Services used this month", "roadside call", "roadside calls", "month", 10, { per1: "call", checks: [
+    { id: "roadside", name: "Roadside call (tow, jump start, flat tire, fuel, lockout)", short: "Roadside call" },
+    { id: "discounts", name: "Hotel, rental car or retail discount", short: "Discount" },
+    { id: "travel", name: "Trip interruption coverage", short: "Trip interruption" },
+    { id: "home_lockout", name: "Home lockout reimbursement", short: "Home lockout", plans: ["premier"] },
+    { id: "other", name: "Something else from your club", short: "Other service" }] }),
 };
 // Replacement cost: when someone keeps a service for one job, it's worth what that job costs on its own.
 // Prices from review sites (security.org), checked 2026-10-18, not yet confirmed on the official pages.
@@ -854,12 +863,21 @@ function measuresOf(s) {
 const measureOf = s => measuresOf(s)[0];
 const unitOf = (m, n) => n === 1 ? m.one : m.short;
 const useText = s => { const m = measureOf(s); if (m.costOnly) return "Not measured by use";
+  if (m.checks) { const on = s.checks?.[periodKeys(s).cur] || []; return on.length ? on.map(id => m.checks.find(c => c.id === id)?.short || id).join(", ") + " this month" : "Nothing used this month"; }
   if (m.per1 === "dollar") return `${money(s.rate)} of perks a ${m.per}`;
   return m.amount ? `${fmtN(s.rate)} ${m.short}` : `${fmtN(s.rate)} ${unitOf(m, s.rate)} a ${m.per}`; };
 // The usage slider runs from 0 to the measure's top ("100+": the top means that much or more).
 const slideText = (m, n) => (m.per1 === "dollar" ? "$" : "") + (n >= m.max ? `${fmtN(Math.max(n, m.max))}${n > m.max ? "" : "+"}` : fmtN(n));
 const slider = (m, n, attrs) => `<div class="slide"><input type="range" min="0" max="${m.max}" step="${m.step}" value="${Math.min(n, m.max)}" ${attrs}><output class="num">${slideText(m, n)}</output>
   <div class="slide-ends" aria-hidden="true"><span>0</span><span>${m.per1 === "dollar" ? "$" : ""}${fmtN(m.max)}+</span></div></div>`;
+// Checkbox usage (AAA): s.checks[month] lists what was used; a roadside call also counts as 1 in the month's history for the chart.
+const checkedIn = (s, m, k) => s.checks?.[k] || (s.hist?.[m.id]?.[k] > 0 ? ["roadside"] : []);
+const checksHtml = (s, m, key) => `<div class="checks" data-ck="${s.id || "new"}|${key}">${m.checks.filter(c => !c.plans || c.plans.includes(s.plan)).map(c =>
+  `<label class="feature"><input type="checkbox" value="${c.id}" ${checkedIn(s, m, key).includes(c.id) ? "checked" : ""}>${esc(c.name)}</label>`).join("")}</div>`;
+function setChecks(s, key, ids) { const m = measureOf(s); (s.checks ||= {})[key] = ids;
+  ((s.hist ||= {})[m.id] ||= {})[key] = ids.includes("roadside") ? 1 : 0; ((s.histSrc ||= {})[m.id] ||= {})[key] = "you"; delete s.needsUse; s.example = false; save(); }
+const wireChecks = (root, after) => root.querySelectorAll("[data-ck]").forEach(box => box.onchange = () => { const [id, key] = box.dataset.ck.split("|"), s = state.subs.find(x => x.id === id);
+  if (!s) return; setChecks(s, key, [...box.querySelectorAll("input:checked")].map(i => i.value)); after?.(s, box); });
 // v66: entries carry over when the unit is the same; otherwise example rows get example numbers and real ones ask again.
 function migrateUse(s) {
   const m = measureOf(s), prev = s.usage?.[m.id] || (s.measure === m.id ? { rate: s.rate, per: s.per } : null), sample = SAMPLE.find(x => x[0] === s.svc);
@@ -881,6 +899,9 @@ function rate(s) {
   if (needsPrice(s)) return { key: "ok", label: "Add your price", cpu: null, needs: true };
   // No usage from the user yet (just added): no rating and no advice until they tell us (Cuong, 2026-10-20).
   const m = measureOf(s);
+  if (m.checks) { const keys = (valueSeries(s)?.rows.slice(1) || []).slice(-12).map(r => r.key), used = (keys.length ? keys : [today().slice(0, 7)]).flatMap(k => checkedIn(s, m, k));
+    return used.includes("roadside") ? { key: "great", label: "Great value", cpu: null, roadside: true }
+      : used.length ? { key: "ok", label: "Fair value", cpu: null, checksUsed: true } : { key: "ok", label: MODEL_LABEL.insurance, cpu: null, model: "insurance" }; }
   if (s.needsUse && !m.costOnly) return { key: "ok", label: "Add how often you use it", cpu: null, waiting: true };
   if (!m.rated) {
     const cpu = s.uses && v.value_model === "insurance" ? monthly(s) / s.uses : null;
@@ -974,7 +995,7 @@ function upcomingHtml() {
 
 // First visit: each person picks their own subscriptions (Cuong shares the prototype for feedback, 2026-10-19).
 // Nothing is shared between viewers: lists live in this browser only.
-const FRESH = () => ({ subs: [], unitsV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
+const FRESH = () => ({ subs: [], unitsV: 1, aaaV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
 function welcomeView() {
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
@@ -1007,7 +1028,7 @@ function welcomeView() {
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, start: today(), day: +today().slice(8) })) };
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = 1; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = 1; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
@@ -1334,7 +1355,7 @@ function usageView() {
   const prevName = new Date(addMonths(-1) + "T12:00:00").toLocaleDateString(undefined, { month: "long" }), curName = new Date().toLocaleDateString(undefined, { month: "long" });
   const row = s => { const m = measureOf(s), { cur } = periodKeys(s), h = s.hist?.[m.id]?.[cur], n = s.needsUse ? 0 : h != null ? Math.round(h / PER[m.per].f * 10) / 10 : s.rate, r = rate(s);
     return `<div class="u-row" data-sub="${s.id}">${logoHtml(svcOf(s))}<div class="u-nm"><button class="u-open" data-id="${s.id}">${esc(s.name)}</button><span class="small muted">${esc(m.label)}</span></div>
-      <span class="pill ${r.key}">${esc(r.label)}</span>${slider(m, n, `data-u="${s.id}" aria-label="${esc(m.label)}, ${esc(s.name)}"`)}</div>`; };
+      <span class="pill ${r.key}">${esc(r.label)}</span>${m.checks ? checksHtml(s, m, cur) : slider(m, n, `data-u="${s.id}" aria-label="${esc(m.label)}, ${esc(s.name)}"`)}</div>`; };
   const f = el(`<div class="section-head"><h2>Usage</h2><span class="small muted">How last month went, and what you're using this month.</span></div>
     <h3 style="margin:4px 0 10px">${esc(prevName)}: what your money bought</h3>
     ${last.length ? `<div class="u-pies">${Object.keys(BUCKETS).map(k => bucketDonut(k, by(k), total)).join("")}</div>
@@ -1345,6 +1366,7 @@ function usageView() {
     ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Add tab.</p>`}
     <details class="note home-how u-how" style="margin-top:12px"><summary>How we rate value</summary>Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>`);
   f.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  wireChecks(f, (s, box) => { const r = rate(s), pill = box.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; });
   f.querySelectorAll("[data-u]").forEach(inp => { const s = state.subs.find(x => x.id === inp.dataset.u), m = measureOf(s);
     inp.oninput = () => { inp.nextElementSibling.textContent = slideText(m, +inp.value); };
     inp.onchange = () => { const { cur } = periodKeys(s), n = +inp.value; setUse(s, n, m.per); s.example = false;
@@ -1381,7 +1403,7 @@ function homeView() {
   pieWire(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
-  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = 1; save(); render(); });
+  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = 1; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
   f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
   return f;
@@ -1701,9 +1723,9 @@ function addView() {
     const fs = featuresFor(v, pl.id); $("f-feats").innerHTML = fs.length ? `<span class="small muted" style="margin-top:6px">What matters to you? Check any that apply.</span>` + fs.map(x => `<label class="feature" style="color:var(--ink);font-weight:500;border:0;padding:0"><input type="checkbox" data-ff="${x.id}">${esc(x.name)}</label>`).join("") : ""; };
   // The usage slider for the service being added, in its own unit (custom entries count days used a month).
   const useBox = () => { const m = measuresOf({ svc: picked || "custom", name: "", plan: CATALOG[picked] ? $("f-plan").value || planOf(CATALOG[picked]).id : null })[0];
-    $("f-use").innerHTML = m.costOnly ? `<span class="small muted">Plans like this aren't judged by how often you use them, so there's nothing to enter.</span>`
+    $("f-use").innerHTML = m.checks ? `<b style="font-weight:500">${esc(m.label)}</b>${checksHtml({ plan: $("f-plan").value }, m, "")}` : m.costOnly ? `<span class="small muted">Plans like this aren't judged by how often you use them, so there's nothing to enter.</span>`
       : `<label for="f-uses" style="font-weight:500">${esc(m.label)}</label>${slider(m, 0, 'id="f-uses"')}${m.note ? `<span class="note">${esc(m.note)}</span>` : ""}`;
-    $("f-unsure").closest("label").hidden = !!m.costOnly;
+    $("f-unsure").closest("label").hidden = !!(m.costOnly || m.checks);
     const u = $("f-uses"); if (u) { u.disabled = $("f-unsure").checked; u.oninput = () => { u.dataset.touched = 1; u.nextElementSibling.textContent = slideText(m, +u.value); }; } };
   const fill = (id) => {
     picked = id; const v = CATALOG[id];
@@ -1741,9 +1763,10 @@ function addView() {
       : { id: "custom-" + Date.now(), svc: "custom", plan: null, used: [], ...base };
     const ff = [...document.querySelectorAll("[data-ff]:checked")].map(x => x.dataset.ff); if (ff.length) sub.used = ff;
     const fm = measuresOf(sub)[0], u = $("f-uses"); sub.measure = fm.id;
-    if (fm.costOnly) setUse(sub, 0, fm.per);
+    const ticks = fm.checks ? [...document.querySelectorAll("#f-use [data-ck] input:checked")].map(i => i.value) : null;
+    if (fm.costOnly || fm.checks) setUse(sub, 0, fm.per);
     else if ($("f-unsure").checked || !u?.dataset.touched) { sub.rate = 0; sub.uses = 0; sub.per = fm.per; sub.needsUse = true; } else setUse(sub, +u.value, fm.per);
-    state.subs.push(sub); save(); picked = null; view = "home"; render(); window.scrollTo(0, 0);
+    state.subs.push(sub); if (ticks) setChecks(sub, periodKeys(sub).cur, ticks); save(); picked = null; view = "home"; render(); window.scrollTo(0, 0);
   });
   if (pendingPick) { const pk = pendingPick; pendingPick = null;
     setTimeout(() => { fill(pk.svc); const pl = planOf(CATALOG[pk.svc], pk.plan); $("f-plan").value = pl.id; $("f-cycle").value = defaultCycle(pl); syncPrice(); if (pk.price) $("f-price").value = (+pk.price).toFixed(2); }); }
@@ -1893,6 +1916,9 @@ function verdictText(s, r) {
     const mine = s.used.filter(id => id !== m.job).map(id => feats.find(f => f.id === id)?.name).filter(Boolean);
     return d <= 0.005 ? `${esc(s.name)} costs less than ${m.jobName} alone (${money(m.worth)}/mo at ${a?.name.split(",")[0] || "the cheapest option"}), so everything else is a bonus.`
       : `You pay ${money(d)}/mo more than ${m.jobName} alone would cost${a ? ` at ${a.name.split(",")[0]}` : ""}. ${mine.length ? `That buys the extras you care about: ${mine.join(", ")}.` : `If you don't need the extras (${extras.slice(0, 3).map(f => f.name.toLowerCase()).join(", ")}${extras.length > 3 ? " and more" : ""}), switching would save ${money(d * 12)} a year.`}`; }
+  if (r.roadside) return `You used roadside help in the last 12 months. We count ${esc(s.name)} as worth it in any year with at least one roadside call.`;
+  if (r.checksUsed) return `No roadside calls in the last 12 months, but you used other member benefits. One roadside call in a year would make it clearly worth it.`;
+  if (s.svc === "aaa" && r.model === "insurance") return `Nothing used in the last 12 months. That's fine for protection, but one roadside call in a year is what makes it clearly worth it. Tick what you use each month under How you use it.`;
   if (r.model === "insurance") return `You pay for protection, not daily use. Check the Overlaps tab to see if another subscription already covers the same things.`;
   if (r.model === "storage") return `Judge this by how much you store. Pick the smallest plan that fits your photos and backups.`;
   if (r.model === "perks") return `Add up the perks you used this year (bags, points, upgrades). If they're worth less than ${money(total(s))}, the fee isn't paying off.`;
@@ -1952,7 +1978,9 @@ const genAll = () => state.subs.forEach(s => {
 function valueSeries(s) {
   if (!s.start || regularTotal(s) == null) return null;
   const m = measureOf(s), worth = m.worth;
-  const t = today(), back = addMonths(-12), from = s.start > back ? s.start : back;
+  // Months start on the billing day, so each month's key stays the same from day to day (v68).
+  const t = today(), back = addMonths(-12); let from = s.start;
+  if (from < back) { let k = Math.max(0, Math.floor(dayDiff(s.start, back) / 30.44) - 1); while (stepDate(s.start, "month", k) < back) k++; from = stepDate(s.start, "month", k); }
   const pts = [from]; for (let k = 1; k <= 12; k++) { const d = stepDate(from, "month", k); if (d >= t) break; pts.push(d); }
   if (pts.at(-1) < t) pts.push(t);
   const reg = monthlyOf(s, regularTotal(s)), lastStart = spans(s).at(-1)?.[0] || s.start;
@@ -1986,7 +2014,7 @@ function valueChart(s) {
   if (vs.rows.length < 2) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">Your chart starts after your first month.${PHASE1 ? "" : " Had it longer? Set your real start date under Start date and pauses."}</p>` };
   // Month by month (Cuong, v65): value each month vs what that month cost, so a slowdown shows even after a strong start.
   const mon = vs.rows.slice(1).map((r, i) => ({ r, cost: r.spent, val: vs.worth ? Math.max(0, r.value - vs.rows[i].value) : null, partial: r === vs.rows.at(-1) && dayDiff(r.from, r.d) < 27 }));
-  const win = m.per === "year" ? 12 : 3;  // things counted per year (roadside calls) are judged over a year, not 3 months
+  const win = m.per === "year" || m.checks ? 12 : 3;  // things counted per year (roadside calls) are judged over a year, not 3 months
   const full = mon.filter(x => !x.partial && !x.r.paused), last3 = full.slice(-win), early = full.slice(0, -win);
   const avg = (xs, k) => xs.length ? xs.reduce((a, x) => a + x[k], 0) / xs.length : 0;
   const aV = avg(last3, "val"), aC = avg(last3, "cost"), worthN = last3.filter(x => x.val >= x.cost).length;
@@ -1998,6 +2026,8 @@ function valueChart(s) {
   const unit = m.short, pp = n => fmtN(Math.round(n / PER[m.per].f * 10) / 10);  // monthly figures in the measure's period
   const head = m.fixed ? `<span>${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone costs <b>${money(vs.worth)} a month</b>${vs.altName ? ` (${esc(vs.altName)})` : ""}. ${esc(s.name)} costs <b>${money(vs.reg)}</b>.</span>
        ${recentHtml}${vs.quiet ? `<span class="small" style="color:var(--warn);font-weight:600">No removals in the last 3 months. Check that ${esc(s.name)}'s scans are still running.</span>` : ""}`
+    : m.checks ? `<span>We count ${esc(s.name)} as worth it in any year with at least one roadside call. Each call counts as ${money(vs.worth)} of value.</span>
+       ${recentHtml}`
     : m.bundle ? `<span>It pays for itself at about <b>${fmtN(Math.round(vs.need * 10) / 10)} orders under $35 a month</b>${m.fixedAdd ? `, counting ${m.counted.map(partText).join(" and ")}` : ""}. ${vs.usualAvg != null ? `In a usual month you average <b>${fmtN(Math.round(vs.usualAvg * 10) / 10)}</b>` : `You averaged <b>${fmtN(Math.round(vs.avg * 10) / 10)}</b>`}.</span>
        ${recentHtml}`
     : !vs.worth
@@ -2023,12 +2053,12 @@ function monthlyHtml(s) {
   const vs = valueSeries(s), m = measureOf(s);
   if (!vs || vs.rows.length < 2) return { meta: "", body: `<p class="small muted" style="margin:0">${PHASE1 ? "Your months show up here after your first month." : "Add a start date and price to see your months."}</p>` };
   const rows = vs.rows.slice(1).reverse(), mine = rows.filter(r => r.src === "you").length, fl = rows.filter(r => r.flag).length;
-  const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} export` : r.src === "kept" ? "Saved at month end" : "Your usual rate";
+  const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} export` : r.src === "kept" ? "Saved at month end" : m.checks ? "Nothing ticked" : "Your usual rate";
   return { meta: [mine ? `${mine} edited` : "", fl ? `${fl} flagged` : ""].filter(Boolean).join(", ") || "Not edited",
-    body: `<p class="small muted" style="margin:0">Slide to correct any month (${esc((m.label || m.short).toLowerCase())}), and flag months that weren't typical so your average isn't thrown off. Months you haven't changed use your usual rate (${esc(useText(s))}).</p>
+    body: `<p class="small muted" style="margin:0">${m.checks ? "Tick what you used in each month. A month with nothing ticked counts as nothing used." : `Slide to correct any month (${esc((m.label || m.short).toLowerCase())}), and flag months that weren't typical so your average isn't thrown off. Months you haven't changed use your usual rate (${esc(useText(s))}).`}</p>
     <div class="months">${rows.map(r => `<div class="mrow${r.flag ? " flagged" : ""}"><div><b>${new Date(r.from + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })}</b><div class="note">${src(r)}</div></div>
-      ${r.paused ? `<span class="small muted">Paused, no usage counted</span>` : `<div class="mact">${r.src === "you" ? `<button class="btn ghost small" data-hm-clear="${r.key}">Use my usual</button>` : ""}<select data-hf="${r.key}" aria-label="Flag ${r.key}"><option value="">Typical month</option>${Object.entries(FLAGS).map(([k, l]) => `<option value="${k}" ${r.flag === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>
-      ${slider(m, r.src === "rate" ? s.rate : Math.round(+s.hist[m.id][r.key] / PER[m.per].f * 10) / 10, `data-hm="${r.key}" aria-label="${esc(m.label)} in ${r.key}"${r.src === "rate" ? ' class="usual"' : ""}`)}
+      ${r.paused ? `<span class="small muted">Paused, no usage counted</span>` : `<div class="mact">${r.src === "you" ? `<button class="btn ghost small" data-hm-clear="${r.key}">${m.checks ? "Clear" : "Use my usual"}</button>` : ""}<select data-hf="${r.key}" aria-label="Flag ${r.key}"><option value="">Typical month</option>${Object.entries(FLAGS).map(([k, l]) => `<option value="${k}" ${r.flag === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>
+      ${m.checks ? checksHtml(s, m, r.key) : slider(m, r.src === "rate" ? s.rate : Math.round(+s.hist[m.id][r.key] / PER[m.per].f * 10) / 10, `data-hm="${r.key}" aria-label="${esc(m.label)} in ${r.key}"${r.src === "rate" ? ' class="usual"' : ""}`)}
       `}</div>`).join("")}</div>
     ${m.amount ? "" : `<p class="note" style="margin:0">Months run from your billing date. ${SYNC[s.svc] ? "Months filled from your data export are marked; your own corrections still win." : "Later, services you connect could fill these in for you, and your own corrections would still win."}</p>`}${syncHtml(s)}` };
 }
@@ -2178,7 +2208,8 @@ function openSheet(id) {
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
         ${sec("usage", "How you use it", esc(useText(s)), `
-        ${m.costOnly ? `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
+        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">Nothing is ticked until you use something. Correct past months under Usage by month.</p></div>`
+        : m.costOnly ? `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
           ${slider(m, s.rate, 'id="s-rate"')}
           ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}
         ${m.fixed ? `<label>Compare with<select id="s-alt">${(ALTERNATIVES[m.job] || []).map((a, i) => `<option value="${i}" ${(s.alt || 0) === i && !m.own ? "selected" : ""}>${esc(a.name)} · ${money(a.monthly)}/mo</option>`).join("")}${m.own ? `<option selected>Your own price · ${money(m.worth)}/mo</option>` : ""}</select></label>
@@ -2192,7 +2223,7 @@ function openSheet(id) {
         : m.worth != null || m.rated ? `<div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Each ${esc(m.per1)} is worth</label>
           <input id="s-worth" type="number" min="0" step="0.01" value="${m.worth == null ? "" : (+m.worth).toFixed(m.worth < 0.1 ? 3 : 2)}"><span class="small muted">${currency()} to you</span>
           ${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use our estimate</button>` : ""}</div>
-          <p class="note" style="margin:-6px 0 0">${m.own ? "You set this value." : m.id === "people" ? `Our estimate: what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own.` : m.bench ? `From our benchmark: above this, each ${esc(m.per1)} costs more than it's worth.` : "Our estimate. Change it to what it's worth to you."} The chart and rating use it.</p>` : ""}
+          <p class="note" style="margin:-6px 0 0">${m.own ? "You set this value." : m.id === "people" ? `Our estimate: what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own.` : m.checks ? "What one roadside call is worth to you, about what you'd pay for it without a membership." : m.bench ? `From our benchmark: above this, each ${esc(m.per1)} costs more than it's worth.` : "Our estimate. Change it to what it's worth to you."} The chart and rating use it.</p>` : ""}
         `)}
         ${m.costOnly ? "" : sec("months", "Usage by month", mo.meta, mo.body)}
         ${sec("alts", "Alternatives", al.meta, al.body)}
@@ -2251,11 +2282,12 @@ function openSheet(id) {
     const use = (rate, per = s.per) => { setUse(s, rate, per); s.example = false; save(); setTimeout(draw); };
     const sr = root.querySelector("#s-rate");
     if (sr) { sr.oninput = () => sr.nextElementSibling.textContent = slideText(m, +sr.value); sr.onchange = () => use(+sr.value, m.per); }
+    wireChecks(root, () => setTimeout(draw));
     root.querySelectorAll("[data-alt]").forEach(b => b.onclick = () => { exploreOpen = b.dataset.alt; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
     root.querySelector("[data-alt-all]")?.addEventListener("click", () => { exploreOpen = null; exploreCat = "mine-alts"; view = "add"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
     // Month sliders show the measure's period (say, prompts a day); history keeps each month's total.
     const setMonth = (k, n) => { const m = measureOf(s), id = m.id; (s.hist ||= {})[id] ||= {}; (s.histSrc ||= {})[id] ||= {};
-      if (n == null) { delete s.hist[id][k]; delete s.histSrc[id][k]; } else { s.hist[id][k] = Math.round(n * PER[m.per].f * 10) / 10; s.histSrc[id][k] = "you"; }
+      if (n == null) { delete s.hist[id][k]; delete s.histSrc[id][k]; if (s.checks) delete s.checks[k]; } else { s.hist[id][k] = Math.round(n * PER[m.per].f * 10) / 10; s.histSrc[id][k] = "you"; }
       s.example = false; save(); setTimeout(draw); };
     root.querySelectorAll("[data-hm]").forEach(inp => { inp.oninput = () => { inp.classList.remove("usual"); inp.nextElementSibling.textContent = slideText(measureOf(s), +inp.value); }; inp.onchange = () => setMonth(inp.dataset.hm, +inp.value); });
     root.querySelectorAll("[data-hm-clear]").forEach(b => b.onclick = () => setMonth(b.dataset.hmClear, null));
@@ -2311,7 +2343,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 67 · Standalone copy · Oct 23", VERSION_NUM = 67;
+const APP_VERSION = "Prototype · Version 68 · Standalone copy · Oct 23", VERSION_NUM = 68;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2416,6 +2448,7 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   // Subscriptions added recently with no usage entered yet wait for the user's input before any rating (one-time check).
   if (!state.needsV) { state.subs.filter(s => !s.example && !s.uses && !s.hist && s.start && dayDiff(s.start, today()) <= 45).forEach(s => s.needsUse = true); state.needsV = 1; }
   if (!state.unitsV) { state.subs.forEach(migrateUse); state.unitsV = 1; }
+  if (!state.aaaV) { state.subs.filter(s => s.svc === "aaa").forEach(s => { s.measure = measureOf(s).id; setUse(s, 0, "month"); }); state.aaaV = 1; }
   closeMonths();
   if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { s.measure = "replace"; if (!s.hist?.replace) genHistory(s); s.used = ["data_removal"]; }); state.cloakedV = 1; }
   save();
