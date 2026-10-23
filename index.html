@@ -256,7 +256,9 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .facts-dots button { width: 6px; height: 6px; padding: 0; border: 0; border-radius: 50%; background: var(--line); cursor: pointer; }
 .facts-dots button[aria-current] { background: var(--accent); width: 14px; border-radius: 3px; }
 .facts-src { font-size: 11px; color: var(--muted); }
-.checkin { display: grid; gap: 10px; margin-bottom: 18px; } .checkin h3 { margin: 0; }
+.checkin { margin-bottom: 18px; } .checkin h3 { margin: 0; flex: 1; font-size: 16px; }
+details.checkin > summary { display: flex; align-items: center; gap: 10px; }
+details.checkin[open] > * + * { margin-top: 10px; }
 .ci-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .ci-list { list-style: none; margin: 0; padding: 0 4px 0 0; display: grid; gap: 6px; max-height: 380px; overflow-y: auto; }
 .ci-list li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); }
@@ -1507,7 +1509,8 @@ function usageView() {
     ${unrated.length ? `<div class="vb-other"><span class="small muted">Not rated for last month (protection plans, paused, new, or missing usage or price):</span>${unrated.map(s => `<button class="chip" data-id="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div>` : ""}
     <div class="section-head" style="margin-top:26px"><h2 style="font-size:20px">${esc(curName)} so far</h2><span class="small muted">Slide to match how you're using each one. Whatever a slider shows when the month ends is saved as that month's usage.</span></div>
     ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Explore tab.</p>`}
-    <details class="note home-how u-how" style="margin-top:12px"><summary>How we rate value</summary>Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>`);
+    <details class="note home-how u-how" style="margin-top:12px"><summary>How we rate value</summary>Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>
+    <div class="charts u-month" style="margin-top:22px">${monthBarsHtml()}</div>`);
   f.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   wireCheckin(f);
   wireChecks(f, (s, box) => { const r = rate(s), pill = box.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; });
@@ -1560,23 +1563,26 @@ function wireFacts(root) {
 }
 // Monthly check-in on Usage (Cuong, v78): did you add, change, pause or cancel anything this month?
 // "No changes" or acting on one hides the question until next month (state.checkin = "YYYY-MM").
-let checkinOpen = false;
+let checkinOpen = false, checkinFold = null;  // checkinFold: the viewer's own open/closed choice this visit
 function checkinHtml() {
   const mo = today().slice(0, 7), name = new Date().toLocaleDateString(undefined, { month: "long" });
-  if (state.checkin === mo && !checkinOpen) return `<p class="small muted checkin-done">Checked for changes in ${esc(name)}. <button class="btn ghost small" data-ci="reopen">Something changed?</button></p>`;
+  const done = state.checkin === mo, open = checkinFold ?? !done;
   const subs = state.subs.slice().sort((a, b) => a.name.localeCompare(b.name));
-  return `<section class="card checkin"><h3>Anything change in ${esc(name)}?</h3><p class="small muted" style="margin:0">Keep your list up to date so your savings and value ratings stay right.</p>
+  // Collapsible (Cuong, v87): open until answered for the month, then folded to its title.
+  return `<details class="card checkin fold" ${open ? "open" : ""}><summary><h3>Anything change in ${esc(name)}?</h3>${done ? `<span class="pill great">Checked</span>` : ""}</summary>
+    <p class="small muted" style="margin:0">Keep your list up to date so your savings and value ratings stay right.</p>
     <div class="ci-btns"><button class="btn" data-ci="add">I added one</button><button class="btn" data-ci="edit" aria-expanded="${checkinOpen}">I changed, paused or cancelled one</button><button class="btn ghost" data-ci="none">No changes</button></div>
     ${checkinOpen ? `<ul class="ci-list">${subs.map(s => `<li>${logoHtml(svcOf(s))}<span class="ci-nm"><b>${esc(s.name)}</b>${pausedNow(s) ? `<span class="small muted">Paused</span>` : ""}</span>
       <span class="ci-act"><button class="btn ghost small" data-ci-plan="${s.id}">Change plan</button><button class="btn ghost small" data-ci-pause="${s.id}">${pausedNow(s) ? "Restarted" : "Paused"}</button><button class="btn ghost small" data-ci-del="${s.id}">Cancelled</button></span></li>`).join("")}</ul>
-      <button class="btn ghost small" data-ci="done">Done</button>` : ""}</section>`;
+      <button class="btn ghost small" data-ci="done">Done</button>` : ""}</details>`;
 }
 function wireCheckin(root) {
-  const mo = today().slice(0, 7), done = () => { state.checkin = mo; checkinOpen = false; save(); render(); };
+  const mo = today().slice(0, 7), done = () => { state.checkin = mo; checkinOpen = false; checkinFold = null; save(); render(); };
+  root.querySelector("details.checkin")?.addEventListener("toggle", e => { checkinFold = e.target.open; });
   root.querySelectorAll("[data-ci]").forEach(b => b.onclick = () => { const k = b.dataset.ci;
     if (k === "add") { state.checkin = mo; save(); view = "add"; render(); window.scrollTo(0, 0); }
     else if (k === "none" || k === "done") done();
-    else { checkinOpen = k === "reopen" ? true : !checkinOpen; render(); } });
+    else { checkinOpen = !checkinOpen; checkinFold = true; render(); } });
   root.querySelectorAll("[data-ci-plan]").forEach(b => b.onclick = () => { state.checkin = mo; save(); openSheet(b.dataset.ciPlan); });
   // A pause starts (or ends) today; while paused it costs nothing and isn't rated.
   root.querySelectorAll("[data-ci-pause]").forEach(b => b.onclick = () => { const s = state.subs.find(x => x.id === b.dataset.ciPause), cp = currentPause(s);
@@ -1598,7 +1604,7 @@ function homeView() {
       ${benchHtml(total)}
     </section>
     ${factsHtml()}
-    <div class="charts">${monthBarsHtml()}${pieHtml()}</div>
+    <div class="charts">${pieHtml()}</div>
     ${trendHtml()}
     ${videosHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
@@ -2598,7 +2604,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 86 · Standalone copy · Oct 23", VERSION_NUM = 86;
+const APP_VERSION = "Prototype · Version 87 · Standalone copy · Oct 23", VERSION_NUM = 87;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
