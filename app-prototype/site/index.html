@@ -934,10 +934,16 @@ const USAGE_BY_CAT = {
 // Each month you tick anything that went wrong; nothing ticked means no problems. A problem that isn't fixed, or callbacks
 // in two of the last 3 months, means it may not be worth it.
 const isPest = v => /pest|mosquito|termite|bug|exterminat|orkin|terminix|aptive/i.test(v.id + " " + v.name);
-const RESULTS = v => { const pest = isPest(v);
-  return U("problems", "Anything go wrong this month?", "problem", "problems", "month", 3, { per1: "problem", results: true, pest, checks: [
-    { id: "problem", name: pest ? "Saw pests in or around the house" : "Saw weeds, bare spots or unhealthy grass", short: "Problem seen" },
-    { id: "callback", name: "Had to call them back", short: "Called back" },
+// v93 (Cuong): protection plans and essentials (antivirus, cameras, internet, phone, password managers...) are judged the same way:
+// is it doing its job, and is the price and service as good as a comparable option? What "doing its job" means, per category:
+const PROBLEM_TEXT = { privacy: "A virus, scam or data leak got through, or it slowed things down", home_security: "Missed motion alerts, or cameras glitched or went offline",
+  internet: "Outages or slow speeds", mobile: "Dropped calls, slow data or poor coverage", tech_support: "A repair or claim didn't go well",
+  passwords: "Sync, autofill or login problems", home: "A repair or claim didn't go well", pets: "A claim or delivery went wrong", beauty: "An order went wrong or arrived late" };
+const RESULTS_CATS = new Set(["lawn_pest", ...Object.keys(PROBLEM_TEXT)]);
+const RESULTS = v => { const pest = isPest(v), lawn = v.category === "lawn_pest";
+  return U("problems", "Anything go wrong this month?", "problem", "problems", "month", 3, { per1: "problem", results: true, pest, lawn, checks: [
+    { id: "problem", name: lawn ? (pest ? "Saw pests in or around the house" : "Saw weeds, bare spots or unhealthy grass") : PROBLEM_TEXT[v.category], short: "Problem seen" },
+    { id: "callback", name: lawn ? "Had to call them back" : "Had to contact support", short: lawn ? "Called back" : "Contacted support" },
     { id: "unfixed", name: "The problem still isn't fixed", short: "Not fixed" }] }); };
 // Typical prices, so "fair market price" has a yardstick. Estimates from This Old House cost guides (2026), not official prices;
 // quotes vary with home or yard size and region, so a price is only flagged when it's well above the range.
@@ -945,7 +951,7 @@ const FAIR_PRICE = {
   pest: { lo: 46, hi: 58, what: "pest control", src: "This Old House's 2026 cost estimates for Terminix, Aptive and Orkin for about a 2,000 sq ft home" },
   lawn: { lo: 65, hi: 86, what: "lawn care", src: "one TruGreen sample quote for a 5,906 sq ft yard, reported by This Old House in June 2026" },
 };
-const fairPrice = s => { const m = measureOf(s); if (!m.results || profile().country !== catalogCountry() || /mosquito/i.test(s.svc)) return null; return FAIR_PRICE[m.pest ? "pest" : "lawn"]; };
+const fairPrice = s => { const m = measureOf(s); if (!m.results || !m.lawn || profile().country !== catalogCountry() || /mosquito/i.test(s.svc)) return null; return FAIR_PRICE[m.pest ? "pest" : "lawn"]; };
 const priceyFor = s => { const fp = fairPrice(s), mo = monthly(s); return fp && mo > fp.hi * 1.15 ? fp : null; };
 // Insurance is judged on price for the same coverage, and on service (Cuong, v91): the best price for the same coverage
 // and terms is great value; paying more than another insurer's matching quote is not, unless their service is clearly worse.
@@ -959,7 +965,16 @@ const INSURER_SERVICE = {
   home: { avg: 642, hi: 652, lo: 632, unit: " of 1,000", what: "overall customer satisfaction",
     src: "J.D. Power 2025 U.S. Home Insurance Study (via Money Talks News)", url: "https://www.moneytalksnews.com/slideshows/homeowners-rate-these-insurers-best-for-customer-service/",
     scores: { state_farm_home: 657, allstate_home: 633, usaa_home: 737, liberty_mutual_home: 620, farmers_home: 631, nationwide_home: 641, travelers_home: 608, american_family_home: 643 } },
+  // ACSI 2025 telecom study (released May 20, 2025). Xfinity and Spectrum cable weren't scored separately, so they aren't rated here.
+  internet: { avg: 72, hi: 75, lo: 69, unit: " of 100", what: "ACSI customer satisfaction",
+    src: "ACSI Telecommunications Study 2025", url: "https://www.silicon.co.uk/press-release/cell-phone-satisfaction-hits-decade-low-mark-as-ai-promises-fall-short-acsi-data-show",
+    scores: { att_fiber: 78, google_fiber: 76, verizon_fios: 76, tmobile_home_internet: 78, verizon_5g_home: 77 } },
+  mobile: { avg: 75, hi: 77, lo: 73, unit: " of 100", what: "ACSI customer satisfaction",
+    src: "ACSI Telecommunications Study 2025", url: "https://www.silicon.co.uk/press-release/cell-phone-satisfaction-hits-decade-low-mark-as-ai-promises-fall-short-acsi-data-show",
+    scores: { verizon_wireless: 75, att_wireless: 74, tmobile_wireless: 76 } },
 };
+// Which ratings table applies: insurance kind, or the category when we have one.
+const ratingKind = s => measureOf(s).insure || (INSURER_SERVICE[svcOf(s).category] ? svcOf(s).category : null);
 const SERVICE_EXP = { good: "Good", ok: "OK", poor: "Poor", none: "No claims yet" };
 const QUOTE_PER = { month: ["a month", 1], half: ["every 6 months", 6], year: ["a year", 12] };
 // Published service band for an insurer in the catalog: above, avg, below, or null when it isn't rated.
@@ -967,7 +982,15 @@ const serviceBand = (svc, kind) => { const t = INSURER_SERVICE[kind], n = t?.sco
 const BAND_LABEL = { above: "Above average", avg: "About average", below: "Below average" };
 const quoteMonthly = q => q && q.price > 0 ? q.price / QUOTE_PER[q.per || "month"][1] : null;
 // Your own experience wins; otherwise the published rating.
-const serviceOf = s => { const m = measureOf(s); return s.service === "good" ? "above" : s.service === "poor" ? "below" : serviceBand(s.svc, m.insure); };
+const serviceOf = s => s.service === "good" ? "above" : s.service === "poor" ? "below" : serviceBand(s.svc, ratingKind(s));
+// A comparable option beats yours (Cuong, v93) when it's cheaper and its service is no worse, or about the same price with better service.
+// That makes yours Costly whatever your usage. Paying more for clearly better service is a fair trade, not costly.
+function compareOf(s) {
+  const q = quoteMonthly(s.quote); if (q == null) return null;
+  const mo = monthly(s), mine = serviceOf(s), theirs = s.quote.by && s.quote.by !== "other" ? serviceBand(s.quote.by, ratingKind(s)) : null, tol = Math.max(1, q * 0.05);
+  const better = (a, b) => a && b && BAND_RANK[a] > BAND_RANK[b], over = mo - q;
+  return { q, over, mine, theirs, cheaper: over > tol && !better(mine, theirs), paysForService: over > tol && better(mine, theirs), betterSame: over >= -tol && better(theirs, mine) };
+}
 const BAND_RANK = { below: 0, avg: 1, above: 2 };
 const USAGE_BY_SVC = {
   youtube_premium: { worth: 0.5 },
@@ -1003,7 +1026,7 @@ const ALTERNATIVES = {
 const partText = p => p.months ? `${money(p.monthly)} a month in football season (Sep to Dec) for ${p.name} (it streams on Prime Video)` : `${money(p.monthly)} for ${p.name}`;
 const altOf = s => { const m = measureOf(s), alts = ALTERNATIVES[m.job] || []; return alts[s.alt || 0] || alts[0]; };
 function measuresOf(s) {
-  const v = svcOf(s), b = v.benchmark, o = USAGE_BY_SVC[s.svc], cat = v.category === "lawn_pest" ? RESULTS(v) : USAGE_BY_CAT[v.category] || USAGE_BY_CAT.default;
+  const v = svcOf(s), b = v.benchmark, o = USAGE_BY_SVC[s.svc], cat = RESULTS_CATS.has(v.category) ? RESULTS(v) : USAGE_BY_CAT[v.category] || USAGE_BY_CAT.default;
   const m = typeof o === "function" ? o(s) : o?.id ? o : { ...cat, ...(o || {}) }, ratio = b ? b.good_at_or_below / b.poor_at_or_above : 1 / 3;
   const listWorth = m.fixed ? (ALTERNATIVES[m.job]?.[s.alt || 0] || ALTERNATIVES[m.job]?.[0])?.monthly ?? null : m.worth ?? (m.id === "uses" && b ? b.poor_at_or_above : null);
   const own = s.worth?.[m.id], worth = own ?? listWorth, on = (m.parts || []).filter(p => (s.used || []).includes(p.feature)), parts = on.filter(p => !(p.within && on.some(q => q.feature === p.within)));
@@ -1067,21 +1090,32 @@ function rateRaw(s) {
   // No usage from the user yet (just added): no rating and no advice until they tell us (Cuong, 2026-10-20).
   const m = measureOf(s);
   if (m.insure) { const q = quoteMonthly(s.quote), mo = monthly(s), mine = serviceOf(s), theirs = s.quote ? serviceBand(s.quote.by, m.insure) : null;
-    if (q == null) return { key: "ok", label: "Compare a quote", cpu: null, model: "insurance", insure: true, mine };
+    if (q == null) return { key: "ok", label: "Compare a quote", cpu: null, insure: true, mine };
     const over = mo - q, better = mine && theirs && BAND_RANK[mine] > BAND_RANK[theirs];
     if (over > Math.max(5, q * 0.05)) return better ? { key: "ok", label: "Costs more, better service", cpu: null, insure: true, quote: q, over, mine, theirs }
       : { key: "poor", label: "Costs more than a matching quote", cpu: null, insure: true, quote: q, over, mine, theirs };
     if (mine === "below") return { key: "ok", label: "Good price, weak service", cpu: null, insure: true, quote: q, over, mine, theirs };
     return { key: "great", label: "Great value", cpu: null, insure: true, quote: q, over, mine, theirs }; }
   if (m.results) { const keys = (valueSeries(s)?.rows.slice(1) || []).slice(-3).map(r => r.key), ticks = (keys.length ? keys : [today().slice(0, 7)]).map(k => checkedIn(s, m, k));
-    const calls = ticks.filter(t => t.includes("callback")).length, pricey = priceyFor(s);
-    if (ticks.some(t => t.includes("unfixed"))) return { key: "poor", label: "Problem not fixed", cpu: null, results: true, unfixed: true };
-    if (calls >= 2) return { key: "poor", label: "Keeps needing callbacks", cpu: null, results: true, calls };
-    return pricey ? { key: "ok", label: "Above typical price", cpu: null, results: true, pricey, calls } : { key: "great", label: "Great value", cpu: null, results: true, calls }; }
+    const calls = ticks.filter(t => t.includes("callback")).length, pricey = priceyFor(s), c = compareOf(s), base = { cpu: null, results: true, calls, cmp: c, quote: c?.q, over: c?.over };
+    if (ticks.some(t => t.includes("unfixed"))) return { ...base, key: "poor", label: "Problem not fixed", unfixed: true };
+    if (calls >= 2) return { ...base, key: "poor", label: m.lawn ? "Keeps needing callbacks" : "Keeps needing support" };
+    if (c?.cheaper) return { ...base, key: "poor", label: "Cheaper option available" };
+    if (c?.betterSame) return { ...base, key: "poor", label: "Better-rated option, same price" };
+    if (c?.paysForService) return { ...base, key: "ok", label: "Costs more, better service" };
+    if (pricey) return { ...base, key: "ok", label: "Above typical price", pricey };
+    if (serviceOf(s) === "below") return { ...base, key: "ok", label: "Weak service rating" };
+    // Great value once the price checks out: a comparison that doesn't beat it, or a typical price range (lawn and pest).
+    return c || fairPrice(s) ? { ...base, key: "great", label: "Great value" } : { ...base, key: "ok", label: "Fair value", unchecked: true }; }
   if (m.checks) { const keys = (valueSeries(s)?.rows.slice(1) || []).slice(-12).map(r => r.key), used = (keys.length ? keys : [today().slice(0, 7)]).flatMap(k => checkedIn(s, m, k));
     return used.includes("roadside") ? { key: "great", label: "Great value", cpu: null, roadside: true }
       : { key: "poor", label: "No roadside calls in 12 months", cpu: null, noRoadside: true, checksUsed: used.length > 0 }; }
   if (s.needsUse && !m.costOnly) return { key: "ok", label: "Add how often you use it", cpu: null, waiting: true };
+  // Perks cards (v93): worth it when the perks you used over the last 12 months cover what the card cost.
+  if (v.value_model === "perks") { const vs = valueSeries(s), rows = (vs?.rows || []).filter(r => r.from && !r.paused).slice(-12);
+    const val = rows.reduce((a, r) => a + r.uses * (m.worth || 1), 0), cost = rows.reduce((a, r) => a + r.spent, 0), ratio = cost ? val / cost : 0;
+    if (!rows.length) return { key: "ok", label: "Perks card", cpu: null, model: "perks" };
+    return { key: ratio >= 1.2 ? "great" : ratio >= 0.9 ? "ok" : "poor", label: ratio >= 1.2 ? "Great value" : ratio >= 0.9 ? "Fair value" : "Perks don't cover the fee", cpu: null, perks: true, val, cost }; }
   if (!m.rated) {
     const cpu = s.uses && v.value_model === "insurance" ? monthly(s) / s.uses : null;
     return { key: "ok", label: MODEL_LABEL[v.value_model] || "Plan", cpu, model: v.value_model };
@@ -1154,9 +1188,9 @@ function cheaperOptions(s) {
       out.push({ kind: "Same plan", name: "Pay yearly", save: Math.min(mo, (plan.price_monthly * 12 - plan.price_annual) / 12), note: `${money(plan.price_annual)} once a year.` });
   }
   // A matching insurance quote (v91), unless that insurer's service is worse than yours.
-  if (r.insure && r.quote != null && r.over > 0 && !(r.mine && r.theirs && BAND_RANK[r.theirs] < BAND_RANK[r.mine])) {
-    const by = CATALOG[s.quote.by]?.name.replace(/ \((Car|Home)\)$/, "") || "Another insurer";
-    out.push({ kind: "Matching quote", name: by, save: r.over, note: `Your quote for the same coverage, ${fmtDate(s.quote.date)}.`, alt: CATALOG[s.quote.by] ? s.quote.by : undefined });
+  if ((r.insure || r.results) && r.quote != null && r.over > 0 && !(r.insure ? r.mine && r.theirs && BAND_RANK[r.theirs] < BAND_RANK[r.mine] : r.cmp?.paysForService)) {
+    const by = CATALOG[s.quote.by]?.name.replace(/ \((Car|Home)\)$/, "") || (r.insure ? "Another insurer" : "Another provider");
+    out.push({ kind: r.insure ? "Matching quote" : "Comparable option", name: by, save: r.over, note: r.insure ? `Your quote for the same coverage, ${fmtDate(s.quote.date)}.` : `A comparable option you found, ${fmtDate(s.quote.date)}.`, alt: CATALOG[s.quote.by] ? s.quote.by : undefined });
   }
   if (!isHard(s) && r.key !== "great") {
     const alts = alternativesOf(s).filter(a => a.monthly != null && a.monthly < mo);
@@ -1560,9 +1594,9 @@ const periodKeys = s => { const rows = valueSeries(s)?.rows.slice(1) || [];
 function lastMonthOf(s) {
   if (isFree(s)) return { s, bucket: "great", cost: 0, free: true };
   const m = measureOf(s), { prev, prevRow } = periodKeys(s);
-  if (m.insure) { const r = rate(s); return !prevRow || prevRow.paused || needsPrice(s) || r.quote == null ? null : { s, bucket: r.key === "great" ? "great" : r.key === "poor" ? "costly" : "fair", cost: prevRow.spent }; }
+  // Insurance and results-rated services go by their current rating (v93): every subscription past its first month gets a ring.
+  if (m.insure || m.results) { const r = rate(s); return !prevRow || prevRow.paused || needsPrice(s) || r.early ? null : { s, bucket: r.key === "great" ? "great" : r.key === "poor" ? "costly" : "fair", cost: prevRow.spent }; }
   if (!prevRow || prevRow.paused || m.costOnly || s.needsUse || needsPrice(s)) return null;
-  if (m.results) { const t = checkedIn(s, m, prev); return { s, bucket: t.includes("unfixed") ? "costly" : priceyFor(s) ? "fair" : "great", cost: prevRow.spent }; }
   const used = s.hist?.[m.id]?.[prev] ?? s.uses, b = valueBucket({ ...s, uses: used });
   return b ? { s, bucket: b, cost: prevRow.spent } : null;
 }
@@ -2303,11 +2337,19 @@ function verdictText(s, r) {
     if (r.key === "ok" && r.over > 0) return `You pay ${money(r.over)} a month more than ${esc(by)}'s quote, but ${svc || "your insurer's service is rated better"}, and ${esc(by)}'s is ${BAND_LABEL[r.theirs]?.toLowerCase() || "lower"}. Paying a little more for claims that go smoothly can be worth it.${stale}`;
     if (r.key === "ok") return `Your price is as good as or better than ${esc(by)}'s quote, but ${svc}. Cheap isn't great value if a claim goes badly, so compare a quote from an insurer with better service.${stale}`;
     return `Your price is as good as or better than ${esc(by)}'s quote for the same coverage${svc ? `, and ${svc}` : ""}. That's great value.${stale}`; }
-  if (r.results) { const m = measureOf(s), fp = fairPrice(s), thing = m.pest ? "pests" : "weeds or lawn problems", range = fp ? `${money(fp.lo)} to ${money(fp.hi)}` : "";
-    if (r.unfixed) return `You reported a problem that still isn't fixed. Ask ${esc(s.name)} for a free re-treatment (most plans include one). If it isn't sorted out, it's not giving you what you pay for, so get quotes from other companies.`;
-    if (r.key === "poor") return `You had to call ${esc(s.name)} back in ${r.calls} of the last 3 months. If the ${thing} keep coming back, it may not be worth ${money(monthly(s))} a month. Ask for a re-treatment or compare quotes.`;
+  if (r.results) { const m = measureOf(s), fp = fairPrice(s), thing = m.lawn ? (m.pest ? "pests" : "weeds or lawn problems") : "problems", range = fp ? `${money(fp.lo)} to ${money(fp.hi)}` : "";
+    const c = r.cmp, by = c && (CATALOG[s.quote.by]?.name || "the option you found"), svc = serviceOf(s);
+    if (r.unfixed) return m.lawn ? `You reported a problem that still isn't fixed. Ask ${esc(s.name)} for a free re-treatment (most plans include one). If it isn't sorted out, it's not giving you what you pay for, so get quotes from other companies.`
+      : `You reported a problem that still isn't fixed. If ${esc(s.name)} can't sort it out, it isn't doing the job you pay ${money(monthly(s))} a month for, so look at other options.`;
+    if (r.key === "poor" && !c?.cheaper && !c?.betterSame) return `You had to ${m.lawn ? "call them back" : "contact support"} in ${r.calls} of the last 3 months. If the ${thing} keep coming back, it may not be worth ${money(monthly(s))} a month.${m.lawn ? " Ask for a re-treatment or compare quotes." : " Compare other options."}`;
+    if (c?.cheaper) return `${esc(by)} costs ${money(c.over)} a month less (${money(c.over * 12)} a year) for a comparable service${c.theirs ? `, with ${BAND_LABEL[c.theirs].toLowerCase()} service` : ""}. A cheaper option that's just as good makes this costly, however much you use it. Ask ${esc(s.name)} to match it, or switch.`;
+    if (c?.betterSame) return `${esc(by)} costs about the same and its service is rated ${BAND_LABEL[c.theirs].toLowerCase()}, better than ${esc(s.name)}'s. Better service for the same price makes this costly. Consider switching.`;
+    if (c?.paysForService) return `You pay ${money(c.over)} a month more than ${esc(by)}, but ${esc(s.name)}'s service is rated better. Paying a little more for service that works can be worth it.`;
     if (r.pricey) return `No unresolved problems lately, but ${money(monthly(s))} a month is above the typical ${range} for ${r.pricey.what}, based on ${esc(r.pricey.src)}. Ask for a better rate, or get a quote or two before you renew.`;
-    return `No unresolved ${thing} in the last 3 months${r.calls ? ", and the problem you called about was fixed" : ""}${fp ? monthly(s) < fp.lo ? `, for less than the typical ${range} a month` : `, at a fair price (typically ${range} a month)` : ""}. That's what you're paying for.${fp ? "" : " We don't have a typical price for this kind of service yet, so it's judged on results only."} Tick anything that goes wrong under How it's going.`; }
+    if (r.key === "ok" && svc === "below") return `It's working, but ${s.service === "poor" ? "you rated its service as poor" : "its published service rating is below average"}. A comparable option with better service at the same price would make this costly, so it's worth comparing.`;
+    if (r.unchecked) return `No unresolved problems in the last 3 months, so it's doing its job. To call it great value we also need a price check: add the cheapest comparable option you've found under How it's going. If it's cheaper, or has better service for the same price, this becomes costly.`;
+    return `No unresolved ${thing} in the last 3 months${r.calls ? ", and the problem you raised was fixed" : ""}${c ? `, and nothing comparable you've found beats its price and service` : fp ? monthly(s) < fp.lo ? `, for less than the typical ${range} a month` : `, at a fair price (typically ${range} a month)` : ""}. That's great value.`; }
+  if (r.perks) return `Over the last 12 months you used ${money(r.val)} of perks on a card that cost ${money(r.cost)}.${r.key === "poor" ? " The perks don't cover the fee, so a no-fee card may be better." : r.key === "ok" ? " That about covers the fee." : " The perks more than pay for it."}`;
   if (r.early) return `${esc(s.name)} was added less than ${NEW_DAYS} days ago, so it's too soon to call it costly. Keep your usage up to date and we'll rate it after its first month.`;
   if (r.idle) return `No use in the last 12 months (0 ${esc(measureOf(s).short)}). A subscription you haven't used in a year probably isn't worth ${money(monthly(s) * 12)} a year. Cancel it, or record your usage if that's wrong.`;
   if (r.noRoadside) return `No roadside calls in the last 12 months${r.checksUsed ? ", only other member benefits" : ""}. Roadside help is the main reason to have ${esc(s.name)}, so you paid ${money(monthly(s) * 12)} over the year for help you didn't use. Tick a roadside call under How you use it if you had one, or compare a cheaper plan or roadside cover from your car insurer.`;
@@ -2430,7 +2472,7 @@ function valueChart(s) {
   const head = m.fixed ? `<span>${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone costs <b>${money(vs.worth)} a month</b>${vs.altName ? ` (${esc(vs.altName)})` : ""}. ${esc(s.name)} costs <b>${money(vs.reg)}</b>.</span>
        ${recentHtml}${vs.quiet ? `<span class="small" style="color:var(--warn);font-weight:600">No removals in the last 3 months. Check that ${esc(s.name)}'s scans are still running.</span>` : ""}`
     : m.results ? (() => { const fp = fairPrice(s), bad = vs.rows.slice(1).filter(r => checkedIn(s, m, r.key).length).length;
-      return `<span>We rate ${esc(s.name)} on results, not use: a month with no ${m.pest ? "pests" : "weeds or lawn problems"}, or one fixed after a single call, is what you're paying for${fp ? `, as long as the price is fair (typically ${money(fp.lo)} to ${money(fp.hi)} a month for ${fp.what})` : ""}.</span>
+      return `<span>We rate ${esc(s.name)} on results, not use: a month with no ${m.lawn ? (m.pest ? "pests" : "weeds or lawn problems") : "problems"}, or one fixed after a single ${m.lawn ? "call" : "support contact"}, is what you're paying for${fp ? `, as long as the price is fair (typically ${money(fp.lo)} to ${money(fp.hi)} a month for ${fp.what})` : ""}.</span>
        <span class="small">${bad ? `Problems in <b>${bad} of the last ${vs.rows.length - 1} months</b>.` : `<b>No problems</b> reported in the last ${vs.rows.length - 1} months.`} You've paid <b>${money(vs.cost)}</b> ${since}.</span>`; })()
     : m.checks ? `<span>We count ${esc(s.name)} as worth it in any year with at least one roadside call. Each call counts as ${money(vs.worth)} of value.</span>
        ${recentHtml}`
@@ -2594,18 +2636,19 @@ function hookChart(root, s) {
 }
 
 function insureHtml(s) {
-  const m = measureOf(s), t = INSURER_SERVICE[m.insure], q = s.quote || {}, v = svcOf(s), n = t.scores[s.svc], band = serviceBand(s.svc, m.insure);
+  const m = measureOf(s), kind = ratingKind(s), t = INSURER_SERVICE[kind], q = s.quote || {}, v = svcOf(s), n = t?.scores[s.svc], band = serviceBand(s.svc, kind), ins = !!m.insure;
+  const from = x => { const ps = x.plans.map(p => p.effective_monthly).filter(n => n != null); return ps.length ? ` (from ${money(Math.min(...ps))}/mo)` : ""; };
   const rivals = Object.values(CATALOG).filter(x => x.category === v.category && x.id !== s.svc).sort((a, b) => a.name.localeCompare(b.name));
-  return `<p class="small muted" style="margin:0">Rated on price and service: the best price for the same coverage and terms is great value, as long as claims and support are good.</p>
-    <div class="small"><b>Published service rating:</b> ${n == null ? `not in our ratings yet.` : `${BAND_LABEL[band]}, ${n}${t.unit} ${t.what} (average ${t.avg}${t.unit}). Source: <a href="${t.url}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(t.src)}</a>.`}</div>
-    <div style="display:grid;gap:6px"><b style="font-size:14px">Your claims and support experience</b>
-      <div class="seg" role="group" aria-label="Your claims and support experience">${Object.entries(SERVICE_EXP).map(([k, l]) => `<button type="button" data-svcx="${k}" aria-pressed="${(s.service || "") === k}">${l}</button>`).join("")}</div></div>
-    <div style="display:grid;gap:6px"><b style="font-size:14px">Best quote for the same coverage and terms</b>
-      <span class="small muted">Same limits, deductibles, drivers or home. Leave it blank if you haven't shopped around.</span>
-      <div class="q-row"><select id="q-by" aria-label="Insurer that quoted"><option value="">Insurer…</option>${rivals.map(x => `<option value="${x.id}" ${q.by === x.id ? "selected" : ""}>${esc(x.name.replace(/ \((Car|Home)\)$/, ""))}</option>`).join("")}<option value="other" ${q.by === "other" ? "selected" : ""}>Another insurer</option></select>
+  return `${ins ? `<p class="small muted" style="margin:0">Rated on price and service: the best price for the same coverage and terms is great value, as long as claims and support are good.</p>` : ""}
+    <div class="small"><b>Published service rating:</b> ${n == null ? `not in our ratings yet${t ? "" : " for this kind of service"}.` : `${BAND_LABEL[band]}, ${n}${t.unit} ${t.what} (average ${t.avg}${t.unit}). Source: <a href="${t.url}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(t.src)}</a>.`}</div>
+    <div style="display:grid;gap:6px"><b style="font-size:14px">Your ${ins ? "claims and support" : "service and support"} experience</b>
+      <div class="seg" role="group" aria-label="Your service experience">${Object.entries(SERVICE_EXP).map(([k, l]) => `<button type="button" data-svcx="${k}" aria-pressed="${(s.service || "") === k}">${l}</button>`).join("")}</div></div>
+    <div style="display:grid;gap:6px"><b style="font-size:14px">${ins ? "Best quote for the same coverage and terms" : "Cheapest comparable option you've found"}</b>
+      <span class="small muted">${ins ? "Same limits, deductibles, drivers or home. Leave it blank if you haven't shopped around." : `Something that does the same job${["internet", "mobile"].includes(v.category) ? " (same speed or data)" : ""}. Leave it blank if you haven't compared.`}</span>
+      <div class="q-row"><select id="q-by" aria-label="Comparable option"><option value="">${ins ? "Insurer…" : "Provider…"}</option>${rivals.map(x => `<option value="${x.id}" ${q.by === x.id ? "selected" : ""}>${esc(x.name.replace(/ \((Car|Home)\)$/, ""))}${ins ? "" : from(x)}</option>`).join("")}<option value="other" ${q.by === "other" ? "selected" : ""}>${ins ? "Another insurer" : "Another provider"}</option></select>
         <input id="q-price" type="number" min="0" step="0.01" placeholder="Price" aria-label="Quoted price" value="${q.price ?? ""}">
         <select id="q-per" aria-label="Quote period">${Object.entries(QUOTE_PER).map(([k, [l]]) => `<option value="${k}" ${(q.per || "month") === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>
-      ${s.quote ? `<span class="note">Quoted ${fmtDate(q.date)}${q.by && q.by !== "other" && serviceBand(q.by, m.insure) ? `. ${esc(CATALOG[q.by].name.replace(/ \((Car|Home)\)$/, ""))}'s service rating: ${BAND_LABEL[serviceBand(q.by, m.insure)].toLowerCase()}` : ""}. <button class="btn ghost small" id="q-clear">Clear quote</button></span>` : ""}</div>`;
+      ${s.quote ? `<span class="note">${ins ? "Quoted" : "Checked"} ${fmtDate(q.date)}${q.by && q.by !== "other" && serviceBand(q.by, kind) ? `. ${esc(CATALOG[q.by].name.replace(/ \((Car|Home)\)$/, ""))}'s service rating: ${BAND_LABEL[serviceBand(q.by, kind)].toLowerCase()}` : ""}. <button class="btn ghost small" id="q-clear">Clear</button></span>` : ""}</div>`;
 }
 function wireInsure(root, s, redraw) {
   root.querySelectorAll("[data-svcx]").forEach(b => b.onclick = () => { s.service = s.service === b.dataset.svcx ? undefined : b.dataset.svcx; if (!s.service) delete s.service; save(); redraw(); });
@@ -2635,13 +2678,13 @@ function openSheet(id) {
           <button class="btn" id="close" aria-label="Close">Close</button></div>
         <div class="kv">
           <div class="stat"><div class="label">${introActive(s) ? (s.intro.kind === "trial" ? "Free trial" : "Intro price") : s.priceMine ? "You pay" : "Price"}</div><div class="value num">${money(total(s))}</div><div class="small muted">per ${s.cycle}${s.cycle === "year" ? ` (${money(monthly(s))}/mo)` : ""}${hh && (s.members || 1) > 1 && total(s) != null ? `<br>${s.members} people, ${money(monthly(s) / s.members)}/mo each` : ""}</div></div>
-          ${m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.insure ? (b => `<div class="stat"><div class="label">Service rating</div><div class="value" style="font-size:20px">${b ? BAND_LABEL[b] : "—"}</div><div class="small muted">${s.service && s.service !== "none" && s.service !== "ok" ? "from your own experience" : b ? "from published ratings" : "not rated yet"}</div></div>`)(serviceOf(s)) : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
+          ${m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.insure || (m.results && !fairPrice(s)) ? (b => `<div class="stat"><div class="label">Service rating</div><div class="value" style="font-size:20px">${b ? BAND_LABEL[b] : "—"}</div><div class="small muted">${s.service && s.service !== "none" && s.service !== "ok" ? "from your own experience" : b ? "from published ratings" : "not rated yet"}</div></div>`)(serviceOf(s)) : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
         </div>
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
         ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
         ${m.insure ? insureHtml(s) : `
-        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>`
+        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${insureHtml(s)}</div>` : ""}`
         : m.costOnly ? `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
           ${slider(m, s.rate, 'id="s-rate"')}
           ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}`}
@@ -2781,7 +2824,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 92 · Standalone copy · Oct 23", VERSION_NUM = 92;
+const APP_VERSION = "Prototype · Version 93 · Standalone copy · Oct 23", VERSION_NUM = 93;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
