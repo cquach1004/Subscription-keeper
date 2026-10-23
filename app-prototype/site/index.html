@@ -1617,7 +1617,8 @@ function usageView() {
   const last = state.subs.map(lastMonthOf).filter(Boolean), total = last.reduce((a, x) => a + x.cost, 0);
   const by = k => last.filter(x => x.bucket === k).sort((a, b) => b.cost - a.cost);
   const unrated = state.subs.filter(s => !last.some(x => x.s === s));
-  const live = state.subs.filter(s => !measureOf(s).costOnly).sort((a, b) => (monthly(b) || 0) - (monthly(a) || 0));
+  // Only slider ones here (Cuong, v94): checkbox ones (AAA, lawn, protection plans) open from the rings instead, to keep this list simple.
+  const live = state.subs.filter(s => { const m = measureOf(s); return !m.costOnly && !m.checks; }).sort((a, b) => (monthly(b) || 0) - (monthly(a) || 0));
   const prevName = new Date(addMonths(-1) + "T12:00:00").toLocaleDateString(undefined, { month: "long" }), curName = new Date().toLocaleDateString(undefined, { month: "long" });
   const row = s => { const m = measureOf(s), { cur } = periodKeys(s), h = s.hist?.[m.id]?.[cur], n = s.needsUse ? 0 : h != null ? Math.round(h / PER[m.per].f * 10) / 10 : s.rate, r = rate(s);
     return `<div class="u-row" data-sub="${s.id}">${logoHtml(svcOf(s))}<div class="u-nm"><button class="u-open" data-id="${s.id}">${esc(s.name)}</button><span class="small muted">${esc(m.label)}</span></div>
@@ -2824,7 +2825,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 93 · Standalone copy · Oct 23", VERSION_NUM = 93;
+const APP_VERSION = "Prototype · Version 94 · Standalone copy · Oct 23", VERSION_NUM = 94;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
