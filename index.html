@@ -664,7 +664,9 @@ const SAMPLE = [
   ["orkin", 0, ["general_pest","revisits"], 5], ["natural_lawn_america", 0, ["fertilization"], 7], ["state_farm_home", 0, ["coverage"], 2],
   ["tinder", 6, ["unlimited_likes","see_likes"], 13], ["audible", 1, ["audio","keep"], 17], ["duolingo", 2, ["lessons"], 20],
   ["la_fitness", 9, ["equipment","classes"], 3], ["doordash_dashpass", 4, ["zero_delivery","lower_service"], 24], ["verizon_fios", 0, ["router","price_guarantee"], 8],
-  ["arlo_secure", 0, ["cloud","ai_detect"], 26], ["verizon_wireless", 0, ["unl_5g","hotspot"], 28]
+  ["arlo_secure", 0, ["cloud","ai_detect"], 26], ["verizon_wireless", 0, ["unl_5g","hotspot"], 28],
+  // v97 (Cuong): Adobe Creative Cloud, Photography plan.
+  ["adobe", 10, ["photoshop","lightroom"], 7]
 ];
 // Brand logos (Simple Icons, CC0 paths) for services that have one; others fall back to a lettered tile.
 // v85 re-pull (Simple Icons 16.35, gilbarbara logos, CoreUI brands, Tabler, MDI): only Audible (CoreUI, CC0) and Bumble (Tabler, MIT) were new;
@@ -680,7 +682,7 @@ function logoHtml(v, cls = "logo") {
   return `<span class="${cls}" style="background:${L.hex}" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="${lum > 0.62 ? "#111" : "#fff"}" d="${L.d}"/></svg></span>`;
 }
 // Example start dates (months ago) for the sample rows.
-const SAMPLE_START = { spotify: 38, netflix: 61, icloud: 30, m365: 20, evernote: 50, chatgpt: 8, claude: 5, wsj: 10, cnbc: 3, aaa: 95, southwest_card: 26, mcafee: 14, cloaked: 7, amazon_prime: 84, progressive_auto: 40, onepassword: 72,
+const SAMPLE_START = { adobe: 30, spotify: 38, netflix: 61, icloud: 30, m365: 20, evernote: 50, chatgpt: 8, claude: 5, wsj: 10, cnbc: 3, aaa: 95, southwest_card: 26, mcafee: 14, cloaked: 7, amazon_prime: 84, progressive_auto: 40, onepassword: 72,
   park_fitness_classes: 14, costco: 60, applecare: 18, orkin: 30, natural_lawn_america: 24, state_farm_home: 66, tinder: 9, audible: 40, duolingo: 30,
   la_fitness: 34, doordash_dashpass: 20, verizon_fios: 48, arlo_secure: 22, verizon_wireless: 96 };
 // Services with no list price (insurance, pest and lawn, LA Fitness): the example uses a made-up monthly amount, as if the user had typed it in.
@@ -841,7 +843,18 @@ function listBase(s) {
   if (annual != null) return { price: s.cycle === "year" ? annual : annual / 12, basis: "region" };
   return { price: cat, basis: p.region && p.region === HOME_REGION[s.svc] ? "list" : "estimate" };
 }
-const extras = s => HOUSEHOLD[s.svc] ? Math.max(0, (s.members || 1) - 1) * (s.memberFee ?? HOUSEHOLD[s.svc].fee) : 0;
+// Paid add-ons on top of a plan, priced per month. Netflix US (price change of Mar 2026): an extra member costs $7.99 with ads or $9.99 without;
+// Standard allows 1 and Premium 2, Standard with Ads none (newsnationnow.com, Mar 27 2026; matches the tracker's Netflix feature list).
+const ADDONS = { netflix: { name: "Extra member", names: "Extra members", per: "month", max: { standard: 1, premium: 2 },
+  opts: [{ id: "ads", name: "With ads", price: 7.99 }, { id: "noads", name: "No ads", price: 9.99 }],
+  note: "An extra member is someone outside your home who gets their own account and password, paid on your bill.", none: "Standard with Ads doesn't offer extra members." } };
+const addonMax = s => ADDONS[s.svc]?.max[s.plan] || 0;
+// Counts above what the plan allows (after a plan change) are dropped, ads first.
+function addonCounts(s) { const a = ADDONS[s.svc]; let left = addonMax(s); const c = {};
+  [...(a?.opts || [])].reverse().forEach(o => { c[o.id] = Math.min(left, s.addons?.[o.id] || 0); left -= c[o.id]; }); return c; }
+const addonList = s => (ADDONS[s.svc]?.opts || []).map(o => ({ ...o, n: addonCounts(s)[o.id] })).filter(o => o.n);
+const addonCost = s => { const m = addonList(s).reduce((t, o) => t + o.n * o.price, 0); return s.cycle === "year" ? m * 12 : m; };
+const extras = s => (HOUSEHOLD[s.svc] ? Math.max(0, (s.members || 1) - 1) * (s.memberFee ?? HOUSEHOLD[s.svc].fee) : 0) + addonCost(s);
 const listTotal = s => { const b = listBase(s); return b ? b.price + extras(s) : null; };
 // What the user pays: their own figure for the whole household when entered, otherwise the list total.
 // Discounts (autopay, loyalty, student...) lower the list total; a price the user typed in already includes them.
@@ -1257,7 +1270,7 @@ function upcomingHtml() {
 
 // First visit: each person picks their own subscriptions (Cuong shares the prototype for feedback, 2026-10-19).
 // Nothing is shared between viewers: lists live in this browser only.
-const FRESH = () => ({ subs: [], sampleV: 3, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
+const FRESH = () => ({ subs: [], sampleV: 4, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
 function welcomeView() {
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
@@ -1290,7 +1303,7 @@ function welcomeView() {
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, start: today(), day: +today().slice(8) })) };
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 3; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
@@ -1755,7 +1768,7 @@ function homeView() {
   wireNudge(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
-  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 3; save(); render(); });
+  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
   f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
   return f;
@@ -2668,7 +2681,7 @@ function openSheet(id) {
     const v = svcOf(s), r = rate(s), feats = featuresFor(v, s.plan), plan = planOf(v, s.plan), hh = HOUSEHOLD[s.svc];
     const next = new Date((nextRenewal(s) || today()) + "T12:00:00");
     const m = measureOf(s), ms = measuresOf(s), vc = valueChart(s), mo = monthlyHtml(s), al = altsHtml(s), fr0 = freshness(v), b0 = v.plans.length ? listBase(s) : null, nOn = (s.discounts || []).filter(d => d.on).length;
-    const priceMeta = `${plan ? `<span>${esc(plan.name)}${hh && (s.members || 1) > 1 ? `, ${s.members} people` : ""}</span>` : ""}${needsPrice(s) ? `<span class="pill poor">Add your price</span>` : v.plans.length ? `<span class="pill ${b0 ? fr0.key : "poor"}">${b0 ? fr0.label : "Not in catalog"}</span>` : ""}`;
+    const priceMeta = `${plan ? `<span>${esc(plan.name)}${hh && (s.members || 1) > 1 ? `, ${s.members} people` : ""}${addonList(s).length ? `, +${addonList(s).reduce((x, o) => x + o.n, 0)} ${addonList(s).reduce((x, o) => x + o.n, 0) === 1 ? ADDONS[s.svc].name.toLowerCase() : ADDONS[s.svc].names.toLowerCase()}` : ""}</span>` : ""}${needsPrice(s) ? `<span class="pill poor">Add your price</span>` : v.plans.length ? `<span class="pill ${b0 ? fr0.key : "poor"}">${b0 ? fr0.label : "Not in catalog"}</span>` : ""}`;
     const datesMeta = `${s.start ? `Started ${fmtDate(s.start)}` : "Add a start date"}${pausedNow(s) ? ` <span class="pill poor">Paused</span>` : (s.pauses || []).length ? `, ${s.pauses.length} pause${s.pauses.length === 1 ? "" : "s"}` : ""}`;
     const dealsMeta = introActive(s) ? `<span class="pill poor">${s.intro.kind === "trial" ? "Trial" : "Intro price"} ends in ${daysUntil(s.intro.ends)} days</span>` : nOn ? `${nOn} discount${nOn === 1 ? "" : "s"} on` : "None added";
     const keepScroll = root.querySelector(".sheet")?.scrollTop || 0;
@@ -2715,6 +2728,12 @@ function openSheet(id) {
             <button class="btn primary" id="m-plus" aria-label="One more member">+ 1</button>
             ${hh.free ? `<span class="small muted" style="margin-left:auto">No extra cost</span>` : `<label style="flex-direction:row;display:flex;align-items:center;gap:6px;margin-left:auto">Extra member $<input id="m-fee" type="number" min="0" step="0.01" value="${(s.memberFee ?? hh.fee).toFixed(2)}" aria-label="Price per extra member per year">/yr</label>`}</div>
           <p class="note" style="margin:6px 0 0">${esc(hh.note)}</p></div>` : ""}
+        ${ADDONS[s.svc] ? (() => { const a = ADDONS[s.svc], max = addonMax(s), c = addonCounts(s), used = Object.values(c).reduce((x, y) => x + y, 0);
+          return `<div><h3>${esc(a.names)}</h3><p class="small muted" style="margin:2px 0 8px">${max ? `Your plan allows ${max}. ${esc(a.note)}` : `${esc(a.none)} ${esc(a.note)}`}</p>
+          ${max ? a.opts.map(o => `<div class="counter" style="margin-bottom:6px"><button class="btn" data-ao="${o.id}" data-d="-1" aria-label="One less ${esc(a.name.toLowerCase())}, ${esc(o.name.toLowerCase())}" ${c[o.id] ? "" : "disabled"}>−</button>
+            <span class="num" style="font-size:22px;min-width:24px;text-align:center">${c[o.id]}</span>
+            <button class="btn primary" data-ao="${o.id}" data-d="1" aria-label="One more ${esc(a.name.toLowerCase())}, ${esc(o.name.toLowerCase())}" ${used >= max ? "disabled" : ""}>+ 1</button>
+            <span class="small" style="margin-left:auto">${esc(o.name)}, ${money(o.price)}/mo each</span></div>`).join("") : ""}</div>`; })() : ""}
         ${plan?.intro_offer ? `<p class="note" style="margin:0">Intro offer: ${esc(plan.intro_offer)}</p>` : ""}
         ${v.plans.length ? (() => {
           const fr = freshness(v), b = listBase(s), lt = listTotal(s), per = s.cycle === "year" ? "yr" : "mo", n = s.members || 1;
@@ -2727,6 +2746,7 @@ function openSheet(id) {
           <div class="head"><h3>Price check</h3><span class="pill ${b ? fr.key : "poor"}">${b ? fr.label : "Not in catalog"}</span></div>
           <div class="small">${basisText}
             ${v.official_url ? `<a href="${esc(v.official_url)}" target="_blank" rel="noopener">Official pricing page</a>` : ""}${v.sources?.length ? `${v.official_url ? ". Also checked: " : "Source: "}${v.sources.map(u => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(host(u))}</a>`).join(", ")}` : ""}</div>
+          ${b && addonCost(s) ? `<div class="small num">${esc(planOf(v, s.plan).name)} ${money(b.price)}${addonList(s).map(o => ` + ${o.n} ${o.n === 1 ? ADDONS[s.svc].name.toLowerCase() : ADDONS[s.svc].names.toLowerCase()} (${o.name.toLowerCase()}) × ${money(s.cycle === "year" ? o.price * 12 : o.price)}`).join("")} = <b>${money(lt)}</b>/${per}</div>` : ""}
           ${b && hh && !hh.free ? `<div class="small num">${esc(planOf(v, s.plan).name)} ${money(b.price)} + ${n - 1} extra × ${money(s.memberFee ?? hh.fee)} = <b>${money(lt)}</b>/${per} for ${n} ${n === 1 ? "person" : "people"}${b.basis === "estimate" ? " (estimate)" : ""}</div>` : ""}
           <div class="mine"><label for="s-mine" style="display:inline;color:var(--ink)">What you actually pay${hh && n > 1 ? `, all ${n} people` : ""}</label>
             <input id="s-mine" type="number" min="0" step="0.01" value="${regularTotal(s) == null ? "" : regularTotal(s).toFixed(2)}" placeholder="0.00"><span class="muted small">${currency()}/${per}</span>
@@ -2780,6 +2800,7 @@ function openSheet(id) {
     const sw2 = root.querySelector("#s-worth");
     if (sw2) sw2.onchange = () => { const n = parseFloat(sw2.value); const id = measureOf(s).id; s.worth ||= {}; if (isNaN(n)) delete s.worth[id]; else s.worth[id] = Math.max(0, n); save(); setTimeout(draw); };
     root.querySelector("#s-worth-reset")?.addEventListener("click", () => { delete s.worth[measureOf(s).id]; save(); draw(); });
+    root.querySelectorAll("[data-ao]").forEach(b => b.onclick = () => { s.addons = { ...addonCounts(s) }; s.addons[b.dataset.ao] = Math.max(0, s.addons[b.dataset.ao] + +b.dataset.d); save(); setTimeout(draw); });
     if (hh) {
       const setM = n => { s.members = Math.min(hh.max, Math.max(1, n)); save(); setTimeout(draw); };
       root.querySelector("#m-plus").onclick = () => setM((s.members || 1) + 1);
@@ -2825,7 +2846,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 96 · Standalone copy · Oct 23", VERSION_NUM = 96;
+const APP_VERSION = "Prototype · Version 98 · Standalone copy · Oct 23", VERSION_NUM = 98;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2943,7 +2964,11 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   if ((state.sampleV || 0) < 2) { if (state.subs.some(s => s.example)) SAMPLE.filter(([id]) => CATALOG[id] && !state.subs.some(s => s.svc === id)).forEach(row => {
       const s = seedSub(row); s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; genHistory(s); state.subs.push(s); });
     state.sampleV = 2; }
+  // v97: example lists get Adobe once.
+  if (state.sampleV < 4) { if (state.subs.some(s => s.example)) SAMPLE.filter(([id]) => id === "adobe" && CATALOG[id] && !state.subs.some(s => s.svc === id)).forEach(row => {
+      const s = seedSub(row); s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; genHistory(s); state.subs.push(s); }); }
   if (state.sampleV < 3) { if (state.subs.some(s => s.example)) state.subs.forEach(s => { if (SAMPLE_QUOTE[s.svc] && !s.quote) s.quote = sampleQuote(s.svc); }); state.sampleV = 3; }
+  if (state.sampleV < 4) state.sampleV = 4;
   if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { s.measure = "replace"; if (!s.hist?.replace) genHistory(s); s.used = ["data_removal"]; }); state.cloakedV = 1; }
   save();
   render();
