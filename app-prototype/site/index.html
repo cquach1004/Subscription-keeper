@@ -568,7 +568,7 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 @media (max-width: 900px) { .u-pies { grid-template-columns: 1fr; } }
 .a-cats { margin-bottom: 12px; }
 @media (max-width: 560px) { .a-cats { gap: 6px; } .a-cats .chip { font-size: 13px; padding: 4px 10px; } }
-/* A to Z groups on Explore (v88): one fold per letter, all closed by default. */
+/* A to Z groups on Explore (v88): one fold per letter, all open by default (v89). */
 .az-tools { display: flex; justify-content: flex-end; margin: -4px 0 6px; }
 details.az { border-bottom: 1px solid var(--line); }
 details.az > summary { display: flex; align-items: center; gap: 10px; padding: 10px 2px; }
@@ -1951,7 +1951,7 @@ function exploreDetail(v) {
 }
 
 // Explore A to Z (Cuong, v88): services grouped by first letter; digits and symbols go under "#", first.
-let azOpen = new Set();
+let azClosed = new Set();  // letters the viewer closed; all start open (Cuong, v89)
 function azGroups(list) {
   const key = v => { const c = v.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").charAt(0).toUpperCase(); return /[A-Z]/.test(c) ? c : "#"; };
   const m = new Map(); list.forEach(v => { const k = key(v); m.has(k) || m.set(k, []); m.get(k).push(v); });
@@ -1965,8 +1965,8 @@ function addView() {
     <h3 style="margin:4px 0 8px">1. Which subscription?</h3>
     <input id="a-q" type="search" placeholder="Search, e.g. Hulu, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:10px">
     <div class="chips a-cats" role="group" aria-label="Category">${["all", "mine-alts", "public", ...cats].map(c => `<button class="chip x-cat" data-cat="${c}" aria-pressed="${exploreCat === c}">${c === "all" ? "All" : c === "mine-alts" ? "Alternatives To Mine" : c === "public" ? "Free Public Services" : esc(catLabel(c))}</button>`).join("")}</div>
-    <div class="az-tools"><button type="button" class="btn ghost small" id="az-all">Expand all</button></div>
-    <div id="a-cat">${azGroups(offered).map(([l, vs]) => `<details class="fold az" data-l="${l}"><summary><b>${l}</b><span class="small muted az-n">${vs.length}</span></summary><div class="catalog">${vs.map(v => `<button class="cat-item" data-svc="${v.id}" data-cat="${v.category}" data-alt-mine="${altFor(v).length ? 1 : 0}" data-public="${v.provider_type ? 1 : 0}" aria-pressed="${picked === v.id}" data-text="${esc((v.name + " " + catLabel(v.category) + " " + v.features.map(x => x.name).join(" ")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}</div></details>`).join("")}
+    <div class="az-tools"><button type="button" class="btn ghost small" id="az-all">Collapse all</button></div>
+    <div id="a-cat">${azGroups(offered).map(([l, vs]) => `<details class="fold az" data-l="${l}" open><summary><b>${l}</b><span class="small muted az-n">${vs.length}</span></summary><div class="catalog">${vs.map(v => `<button class="cat-item" data-svc="${v.id}" data-cat="${v.category}" data-alt-mine="${altFor(v).length ? 1 : 0}" data-public="${v.provider_type ? 1 : 0}" aria-pressed="${picked === v.id}" data-text="${esc((v.name + " " + catLabel(v.category) + " " + v.features.map(x => x.name).join(" ")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}</div></details>`).join("")}
       <div class="catalog" id="a-other"><button class="cat-item" data-svc="" aria-pressed="${picked === ""}" data-text=""><span class="logo" style="background:#6b7785">+</span><span>Something else</span></button></div></div>
     <p class="muted" id="a-none" hidden>No services match. Try another word or category, or choose Something else.</p>
     <p class="muted" id="a-hint">Tap a subscription above to fill in the details.</p>
@@ -2021,19 +2021,19 @@ function addView() {
       b.hidden = !ok; n += ok; });
     $("a-none").hidden = n > 0;
     // Letters with nothing left are hidden. A search or a category filter opens every letter that still has matches;
-    // otherwise each letter is as the viewer left it (closed to start).
+    // otherwise each letter is as the viewer left it (open to start).
     const auto = !!q || exploreCat !== "all";
     document.querySelectorAll("#a-cat details.az").forEach(d => { const k = d.querySelectorAll(".cat-item:not([hidden])").length;
-      d.hidden = !k; d.querySelector(".az-n").textContent = k; d.open = auto ? true : azOpen.has(d.dataset.l); });
+      d.hidden = !k; d.querySelector(".az-n").textContent = k; d.open = auto || !azClosed.has(d.dataset.l); });
     azSync(); };
   const azSync = () => { const ds = [...document.querySelectorAll("#a-cat details.az:not([hidden])")], all = ds.length && ds.every(d => d.open);
     $("az-all").textContent = all ? "Collapse all" : "Expand all"; };
   f.querySelectorAll("details.az").forEach(d => d.addEventListener("toggle", () => {
-    if (!($("a-q")?.value || "").trim() && exploreCat === "all") d.open ? azOpen.add(d.dataset.l) : azOpen.delete(d.dataset.l); azSync(); }));
+    if (!($("a-q")?.value || "").trim() && exploreCat === "all") d.open ? azClosed.delete(d.dataset.l) : azClosed.add(d.dataset.l); azSync(); }));
   f.getElementById("az-all").addEventListener("click", () => { const ds = [...document.querySelectorAll("#a-cat details.az:not([hidden])")], open = !ds.every(d => d.open);
     ds.forEach(d => d.open = open); });
   // Coming back with a service picked, open its letter so the selection shows.
-  if (picked) { const b = f.querySelector(`.cat-item[data-svc="${picked}"]`); if (b) azOpen.add(b.closest("details.az").dataset.l); }
+  if (picked) { const b = f.querySelector(`.cat-item[data-svc="${picked}"]`); if (b) azClosed.delete(b.closest("details.az").dataset.l); }
   f.getElementById("a-q").addEventListener("input", applyAdd);
   f.querySelectorAll(".a-cats .x-cat").forEach(b => b.addEventListener("click", () => { exploreCat = b.dataset.cat;
     document.querySelectorAll(".a-cats .x-cat").forEach(x => x.setAttribute("aria-pressed", x.dataset.cat === exploreCat)); applyAdd(); }));
@@ -2639,7 +2639,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 88 · Standalone copy · Oct 23", VERSION_NUM = 88;
+const APP_VERSION = "Prototype · Version 89 · Standalone copy · Oct 23", VERSION_NUM = 89;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
