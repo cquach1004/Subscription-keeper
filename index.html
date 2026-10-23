@@ -499,7 +499,7 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 
 /* Help and Sam */
 .top-btns { display: flex; gap: 10px; align-items: center; }
-/* v99 (Cuong): subscription search in the header on every page, left of Help. On phones it's a round button that widens over the title. */
+/* v99 (Cuong): subscription search in the header on every page, left of Help. */
 .top-search { position: relative; }
 .top-search svg { position: absolute; left: 12px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); pointer-events: none; color: #fff; }
 .top-search input { width: 230px; height: 42px; border-radius: 21px; border: 2px solid rgba(255,255,255,.55); background: rgba(255,255,255,.14); color: #fff; padding: 0 14px 0 38px; font: 15px var(--f-body); box-shadow: 0 4px 14px rgba(0,0,0,.18); }
@@ -518,11 +518,10 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .tq-row span { min-width: 0; } .tq-row b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tq-empty { padding: 10px; }
 @media (max-width: 640px) {
-  .top-search input { width: 42px; padding: 0; cursor: pointer; } .top-search input::placeholder { color: transparent; }
-  header.top.searching .brand { display: none; } header.top.searching .top-btns { grid-column: 1 / -1; }
-  header.top.searching .top-search { flex: 1; } .tq-res { left: 0; right: auto; width: calc(100vw - 32px); } header.top.searching .top-search input { width: 100%; padding: 0 14px 0 38px; cursor: text; }
-  header.top.searching .top-search input::placeholder { color: rgba(255,255,255,.8); }
-  :root[data-style="crisp"] header.top.searching .top-search input::placeholder, :root[data-style="paper"] header.top.searching .top-search input::placeholder { color: var(--muted); }
+  /* v100 (Cuong): phones get a full-width box on its own row under the title, Help and profile to its right. */
+  header.top .brand { grid-column: 1 / -1; } header.top .top-btns { grid-column: 1 / -1; margin-top: 10px; }
+  .top-search { flex: 1; } .top-search input { width: 100%; }
+  .tq-res { left: 0; right: auto; width: calc(100vw - 32px); }
 }
 .help-btn { background: rgba(255,255,255,.14); }
 :root[data-style="crisp"] .help-btn, :root[data-style="paper"] .help-btn { background: var(--surface); color: var(--accent); border-color: var(--line); }
@@ -2871,7 +2870,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 99 · Standalone copy · Oct 23", VERSION_NUM = 99;
+const APP_VERSION = "Prototype · Version 100 · Standalone copy · Oct 23", VERSION_NUM = 100;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2955,14 +2954,14 @@ function openMe() {
 document.getElementById("me-btn").addEventListener("click", openMe);
 // Header search (v99): the user's own subscriptions first (opens its details), then services from Explore offered where they live.
 (() => {
-  const inp = document.getElementById("tq"), res = document.getElementById("tq-res"), head = inp.closest("header.top");
+  const inp = document.getElementById("tq"), res = document.getElementById("tq-res");
   const norm = x => (x || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   const score = (name, q) => { const n = norm(name); return n.startsWith(q) ? 0 : n.split(" ").some(w => w.startsWith(q)) ? 1 : q.length < 4 ? -1 : n.includes(q) ? 2 : n.replace(/ /g, "").includes(q.replace(/ /g, "")) ? 3 : -1; };
   const rank = (items, q, name, cat) => items.map(x => { let r = score(name(x), q); if (r < 0 && cat && q.length >= 4 && norm(cat(x)).split(" ").some(w => w.startsWith(q))) r = 4; return [r, x]; }).filter(([r]) => r >= 0).sort((a, b) => a[0] - b[0] || name(a[1]).localeCompare(name(b[1]))).map(([, x]) => x);
-  const close = (keepOpen) => { res.hidden = true; inp.setAttribute("aria-expanded", "false"); if (!keepOpen) head.classList.remove("searching"); };
+  const close = () => { res.hidden = true; inp.setAttribute("aria-expanded", "false"); };
   const go = fn => { inp.value = ""; close(); inp.blur(); fn(); };
   function show() {
-    const q = norm(inp.value); if (!q) { close(true); return; }
+    const q = norm(inp.value); if (!q) { close(); return; }
     const mine = rank(state.subs, q, s => s.name, s => catLabel(svcOf(s).category)).slice(0, 6), have = new Set(state.subs.map(s => s.svc)), country = profile().country;
     const more = rank(Object.values(CATALOG).filter(v => v.id !== "custom" && !have.has(v.id) && availability(v.id, country) !== "no"), q, v => v.name, v => catLabel(v.category)).slice(0, 8);
     const per = s => s.cycle === "year" ? "yr" : "mo";
@@ -2973,7 +2972,7 @@ document.getElementById("me-btn").addEventListener("click", openMe);
     res.querySelectorAll("[data-tq-sub]").forEach(b => b.onclick = () => go(() => openSheet(b.dataset.tqSub)));
     res.querySelectorAll("[data-tq-svc]").forEach(b => b.onclick = () => go(() => { exploreOpen = b.dataset.tqSvc; view = "explore"; render(); window.scrollTo(0, 0); }));
   }
-  inp.addEventListener("focus", () => { head.classList.add("searching"); if (inp.value) show(); });
+  inp.addEventListener("focus", () => { if (inp.value) show(); });
   inp.addEventListener("input", show);
   inp.addEventListener("keydown", e => { const rows = [...res.querySelectorAll(".tq-row")];
     if (e.key === "Enter") { e.preventDefault(); rows[0]?.click(); } else if (e.key === "Escape") { inp.value = ""; close(); inp.blur(); } else if (e.key === "ArrowDown" && rows.length) { e.preventDefault(); rows[0].focus(); } });
