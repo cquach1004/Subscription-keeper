@@ -370,6 +370,7 @@ header.top nav.tabs { grid-column: 1 / -1; justify-self: start; }
 .me-item:first-child { border-top: 0; }
 button.me-item:hover { background: var(--accent-soft); }
 .me-item .me-l { flex: 1; min-width: 0; font-weight: 500; }
+.me-item select { width: auto; flex: none; max-width: 55%; }
 .me-item .me-v { color: var(--muted); font-size: 14px; text-align: right; }
 .me-item svg.ic { width: 20px; height: 20px; color: var(--accent); flex: none; }
 .me-item.chev::after { content: ""; width: 7px; height: 7px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(-45deg); flex: none; }
@@ -2564,7 +2565,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 81 · Standalone copy · Oct 23", VERSION_NUM = 81;
+const APP_VERSION = "Prototype · Version 82 · Standalone copy · Oct 23", VERSION_NUM = 82;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
