@@ -259,6 +259,7 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .checkin { margin-bottom: 18px; } .checkin h3 { margin: 0; flex: 1; font-size: 16px; }
 .checkin > * + * { margin-top: 10px; }
 .q-row { display: flex; flex-wrap: wrap; gap: 6px; } .q-row select, .q-row input { width: auto; flex: 1 1 110px; min-width: 0; }
+.nudge { display: grid; gap: 10px; margin-bottom: 14px; border-left: 4px solid var(--accent); } .nudge h3 { margin: 0; font-size: 16px; }
 .ci-link { background: none; border: 0; padding: 0; color: var(--accent); font: inherit; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; margin-left: auto; }
 .u-cur { align-items: baseline; }
 .ci-btns { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -1046,7 +1047,18 @@ const svcOf = s => CATALOG[s.svc] || { color: "#6b7785", mark: s.name.slice(0, 2
 // Free for good, not a free trial or an intro price that will end.
 const isFree = s => !pausedNow(s) && !introActive(s) && regularTotal(s) === 0;
 // Usage services are rated on cost per use against the tracker's benchmark. Protection, storage and perks plans are judged differently.
+// Unused for 12 months means Costly, for any subscription (Cuong, v92); AAA counts only roadside calls as use.
+// Nothing is called Costly in its first 31 days, since there hasn't been time to use it.
+const NEW_DAYS = 31;
+const isNew = s => !!s.start && dayDiff(s.start, today()) < NEW_DAYS;
+// Months in the last 12 (not paused) and whether any of them had use.
+function usedInYear(s) { const m = measureOf(s), rows = (valueSeries(s)?.rows.slice(1) || []).filter(r => !r.paused).slice(-12);
+  return { months: rows.length, used: rows.some(r => m.checks ? checkedIn(s, m, r.key).includes("roadside") : r.uses > 0) }; }
 function rate(s) {
+  const r = rateRaw(s);
+  return (r.key === "poor" || r.key === "unused") && isNew(s) ? { key: "ok", label: "New, too soon to rate", cpu: r.cpu, early: true } : r;
+}
+function rateRaw(s) {
   const v = svcOf(s);
   if (pausedNow(s)) return { key: "ok", label: "Paused", cpu: null, paused: true };
   if (needsPrice(s)) return { key: "ok", label: "Add your price", cpu: null, needs: true };
@@ -1068,7 +1080,7 @@ function rate(s) {
     return pricey ? { key: "ok", label: "Above typical price", cpu: null, results: true, pricey, calls } : { key: "great", label: "Great value", cpu: null, results: true, calls }; }
   if (m.checks) { const keys = (valueSeries(s)?.rows.slice(1) || []).slice(-12).map(r => r.key), used = (keys.length ? keys : [today().slice(0, 7)]).flatMap(k => checkedIn(s, m, k));
     return used.includes("roadside") ? { key: "great", label: "Great value", cpu: null, roadside: true }
-      : used.length ? { key: "ok", label: "Fair value", cpu: null, checksUsed: true } : { key: "ok", label: MODEL_LABEL.insurance, cpu: null, model: "insurance" }; }
+      : { key: "poor", label: "No roadside calls in 12 months", cpu: null, noRoadside: true, checksUsed: used.length > 0 }; }
   if (s.needsUse && !m.costOnly) return { key: "ok", label: "Add how often you use it", cpu: null, waiting: true };
   if (!m.rated) {
     const cpu = s.uses && v.value_model === "insurance" ? monthly(s) / s.uses : null;
@@ -1076,11 +1088,12 @@ function rate(s) {
   }
   if (m.bundle) { const val = s.uses * m.worth + m.fixedAdd, ratio = val / Math.max(0.01, monthly(s));
     return { key: ratio >= 1.2 ? "great" : ratio >= 0.9 ? "ok" : "poor", label: ratio >= 1.2 ? "Great value" : ratio >= 0.9 ? "Fair value" : "Costs more than it saves", cpu: null, bundle: true, val }; }
-  if (m.fixed) { const mo = monthly(s), w = m.worth;
+  if (m.fixed) { const mo = monthly(s), w = m.worth, y = usedInYear(s);
+    if (y.months && !y.used) return { key: "poor", label: "Not used in 12 months", cpu: null, fixed: true, idle: true };
     return w == null ? { key: "ok", label: "Add a comparison", cpu: null, fixed: true }
       : mo <= w ? { key: "great", label: "Great value", cpu: null, fixed: true } : mo <= w * 1.3 ? { key: "ok", label: "Fair value", cpu: null, fixed: true }
       : { key: "poor", label: `Costs more than ${m.jobName} alone`, cpu: null, fixed: true }; }
-  if (s.uses === 0) return { key: "unused", label: "Unused", cpu: null };
+  if (s.uses === 0) { const y = usedInYear(s); return { key: "unused", label: y.months >= 12 && !y.used ? "Not used in 12 months" : "Unused", cpu: null }; }
   const cpu = monthly(s) / s.uses;
   if (m.worth == null) return { key: "ok", label: "Fair value", cpu };
   if (cpu <= m.good) return { key: "great", label: "Great value", cpu };
@@ -1168,7 +1181,7 @@ function valueBucket(s) {
   const r = rate(s);
   if (r.key === "great") return "great";
   if (r.key === "poor" || r.key === "unused") return "costly";
-  if (r.key === "ok" && !r.model && !r.paused && !r.needs && !r.waiting && !(r.fixed && r.label === "Add a comparison")) return "fair";
+  if (r.key === "ok" && !r.model && !r.early && !r.paused && !r.needs && !r.waiting && !(r.fixed && r.label === "Add a comparison")) return "fair";
   return null;
 }
 
@@ -1668,6 +1681,19 @@ function wireCheckin(root) {
   root.querySelectorAll("[data-ci-del]").forEach(b => b.onclick = () => { const s = state.subs.find(x => x.id === b.dataset.ciDel);
     if (!confirm(`Remove ${s.name} from your list?`)) return; state.subs = state.subs.filter(x => x !== s); state.checkin = mo; save(); render(); });
 }
+// Usage reminder on Overview (Cuong, v92): subscriptions added over a month ago with no usage entered yet. "Later" hides it for a week.
+const needsNudge = s => s.needsUse && !measureOf(s).costOnly && !!s.start && dayDiff(s.start, today()) >= NEW_DAYS && !pausedNow(s);
+function usageNudgeHtml() {
+  const list = state.subs.filter(needsNudge);
+  if (!list.length || (state.nudgeLater && state.nudgeLater > today())) return "";
+  return `<div class="card nudge"><div><h3>Add your usage</h3><p class="small muted" style="margin:2px 0 0">${list.length === 1 ? "This has" : "These have"} been on your list for over a month with no usage entered, so we can't tell if ${list.length === 1 ? "it's" : "they're"} worth it.</p></div>
+    <div class="chips">${list.map(s => `<button class="chip" data-nudge="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div>
+    <div><button class="btn ghost small" id="nudge-later">Remind me later</button></div></div>`;
+}
+function wireNudge(f) {
+  f.querySelectorAll("[data-nudge]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.nudge)));
+  f.getElementById("nudge-later")?.addEventListener("click", () => { state.nudgeLater = iso(new Date(Date.now() + 7 * 864e5)); save(); render(); });
+}
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
@@ -1680,6 +1706,7 @@ function homeView() {
       ${saveHtml(total)}
       ${benchHtml(total)}
     </section>
+    ${usageNudgeHtml()}
     ${factsHtml()}
     <div class="charts">${pieHtml()}</div>
     ${trendHtml()}
@@ -1690,6 +1717,7 @@ function homeView() {
   f.querySelectorAll(".save-top").forEach(b => b.addEventListener("click", () => { view = "overlaps"; render(); window.scrollTo(0, 0); }));
   pieWire(f);
   wireFacts(f);
+  wireNudge(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 3; save(); render(); });
@@ -2263,7 +2291,7 @@ function verdictText(s, r) {
   const cheaper = v.plans.filter(p => p.effective_monthly < (plan?.effective_monthly ?? 0)).sort((a, b) => a.effective_monthly - b.effective_monthly)[0];
   if (r.bundle) { const m = measureOf(s);
     return `Without ${esc(s.name)} you'd pay about ${money(r.val)} a month: ${money(m.worth)} shipping on ${fmtN(s.uses)} order${s.uses === 1 ? "" : "s"} under $35${m.counted.map(p => ` plus ${partText(p)}`).join("")}${m.counted.some(p => p.months) ? ` (about ${money(m.fixedAdd)} a month averaged over the year)` : ""}${m.included.length ? `. ${m.included.map(p => p.name).join(" and ")} is included in Prime Video's ${money(m.counted.find(c => c.feature === m.included[0].within)?.monthly)}` : ""}. It costs ${money(monthly(s))}${(s.members || 1) > 1 ? `, or ${money(monthly(s) / s.members)} for each of the ${s.members} people sharing it` : ""}.${r.key === "poor" ? " Grouping orders to $35 or more gets free shipping without Prime." : ""}`; }
-  if (r.fixed) { const m = measureOf(s), a = altOf(s), d = monthly(s) - m.worth, extras = feats.filter(f => f.id !== m.job);
+  if (r.fixed && !r.idle) { const m = measureOf(s), a = altOf(s), d = monthly(s) - m.worth, extras = feats.filter(f => f.id !== m.job);
     const mine = s.used.filter(id => id !== m.job).map(id => feats.find(f => f.id === id)?.name).filter(Boolean);
     return d <= 0.005 ? `${esc(s.name)} costs less than ${m.jobName} alone (${money(m.worth)}/mo at ${a?.name.split(",")[0] || "the cheapest option"}), so everything else is a bonus.`
       : `You pay ${money(d)}/mo more than ${m.jobName} alone would cost${a ? ` at ${a.name.split(",")[0]}` : ""}. ${mine.length ? `That buys the extras you care about: ${mine.join(", ")}.` : `If you don't need the extras (${extras.slice(0, 3).map(f => f.name.toLowerCase()).join(", ")}${extras.length > 3 ? " and more" : ""}), switching would save ${money(d * 12)} a year.`}`; }
@@ -2280,6 +2308,9 @@ function verdictText(s, r) {
     if (r.key === "poor") return `You had to call ${esc(s.name)} back in ${r.calls} of the last 3 months. If the ${thing} keep coming back, it may not be worth ${money(monthly(s))} a month. Ask for a re-treatment or compare quotes.`;
     if (r.pricey) return `No unresolved problems lately, but ${money(monthly(s))} a month is above the typical ${range} for ${r.pricey.what}, based on ${esc(r.pricey.src)}. Ask for a better rate, or get a quote or two before you renew.`;
     return `No unresolved ${thing} in the last 3 months${r.calls ? ", and the problem you called about was fixed" : ""}${fp ? monthly(s) < fp.lo ? `, for less than the typical ${range} a month` : `, at a fair price (typically ${range} a month)` : ""}. That's what you're paying for.${fp ? "" : " We don't have a typical price for this kind of service yet, so it's judged on results only."} Tick anything that goes wrong under How it's going.`; }
+  if (r.early) return `${esc(s.name)} was added less than ${NEW_DAYS} days ago, so it's too soon to call it costly. Keep your usage up to date and we'll rate it after its first month.`;
+  if (r.idle) return `No use in the last 12 months (0 ${esc(measureOf(s).short)}). A subscription you haven't used in a year probably isn't worth ${money(monthly(s) * 12)} a year. Cancel it, or record your usage if that's wrong.`;
+  if (r.noRoadside) return `No roadside calls in the last 12 months${r.checksUsed ? ", only other member benefits" : ""}. Roadside help is the main reason to have ${esc(s.name)}, so you paid ${money(monthly(s) * 12)} over the year for help you didn't use. Tick a roadside call under How you use it if you had one, or compare a cheaper plan or roadside cover from your car insurer.`;
   if (r.roadside) return `You used roadside help in the last 12 months. We count ${esc(s.name)} as worth it in any year with at least one roadside call.`;
   if (r.checksUsed) return `No roadside calls in the last 12 months, but you used other member benefits. One roadside call in a year would make it clearly worth it.`;
   if (s.svc === "aaa" && r.model === "insurance") return `Nothing used in the last 12 months. That's fine for protection, but one roadside call in a year is what makes it clearly worth it. Tick what you use each month under How you use it.`;
@@ -2750,7 +2781,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 91 · Standalone copy · Oct 23", VERSION_NUM = 91;
+const APP_VERSION = "Prototype · Version 92 · Standalone copy · Oct 23", VERSION_NUM = 92;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
