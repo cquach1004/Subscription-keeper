@@ -257,8 +257,9 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .facts-dots button[aria-current] { background: var(--accent); width: 14px; border-radius: 3px; }
 .facts-src { font-size: 11px; color: var(--muted); }
 .checkin { margin-bottom: 18px; } .checkin h3 { margin: 0; flex: 1; font-size: 16px; }
-details.checkin > summary { display: flex; align-items: center; gap: 10px; }
-details.checkin[open] > * + * { margin-top: 10px; }
+.checkin > * + * { margin-top: 10px; }
+.ci-link { background: none; border: 0; padding: 0; color: var(--accent); font: inherit; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; margin-left: auto; }
+.u-cur { align-items: baseline; }
 .ci-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .ci-list { list-style: none; margin: 0; padding: 0 4px 0 0; display: grid; gap: 6px; max-height: 380px; overflow-y: auto; }
 .ci-list li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); }
@@ -566,7 +567,17 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .u-how { margin-top: 14px; }
 @media (max-width: 900px) { .u-pies { grid-template-columns: 1fr; } }
 .a-cats { margin-bottom: 12px; }
-@media (max-width: 560px) { .a-cats { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding: 2px 16px; } .a-cats::-webkit-scrollbar { display: none; } .a-cats .chip { flex: none; } }
+@media (max-width: 560px) { .a-cats { gap: 6px; } .a-cats .chip { font-size: 13px; padding: 4px 10px; } }
+/* A to Z groups on Explore (v88): one fold per letter, all closed by default. */
+.az-tools { display: flex; justify-content: flex-end; margin: -4px 0 6px; }
+details.az { border-bottom: 1px solid var(--line); }
+details.az > summary { display: flex; align-items: center; gap: 10px; padding: 10px 2px; }
+details.az > summary b { font-size: 17px; min-width: 22px; }
+details.az > summary .az-n { flex: 1; }
+details.az[open] > summary { margin-bottom: 0; }
+details.az .catalog { margin: 2px 0 12px; }
+details.az[hidden] { display: none; }
+#a-other { margin-top: 12px; }
 .vb-other { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 12px; }
 .vb-other > span { flex-basis: 100%; }
 .vb-other .chip { background: var(--surface); color: inherit; cursor: pointer; }
@@ -1501,13 +1512,14 @@ function usageView() {
     return `<div class="u-row" data-sub="${s.id}">${logoHtml(svcOf(s))}<div class="u-nm"><button class="u-open" data-id="${s.id}">${esc(s.name)}</button><span class="small muted">${esc(m.label)}</span></div>
       <span class="pill ${r.key}">${esc(r.label)}</span>${m.checks ? checksHtml(s, m, cur) : slider(m, n, `data-u="${s.id}" aria-label="${esc(m.label)}, ${esc(s.name)}"`)}</div>`; };
   const f = el(`<div class="section-head"><h2>Usage</h2><span class="small muted">How last month went, and what you're using this month.</span></div>
-    ${state.subs.length ? checkinHtml() : ""}
     <h3 style="margin:4px 0 10px">${esc(prevName)}: what your money bought</h3>
     ${last.length ? `<div class="u-pies">${Object.keys(BUCKETS).map(k => bucketDonut(k, by(k), total)).join("")}</div>
       <p class="note" style="margin:8px 0 0">Each ring is that group's share of the ${money(total)} you paid last month for rated subscriptions.${last.some(x => x.free) ? " Free services count as Great value but add nothing to the rings." : ""}</p>`
       : `<p class="muted">Nothing to show for last month yet. Once a month ends with your usage set, it shows here.</p>`}
     ${unrated.length ? `<div class="vb-other"><span class="small muted">Not rated for last month (protection plans, paused, new, or missing usage or price):</span>${unrated.map(s => `<button class="chip" data-id="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div>` : ""}
-    <div class="section-head" style="margin-top:26px"><h2 style="font-size:20px">${esc(curName)} so far</h2><span class="small muted">Slide to match how you're using each one. Whatever a slider shows when the month ends is saved as that month's usage.</span></div>
+    <div class="section-head u-cur" style="margin-top:26px"><h2 style="font-size:20px">${esc(curName)} so far</h2>${state.subs.length ? checkinLink() : ""}</div>
+    ${state.subs.length && checkinOpen ? checkinHtml() : ""}
+    <p class="small muted" style="margin:-4px 0 10px">Slide to match how you're using each one. Whatever a slider shows when the month ends is saved as that month's usage.</p>
     ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Explore tab.</p>`}
     <details class="note home-how u-how" style="margin-top:12px"><summary>How we rate value</summary>Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>
     <div class="charts u-month" style="margin-top:22px">${monthBarsHtml()}</div>`);
@@ -1562,27 +1574,28 @@ function wireFacts(root) {
   start();
 }
 // Monthly check-in on Usage (Cuong, v78): did you add, change, pause or cancel anything this month?
-// "No changes" or acting on one hides the question until next month (state.checkin = "YYYY-MM").
-let checkinOpen = false, checkinFold = null;  // checkinFold: the viewer's own open/closed choice this visit
+// v88 (Cuong): a link at the right of the "{Month} so far" heading opens it; answering marks the month checked (state.checkin = "YYYY-MM").
+let checkinOpen = false, checkinEdit = false;
+function checkinLink() {
+  const done = state.checkin === today().slice(0, 7);
+  return `<button type="button" class="ci-link" data-ci="toggle" aria-expanded="${checkinOpen}">${done ? "✓ " : ""}Anything change this month?</button>`;
+}
 function checkinHtml() {
-  const mo = today().slice(0, 7), name = new Date().toLocaleDateString(undefined, { month: "long" });
-  const done = state.checkin === mo, open = checkinFold ?? !done;
   const subs = state.subs.slice().sort((a, b) => a.name.localeCompare(b.name));
-  // Collapsible (Cuong, v87): open until answered for the month, then folded to its title.
-  return `<details class="card checkin fold" ${open ? "open" : ""}><summary><h3>Anything change in ${esc(name)}?</h3>${done ? `<span class="pill great">Checked</span>` : ""}</summary>
+  return `<div class="card checkin">
     <p class="small muted" style="margin:0">Keep your list up to date so your savings and value ratings stay right.</p>
-    <div class="ci-btns"><button class="btn" data-ci="add">I added one</button><button class="btn" data-ci="edit" aria-expanded="${checkinOpen}">I changed, paused or cancelled one</button><button class="btn ghost" data-ci="none">No changes</button></div>
-    ${checkinOpen ? `<ul class="ci-list">${subs.map(s => `<li>${logoHtml(svcOf(s))}<span class="ci-nm"><b>${esc(s.name)}</b>${pausedNow(s) ? `<span class="small muted">Paused</span>` : ""}</span>
+    <div class="ci-btns"><button class="btn" data-ci="add">I added one</button><button class="btn" data-ci="edit" aria-expanded="${checkinEdit}">I changed, paused or cancelled one</button><button class="btn ghost" data-ci="none">No changes</button></div>
+    ${checkinEdit ? `<ul class="ci-list">${subs.map(s => `<li>${logoHtml(svcOf(s))}<span class="ci-nm"><b>${esc(s.name)}</b>${pausedNow(s) ? `<span class="small muted">Paused</span>` : ""}</span>
       <span class="ci-act"><button class="btn ghost small" data-ci-plan="${s.id}">Change plan</button><button class="btn ghost small" data-ci-pause="${s.id}">${pausedNow(s) ? "Restarted" : "Paused"}</button><button class="btn ghost small" data-ci-del="${s.id}">Cancelled</button></span></li>`).join("")}</ul>
-      <button class="btn ghost small" data-ci="done">Done</button>` : ""}</details>`;
+      <button class="btn ghost small" data-ci="done">Done</button>` : ""}</div>`;
 }
 function wireCheckin(root) {
-  const mo = today().slice(0, 7), done = () => { state.checkin = mo; checkinOpen = false; checkinFold = null; save(); render(); };
-  root.querySelector("details.checkin")?.addEventListener("toggle", e => { checkinFold = e.target.open; });
+  const mo = today().slice(0, 7), done = () => { state.checkin = mo; checkinOpen = checkinEdit = false; save(); render(); };
   root.querySelectorAll("[data-ci]").forEach(b => b.onclick = () => { const k = b.dataset.ci;
-    if (k === "add") { state.checkin = mo; save(); view = "add"; render(); window.scrollTo(0, 0); }
+    if (k === "add") { state.checkin = mo; checkinOpen = checkinEdit = false; save(); view = "add"; render(); window.scrollTo(0, 0); }
     else if (k === "none" || k === "done") done();
-    else { checkinOpen = !checkinOpen; checkinFold = true; render(); } });
+    else if (k === "toggle") { checkinOpen = !checkinOpen; checkinEdit = false; render(); }
+    else { checkinEdit = !checkinEdit; render(); } });
   root.querySelectorAll("[data-ci-plan]").forEach(b => b.onclick = () => { state.checkin = mo; save(); openSheet(b.dataset.ciPlan); });
   // A pause starts (or ends) today; while paused it costs nothing and isn't rated.
   root.querySelectorAll("[data-ci-pause]").forEach(b => b.onclick = () => { const s = state.subs.find(x => x.id === b.dataset.ciPause), cp = currentPause(s);
@@ -1937,6 +1950,13 @@ function exploreDetail(v) {
   return f;
 }
 
+// Explore A to Z (Cuong, v88): services grouped by first letter; digits and symbols go under "#", first.
+let azOpen = new Set();
+function azGroups(list) {
+  const key = v => { const c = v.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").charAt(0).toUpperCase(); return /[A-Z]/.test(c) ? c : "#"; };
+  const m = new Map(); list.forEach(v => { const k = key(v); m.has(k) || m.set(k, []); m.get(k).push(v); });
+  return [...m].sort(([a], [b]) => a === "#" ? -1 : b === "#" ? 1 : a.localeCompare(b));
+}
 function addView() {
   const mine = new Set(state.subs.map(s => s.svc)), country = profile().country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no").sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" })), hidden = Object.keys(CATALOG).length - offered.length;
@@ -1945,8 +1965,9 @@ function addView() {
     <h3 style="margin:4px 0 8px">1. Which subscription?</h3>
     <input id="a-q" type="search" placeholder="Search, e.g. Hulu, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:10px">
     <div class="chips a-cats" role="group" aria-label="Category">${["all", "mine-alts", "public", ...cats].map(c => `<button class="chip x-cat" data-cat="${c}" aria-pressed="${exploreCat === c}">${c === "all" ? "All" : c === "mine-alts" ? "Alternatives To Mine" : c === "public" ? "Free Public Services" : esc(catLabel(c))}</button>`).join("")}</div>
-    <div class="catalog" id="a-cat">${offered.map(v => `<button class="cat-item" data-svc="${v.id}" data-cat="${v.category}" data-alt-mine="${altFor(v).length ? 1 : 0}" data-public="${v.provider_type ? 1 : 0}" aria-pressed="${picked === v.id}" data-text="${esc((v.name + " " + catLabel(v.category) + " " + v.features.map(x => x.name).join(" ")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}
-      <button class="cat-item" data-svc="" aria-pressed="${picked === ""}" data-text=""><span class="logo" style="background:#6b7785">+</span><span>Something else</span></button></div>
+    <div class="az-tools"><button type="button" class="btn ghost small" id="az-all">Expand all</button></div>
+    <div id="a-cat">${azGroups(offered).map(([l, vs]) => `<details class="fold az" data-l="${l}"><summary><b>${l}</b><span class="small muted az-n">${vs.length}</span></summary><div class="catalog">${vs.map(v => `<button class="cat-item" data-svc="${v.id}" data-cat="${v.category}" data-alt-mine="${altFor(v).length ? 1 : 0}" data-public="${v.provider_type ? 1 : 0}" aria-pressed="${picked === v.id}" data-text="${esc((v.name + " " + catLabel(v.category) + " " + v.features.map(x => x.name).join(" ")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}</div></details>`).join("")}
+      <div class="catalog" id="a-other"><button class="cat-item" data-svc="" aria-pressed="${picked === ""}" data-text=""><span class="logo" style="background:#6b7785">+</span><span>Something else</span></button></div></div>
     <p class="muted" id="a-none" hidden>No services match. Try another word or category, or choose Something else.</p>
     <p class="muted" id="a-hint">Tap a subscription above to fill in the details.</p>
     <form class="fields" id="add-form" hidden>
@@ -1998,7 +2019,21 @@ function addView() {
     document.querySelectorAll("#a-cat .cat-item").forEach(b => { if (!b.dataset.svc) { b.hidden = exploreCat !== "all" && !q; return; }
       const ok = (exploreCat === "all" || b.dataset.cat === exploreCat || (exploreCat === "mine-alts" && b.dataset.altMine === "1") || (exploreCat === "public" && b.dataset.public === "1")) && (!q || b.dataset.text.includes(q));
       b.hidden = !ok; n += ok; });
-    $("a-none").hidden = n > 0; };
+    $("a-none").hidden = n > 0;
+    // Letters with nothing left are hidden. A search or a category filter opens every letter that still has matches;
+    // otherwise each letter is as the viewer left it (closed to start).
+    const auto = !!q || exploreCat !== "all";
+    document.querySelectorAll("#a-cat details.az").forEach(d => { const k = d.querySelectorAll(".cat-item:not([hidden])").length;
+      d.hidden = !k; d.querySelector(".az-n").textContent = k; d.open = auto ? true : azOpen.has(d.dataset.l); });
+    azSync(); };
+  const azSync = () => { const ds = [...document.querySelectorAll("#a-cat details.az:not([hidden])")], all = ds.length && ds.every(d => d.open);
+    $("az-all").textContent = all ? "Collapse all" : "Expand all"; };
+  f.querySelectorAll("details.az").forEach(d => d.addEventListener("toggle", () => {
+    if (!($("a-q")?.value || "").trim() && exploreCat === "all") d.open ? azOpen.add(d.dataset.l) : azOpen.delete(d.dataset.l); azSync(); }));
+  f.getElementById("az-all").addEventListener("click", () => { const ds = [...document.querySelectorAll("#a-cat details.az:not([hidden])")], open = !ds.every(d => d.open);
+    ds.forEach(d => d.open = open); });
+  // Coming back with a service picked, open its letter so the selection shows.
+  if (picked) { const b = f.querySelector(`.cat-item[data-svc="${picked}"]`); if (b) azOpen.add(b.closest("details.az").dataset.l); }
   f.getElementById("a-q").addEventListener("input", applyAdd);
   f.querySelectorAll(".a-cats .x-cat").forEach(b => b.addEventListener("click", () => { exploreCat = b.dataset.cat;
     document.querySelectorAll(".a-cats .x-cat").forEach(x => x.setAttribute("aria-pressed", x.dataset.cat === exploreCat)); applyAdd(); }));
@@ -2604,7 +2639,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 87 · Standalone copy · Oct 23", VERSION_NUM = 87;
+const APP_VERSION = "Prototype · Version 88 · Standalone copy · Oct 23", VERSION_NUM = 88;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
