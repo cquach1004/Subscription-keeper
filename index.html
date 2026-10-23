@@ -241,21 +241,21 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 @media (max-width: 560px) { .pie-wrap { grid-template-columns: 136px 1fr; gap: 12px; } .pie-box { width: 136px; height: 136px; } .pie-mid b { font-size: 17px; } .pie-mid span { font-size: 11px; }
   .pie-legend li { grid-template-columns: 10px 1fr auto; gap: 6px; padding: 2px 0; font-size: 12px; } .pie-legend .pct, .pie-legend .n { display: none; } .pie-legend .sw { width: 10px; height: 10px; border-radius: 3px; } }
 
-.facts { display: grid; gap: 10px; margin-bottom: 16px; }
-.facts-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-.facts-head h3 { margin: 0; }
-.facts-view { min-height: 92px; }
-.fact { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; animation: factIn .35s ease; }
-.fact-big { font-size: 34px; font-weight: 700; color: var(--accent); letter-spacing: -.02em; display: grid; line-height: 1.05; min-width: 92px; }
-.fact-big span { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
-.fact p { margin: 0; font-size: 15px; }
+.facts { display: grid; gap: 6px; margin-bottom: 16px; padding: 14px 18px; }
+.facts-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.facts-head h3 { margin: 0; font-size: 15px; }
+.fact { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; animation: factIn .35s ease; }
+.fact-big { font-size: 26px; font-weight: 700; color: var(--accent); letter-spacing: -.02em; display: grid; line-height: 1; min-width: 72px; }
+.fact-big span { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0; margin-top: 2px; }
+.fact p { margin: 0; font-size: 14px; line-height: 1.4; }
 @keyframes factIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .fact { animation: none; } }
-.facts-nav { display: flex; align-items: center; justify-content: center; gap: 8px; }
-.facts-nav .btn { font-size: 20px; line-height: 1; padding: 4px 12px; }
-.facts-dots { display: flex; gap: 6px; }
-.facts-dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: var(--line); cursor: pointer; }
-.facts-dots button[aria-current] { background: var(--accent); width: 20px; border-radius: 4px; }
+.facts-nav { display: flex; align-items: center; gap: 4px; }
+.facts-nav > button { border: 0; background: none; color: var(--accent); font-size: 20px; line-height: 1; padding: 0 6px; cursor: pointer; }
+.facts-dots { display: flex; gap: 5px; }
+.facts-dots button { width: 6px; height: 6px; padding: 0; border: 0; border-radius: 50%; background: var(--line); cursor: pointer; }
+.facts-dots button[aria-current] { background: var(--accent); width: 14px; border-radius: 3px; }
+.facts-src { font-size: 11px; color: var(--muted); }
 .checkin { display: grid; gap: 10px; margin-bottom: 18px; } .checkin h3 { margin: 0; }
 .ci-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .ci-list { list-style: none; margin: 0; padding: 0 4px 0 0; display: grid; gap: 6px; max-height: 380px; overflow-y: auto; }
@@ -264,7 +264,7 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .ci-act { display: flex; gap: 2px; flex-wrap: wrap; justify-content: flex-end; }
 .ci-act .btn { padding: 6px 8px; }
 .checkin-done { margin: 0 0 14px; }
-@media (max-width: 560px) { .ci-list li { grid-template-columns: auto 1fr; } .ci-act { grid-column: 1 / -1; justify-content: flex-start; } .fact-big { font-size: 28px; min-width: 76px; } }
+@media (max-width: 560px) { .ci-list li { grid-template-columns: auto 1fr; } .ci-act { grid-column: 1 / -1; justify-content: flex-start; } .fact-big { font-size: 24px; min-width: 64px; } }
 .sv-sum { display: flex; gap: 10px 28px; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 18px; }
 .sv-sum .big { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
 .co { display: grid; gap: 10px; }
@@ -1516,11 +1516,11 @@ const FACTS = [
 ];
 let factAt = 0, factTimer = null;
 const factsHtml = () => `<section class="card facts" aria-roledescription="carousel" aria-label="Did you know?">
-  <div class="facts-head"><h3>Did You Know?</h3><span class="tag">Sample facts for the demo</span></div>
-  <div class="facts-view" aria-live="polite">${factSlide(factAt)}</div>
-  <div class="facts-nav"><button class="btn ghost small" data-fact="-1" aria-label="Previous fact">&lsaquo;</button>
+  <div class="facts-head"><h3>Did You Know?</h3><span class="facts-nav"><button data-fact="-1" aria-label="Previous fact">&lsaquo;</button>
     <span class="facts-dots">${FACTS.map((_, i) => `<button data-fact-go="${i}" aria-label="Fact ${i + 1} of ${FACTS.length}" ${i === factAt ? 'aria-current="true"' : ""}></button>`).join("")}</span>
-    <button class="btn ghost small" data-fact="1" aria-label="Next fact">&rsaquo;</button></div></section>`;
+    <button data-fact="1" aria-label="Next fact">&rsaquo;</button></span></div>
+  <div class="facts-view" aria-live="polite">${factSlide(factAt)}</div>
+  <div class="facts-src">Sample facts for the demo</div></section>`;
 const factSlide = i => { const [big, unit, text] = FACTS[i]; return `<div class="fact"><div class="fact-big num">${esc(big)}<span>${esc(unit)}</span></div><p>${esc(text)}</p></div>`; };
 function wireFacts(root) {
   const box = root.querySelector(".facts"); if (!box) return;
@@ -2564,7 +2564,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 78 · Standalone copy · Oct 23", VERSION_NUM = 78;
+const APP_VERSION = "Prototype · Version 79 · Standalone copy · Oct 23", VERSION_NUM = 79;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
