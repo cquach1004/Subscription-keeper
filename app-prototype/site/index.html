@@ -925,6 +925,23 @@ const USAGE_BY_CAT = {
   car_insurance: COST_ONLY, home_insurance: COST_ONLY,
   privacy: COST_ONLY, home_security: COST_ONLY, home: COST_ONLY, tech_support: COST_ONLY, lawn_pest: COST_ONLY, internet: COST_ONLY, mobile: COST_ONLY, pets: COST_ONLY, beauty: COST_ONLY, passwords: COST_ONLY,
 };
+// Lawn and pest control are judged on results (Cuong, v90): no pests or weeds at a fair market price is what you paid for.
+// Each month you tick anything that went wrong; nothing ticked means no problems. A problem that isn't fixed, or callbacks
+// in two of the last 3 months, means it may not be worth it.
+const isPest = v => /pest|mosquito|termite|bug|exterminat|orkin|terminix|aptive/i.test(v.id + " " + v.name);
+const RESULTS = v => { const pest = isPest(v);
+  return U("problems", "Anything go wrong this month?", "problem", "problems", "month", 3, { per1: "problem", results: true, pest, checks: [
+    { id: "problem", name: pest ? "Saw pests in or around the house" : "Saw weeds, bare spots or unhealthy grass", short: "Problem seen" },
+    { id: "callback", name: "Had to call them back", short: "Called back" },
+    { id: "unfixed", name: "The problem still isn't fixed", short: "Not fixed" }] }); };
+// Typical prices, so "fair market price" has a yardstick. Estimates from This Old House cost guides (2026), not official prices;
+// quotes vary with home or yard size and region, so a price is only flagged when it's well above the range.
+const FAIR_PRICE = {
+  pest: { lo: 46, hi: 58, what: "pest control", src: "This Old House's 2026 cost estimates for Terminix, Aptive and Orkin for about a 2,000 sq ft home" },
+  lawn: { lo: 65, hi: 86, what: "lawn care", src: "one TruGreen sample quote for a 5,906 sq ft yard, reported by This Old House in June 2026" },
+};
+const fairPrice = s => { const m = measureOf(s); if (!m.results || profile().country !== catalogCountry() || /mosquito/i.test(s.svc)) return null; return FAIR_PRICE[m.pest ? "pest" : "lawn"]; };
+const priceyFor = s => { const fp = fairPrice(s), mo = monthly(s); return fp && mo > fp.hi * 1.15 ? fp : null; };
 const USAGE_BY_SVC = {
   youtube_premium: { worth: 0.5 },
   // Pro articles (Pro plan only) are worth what an article is at WSJ's "poor" benchmark ($2), the same scale the catalog uses for WSJ.
@@ -959,7 +976,7 @@ const ALTERNATIVES = {
 const partText = p => p.months ? `${money(p.monthly)} a month in football season (Sep to Dec) for ${p.name} (it streams on Prime Video)` : `${money(p.monthly)} for ${p.name}`;
 const altOf = s => { const m = measureOf(s), alts = ALTERNATIVES[m.job] || []; return alts[s.alt || 0] || alts[0]; };
 function measuresOf(s) {
-  const v = svcOf(s), b = v.benchmark, o = USAGE_BY_SVC[s.svc], cat = USAGE_BY_CAT[v.category] || USAGE_BY_CAT.default;
+  const v = svcOf(s), b = v.benchmark, o = USAGE_BY_SVC[s.svc], cat = v.category === "lawn_pest" ? RESULTS(v) : USAGE_BY_CAT[v.category] || USAGE_BY_CAT.default;
   const m = typeof o === "function" ? o(s) : o?.id ? o : { ...cat, ...(o || {}) }, ratio = b ? b.good_at_or_below / b.poor_at_or_above : 1 / 3;
   const listWorth = m.fixed ? (ALTERNATIVES[m.job]?.[s.alt || 0] || ALTERNATIVES[m.job]?.[0])?.monthly ?? null : m.worth ?? (m.id === "uses" && b ? b.poor_at_or_above : null);
   const own = s.worth?.[m.id], worth = own ?? listWorth, on = (m.parts || []).filter(p => (s.used || []).includes(p.feature)), parts = on.filter(p => !(p.within && on.some(q => q.feature === p.within)));
@@ -969,7 +986,7 @@ function measuresOf(s) {
 const measureOf = s => measuresOf(s)[0];
 const unitOf = (m, n) => n === 1 ? m.one : m.short;
 const useText = s => { const m = measureOf(s); if (m.costOnly) return "Not measured by use";
-  if (m.checks) { const on = s.checks?.[periodKeys(s).cur] || []; return on.length ? on.map(id => m.checks.find(c => c.id === id)?.short || id).join(", ") + " this month" : "Nothing used this month"; }
+  if (m.checks) { const on = s.checks?.[periodKeys(s).cur] || []; return on.length ? on.map(id => m.checks.find(c => c.id === id)?.short || id).join(", ") + " this month" : m.results ? "No problems this month" : "Nothing used this month"; }
   if (m.per1 === "dollar") return `${money(s.rate)} of perks a ${m.per}`;
   return m.amount ? `${fmtN(s.rate)} ${m.short}` : `${fmtN(s.rate)} ${unitOf(m, s.rate)} a ${m.per}`; };
 // The usage slider runs from 0 to the measure's top ("100+": the top means that much or more).
@@ -977,11 +994,11 @@ const slideText = (m, n) => (m.per1 === "dollar" ? "$" : "") + (n >= m.max ? `${
 const slider = (m, n, attrs) => `<div class="slide"><input type="range" min="0" max="${m.max}" step="${m.step}" value="${Math.min(n, m.max)}" ${attrs}><output class="num">${slideText(m, n)}</output>
   <div class="slide-ends" aria-hidden="true"><span>0</span><span>${m.per1 === "dollar" ? "$" : ""}${fmtN(m.max)}+</span></div></div>`;
 // Checkbox usage (AAA): s.checks[month] lists what was used; a roadside call also counts as 1 in the month's history for the chart.
-const checkedIn = (s, m, k) => s.checks?.[k] || (s.hist?.[m.id]?.[k] > 0 ? ["roadside"] : []);
+const checkedIn = (s, m, k) => s.checks?.[k] || (s.hist?.[m.id]?.[k] > 0 ? [m.results ? "problem" : "roadside"] : []);
 const checksHtml = (s, m, key) => `<div class="checks" data-ck="${s.id || "new"}|${key}">${m.checks.filter(c => !c.plans || c.plans.includes(s.plan)).map(c =>
   `<label class="feature"><input type="checkbox" value="${c.id}" ${checkedIn(s, m, key).includes(c.id) ? "checked" : ""}>${esc(c.name)}</label>`).join("")}</div>`;
 function setChecks(s, key, ids) { const m = measureOf(s); (s.checks ||= {})[key] = ids;
-  ((s.hist ||= {})[m.id] ||= {})[key] = ids.includes("roadside") ? 1 : 0; ((s.histSrc ||= {})[m.id] ||= {})[key] = "you"; delete s.needsUse; s.example = false; save(); }
+  ((s.hist ||= {})[m.id] ||= {})[key] = m.results ? ids.length : ids.includes("roadside") ? 1 : 0; ((s.histSrc ||= {})[m.id] ||= {})[key] = "you"; delete s.needsUse; s.example = false; save(); }
 const wireChecks = (root, after) => root.querySelectorAll("[data-ck]").forEach(box => box.onchange = () => { const [id, key] = box.dataset.ck.split("|"), s = state.subs.find(x => x.id === id);
   if (!s) return; setChecks(s, key, [...box.querySelectorAll("input:checked")].map(i => i.value)); after?.(s, box); });
 // v66: entries carry over when the unit is the same; otherwise example rows get example numbers and real ones ask again.
@@ -1009,6 +1026,11 @@ function rate(s) {
   if (isFree(s)) return { key: "great", label: "Free", cpu: null, free: true };
   // No usage from the user yet (just added): no rating and no advice until they tell us (Cuong, 2026-10-20).
   const m = measureOf(s);
+  if (m.results) { const keys = (valueSeries(s)?.rows.slice(1) || []).slice(-3).map(r => r.key), ticks = (keys.length ? keys : [today().slice(0, 7)]).map(k => checkedIn(s, m, k));
+    const calls = ticks.filter(t => t.includes("callback")).length, pricey = priceyFor(s);
+    if (ticks.some(t => t.includes("unfixed"))) return { key: "poor", label: "Problem not fixed", cpu: null, results: true, unfixed: true };
+    if (calls >= 2) return { key: "poor", label: "Keeps needing callbacks", cpu: null, results: true, calls };
+    return pricey ? { key: "ok", label: "Above typical price", cpu: null, results: true, pricey, calls } : { key: "great", label: "Great value", cpu: null, results: true, calls }; }
   if (m.checks) { const keys = (valueSeries(s)?.rows.slice(1) || []).slice(-12).map(r => r.key), used = (keys.length ? keys : [today().slice(0, 7)]).flatMap(k => checkedIn(s, m, k));
     return used.includes("roadside") ? { key: "great", label: "Great value", cpu: null, roadside: true }
       : used.length ? { key: "ok", label: "Fair value", cpu: null, checksUsed: true } : { key: "ok", label: MODEL_LABEL.insurance, cpu: null, model: "insurance" }; }
@@ -1486,6 +1508,7 @@ function lastMonthOf(s) {
   if (isFree(s)) return { s, bucket: "great", cost: 0, free: true };
   const m = measureOf(s), { prev, prevRow } = periodKeys(s);
   if (!prevRow || prevRow.paused || m.costOnly || s.needsUse || needsPrice(s)) return null;
+  if (m.results) { const t = checkedIn(s, m, prev); return { s, bucket: t.includes("unfixed") ? "costly" : priceyFor(s) ? "fair" : "great", cost: prevRow.spent }; }
   const used = s.hist?.[m.id]?.[prev] ?? s.uses, b = valueBucket({ ...s, uses: used });
   return b ? { s, bucket: b, cost: prevRow.spent } : null;
 }
@@ -2203,6 +2226,11 @@ function verdictText(s, r) {
     const mine = s.used.filter(id => id !== m.job).map(id => feats.find(f => f.id === id)?.name).filter(Boolean);
     return d <= 0.005 ? `${esc(s.name)} costs less than ${m.jobName} alone (${money(m.worth)}/mo at ${a?.name.split(",")[0] || "the cheapest option"}), so everything else is a bonus.`
       : `You pay ${money(d)}/mo more than ${m.jobName} alone would cost${a ? ` at ${a.name.split(",")[0]}` : ""}. ${mine.length ? `That buys the extras you care about: ${mine.join(", ")}.` : `If you don't need the extras (${extras.slice(0, 3).map(f => f.name.toLowerCase()).join(", ")}${extras.length > 3 ? " and more" : ""}), switching would save ${money(d * 12)} a year.`}`; }
+  if (r.results) { const m = measureOf(s), fp = fairPrice(s), thing = m.pest ? "pests" : "weeds or lawn problems", range = fp ? `${money(fp.lo)} to ${money(fp.hi)}` : "";
+    if (r.unfixed) return `You reported a problem that still isn't fixed. Ask ${esc(s.name)} for a free re-treatment (most plans include one). If it isn't sorted out, it's not giving you what you pay for, so get quotes from other companies.`;
+    if (r.key === "poor") return `You had to call ${esc(s.name)} back in ${r.calls} of the last 3 months. If the ${thing} keep coming back, it may not be worth ${money(monthly(s))} a month. Ask for a re-treatment or compare quotes.`;
+    if (r.pricey) return `No unresolved problems lately, but ${money(monthly(s))} a month is above the typical ${range} for ${r.pricey.what}, based on ${esc(r.pricey.src)}. Ask for a better rate, or get a quote or two before you renew.`;
+    return `No unresolved ${thing} in the last 3 months${r.calls ? ", and the problem you called about was fixed" : ""}${fp ? monthly(s) < fp.lo ? `, for less than the typical ${range} a month` : `, at a fair price (typically ${range} a month)` : ""}. That's what you're paying for.${fp ? "" : " We don't have a typical price for this kind of service yet, so it's judged on results only."} Tick anything that goes wrong under How it's going.`; }
   if (r.roadside) return `You used roadside help in the last 12 months. We count ${esc(s.name)} as worth it in any year with at least one roadside call.`;
   if (r.checksUsed) return `No roadside calls in the last 12 months, but you used other member benefits. One roadside call in a year would make it clearly worth it.`;
   if (s.svc === "aaa" && r.model === "insurance") return `Nothing used in the last 12 months. That's fine for protection, but one roadside call in a year is what makes it clearly worth it. Tick what you use each month under How you use it.`;
@@ -2241,6 +2269,12 @@ function genHistory(s) {
   const v = svcOf(s), m = measureOf(s), r = rng([...(s.svc + s.id)].reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 7));
   const old = s.hist || {}; s.hist = {}; s.histTest = true;
   if (m.costOnly) return;
+  // Results-rated services (lawn, pest): test data has one problem that was fixed after a call; every other month is fine.
+  if (m.results) { const h = s.hist[m.id] = {}, ev = 3 + Math.floor(r() * 9), mine = k => s.histSrc?.[m.id]?.[k] === "you";
+    s.checks = Object.fromEntries(Object.entries(s.checks || {}).filter(([k]) => mine(k)));
+    for (let k = 11; k >= 0; k--) { const key = addMonths(-k).slice(0, 7);
+      if (mine(key)) h[key] = old[m.id][key]; else if (k === ev) { h[key] = 2; s.checks[key] = ["problem", "callback"]; } else h[key] = 0; }
+    return; }
   let base = s.uses;
   if (!base && v.value_model === "insurance") base = 0.12;
   if (!base && v.value_model === "usage") base = 3;
@@ -2303,7 +2337,7 @@ function valueChart(s) {
   if (vs.rows.length < 2) return { meta: "", seg, body: `${seg}<p class="small muted" style="margin:0">Your chart starts after your first month.${PHASE1 ? "" : " Had it longer? Set your real start date under Start date and pauses."}</p>` };
   // Month by month (Cuong, v65): value each month vs what that month cost, so a slowdown shows even after a strong start.
   const mon = vs.rows.slice(1).map((r, i) => ({ r, cost: r.spent, val: vs.worth ? Math.max(0, r.value - vs.rows[i].value) : null, partial: r === vs.rows.at(-1) && dayDiff(r.from, r.d) < 27 }));
-  const win = m.per === "year" || m.checks ? 12 : 3;  // things counted per year (roadside calls) are judged over a year, not 3 months
+  const win = m.per === "year" || (m.checks && !m.results) ? 12 : 3;  // things counted per year (roadside calls) are judged over a year, not 3 months
   const full = mon.filter(x => !x.partial && !x.r.paused), last3 = full.slice(-win), early = full.slice(0, -win);
   const avg = (xs, k) => xs.length ? xs.reduce((a, x) => a + x[k], 0) / xs.length : 0;
   const aV = avg(last3, "val"), aC = avg(last3, "cost"), worthN = last3.filter(x => x.val >= x.cost).length;
@@ -2315,6 +2349,9 @@ function valueChart(s) {
   const unit = m.short, pp = n => fmtN(Math.round(n / PER[m.per].f * 10) / 10);  // monthly figures in the measure's period
   const head = m.fixed ? `<span>${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone costs <b>${money(vs.worth)} a month</b>${vs.altName ? ` (${esc(vs.altName)})` : ""}. ${esc(s.name)} costs <b>${money(vs.reg)}</b>.</span>
        ${recentHtml}${vs.quiet ? `<span class="small" style="color:var(--warn);font-weight:600">No removals in the last 3 months. Check that ${esc(s.name)}'s scans are still running.</span>` : ""}`
+    : m.results ? (() => { const fp = fairPrice(s), bad = vs.rows.slice(1).filter(r => checkedIn(s, m, r.key).length).length;
+      return `<span>We rate ${esc(s.name)} on results, not use: a month with no ${m.pest ? "pests" : "weeds or lawn problems"}, or one fixed after a single call, is what you're paying for${fp ? `, as long as the price is fair (typically ${money(fp.lo)} to ${money(fp.hi)} a month for ${fp.what})` : ""}.</span>
+       <span class="small">${bad ? `Problems in <b>${bad} of the last ${vs.rows.length - 1} months</b>.` : `<b>No problems</b> reported in the last ${vs.rows.length - 1} months.`} You've paid <b>${money(vs.cost)}</b> ${since}.</span>`; })()
     : m.checks ? `<span>We count ${esc(s.name)} as worth it in any year with at least one roadside call. Each call counts as ${money(vs.worth)} of value.</span>
        ${recentHtml}`
     : m.bundle ? `<span>It pays for itself at about <b>${fmtN(Math.round(vs.need * 10) / 10)} orders under $35 a month</b>${m.fixedAdd ? `, counting ${m.counted.map(partText).join(" and ")}` : ""}. ${vs.usualAvg != null ? `In a usual month you average <b>${fmtN(Math.round(vs.usualAvg * 10) / 10)}</b>` : `You averaged <b>${fmtN(Math.round(vs.avg * 10) / 10)}</b>`}.</span>
@@ -2342,9 +2379,9 @@ function monthlyHtml(s) {
   const vs = valueSeries(s), m = measureOf(s);
   if (!vs || vs.rows.length < 2) return { meta: "", body: `<p class="small muted" style="margin:0">${PHASE1 ? "Your months show up here after your first month." : "Add a start date and price to see your months."}</p>` };
   const rows = vs.rows.slice(1).reverse(), mine = rows.filter(r => r.src === "you").length, fl = rows.filter(r => r.flag).length;
-  const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} export` : r.src === "kept" ? "Saved at month end" : m.checks ? "Nothing ticked" : "Your usual rate";
+  const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} export` : r.src === "kept" ? "Saved at month end" : m.results ? "No problems" : m.checks ? "Nothing ticked" : "Your usual rate";
   return { meta: [mine ? `${mine} edited` : "", fl ? `${fl} flagged` : ""].filter(Boolean).join(", ") || "Not edited",
-    body: `<p class="small muted" style="margin:0">${m.checks ? "Tick what you used in each month. A month with nothing ticked counts as nothing used." : `Slide to correct any month (${esc((m.label || m.short).toLowerCase())}), and flag months that weren't typical so your average isn't thrown off. Months you haven't changed use your usual rate (${esc(useText(s))}).`}</p>
+    body: `<p class="small muted" style="margin:0">${m.results ? "Tick anything that went wrong in each month. A month with nothing ticked counts as no problems." : m.checks ? "Tick what you used in each month. A month with nothing ticked counts as nothing used." : `Slide to correct any month (${esc((m.label || m.short).toLowerCase())}), and flag months that weren't typical so your average isn't thrown off. Months you haven't changed use your usual rate (${esc(useText(s))}).`}</p>
     <div class="months">${rows.map(r => `<div class="mrow${r.flag ? " flagged" : ""}"><div><b>${new Date(r.from + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })}</b><div class="note">${src(r)}</div></div>
       ${r.paused ? `<span class="small muted">Paused, no usage counted</span>` : `<div class="mact">${r.src === "you" ? `<button class="btn ghost small" data-hm-clear="${r.key}">${m.checks ? "Clear" : "Use my usual"}</button>` : ""}<select data-hf="${r.key}" aria-label="Flag ${r.key}"><option value="">Typical month</option>${Object.entries(FLAGS).map(([k, l]) => `<option value="${k}" ${r.flag === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>
       ${m.checks ? checksHtml(s, m, r.key) : slider(m, r.src === "rate" ? s.rate : Math.round(+s.hist[m.id][r.key] / PER[m.per].f * 10) / 10, `data-hm="${r.key}" aria-label="${esc(m.label)} in ${r.key}"${r.src === "rate" ? ' class="usual"' : ""}`)}
@@ -2495,12 +2532,12 @@ function openSheet(id) {
           <button class="btn" id="close" aria-label="Close">Close</button></div>
         <div class="kv">
           <div class="stat"><div class="label">${introActive(s) ? (s.intro.kind === "trial" ? "Free trial" : "Intro price") : s.priceMine ? "You pay" : "Price"}</div><div class="value num">${money(total(s))}</div><div class="small muted">per ${s.cycle}${s.cycle === "year" ? ` (${money(monthly(s))}/mo)` : ""}${hh && (s.members || 1) > 1 && total(s) != null ? `<br>${s.members} people, ${money(monthly(s) / s.members)}/mo each` : ""}</div></div>
-          ${m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
+          ${m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
         </div>
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
-        ${sec("usage", "How you use it", esc(useText(s)), `
-        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">Nothing is ticked until you use something. Correct past months under Usage by month.</p></div>`
+        ${sec("usage", m.results ? "How it's going" : "How you use it", esc(useText(s)), `
+        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>`
         : m.costOnly ? `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
           ${slider(m, s.rate, 'id="s-rate"')}
           ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}
@@ -2639,7 +2676,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 89 · Standalone copy · Oct 23", VERSION_NUM = 89;
+const APP_VERSION = "Prototype · Version 90 · Standalone copy · Oct 23", VERSION_NUM = 90;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
