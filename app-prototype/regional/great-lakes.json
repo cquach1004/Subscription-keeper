@@ -1,0 +1,1654 @@
+[
+ {
+  "id": "metronet_fiber",
+  "name": "Metronet Fiber (Home Internet)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "CO",
+   "FL",
+   "IA",
+   "IL",
+   "IN",
+   "KY",
+   "MI",
+   "MN",
+   "MO",
+   "NE",
+   "NC",
+   "OH",
+   "OK",
+   "TX",
+   "VA",
+   "WI"
+  ],
+  "service_area_note": "Fiber in ~17 states, heavily Midwest (IN, IL, MI, OH, WI, MN, IA); now part of a T-Mobile joint venture",
+  "official_url": "https://metronet.com",
+  "plans": [
+   {
+    "id": "fiber_150",
+    "name": "150 Mb",
+    "price_monthly": 29.95,
+    "price_annual": null,
+    "effective_monthly": 29.95,
+    "verified": true,
+    "note": "Official homepage limited-time offer; excludes $12.95/mo Tech Assure fee, taxes, install"
+   },
+   {
+    "id": "fiber_500",
+    "name": "500 Mb",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Official page shows no price; CNET (Jul 2025) cited $49/mo w/ 3-yr lock or $45 w/ 1-yr lock (third-party)"
+   },
+   {
+    "id": "fiber_1gig",
+    "name": "1 Gig",
+    "price_monthly": 49.95,
+    "price_annual": null,
+    "effective_monthly": 49.95,
+    "verified": true,
+    "note": "Official homepage offer; plus $12.95/mo Tech Assure fee; page referenced June 2025 offer terms so may be stale"
+   },
+   {
+    "id": "fiber_2gig",
+    "name": "2 Gig",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not shown on official page; address-dependent"
+   },
+   {
+    "id": "fiber_5gig",
+    "name": "5 Gig",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not shown; limited availability"
+   }
+  ],
+  "default_plan": "fiber_1gig",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical fiber speeds",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "eero_router",
+    "name": "eero router included",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Midwest households in a Metronet fiber area wanting cheap gigabit.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Budget for the mandatory ~$12.95/mo Tech Assure fee on top of the advertised price."
+  ],
+  "sources": [
+   {
+    "label": "Metronet home",
+    "url": "https://metronet.com"
+   },
+   {
+    "label": "CNET Metronet review (Jul 2025)",
+    "url": "https://tech.yahoo.com/computing/articles/metronet-internet-review-plans-pricing-120000211.html"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "mediacom_internet",
+  "name": "Mediacom Xtream Internet",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "IA",
+   "IL",
+   "MO",
+   "KS",
+   "FL",
+   "MN",
+   "GA",
+   "IN",
+   "WI"
+  ],
+  "service_area_note": "Cable/fiber mostly in smaller Midwest and Southern markets (says ~22 states; list here is partial)",
+  "official_url": "https://mediacomcable.com/deals",
+  "plans": [
+   {
+    "id": "internet_300",
+    "name": "Internet 300",
+    "price_monthly": 30,
+    "price_annual": null,
+    "effective_monthly": 30,
+    "verified": true,
+    "note": "2-yr promo price incl. $10/mo AutoPay+paperless discount; $75 install + $25 activation extra"
+   },
+   {
+    "id": "internet_1gig",
+    "name": "Internet 1 Gig",
+    "price_monthly": 50,
+    "price_annual": null,
+    "effective_monthly": 50,
+    "verified": true,
+    "note": "3-yr promo price per official deals page"
+   },
+   {
+    "id": "internet_2gig",
+    "name": "Internet 2 Gig",
+    "price_monthly": 70,
+    "price_annual": null,
+    "effective_monthly": 70,
+    "verified": true,
+    "note": "3-yr promo price; not available everywhere"
+   }
+  ],
+  "default_plan": "internet_300",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "eero_wifi",
+    "name": "eero WiFi included",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "mobile_bundle_discount",
+    "name": "$10/mo off per Xtream Mobile line (up to $30)",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Small-town Midwest households where Mediacom is the main cable option.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Promo prices end after 2-3 years; note the standard rate.",
+   "Upload may be throttled 50% after 1 TB upstream use."
+  ],
+  "sources": [
+   {
+    "label": "Mediacom deals",
+    "url": "https://mediacomcable.com/deals"
+   },
+   {
+    "label": "Mediacom (Wikipedia, footprint)",
+    "url": "https://en.wikipedia.org/wiki/Mediacom"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "altafiber_fioptics",
+  "name": "altafiber Fioptics (Home Internet)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "OH",
+   "KY",
+   "IN"
+  ],
+  "service_area_note": "Fiber in Greater Cincinnati/Dayton (OH), Northern Kentucky and SE Indiana; formerly Cincinnati Bell",
+  "official_url": "https://altafiber.com/shop-altafiber/internet",
+  "plans": [
+   {
+    "id": "starting",
+    "name": "Entry plan",
+    "price_monthly": 30,
+    "price_annual": null,
+    "effective_monthly": 30,
+    "verified": true,
+    "note": "Official page: 'prices starting at $30/mo' (plan/conditions not stated); $30 is also the bundled internet+TV price"
+   },
+   {
+    "id": "fiber_600",
+    "name": "600 Mbps",
+    "price_monthly": 55,
+    "price_annual": null,
+    "effective_monthly": 55,
+    "verified": false,
+    "note": "CNET/AOL review: $55/mo with 2-year price lock"
+   },
+   {
+    "id": "fiber_1gig",
+    "name": "1 Gig",
+    "price_monthly": 75,
+    "price_annual": null,
+    "effective_monthly": 75,
+    "verified": false,
+    "note": "CNET/AOL review: $75/mo with 3-year price lock; ~$15/mo increase after promo"
+   },
+   {
+    "id": "fiber_3gig",
+    "name": "3 Gig",
+    "price_monthly": 105,
+    "price_annual": null,
+    "effective_monthly": 105,
+    "verified": false,
+    "note": "CNET/AOL review; where available"
+   },
+   {
+    "id": "fioptics_home",
+    "name": "Fioptics Home WiFi add-on",
+    "price_monthly": 20,
+    "price_annual": null,
+    "effective_monthly": 20,
+    "verified": true,
+    "note": "Official: $20/mo add-on, free with 3 Gig"
+   }
+  ],
+  "default_plan": "fiber_1gig",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "symmetrical_fiber",
+    "name": "Fiber speeds up to 6 Gig in select areas",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Cincinnati-area households wanting fiber with a price lock.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "altafiber internet",
+    "url": "https://altafiber.com/shop-altafiber/internet"
+   },
+   {
+    "label": "altafiber plans",
+    "url": "https://altafiber.com/plans-and-pricing"
+   },
+   {
+    "label": "CNET/AOL altafiber review",
+    "url": "https://aol.com/altafiber-internet-review-plans-pricing-150000196.html"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "surf_internet",
+  "name": "Surf Internet (Fiber)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "IN",
+   "IL",
+   "MI"
+  ],
+  "service_area_note": "Fiber mainly in rural/small-town northern Indiana, southwest Michigan and northern Illinois",
+  "official_url": "https://www.surfinternet.com",
+  "plans": [
+   {
+    "id": "surf_300",
+    "name": "300 Mbps",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price varies by address; not published"
+   },
+   {
+    "id": "surf_500",
+    "name": "500 Mbps",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price varies by address"
+   },
+   {
+    "id": "surf_1gig",
+    "name": "SURF 1 Gig",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price varies by address"
+   },
+   {
+    "id": "surf_2gig",
+    "name": "SURF 2 Gig",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price varies by address"
+   },
+   {
+    "id": "surf_ultimate",
+    "name": "SURF Ultimate (up to 8 Gig)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price varies by address"
+   }
+  ],
+  "default_plan": "surf_1gig",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical fiber, no data caps",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "price_lock",
+    "name": "3-year price lock for new customers",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "all_in_pricing",
+    "name": "All-in pricing incl. equipment and taxes",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Rural Indiana/Michigan homes getting fiber for the first time.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Surf Internet (llms.txt)",
+    "url": "https://www.surfinternet.com/llms.txt"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "buckeye_broadband",
+  "name": "Buckeye Broadband (Internet)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "OH",
+   "MI"
+  ],
+  "service_area_note": "Northwest Ohio (Toledo, Sandusky/Erie County) and Southeast Michigan (Bedford, Temperance)",
+  "official_url": "https://www.buckeyebroadband.com/internet",
+  "plans": [
+   {
+    "id": "internet_200",
+    "name": "200 Mbps",
+    "price_monthly": 49.99,
+    "price_annual": null,
+    "effective_monthly": 49.99,
+    "verified": true,
+    "note": "Limited-time offer, 3-year price guarantee"
+   },
+   {
+    "id": "internet_400",
+    "name": "400 Mbps",
+    "price_monthly": 59.99,
+    "price_annual": null,
+    "effective_monthly": 59.99,
+    "verified": true,
+    "note": "Limited-time offer, 3-year price guarantee"
+   },
+   {
+    "id": "internet_600",
+    "name": "600 Mbps",
+    "price_monthly": 79.99,
+    "price_annual": null,
+    "effective_monthly": 79.99,
+    "verified": true,
+    "note": "Includes SmartNet WiFi; 3-year price guarantee"
+   },
+   {
+    "id": "internet_1gig",
+    "name": "1 Gig",
+    "price_monthly": 89.99,
+    "price_annual": null,
+    "effective_monthly": 89.99,
+    "verified": true,
+    "note": "Includes SmartNet WiFi; 3-year price guarantee"
+   }
+  ],
+  "default_plan": "internet_400",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "price_guarantee",
+    "name": "3-year price guarantee",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "no_contract",
+    "name": "No contract",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Toledo-area households wanting a locked 3-year price.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Buckeye Broadband internet",
+    "url": "https://www.buckeyebroadband.com/internet"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "midco_internet",
+  "name": "Midco Internet",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "MN",
+   "ND",
+   "SD",
+   "IA",
+   "KS",
+   "WI"
+  ],
+  "service_area_note": "Mainly Minnesota and the Dakotas, plus parts of Wisconsin, Kansas and Iowa",
+  "official_url": "https://www.midco.com/internet/",
+  "plans": [
+   {
+    "id": "starting",
+    "name": "Entry plan",
+    "price_monthly": 39,
+    "price_annual": null,
+    "effective_monthly": 39,
+    "verified": true,
+    "note": "Official: plans 'start at $39/mo' with AutoPay+paperless; 3-year price lock; modem $9-11/mo extra"
+   },
+   {
+    "id": "internet_500",
+    "name": "Internet 500",
+    "price_monthly": 69,
+    "price_annual": null,
+    "effective_monthly": 69,
+    "verified": false,
+    "note": "CNET/AOL review: $69 rising to $79 after 6 months (may predate the current 3-yr price lock)"
+   }
+  ],
+  "default_plan": "starting",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "price_lock",
+    "name": "3-year price lock",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "no_contract",
+    "name": "No contract",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Northern Wisconsin households in Midco's cable/fiber area.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Midco internet",
+    "url": "https://www.midco.com/internet/"
+   },
+   {
+    "label": "CNET/AOL Midco review",
+    "url": "https://www.aol.com/midco-internet-review-plans-pricing-160000804.html"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "i3_broadband",
+  "name": "i3 Broadband (Fiber)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "IL",
+   "MO",
+   "RI"
+  ],
+  "service_area_note": "Fiber in central and northern Illinois (Peoria, Bloomington, Rockford area), St. Louis area, and Rhode Island East Bay",
+  "official_url": "https://www.i3broadband.com",
+  "plans": [
+   {
+    "id": "fiber_plans",
+    "name": "Fiber plans (up to 8 Gig)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Prices not published on pages checked; address-dependent"
+   }
+  ],
+  "default_plan": "fiber_plans",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical fiber up to 8 Gig",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Central/northern Illinois towns wanting symmetrical fiber.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "i3 Broadband Loves Park expansion",
+    "url": "https://www.i3broadband.com/?p=2840"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "hyvee_plus",
+  "name": "Hy-Vee Plus",
+  "category": "food",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "IA",
+   "IL",
+   "KS",
+   "MN",
+   "MO",
+   "NE",
+   "SD",
+   "WI"
+  ],
+  "service_area_note": "Hy-Vee supermarkets across 8 Midwest states (Illinois and Wisconsin in this region)",
+  "official_url": "https://www.hy-vee.com/plus",
+  "plans": [
+   {
+    "id": "plus_annual",
+    "name": "Hy-Vee Plus (annual)",
+    "price_monthly": null,
+    "price_annual": 99,
+    "effective_monthly": 8.25,
+    "verified": false,
+    "note": "$99/yr at 2020 launch per trade press; official page did not show a current price"
+   }
+  ],
+  "default_plan": "plus_annual",
+  "features": [
+   {
+    "id": "free_delivery",
+    "name": "Free delivery and 2-hour express pickup",
+    "plans": "all",
+    "overlap_tag": "grocery_delivery"
+   },
+   {
+    "id": "fuel_savings",
+    "name": "Extra fuel savings",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "member_deals",
+    "name": "Member-only PERKS prices",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Hy-Vee shoppers who order delivery or pickup often.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Confirm the current price in the Hy-Vee app before joining; the $99 figure is from launch."
+  ],
+  "sources": [
+   {
+    "label": "Hy-Vee Plus",
+    "url": "https://www.hy-vee.com/plus"
+   },
+   {
+    "label": "Grocery Dive launch article (2020)",
+    "url": "https://www.grocerydive.com/news/hy-vee-launches-expanded-membership-program/589903/"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "chicago_tribune",
+  "name": "Chicago Tribune (Digital)",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "IL"
+  ],
+  "service_area_note": "Chicago metro daily newspaper",
+  "official_url": "https://www.chicagotribune.com",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital subscription",
+    "price_monthly": 20,
+    "price_annual": null,
+    "effective_monthly": 20,
+    "verified": false,
+    "note": "Standard rate per Axios Chicago (Feb 2026); intro discounts common; official site blocked to our checker"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Unlimited digital news",
+    "plans": "all",
+    "overlap_tag": "local_news"
+   },
+   {
+    "id": "eedition",
+    "name": "e-Edition",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Chicago-area readers wanting full local news coverage.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Axios Chicago: what Chicago news costs (Feb 2026)",
+    "url": "https://www.axios.com/local/chicago/2026/02/05/news-local-subscriptions-2026-tribune-sun-times-paywall"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "chicago_sun_times",
+  "name": "Chicago Sun-Times Membership",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "IL"
+  ],
+  "service_area_note": "Chicago daily; content is free with registration, membership is a donation",
+  "official_url": "https://marketing.suntimes.com/cst-membership-faq",
+  "plans": [
+   {
+    "id": "member_monthly",
+    "name": "Monthly membership",
+    "price_monthly": 9,
+    "price_annual": null,
+    "effective_monthly": 9,
+    "verified": false,
+    "note": "Any amount accepted; $9/mo cited as standard by Axios (Feb 2026); site content is free with email registration"
+   }
+  ],
+  "default_plan": "member_monthly",
+  "features": [
+   {
+    "id": "member_events",
+    "name": "Members-only events and MemberCard discounts",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "news_access",
+    "name": "Supports free local news",
+    "plans": "all",
+    "overlap_tag": "local_news"
+   }
+  ],
+  "best_for": "Chicago readers who want to support free local news.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Reading is free with registration; membership is optional."
+  ],
+  "sources": [
+   {
+    "label": "Sun-Times membership FAQ",
+    "url": "https://marketing.suntimes.com/cst-membership-faq"
+   },
+   {
+    "label": "Axios Chicago (Feb 2026)",
+    "url": "https://www.axios.com/local/chicago/2026/02/05/news-local-subscriptions-2026-tribune-sun-times-paywall"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "crains_chicago",
+  "name": "Crain's Chicago Business",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "IL"
+  ],
+  "service_area_note": "Chicago business news",
+  "official_url": "https://www.chicagobusiness.com",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital subscription",
+    "price_monthly": 18,
+    "price_annual": null,
+    "effective_monthly": 18,
+    "verified": false,
+    "note": "Per Axios Chicago (Feb 2026)"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Chicago business news",
+    "plans": "all",
+    "overlap_tag": "local_news"
+   }
+  ],
+  "best_for": "Chicago professionals tracking local business.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Axios Chicago (Feb 2026)",
+    "url": "https://www.axios.com/local/chicago/2026/02/05/news-local-subscriptions-2026-tribune-sun-times-paywall"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "cleveland_com",
+  "name": "cleveland.com / The Plain Dealer (Digital)",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "OH"
+  ],
+  "service_area_note": "Northeast Ohio news (Advance Local)",
+  "official_url": "https://www.cleveland.com",
+  "plans": [
+   {
+    "id": "all_access",
+    "name": "All Access (monthly, app)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "App-store listings conflict: $9.99 or $11.99/mo; official subscribe page blocked to our checker"
+   },
+   {
+    "id": "all_access_annual",
+    "name": "All Access (annual, app)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "App-store listings conflict: $99.99 or $119.99/yr"
+   }
+  ],
+  "default_plan": "all_access",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Unlimited local news",
+    "plans": "all",
+    "overlap_tag": "local_news"
+   }
+  ],
+  "best_for": "Northeast Ohio readers, especially Browns/Guardians fans.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Adapty paywall library: cleveland.com",
+    "url": "https://adapty.io/paywall-library/cleveland-com/"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "detroit_free_press",
+  "name": "Detroit Free Press (Digital)",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "MI"
+  ],
+  "service_area_note": "Detroit/Michigan daily newspaper (Gannett)",
+  "official_url": "https://www.freep.com",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital subscription",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not verifiable: official subscribe page blocked to our checker; Gannett intro offers vary"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Unlimited digital news",
+    "plans": "all",
+    "overlap_tag": "local_news"
+   },
+   {
+    "id": "eedition",
+    "name": "e-Edition (plus e-editions of other Gannett papers)",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Michigan readers following Detroit news and sports.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Detroit Free Press",
+    "url": "https://www.freep.com"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "milwaukee_journal_sentinel",
+  "name": "Milwaukee Journal Sentinel (Digital)",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "WI"
+  ],
+  "service_area_note": "Milwaukee/Wisconsin daily newspaper (Gannett)",
+  "official_url": "https://www.jsonline.com",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital subscription",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Official page blocked; App Store lists in-app options from $19.99-$24.99/mo and an annual $69.99 option (terms unclear)"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Unlimited digital news",
+    "plans": "all",
+    "overlap_tag": "local_news"
+   }
+  ],
+  "best_for": "Wisconsin readers following Milwaukee news and Packers/Bucks.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "App Pricing Lab (App Store IAPs)",
+    "url": "https://apppricinglab.com/iap/apple/526882300"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "ymca_indianapolis",
+  "name": "YMCA of Greater Indianapolis",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "IN"
+  ],
+  "service_area_note": "YMCA branches across the Indianapolis metro",
+  "official_url": "https://indymca.org",
+  "plans": [
+   {
+    "id": "adult",
+    "name": "Adult (30-64)",
+    "price_monthly": 68,
+    "price_annual": null,
+    "effective_monthly": 68,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "young_adult",
+    "name": "Young Adult (19-29)",
+    "price_monthly": 52,
+    "price_annual": null,
+    "effective_monthly": 52,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "senior",
+    "name": "Senior Adult (65+)",
+    "price_monthly": 63,
+    "price_annual": null,
+    "effective_monthly": 63,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "two_adult_household",
+    "name": "Two-Adult Household",
+    "price_monthly": 106,
+    "price_annual": null,
+    "effective_monthly": 106,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "one_adult_household",
+    "name": "One-Adult Household",
+    "price_monthly": 90.5,
+    "price_annual": null,
+    "effective_monthly": 90.5,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "youth",
+    "name": "Youth (18 and under)",
+    "price_monthly": 29.5,
+    "price_annual": null,
+    "effective_monthly": 29.5,
+    "verified": true,
+    "note": ""
+   }
+  ],
+  "default_plan": "adult",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym, pool and classes at all branches",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "financial_aid",
+    "name": "Financial assistance available",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Indy-area families wanting gym, pool and kids programs.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Single-location memberships (Avondale Meadows, Witham) cost less.",
+   "Joining fee not listed; ask before signing up."
+  ],
+  "sources": [
+   {
+    "label": "YMCA of Greater Indianapolis membership",
+    "url": "https://indymca.org/?p=207"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "ymca_detroit",
+  "name": "YMCA of Metropolitan Detroit",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "MI"
+  ],
+  "service_area_note": "YMCA branches across metro Detroit",
+  "official_url": "https://ymcadetroit.org",
+  "plans": [
+   {
+    "id": "adult",
+    "name": "Adult (27+)",
+    "price_monthly": 54,
+    "price_annual": null,
+    "effective_monthly": 54,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "young_adult",
+    "name": "Young Adult/Student (to 26)",
+    "price_monthly": 44,
+    "price_annual": null,
+    "effective_monthly": 44,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "adult_plus_one",
+    "name": "Adult + 1",
+    "price_monthly": 83,
+    "price_annual": null,
+    "effective_monthly": 83,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "family",
+    "name": "Family",
+    "price_monthly": 92,
+    "price_annual": null,
+    "effective_monthly": 92,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "y_for_all",
+    "name": "Y For All (income-based)",
+    "price_monthly": 43,
+    "price_annual": null,
+    "effective_monthly": 43,
+    "verified": true,
+    "note": "Household income under $50,000/yr"
+   }
+  ],
+  "default_plan": "adult",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym, pool and classes",
+    "plans": "all",
+    "overlap_tag": "gym"
+   }
+  ],
+  "best_for": "Metro Detroit residents wanting an affordable full-service gym.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Watch for 'Pay the Day' first-month promos."
+  ],
+  "sources": [
+   {
+    "label": "YMCA Detroit membership",
+    "url": "https://ymcadetroit.org/?p=16"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "wisconsin_athletic_club",
+  "name": "Wisconsin Athletic Club (WAC)",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "WI"
+  ],
+  "service_area_note": "8 clubs in the Milwaukee area (West Allis, Greenfield, Wauwatosa, Downtown, North Shore, Menomonee Falls, Brookfield, Lake Country)",
+  "official_url": "https://www.thewac.com/membership",
+  "plans": [
+   {
+    "id": "individual",
+    "name": "Individual",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Prices only via online Build-a-Membership tool; not shown in page text"
+   },
+   {
+    "id": "advantage",
+    "name": "Advantage upgrade (tennis)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Extra fee; price not shown"
+   }
+  ],
+  "default_plan": "individual",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Access to all WAC clubs",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "pools",
+    "name": "Pools (outdoor at 3 clubs)",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Milwaukee-area members wanting a multi-club gym with pools.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Month-to-month; 30-day notice to cancel.",
+   "Ask about the 'Get Started' fee."
+  ],
+  "sources": [
+   {
+    "label": "WAC membership",
+    "url": "https://thewac.com/membership"
+   },
+   {
+    "label": "WAC Build-a-Membership",
+    "url": "https://www.thewac.com/build-a-membership/"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "fitworks",
+  "name": "FitWorks",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "OH"
+  ],
+  "service_area_note": "6 clubs in Northeast Ohio (Highland Heights, Mentor, Parma, Rocky River, Stow-Kent, Niles)",
+  "official_url": "https://www.fitworks.com",
+  "plans": [
+   {
+    "id": "standard",
+    "name": "Standard Membership",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Prices not published; shown per location at join.fitworks.com"
+   }
+  ],
+  "default_plan": "standard",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym access 365 days a year",
+    "plans": "all",
+    "overlap_tag": "gym"
+   }
+  ],
+  "best_for": "Northeast Ohio residents near a FitWorks club.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "First month free on 12-month memberships (current offer)."
+  ],
+  "sources": [
+   {
+    "label": "FitWorks",
+    "url": "https://www.fitworks.com"
+   },
+   {
+    "label": "FitWorks join",
+    "url": "https://join.fitworks.com"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "dte_surge_protection",
+  "name": "DTE Energy Surge Coverage Plans",
+  "category": "home",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "MI"
+  ],
+  "service_area_note": "DTE Energy electric customers in Southeast Michigan; billed on the DTE bill",
+  "official_url": "https://dteenergy.com/us/en/residential/service-request/additional-products-and-services/surge/surge-protection-plan-details.html",
+  "plans": [
+   {
+    "id": "electronic_surge",
+    "name": "Electronic Surge Coverage",
+    "price_monthly": 5.99,
+    "price_annual": null,
+    "effective_monthly": 5.99,
+    "verified": true,
+    "note": "Up to $1,000/event for electronics"
+   },
+   {
+    "id": "appliance_surge",
+    "name": "Appliance Surge Coverage",
+    "price_monthly": 5.99,
+    "price_annual": null,
+    "effective_monthly": 5.99,
+    "verified": true,
+    "note": "Up to $1,000/event for appliances"
+   },
+   {
+    "id": "premium_surge",
+    "name": "Premium Surge Coverage",
+    "price_monthly": 8.99,
+    "price_annual": null,
+    "effective_monthly": 8.99,
+    "verified": true,
+    "note": "Up to $1,000 electronics + $1,000 appliances per event"
+   },
+   {
+    "id": "whole_home_surge",
+    "name": "Whole Home Surge Protection (meter device)",
+    "price_monthly": 14.99,
+    "price_annual": null,
+    "effective_monthly": 14.99,
+    "verified": true,
+    "note": "Plus $99.99 one-time install"
+   },
+   {
+    "id": "surge_protection_plus",
+    "name": "Surge Protection Plus",
+    "price_monthly": 22.99,
+    "price_annual": null,
+    "effective_monthly": 22.99,
+    "verified": true,
+    "note": "Plus $99.99 or $249.99 one-time device fee; includes generator connection"
+   }
+  ],
+  "default_plan": "premium_surge",
+  "features": [
+   {
+    "id": "surge_coverage",
+    "name": "Surge damage repair/replacement",
+    "plans": "all",
+    "overlap_tag": "home_protection"
+   }
+  ],
+  "best_for": "DTE customers worried about surge damage to appliances and electronics.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Coverage starts 15 days after enrolling.",
+   "Check whether homeowners insurance already covers surge damage."
+  ],
+  "sources": [
+   {
+    "label": "DTE surge plan details",
+    "url": "https://dteenergy.com/us/en/residential/service-request/additional-products-and-services/surge/surge-protection-plan-details.html"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "consumers_energy_asp",
+  "name": "Appliance Service Plan (ASP, formerly Consumers Energy)",
+  "category": "home",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "MI"
+  ],
+  "service_area_note": "Michigan; sold by Consumers Energy to Oncourse Home Solutions in 2024",
+  "official_url": "https://oncourse.com/ce/company/faqs",
+  "plans": [
+   {
+    "id": "asp",
+    "name": "Appliance Service Plan",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Prices vary by plan and are not published on pages checked"
+   }
+  ],
+  "default_plan": "asp",
+  "features": [
+   {
+    "id": "appliance_repair",
+    "name": "Furnace/appliance repair coverage",
+    "plans": "all",
+    "overlap_tag": "home_protection"
+   }
+  ],
+  "best_for": "Michigan homeowners wanting furnace/appliance repair coverage.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "No longer regulated by the Michigan PSC; compare with a home warranty."
+  ],
+  "sources": [
+   {
+    "label": "Consumers Energy sale announcement (2024)",
+    "url": "https://www.consumersenergy.com/news-releases/news-release-details/2024/02/05/consumers-energy-announces-the-sale-of-appliance-service-plan-business-to-oncourse-home-solutions"
+   },
+   {
+    "label": "Oncourse ASP FAQs",
+    "url": "https://oncourse.com/ce/company/faqs"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "rose_pest_solutions",
+  "name": "Rose Pest Solutions Home Service Program",
+  "category": "lawn_pest",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "MI",
+   "OH",
+   "IN",
+   "KY",
+   "PA",
+   "WV"
+  ],
+  "service_area_note": "Michigan-based pest control with branches in MI, OH, IN, KY, PA and WV",
+  "official_url": "https://www.rosepestsolutions.com/residential-services/home-service-program",
+  "plans": [
+   {
+    "id": "basic",
+    "name": "Home Service Basic",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "1-2 exterior visits/yr; single annual fee, quote only"
+   },
+   {
+    "id": "advantage",
+    "name": "Home Service Advantage",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "3+ visits/yr with free callbacks; quote only"
+   },
+   {
+    "id": "premium",
+    "name": "Home Service Premium",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "3-4 visits/yr with free callbacks; quote only"
+   }
+  ],
+  "default_plan": "advantage",
+  "features": [
+   {
+    "id": "pest_control",
+    "name": "Recurring pest control",
+    "plans": "all",
+    "overlap_tag": "pest_control"
+   },
+   {
+    "id": "free_callbacks",
+    "name": "Free return visits (Advantage/Premium)",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Great Lakes homeowners wanting year-round pest prevention.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Rose Home Service Program",
+    "url": "https://www.rosepestsolutions.com/residential-services/home-service-program"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "guardian_alarm",
+  "name": "Guardian Alarm (Home Security)",
+  "category": "home_security",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "MI",
+   "OH",
+   "TN",
+   "AR"
+  ],
+  "service_area_note": "Michigan-based security company with offices in MI, OH and the Memphis/Little Rock areas",
+  "official_url": "https://guardianalarm.com",
+  "plans": [
+   {
+    "id": "security_automation",
+    "name": "Security + automation monitoring",
+    "price_monthly": 49.99,
+    "price_annual": null,
+    "effective_monthly": 49.99,
+    "verified": false,
+    "note": "Per SafeHome.org review (Aug 2026); requires 3-year agreement"
+   },
+   {
+    "id": "security_automation_video",
+    "name": "Security + automation + video",
+    "price_monthly": 59.99,
+    "price_annual": null,
+    "effective_monthly": 59.99,
+    "verified": false,
+    "note": "Per SafeHome.org review (Aug 2026)"
+   }
+  ],
+  "default_plan": "security_automation",
+  "features": [
+   {
+    "id": "pro_monitoring",
+    "name": "24/7 professional monitoring",
+    "plans": "all",
+    "overlap_tag": "home_security_monitoring"
+   }
+  ],
+  "best_for": "Michigan/Ohio homeowners wanting a local pro-installed system.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Requires a 3-year monitoring contract; equipment is extra."
+  ],
+  "sources": [
+   {
+    "label": "Guardian Alarm switch offer",
+    "url": "https://guardianalarm.com/switch"
+   },
+   {
+    "label": "SafeHome.org Guardian review",
+    "url": "https://www.safehome.org/security-systems/guardian/reviews/"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "delta_sonic_unlimited",
+  "name": "Delta Sonic Unlimited Car Wash",
+  "category": "auto",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NY",
+   "PA",
+   "IL"
+  ],
+  "service_area_note": "32 locations in Western NY, PA and the Chicago suburbs",
+  "official_url": "https://deltasoniccarwash.com/car-wash/",
+  "plans": [
+   {
+    "id": "super_kiss",
+    "name": "Unlimited Super Kiss",
+    "price_monthly": 29.99,
+    "price_annual": null,
+    "effective_monthly": 29.99,
+    "verified": false,
+    "note": "Standard rate per third-party guide (updated Sep 2026); promos $16.99-$20"
+   },
+   {
+    "id": "super_kiss_plus",
+    "name": "Unlimited Super Kiss Plus",
+    "price_monthly": 44.99,
+    "price_annual": null,
+    "effective_monthly": 44.99,
+    "verified": false,
+    "note": "Per third-party guide"
+   },
+   {
+    "id": "super_interior",
+    "name": "Unlimited Super Interior",
+    "price_monthly": 44.99,
+    "price_annual": null,
+    "effective_monthly": 44.99,
+    "verified": false,
+    "note": "Per third-party guide"
+   }
+  ],
+  "default_plan": "super_kiss",
+  "features": [
+   {
+    "id": "unlimited_washes",
+    "name": "Unlimited exterior washes",
+    "plans": "all",
+    "overlap_tag": "car_wash"
+   }
+  ],
+  "best_for": "Chicago-suburb drivers who wash more than twice a month.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Delta Sonic car wash",
+    "url": "https://deltasoniccarwash.com/car-wash/"
+   },
+   {
+    "label": "CarTipsDaily Delta Sonic prices",
+    "url": "https://cartipsdaily.com/delta-sonic-car-wash-prices"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ },
+ {
+  "id": "crew_carwash_unlimited",
+  "name": "Crew Carwash Unlimited",
+  "category": "auto",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "IN",
+   "IL",
+   "MN"
+  ],
+  "service_area_note": "Indiana-based express washes (mostly central Indiana) with some IL and MN sites",
+  "official_url": "https://crewcarwash.com",
+  "plans": [
+   {
+    "id": "unlimited",
+    "name": "Unlimited plan",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Prices not visible to our checker; sold via online plan page"
+   }
+  ],
+  "default_plan": "unlimited",
+  "features": [
+   {
+    "id": "unlimited_washes",
+    "name": "Unlimited washes",
+    "plans": "all",
+    "overlap_tag": "car_wash"
+   }
+  ],
+  "best_for": "Indianapolis-area drivers who wash often.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Crew Carwash Noblesville location",
+    "url": "https://locations.crewcarwash.com/in/noblesville/noblesville-ic/"
+   }
+  ],
+  "checked_at": "2026-10-23"
+ }
+]

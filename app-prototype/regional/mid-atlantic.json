@@ -1,0 +1,1743 @@
+[
+  {
+    "id": "freshdirect_deliverypass",
+    "name": "FreshDirect DeliveryPass",
+    "category": "food",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "NY",
+      "NJ",
+      "CT"
+    ],
+    "service_area_note": "Year-round residential delivery zones in NY, NJ and CT; seasonal areas may carry a surcharge",
+    "official_url": "https://www.freshdirect.com/",
+    "plans": [
+      {
+        "id": "one_month",
+        "name": "DeliveryPass 1 month",
+        "price_monthly": 12.99,
+        "price_annual": null,
+        "effective_monthly": 12.99,
+        "verified": true,
+        "note": "One-month membership"
+      },
+      {
+        "id": "six_month",
+        "name": "DeliveryPass 6 months",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": 13.17,
+        "verified": true,
+        "note": "$79 per 6 months (~$13.17/mo)"
+      },
+      {
+        "id": "annual",
+        "name": "DeliveryPass 1 year",
+        "price_monthly": null,
+        "price_annual": 129.0,
+        "effective_monthly": 10.75,
+        "verified": true,
+        "note": "$129/year"
+      }
+    ],
+    "default_plan": "annual",
+    "features": [
+      {
+        "id": "free_delivery",
+        "name": "Unlimited free delivery on qualifying orders",
+        "plans": "all",
+        "overlap_tag": "grocery_delivery"
+      }
+    ],
+    "best_for": "NYC-area households ordering groceries several times a month.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Not valid for FreshDirect At The Office orders"
+    ],
+    "sources": [
+      {
+        "label": "FreshDirect DeliveryPass product page",
+        "url": "https://www.freshdirect.com/pdp.jsp?productId=mkt_dpss_onemonth&catId=gro_gear_dlvpass"
+      },
+      {
+        "label": "DeliveryPass areas FAQ",
+        "url": "https://www.freshdirect.com/help/faq/faq_about_deliverypass_areas"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "giant_food_pass",
+    "name": "Giant Food (Landover) delivery & pickup pass",
+    "category": "food",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "MD",
+      "VA",
+      "DC",
+      "DE"
+    ],
+    "service_area_note": "Giant Food stores and delivery in the Baltimore-Washington area, Delaware and Virginia",
+    "official_url": "https://giantfood.com/",
+    "plans": [
+      {
+        "id": "monthly",
+        "name": "Monthly pass",
+        "price_monthly": 12.95,
+        "price_annual": null,
+        "effective_monthly": 12.95,
+        "verified": false,
+        "note": "Third-party report (2023); giantfood.com was down for maintenance on check date"
+      },
+      {
+        "id": "six_month",
+        "name": "6-month pass",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": 11.5,
+        "verified": false,
+        "note": "Reported $69 per 6 months (2023), unconfirmed"
+      },
+      {
+        "id": "annual",
+        "name": "Annual pass",
+        "price_monthly": null,
+        "price_annual": 99.0,
+        "effective_monthly": 8.25,
+        "verified": false,
+        "note": "Reported $99/year (2023), unconfirmed"
+      }
+    ],
+    "default_plan": "annual",
+    "features": [
+      {
+        "id": "free_delivery",
+        "name": "Unlimited free delivery and pickup on qualifying orders",
+        "plans": "all",
+        "overlap_tag": "grocery_delivery"
+      }
+    ],
+    "best_for": "Giant Food shoppers in MD/VA/DC/DE who order online often.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Krazy Coupon Lady: Giant Food delivery",
+        "url": "https://thekrazycouponlady.com/coupons-for/giant/giant-food-delivery"
+      },
+      {
+        "label": "Giant Food online perks (official)",
+        "url": "https://giantfood.com/pages/online-perks"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "giant_company_choice_pass",
+    "name": "The Giant Company / Martin's Choice Pass",
+    "category": "food",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "PA",
+      "MD",
+      "VA",
+      "WV"
+    ],
+    "service_area_note": "Giant (Carlisle, PA) and Martin's stores in PA, MD, VA and WV",
+    "official_url": "https://giantfoodstores.com/pages/subscriptions",
+    "plans": [
+      {
+        "id": "monthly",
+        "name": "Choice Pass monthly",
+        "price_monthly": 12.95,
+        "price_annual": null,
+        "effective_monthly": 12.95,
+        "verified": false,
+        "note": "Launch price (Jan 2021); official page did not render prices"
+      },
+      {
+        "id": "annual",
+        "name": "Choice Pass annual",
+        "price_monthly": null,
+        "price_annual": 98.0,
+        "effective_monthly": 8.17,
+        "verified": false,
+        "note": "Launch price (Jan 2021)"
+      }
+    ],
+    "default_plan": "annual",
+    "features": [
+      {
+        "id": "free_delivery",
+        "name": "Unlimited free delivery and pickup on qualifying orders",
+        "plans": "all",
+        "overlap_tag": "grocery_delivery"
+      }
+    ],
+    "best_for": "Pennsylvania Giant/Martin's shoppers who order delivery twice a month or more.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Non-member delivery fee is $7.95 with a $60 minimum"
+    ],
+    "sources": [
+      {
+        "label": "Supermarket News: Choice Pass launch",
+        "url": "https://www.supermarketnews.com/grocery-trends-data/the-giant-company-launches-choice-pass-online-grocery-subscription"
+      },
+      {
+        "label": "Giant store delivery page",
+        "url": "https://stores.giantfoodstores.com/pa/philadelphia/2550-grant-ave/delivery"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "stop_and_shop_pass",
+    "name": "Stop & Shop delivery & pickup pass",
+    "category": "food",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "NY",
+      "NJ",
+      "CT",
+      "MA",
+      "RI"
+    ],
+    "service_area_note": "Stop & Shop stores in New York, New Jersey and New England",
+    "official_url": "https://stopandshop.com/",
+    "plans": [
+      {
+        "id": "pass",
+        "name": "Delivery & pickup pass",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price not confirmed; stopandshop.com was down for maintenance on check date"
+      }
+    ],
+    "default_plan": "pass",
+    "features": [
+      {
+        "id": "free_delivery",
+        "name": "Free delivery and pickup on qualifying orders",
+        "plans": "all",
+        "overlap_tag": "grocery_delivery"
+      }
+    ],
+    "best_for": "Stop & Shop shoppers in NY/NJ who order online regularly.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Stop & Shop subscriptions page",
+        "url": "https://stopandshop.com/pages/subscriptions"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "harris_teeter_htplus",
+    "name": "Harris Teeter HT Plus",
+    "category": "food",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "NC",
+      "SC",
+      "VA",
+      "MD",
+      "DC",
+      "DE",
+      "GA",
+      "FL"
+    ],
+    "service_area_note": "Harris Teeter stores in the Southeast and Mid-Atlantic (VA, MD, DC, DE)",
+    "official_url": "https://www.harristeeter.com/pr/ht-plus/overview",
+    "plans": [
+      {
+        "id": "plus_99",
+        "name": "HT Plus (2-hour delivery)",
+        "price_monthly": 12.99,
+        "price_annual": 99.0,
+        "effective_monthly": 8.25,
+        "verified": true,
+        "note": "Free delivery in as little as 2 hours on $35+ orders"
+      },
+      {
+        "id": "plus_69",
+        "name": "HT Plus (next-day delivery)",
+        "price_monthly": 8.99,
+        "price_annual": 69.0,
+        "effective_monthly": 5.75,
+        "verified": true,
+        "note": "Free next-day delivery on $35+ orders"
+      }
+    ],
+    "default_plan": "plus_99",
+    "features": [
+      {
+        "id": "free_delivery",
+        "name": "Free delivery on $35+ orders",
+        "plans": "all",
+        "overlap_tag": "grocery_delivery"
+      },
+      {
+        "id": "free_pickup",
+        "name": "Free pickup on $35+ orders",
+        "plans": "all",
+        "overlap_tag": null
+      },
+      {
+        "id": "fuel_points",
+        "name": "2x fuel points",
+        "plans": "all",
+        "overlap_tag": null
+      },
+      {
+        "id": "streaming",
+        "name": "Disney+, Hulu or ESPN+ (with ads) with annual plan",
+        "plans": "all",
+        "overlap_tag": "streaming_bundle"
+      }
+    ],
+    "best_for": "Harris Teeter shoppers who want delivery plus fuel rewards.",
+    "free_trial_days": 30,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "HT Plus overview",
+        "url": "https://www.harristeeter.com/pr/ht-plus/overview"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "albertsons_freshpass",
+    "name": "Safeway / Acme FreshPass (Albertsons)",
+    "category": "food",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "AK",
+      "AZ",
+      "AR",
+      "CA",
+      "CO",
+      "CT",
+      "DE",
+      "DC",
+      "HI",
+      "ID",
+      "IL",
+      "IN",
+      "IA",
+      "LA",
+      "ME",
+      "MD",
+      "MA",
+      "MT",
+      "NE",
+      "NV",
+      "NH",
+      "NJ",
+      "NM",
+      "NY",
+      "ND",
+      "OR",
+      "PA",
+      "RI",
+      "SD",
+      "TX",
+      "UT",
+      "VT",
+      "VA",
+      "WA",
+      "WY"
+    ],
+    "service_area_note": "Albertsons Cos. banners; in the Mid-Atlantic via Safeway (MD, VA, DC, DE) and Acme (NJ, PA, DE, MD, NY)",
+    "official_url": "https://www.safeway.com/lp/subscriptions-delivery.3132.html",
+    "plans": [
+      {
+        "id": "monthly",
+        "name": "FreshPass monthly",
+        "price_monthly": 12.99,
+        "price_annual": null,
+        "effective_monthly": 12.99,
+        "verified": false,
+        "note": "Launch price (Aug 2021); official page did not show standard price"
+      },
+      {
+        "id": "annual",
+        "name": "FreshPass annual",
+        "price_monthly": null,
+        "price_annual": 99.0,
+        "effective_monthly": 8.25,
+        "verified": false,
+        "note": "Launch price (Aug 2021)"
+      },
+      {
+        "id": "snap",
+        "name": "FreshPass discounted (SNAP)",
+        "price_monthly": 5.99,
+        "price_annual": 49.0,
+        "effective_monthly": 4.08,
+        "verified": true,
+        "note": "For verified SNAP recipients"
+      }
+    ],
+    "default_plan": "annual",
+    "features": [
+      {
+        "id": "free_delivery",
+        "name": "Free delivery on $30+ orders",
+        "plans": "all",
+        "overlap_tag": "grocery_delivery"
+      },
+      {
+        "id": "monthly_credit",
+        "name": "$5 monthly credit (annual plan)",
+        "plans": "all",
+        "overlap_tag": null
+      },
+      {
+        "id": "private_label_discount",
+        "name": "5% off O Organics and Open Nature",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Safeway or Acme shoppers who order delivery regularly.",
+    "free_trial_days": 30,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "State list is approximate: covers all Albertsons Cos. states; delivery not everywhere"
+    ],
+    "sources": [
+      {
+        "label": "Safeway delivery subscription FAQ",
+        "url": "https://www.safeway.com/mobile/delivery-subscription-faq.html"
+      },
+      {
+        "label": "Business Wire: FreshPass launch",
+        "url": "https://www.businesswire.com/news/home/20210816005198/en"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "optimum_internet",
+    "name": "Optimum Internet (Altice)",
+    "category": "internet",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "AZ",
+      "AR",
+      "CA",
+      "CT",
+      "ID",
+      "KS",
+      "KY",
+      "LA",
+      "MS",
+      "MO",
+      "NV",
+      "NJ",
+      "NM",
+      "NY",
+      "NC",
+      "OH",
+      "OK",
+      "PA",
+      "TX",
+      "VA",
+      "WV"
+    ],
+    "service_area_note": "Cable and fiber, largest in NY metro (Long Island, NYC suburbs), northern NJ and CT",
+    "official_url": "https://www.optimum.com/internet",
+    "plans": [
+      {
+        "id": "300",
+        "name": "300 Mbps",
+        "price_monthly": 35.0,
+        "price_annual": null,
+        "effective_monthly": 35.0,
+        "verified": true,
+        "note": "Includes $10 autopay discount; 12-month price"
+      },
+      {
+        "id": "500",
+        "name": "500 Mbps",
+        "price_monthly": 45.0,
+        "price_annual": null,
+        "effective_monthly": 45.0,
+        "verified": true,
+        "note": "Includes $10 autopay discount; 12-month price"
+      },
+      {
+        "id": "1gig",
+        "name": "1 Gig",
+        "price_monthly": 55.0,
+        "price_annual": null,
+        "effective_monthly": 55.0,
+        "verified": true,
+        "note": "Includes $10 autopay discount; 36-month price"
+      }
+    ],
+    "default_plan": "300",
+    "features": [
+      {
+        "id": "internet",
+        "name": "Home internet",
+        "plans": "all",
+        "overlap_tag": "home_internet"
+      },
+      {
+        "id": "gateway",
+        "name": "One free gateway",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Households in the NY/NJ/CT metro without fiber options.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "After promo, price can rise up to $15/mo per year"
+    ],
+    "sources": [
+      {
+        "label": "Optimum internet plans",
+        "url": "https://www.optimum.com/internet"
+      },
+      {
+        "label": "Reviews.org Optimum coverage",
+        "url": "https://www.reviews.org/internet-service/optimum-coverage-and-availability/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "astound_broadband",
+    "name": "Astound Broadband (formerly RCN)",
+    "category": "internet",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "NY",
+      "MA",
+      "PA",
+      "DC",
+      "MD",
+      "VA",
+      "IL",
+      "IN",
+      "TX",
+      "WA",
+      "OR",
+      "CA"
+    ],
+    "service_area_note": "In the region: NYC area, Philadelphia, Lehigh Valley, NE Pennsylvania, DC metro, Montgomery and Anne Arundel counties",
+    "official_url": "https://www.astound.com/internet/",
+    "plans": [
+      {
+        "id": "wifi",
+        "name": "Astound WiFi",
+        "price_monthly": 40.0,
+        "price_annual": null,
+        "effective_monthly": 40.0,
+        "verified": true,
+        "note": "Promo price with autopay/e-bill; 12 months"
+      },
+      {
+        "id": "gig",
+        "name": "Gig WiFi",
+        "price_monthly": 45.0,
+        "price_annual": null,
+        "effective_monthly": 45.0,
+        "verified": true,
+        "note": "Promo price; page showed $45 and $50 variants by market"
+      }
+    ],
+    "default_plan": "gig",
+    "features": [
+      {
+        "id": "internet",
+        "name": "Home internet",
+        "plans": "all",
+        "overlap_tag": "home_internet"
+      },
+      {
+        "id": "no_contract",
+        "name": "No contract",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Urban customers in Philly, NYC or DC wanting a cable alternative.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Professional install is $99.95; self-install free"
+    ],
+    "sources": [
+      {
+        "label": "Astound internet plans",
+        "url": "https://www.astound.com/internet/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "breezeline",
+    "name": "Breezeline (Cogeco)",
+    "category": "internet",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "CT",
+      "DE",
+      "FL",
+      "ME",
+      "MD",
+      "MA",
+      "NH",
+      "NY",
+      "OH",
+      "PA",
+      "SC",
+      "VA",
+      "WV"
+    ],
+    "service_area_note": "Cable and fiber in smaller markets incl. PA, MD Eastern Shore, DE, WV and VA",
+    "official_url": "https://www.breezeline.com/internet",
+    "plans": [
+      {
+        "id": "500",
+        "name": "500 Mbps",
+        "price_monthly": 40.0,
+        "price_annual": null,
+        "effective_monthly": 40.0,
+        "verified": true,
+        "note": "Includes $10 EcoSave + AutoPay discount; up to 5-year price"
+      },
+      {
+        "id": "1gig",
+        "name": "1 Gig",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": true,
+        "note": "Price not shown on page"
+      }
+    ],
+    "default_plan": "500",
+    "features": [
+      {
+        "id": "internet",
+        "name": "Home internet",
+        "plans": "all",
+        "overlap_tag": "home_internet"
+      },
+      {
+        "id": "price_lock",
+        "name": "Up to 5-year price guarantee",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Suburban and small-town customers wanting a long price lock.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Breezeline internet",
+        "url": "https://www.breezeline.com/internet"
+      },
+      {
+        "label": "Wikipedia: Breezeline",
+        "url": "https://en.wikipedia.org/wiki/Breezeline"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "glo_fiber",
+    "name": "Glo Fiber (Shentel)",
+    "category": "internet",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "VA",
+      "WV",
+      "PA",
+      "MD",
+      "DE",
+      "OH"
+    ],
+    "service_area_note": "Fiber in growing parts of VA, WV, PA, MD, DE and OH; Shentel cable in VA/WV",
+    "official_url": "https://www.glofiber.com/",
+    "plans": [
+      {
+        "id": "300",
+        "name": "300 Mbps",
+        "price_monthly": 55.0,
+        "price_annual": null,
+        "effective_monthly": 55.0,
+        "verified": false,
+        "note": "From FCC broadband label data via ISPReports (June 2026)"
+      },
+      {
+        "id": "1_2gig",
+        "name": "1.2 Gig",
+        "price_monthly": 85.0,
+        "price_annual": null,
+        "effective_monthly": 85.0,
+        "verified": false,
+        "note": "From FCC broadband label data via ISPReports (June 2026)"
+      },
+      {
+        "id": "2gig",
+        "name": "2 Gig",
+        "price_monthly": 120.0,
+        "price_annual": null,
+        "effective_monthly": 120.0,
+        "verified": false,
+        "note": "From FCC broadband label data via ISPReports (June 2026)"
+      }
+    ],
+    "default_plan": "300",
+    "features": [
+      {
+        "id": "internet",
+        "name": "Symmetric fiber internet",
+        "plans": "all",
+        "overlap_tag": "home_internet"
+      }
+    ],
+    "best_for": "Customers in Glo Fiber build areas wanting symmetric fiber.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Official prices vary by address"
+    ],
+    "sources": [
+      {
+        "label": "Glo Fiber home",
+        "url": "https://www.glofiber.com/"
+      },
+      {
+        "label": "ISPReports Glo Fiber pricing",
+        "url": "https://ispreports.org/compare-internet-service-providers/google-fiber-vs-glo-fiber"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "brightspeed_fiber",
+    "name": "Brightspeed Fiber",
+    "category": "internet",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "AL",
+      "AR",
+      "GA",
+      "IN",
+      "IL",
+      "KS",
+      "LA",
+      "MI",
+      "MO",
+      "MS",
+      "NJ",
+      "NC",
+      "OH",
+      "OK",
+      "PA",
+      "SC",
+      "TN",
+      "TX",
+      "VA",
+      "WI"
+    ],
+    "service_area_note": "Former CenturyLink areas; in region mostly rural/suburban NJ, PA and VA",
+    "official_url": "https://www.brightspeed.com/",
+    "plans": [
+      {
+        "id": "200",
+        "name": "200 Mbps",
+        "price_monthly": 29.99,
+        "price_annual": null,
+        "effective_monthly": 29.99,
+        "verified": true,
+        "note": "With autopay and paperless"
+      },
+      {
+        "id": "500",
+        "name": "500 Mbps",
+        "price_monthly": 39.99,
+        "price_annual": null,
+        "effective_monthly": 39.99,
+        "verified": true,
+        "note": "With autopay and paperless"
+      },
+      {
+        "id": "1gig",
+        "name": "1 Gig",
+        "price_monthly": 49.99,
+        "price_annual": null,
+        "effective_monthly": 49.99,
+        "verified": true,
+        "note": "With autopay and paperless"
+      },
+      {
+        "id": "2gig",
+        "name": "2 Gig",
+        "price_monthly": 59.99,
+        "price_annual": null,
+        "effective_monthly": 59.99,
+        "verified": true,
+        "note": "With autopay and paperless"
+      }
+    ],
+    "default_plan": "500",
+    "features": [
+      {
+        "id": "internet",
+        "name": "Symmetric fiber internet",
+        "plans": "all",
+        "overlap_tag": "home_internet"
+      },
+      {
+        "id": "no_contract",
+        "name": "No annual contract",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Rural and suburban homes in former CenturyLink areas now on fiber.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Brightspeed home",
+        "url": "https://www.brightspeed.com/"
+      },
+      {
+        "label": "Brightspeed coverage",
+        "url": "https://www.brightspeed.com/local/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "onelife_fitness",
+    "name": "Onelife Fitness (incl. former Sport&Health)",
+    "category": "fitness",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "GA",
+      "MD",
+      "NC",
+      "SC",
+      "VA",
+      "WV",
+      "DC"
+    ],
+    "service_area_note": "Clubs in DC metro, Virginia, Maryland, West Virginia and the Southeast; Sport&Health now redirects to Onelife",
+    "official_url": "https://www.onelifefitness.com/membership",
+    "plans": [
+      {
+        "id": "basic",
+        "name": "Basic (one club)",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price varies by club; not listed online"
+      },
+      {
+        "id": "elite",
+        "name": "Elite (one club)",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price varies by club"
+      },
+      {
+        "id": "premier",
+        "name": "Premier (multi-club)",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price varies by club"
+      }
+    ],
+    "default_plan": "basic",
+    "features": [
+      {
+        "id": "gym",
+        "name": "Gym access",
+        "plans": "all",
+        "overlap_tag": "gym_access"
+      },
+      {
+        "id": "multi_club",
+        "name": "Multi-club access",
+        "plans": "premier",
+        "overlap_tag": "gym_access"
+      }
+    ],
+    "best_for": "DC-area and Virginia members wanting full-service clubs.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Onelife membership",
+        "url": "https://www.onelifefitness.com/membership"
+      },
+      {
+        "label": "Onelife locations",
+        "url": "https://www.onelifefitness.com/gyms"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "retro_fitness",
+    "name": "Retro Fitness",
+    "category": "fitness",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "FL",
+      "MD",
+      "MA",
+      "MI",
+      "NJ",
+      "NY",
+      "PA",
+      "TX",
+      "UT"
+    ],
+    "service_area_note": "Franchise gyms concentrated in NJ, NY and PA",
+    "official_url": "https://www.retrofitness.com/",
+    "plans": [
+      {
+        "id": "standard",
+        "name": "Membership",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Prices set per franchise location; not listed online"
+      }
+    ],
+    "default_plan": "standard",
+    "features": [
+      {
+        "id": "gym",
+        "name": "Gym access",
+        "plans": "all",
+        "overlap_tag": "gym_access"
+      }
+    ],
+    "best_for": "Budget-to-mid gym users in New Jersey and New York.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "State list from site guest-pass form"
+    ],
+    "sources": [
+      {
+        "label": "Retro Fitness",
+        "url": "https://www.retrofitness.com/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "puregym_us",
+    "name": "PureGym (formerly Blink Fitness)",
+    "category": "fitness",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "NY",
+      "NJ",
+      "MD",
+      "VA"
+    ],
+    "service_area_note": "Former Blink Fitness gyms in NYC area, NJ, MD and VA",
+    "official_url": "https://www.puregym.com/us/",
+    "plans": [
+      {
+        "id": "monthly",
+        "name": "Month-to-month",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price varies by gym; not listed online"
+      }
+    ],
+    "default_plan": "monthly",
+    "features": [
+      {
+        "id": "gym",
+        "name": "Gym access",
+        "plans": "all",
+        "overlap_tag": "gym_access"
+      },
+      {
+        "id": "no_contract",
+        "name": "No long-term contract",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Budget gym users in the NYC metro.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "PureGym US",
+        "url": "https://www.puregym.com/us/"
+      },
+      {
+        "label": "PureGym US gyms",
+        "url": "https://www.puregym.com/us/gyms"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "merritt_clubs",
+    "name": "Merritt Clubs",
+    "category": "fitness",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "MD"
+    ],
+    "service_area_note": "8 clubs in the greater Baltimore area",
+    "official_url": "https://www.merrittclubs.com/membership/",
+    "plans": [
+      {
+        "id": "platinum",
+        "name": "Platinum (all clubs)",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price not listed; contact club"
+      },
+      {
+        "id": "gold",
+        "name": "Gold (6 clubs)",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price not listed"
+      },
+      {
+        "id": "express",
+        "name": "Express (2 clubs)",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price not listed"
+      }
+    ],
+    "default_plan": "gold",
+    "features": [
+      {
+        "id": "gym",
+        "name": "Gym access",
+        "plans": "all",
+        "overlap_tag": "gym_access"
+      },
+      {
+        "id": "classes",
+        "name": "Group fitness classes",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Baltimore-area members wanting full-service clubs.",
+    "free_trial_days": 3,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Merritt Clubs membership",
+        "url": "https://www.merrittclubs.com/membership/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "ymca_metro_washington",
+    "name": "YMCA of Metropolitan Washington",
+    "category": "fitness",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "DC",
+      "MD",
+      "VA"
+    ],
+    "service_area_note": "Branches in DC, suburban Maryland and Northern Virginia (sample YMCA association)",
+    "official_url": "https://ymcadc.org/membership/",
+    "plans": [
+      {
+        "id": "adult",
+        "name": "Membership",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Rates not listed online; financial assistance available"
+      }
+    ],
+    "default_plan": "adult",
+    "features": [
+      {
+        "id": "gym",
+        "name": "Gym and pool access",
+        "plans": "all",
+        "overlap_tag": "gym_access"
+      },
+      {
+        "id": "childcare",
+        "name": "Child care while working out",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Families in the DC area wanting pools, classes and child care.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Membership includes access to participating YMCAs nationwide"
+    ],
+    "sources": [
+      {
+        "label": "YMCA DC membership",
+        "url": "https://ymcadc.org/membership/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "baltimore_banner",
+    "name": "The Baltimore Banner",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "MD"
+    ],
+    "service_area_note": "Baltimore and Maryland news (incl. Montgomery County)",
+    "official_url": "https://www.thebanner.com/subscribe/",
+    "plans": [
+      {
+        "id": "digital",
+        "name": "Digital",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price not shown (subscribe page errored)"
+      }
+    ],
+    "default_plan": "digital",
+    "features": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital access",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "Baltimore-area readers.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Nonprofit Venetoulis Institute also owns the Post-Gazette"
+    ],
+    "sources": [
+      {
+        "label": "Banner subscribe",
+        "url": "https://www.thebanner.com/subscribe/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "philadelphia_inquirer",
+    "name": "The Philadelphia Inquirer",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "PA",
+      "NJ",
+      "DE"
+    ],
+    "service_area_note": "Philadelphia region incl. South Jersey",
+    "official_url": "https://www.inquirer.com/subscribe/",
+    "plans": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price loads dynamically; not confirmed"
+      },
+      {
+        "id": "sunday_print",
+        "name": "Sunday print + digital",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Not confirmed"
+      }
+    ],
+    "default_plan": "digital",
+    "features": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital access",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "Philadelphia-area readers.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Inquirer subscribe",
+        "url": "https://www.inquirer.com/subscribe/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "richmond_times_dispatch",
+    "name": "Richmond Times-Dispatch",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "VA"
+    ],
+    "service_area_note": "Richmond and central Virginia",
+    "official_url": "https://richmond.com/",
+    "plans": [
+      {
+        "id": "digital",
+        "name": "All digital access",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price not confirmed; site blocked to fetch"
+      }
+    ],
+    "default_plan": "digital",
+    "features": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital access",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "Central Virginia readers.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Richmond Times-Dispatch",
+        "url": "https://richmond.com/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "newsday",
+    "name": "Newsday",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "NY"
+    ],
+    "service_area_note": "Long Island and NYC",
+    "official_url": "https://www.newsday.com/subscribe",
+    "plans": [
+      {
+        "id": "monthly",
+        "name": "Digital monthly",
+        "price_monthly": 29.99,
+        "price_annual": null,
+        "effective_monthly": 29.99,
+        "verified": false,
+        "note": "App Store listing; promo intro rates common"
+      },
+      {
+        "id": "annual",
+        "name": "Digital annual",
+        "price_monthly": null,
+        "price_annual": 149.99,
+        "effective_monthly": 12.5,
+        "verified": false,
+        "note": "App Store in-app price"
+      }
+    ],
+    "default_plan": "monthly",
+    "features": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital access",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "Long Island readers.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Newsday on App Store",
+        "url": "https://apps.apple.com/us/app/newsday/id358571317"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "nj_com",
+    "name": "NJ.com (Star-Ledger)",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "NJ"
+    ],
+    "service_area_note": "New Jersey statewide; Star-Ledger print ended in 2025",
+    "official_url": "https://www.nj.com/",
+    "plans": [
+      {
+        "id": "all_access",
+        "name": "All Access",
+        "price_monthly": 9.99,
+        "price_annual": 99.99,
+        "effective_monthly": 8.33,
+        "verified": false,
+        "note": "2023 snapshot via Adapty; app also listed $11.99/$119.99"
+      }
+    ],
+    "default_plan": "all_access",
+    "features": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital access",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "New Jersey readers.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Adapty NJ.com paywall (2023)",
+        "url": "https://adapty.io/paywall-library/nj-com/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "pittsburgh_post_gazette",
+    "name": "Pittsburgh Post-Gazette",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "PA"
+    ],
+    "service_area_note": "Pittsburgh and western PA; nonprofit-owned since May 2026, print Thu & Sun",
+    "official_url": "https://www.post-gazette.com/",
+    "plans": [
+      {
+        "id": "digital",
+        "name": "Digital",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price not confirmed after ownership change"
+      }
+    ],
+    "default_plan": "digital",
+    "features": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital access",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "Pittsburgh-area readers.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "WTOP: Post-Gazette finds buyer",
+        "url": "https://wtop.com/national/2026/04/pittsburgh-post-gazette-announces-it-has-found-a-buyer-to-keep-the-newspaper-open/"
+      },
+      {
+        "label": "Voices of Winchester: P-G lives on",
+        "url": "https://voicesofwinchester.org/5253/media/the-pittsburgh-post-gazette-lives-on/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "constellation_home",
+    "name": "Constellation Home (formerly BGE Home) service plans",
+    "category": "home",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "MD",
+      "PA",
+      "TX",
+      "GA"
+    ],
+    "service_area_note": "Home service plans mainly in Maryland (Baltimore); also PA, TX, GA",
+    "official_url": "https://www.constellationhome.com/md/home-service-plans/",
+    "plans": [
+      {
+        "id": "whole_house",
+        "name": "Whole House",
+        "price_monthly": 65.95,
+        "price_annual": null,
+        "effective_monthly": 65.95,
+        "verified": true,
+        "note": "Maryland price"
+      },
+      {
+        "id": "home_comfort",
+        "name": "Home Comfort",
+        "price_monthly": 36.95,
+        "price_annual": null,
+        "effective_monthly": 36.95,
+        "verified": true,
+        "note": "Maryland price"
+      },
+      {
+        "id": "select",
+        "name": "Select Service",
+        "price_monthly": 29.95,
+        "price_annual": null,
+        "effective_monthly": 29.95,
+        "verified": true,
+        "note": "Maryland price"
+      },
+      {
+        "id": "water_sewer",
+        "name": "Water Line & Sewer Line",
+        "price_monthly": 11.95,
+        "price_annual": null,
+        "effective_monthly": 11.95,
+        "verified": true,
+        "note": "Starting price, MD"
+      }
+    ],
+    "default_plan": "home_comfort",
+    "features": [
+      {
+        "id": "hvac",
+        "name": "Heating/cooling repair coverage",
+        "plans": "all",
+        "overlap_tag": "home_warranty"
+      },
+      {
+        "id": "appliances",
+        "name": "Appliance coverage",
+        "plans": "whole_house",
+        "overlap_tag": "home_warranty"
+      }
+    ],
+    "best_for": "Maryland homeowners wanting utility-linked repair plans.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Constellation Home MD plans",
+        "url": "https://www.constellationhome.com/md/home-service-plans/"
+      },
+      {
+        "label": "This Old House review",
+        "url": "https://www.thisoldhouse.com/home-finances/reviews/bge-home"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "washington_gas_homeserve",
+    "name": "Washington Gas home repair plans (HomeServe)",
+    "category": "home",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "DC",
+      "MD",
+      "VA"
+    ],
+    "service_area_note": "Washington Gas customers in DC, Maryland and Virginia",
+    "official_url": "https://www.washingtongas.com/ways-to-save/home-owners/home-repair-plans",
+    "plans": [
+      {
+        "id": "gas_line",
+        "name": "Gas Line Coverage",
+        "price_monthly": 5.49,
+        "price_annual": null,
+        "effective_monthly": 5.49,
+        "verified": true,
+        "note": ""
+      },
+      {
+        "id": "water_line",
+        "name": "Exterior Water Service Line",
+        "price_monthly": 5.99,
+        "price_annual": null,
+        "effective_monthly": 5.99,
+        "verified": true,
+        "note": ""
+      },
+      {
+        "id": "water_heater",
+        "name": "Water Heater Repair & Replacement",
+        "price_monthly": 12.99,
+        "price_annual": null,
+        "effective_monthly": 12.99,
+        "verified": true,
+        "note": ""
+      },
+      {
+        "id": "ext_electric",
+        "name": "Exterior Electrical",
+        "price_monthly": 5.99,
+        "price_annual": null,
+        "effective_monthly": 5.99,
+        "verified": true,
+        "note": ""
+      },
+      {
+        "id": "int_electric",
+        "name": "Interior Electrical",
+        "price_monthly": 5.99,
+        "price_annual": null,
+        "effective_monthly": 5.99,
+        "verified": true,
+        "note": ""
+      }
+    ],
+    "default_plan": "gas_line",
+    "features": [
+      {
+        "id": "repair",
+        "name": "Covered repairs up to benefit limit",
+        "plans": "all",
+        "overlap_tag": "home_warranty"
+      }
+    ],
+    "best_for": "Washington Gas customers wanting cheap single-system coverage.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Washington Gas home repair plans",
+        "url": "https://www.washingtongas.com/ways-to-save/home-owners/home-repair-plans"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "dominion_homeserve",
+    "name": "Dominion Energy repair plans (HomeServe)",
+    "category": "home",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "VA",
+      "NC",
+      "SC"
+    ],
+    "service_area_note": "Dominion Energy electric customers; plans vary by ZIP",
+    "official_url": "https://www.homeserve.com/en-us/partners/dominion/",
+    "plans": [
+      {
+        "id": "water_line",
+        "name": "Exterior Water Service Line",
+        "price_monthly": 7.95,
+        "price_annual": null,
+        "effective_monthly": 7.95,
+        "verified": false,
+        "note": "Shown on HomeServe partner page; ZIP-dependent"
+      },
+      {
+        "id": "other",
+        "name": "Other plans (HVAC, plumbing, electrical)",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Prices need ZIP code"
+      }
+    ],
+    "default_plan": "water_line",
+    "features": [
+      {
+        "id": "repair",
+        "name": "Covered repairs up to benefit limit",
+        "plans": "all",
+        "overlap_tag": "home_warranty"
+      }
+    ],
+    "best_for": "Dominion customers wanting utility-partnered repair plans.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "HomeServe Dominion partner page",
+        "url": "https://www.homeserve.com/en-us/partners/dominion/"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  },
+  {
+    "id": "pseg_worryfree",
+    "name": "PSEG WorryFree",
+    "category": "home",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "NJ",
+      "NY"
+    ],
+    "service_area_note": "PSE&G customers in New Jersey; PSEG Long Island via HomeServe",
+    "official_url": "https://worryfree.pseg.com/",
+    "plans": [
+      {
+        "id": "heating",
+        "name": "Heating protection plan",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Prices not shown online"
+      },
+      {
+        "id": "cooling",
+        "name": "Cooling protection plan",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Prices not shown online"
+      }
+    ],
+    "default_plan": "heating",
+    "features": [
+      {
+        "id": "hvac",
+        "name": "Heating/cooling repair coverage",
+        "plans": "all",
+        "overlap_tag": "home_warranty"
+      },
+      {
+        "id": "appliances",
+        "name": "Appliance plans",
+        "plans": "all",
+        "overlap_tag": "home_warranty"
+      }
+    ],
+    "best_for": "PSE&G customers in NJ wanting repair plans billed with utility.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "PSEG WorryFree",
+        "url": "https://worryfree.pseg.com/"
+      },
+      {
+        "label": "HomeServe PSEG WorryFree LI",
+        "url": "https://www.homeserve.com/sc/web/mail/worryfree/w"
+      }
+    ],
+    "checked_at": "2026-10-19"
+  }
+]

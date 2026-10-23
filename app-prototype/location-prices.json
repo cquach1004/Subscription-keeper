@@ -1,0 +1,3984 @@
+{
+ "generated_at": "2026-10-19",
+ "note": "Prices by location, researched 2026-10-19. verified=false means a news, review or price-tracker source.",
+ "services": {
+  "aaa": {
+   "level": "state",
+   "why": "Each regional AAA club (and CAA club in Canada) sets its own dues, so price depends on which club serves your area.",
+   "locations": [
+    {
+     "country": "US",
+     "state": "CA",
+     "city": null,
+     "label": "AAA Mountain West Group (Northern CA)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 64.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr. $10 off with auto-renew."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 99.99,
+       "verified": true,
+       "note": "Extra household member $64.99/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 124.99,
+       "verified": true,
+       "note": "Extra household member $84.99/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Mountain West Group join page",
+       "url": "https://mwg.aaa.com/membership/join-aaa"
+      },
+      {
+       "label": "AAA MWG cost comparison",
+       "url": "https://mwg.aaa.com/membership/aaa-membership-cost-compare-benefits"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "NV",
+     "city": null,
+     "label": "AAA Mountain West Group (Nevada)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 64.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr. $10 off with auto-renew."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 99.99,
+       "verified": true,
+       "note": "Extra household member $64.99/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 124.99,
+       "verified": true,
+       "note": "Extra household member $84.99/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Mountain West Group join page",
+       "url": "https://mwg.aaa.com/membership/join-aaa"
+      },
+      {
+       "label": "AAA MWG cost comparison",
+       "url": "https://mwg.aaa.com/membership/aaa-membership-cost-compare-benefits"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "UT",
+     "city": null,
+     "label": "AAA Mountain West Group (Utah)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 64.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr. $10 off with auto-renew."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 99.99,
+       "verified": true,
+       "note": "Extra household member $64.99/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 124.99,
+       "verified": true,
+       "note": "Extra household member $84.99/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Mountain West Group join page",
+       "url": "https://mwg.aaa.com/membership/join-aaa"
+      },
+      {
+       "label": "AAA MWG cost comparison",
+       "url": "https://mwg.aaa.com/membership/aaa-membership-cost-compare-benefits"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "AZ",
+     "city": null,
+     "label": "AAA Mountain West Group (Arizona)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 64.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr. $10 off with auto-renew."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 99.99,
+       "verified": true,
+       "note": "Extra household member $64.99/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 124.99,
+       "verified": true,
+       "note": "Extra household member $84.99/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Mountain West Group join page",
+       "url": "https://mwg.aaa.com/membership/join-aaa"
+      },
+      {
+       "label": "AAA MWG cost comparison",
+       "url": "https://mwg.aaa.com/membership/aaa-membership-cost-compare-benefits"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "MT",
+     "city": null,
+     "label": "AAA Mountain West Group (Montana)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 64.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 99.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 124.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Mountain West Group join page",
+       "url": "https://mwg.aaa.com/membership/join-aaa"
+      },
+      {
+       "label": "AAA MWG cost comparison",
+       "url": "https://mwg.aaa.com/membership/aaa-membership-cost-compare-benefits"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "WY",
+     "city": null,
+     "label": "AAA Mountain West Group (Wyoming)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 64.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 99.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 124.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Mountain West Group join page",
+       "url": "https://mwg.aaa.com/membership/join-aaa"
+      },
+      {
+       "label": "AAA MWG cost comparison",
+       "url": "https://mwg.aaa.com/membership/aaa-membership-cost-compare-benefits"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "AK",
+     "city": null,
+     "label": "AAA Mountain West Group (Alaska)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 64.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 99.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 124.99,
+       "verified": true,
+       "note": "Extra household member $44.99/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Mountain West Group join page",
+       "url": "https://mwg.aaa.com/membership/join-aaa"
+      },
+      {
+       "label": "AAA MWG cost comparison",
+       "url": "https://mwg.aaa.com/membership/aaa-membership-cost-compare-benefits"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "IN",
+     "city": null,
+     "label": "AAA Hoosier Motor Club (Indiana)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 72.0,
+       "verified": true,
+       "note": "2 extra cardholders free for new members; $25 each at renewal. Enrollment fee amount not shown."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 157.0,
+       "verified": true
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 246.0,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Hoosier compare plans",
+       "url": "https://www.hoosier.aaa.com/membership/compare-aaa-membership-plans"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "MI",
+     "city": null,
+     "label": "The Auto Club Group (Michigan and other ACG states)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 79.0,
+       "verified": true,
+       "note": "ACG page price; ACG says pricing may vary by ZIP code."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 117.0,
+       "verified": true,
+       "note": "May vary by ZIP code."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 144.0,
+       "verified": true,
+       "note": "May vary by ZIP code."
+      }
+     ],
+     "sources": [
+      {
+       "label": "ACG compare membership levels",
+       "url": "https://www.acg.aaa.com/aaa-membership/compare-membership-levels.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "MN",
+     "city": null,
+     "label": "AAA Minneapolis",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Basic",
+       "price_monthly": null,
+       "price_annual": 73.0,
+       "verified": true,
+       "note": "+ $10 one-time enrollment fee. Or $9.09/mo for 12 months."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 118.0,
+       "verified": true,
+       "note": "+ $10 enrollment fee. Or $12.84/mo."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 168.0,
+       "verified": true,
+       "note": "+ $10 enrollment fee. Or $17.00/mo."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Minneapolis membership page",
+       "url": "https://www.minneapolis.aaa.com/node/17"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "WA",
+     "city": null,
+     "label": "AAA Washington",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 75.0,
+       "verified": true,
+       "note": "+ $20 one-time enrollment fee. Household member $55/yr."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 115.0,
+       "verified": true,
+       "note": "+ $20 enrollment fee. Household member $70/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 155.0,
+       "verified": true,
+       "note": "+ $20 enrollment fee. Household member $85/yr."
+      },
+      {
+       "id": "everyday",
+       "name": "Everyday",
+       "price_monthly": null,
+       "price_annual": 25.0,
+       "verified": true,
+       "note": "Discounts only, no roadside."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Washington join page",
+       "url": "https://wa.aaa.com//membership/join"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "PA",
+     "city": null,
+     "label": "AAA Central Penn",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 65.0,
+       "verified": true,
+       "note": "+ $15 one-time enrollment fee. Monthly option $7.99/mo."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 95.0,
+       "verified": true,
+       "note": "+ $15 enrollment fee. Monthly option $10.49/mo."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 135.0,
+       "verified": true,
+       "note": "+ $15 enrollment fee. Monthly option $13.82/mo."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Central Penn annual membership",
+       "url": "https://centralpenn.aaa.com/node/8307"
+      },
+      {
+       "label": "AAA Central Penn monthly memberships",
+       "url": "https://centralpenn.aaa.com/membership/plans/monthly-memberships/"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "PA",
+     "city": null,
+     "label": "AAA Reading-Berks (PA)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 58.0,
+       "verified": true,
+       "note": "Associate $46/yr."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 86.0,
+       "verified": true,
+       "note": "Associate $68/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 126.0,
+       "verified": true,
+       "note": "Associate $68/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA Reading-Berks compare memberships",
+       "url": "https://readingberks.aaa.com/index.php/membership/compare"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "NJ",
+     "city": null,
+     "label": "AAA South Jersey",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Basic",
+       "price_monthly": null,
+       "price_annual": 68.0,
+       "verified": true
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 102.0,
+       "verified": true
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 136.0,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA South Jersey compare levels",
+       "url": "https://southjersey.aaa.com/membership/compare-membership-levels"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "NY",
+     "city": null,
+     "label": "AAA Western and Central New York",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Basic",
+       "price_monthly": null,
+       "price_annual": 65.0,
+       "verified": true,
+       "note": "+ $20 one-time enrollment fee. Extra household member $41/yr."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 105.0,
+       "verified": true,
+       "note": "+ $20 enrollment fee. Extra household member $68/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 140.0,
+       "verified": true,
+       "note": "+ $20 enrollment fee. Extra household member $88/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "AAA WCNY membership terms",
+       "url": "https://westerncentralnyaaa.com/membership/my-aaa/membership-terms"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "OR",
+     "city": null,
+     "label": "AAA Oregon/Idaho (Oregon)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Basic",
+       "price_monthly": null,
+       "price_annual": 67.0,
+       "verified": false,
+       "note": "+ $20 one-time enrollment fee (new members). Third-party figure."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 110.0,
+       "verified": false,
+       "note": "+ $20 enrollment fee. Third-party figure."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 149.0,
+       "verified": false,
+       "note": "+ $20 enrollment fee. Third-party figure."
+      }
+     ],
+     "sources": [
+      {
+       "label": "ThePricer AAA cost guide (prices checked 2026-09-08)",
+       "url": "https://www.thepricer.org/how-much-does-aaa-membership-cost/"
+      },
+      {
+       "label": "AAA Oregon/Idaho join page (prices not readable)",
+       "url": "https://oregon.aaa.com/membership/join/index.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "ID",
+     "city": null,
+     "label": "AAA Oregon/Idaho (Idaho)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Basic",
+       "price_monthly": null,
+       "price_annual": 67.0,
+       "verified": false,
+       "note": "+ $20 one-time enrollment fee (new members). Third-party figure."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 110.0,
+       "verified": false,
+       "note": "+ $20 enrollment fee. Third-party figure."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 149.0,
+       "verified": false,
+       "note": "+ $20 enrollment fee. Third-party figure."
+      }
+     ],
+     "sources": [
+      {
+       "label": "ThePricer AAA cost guide (prices checked 2026-09-08)",
+       "url": "https://www.thepricer.org/how-much-does-aaa-membership-cost/"
+      },
+      {
+       "label": "AAA Oregon/Idaho join page (prices not readable)",
+       "url": "https://oregon.aaa.com/membership/join/index.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "NB",
+     "city": null,
+     "label": "CAA Atlantic",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 97.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 153.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 207.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "everyday",
+       "name": "Everyday",
+       "price_monthly": null,
+       "price_annual": 30.0,
+       "verified": true,
+       "note": "No roadside. Taxes extra."
+      }
+     ],
+     "sources": [
+      {
+       "label": "CAA Atlantic join page",
+       "url": "https://atlantic.caa.ca/membership/join-caa.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "NS",
+     "city": null,
+     "label": "CAA Atlantic",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 97.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 153.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 207.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "everyday",
+       "name": "Everyday",
+       "price_monthly": null,
+       "price_annual": 30.0,
+       "verified": true,
+       "note": "No roadside. Taxes extra."
+      }
+     ],
+     "sources": [
+      {
+       "label": "CAA Atlantic join page",
+       "url": "https://atlantic.caa.ca/membership/join-caa.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "PE",
+     "city": null,
+     "label": "CAA Atlantic",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 97.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 153.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 207.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "everyday",
+       "name": "Everyday",
+       "price_monthly": null,
+       "price_annual": 30.0,
+       "verified": true,
+       "note": "No roadside. Taxes extra."
+      }
+     ],
+     "sources": [
+      {
+       "label": "CAA Atlantic join page",
+       "url": "https://atlantic.caa.ca/membership/join-caa.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "NL",
+     "city": null,
+     "label": "CAA Atlantic",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 97.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 153.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 207.0,
+       "verified": true,
+       "note": "Taxes extra."
+      },
+      {
+       "id": "everyday",
+       "name": "Everyday",
+       "price_monthly": null,
+       "price_annual": 30.0,
+       "verified": true,
+       "note": "No roadside. Taxes extra."
+      }
+     ],
+     "sources": [
+      {
+       "label": "CAA Atlantic join page",
+       "url": "https://atlantic.caa.ca/membership/join-caa.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "BC",
+     "city": null,
+     "label": "BCAA (British Columbia)",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Basic",
+       "price_monthly": null,
+       "price_annual": 95.0,
+       "verified": true,
+       "note": "Associate $60/yr."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 135.0,
+       "verified": true,
+       "note": "Associate $100/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 175.0,
+       "verified": true,
+       "note": "Associate $140/yr."
+      }
+     ],
+     "sources": [
+      {
+       "label": "BCAA membership offer page (regular prices)",
+       "url": "https://www.bcaa.com/membership/campaigns/classic/classic3mo"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "SK",
+     "city": null,
+     "label": "CAA Saskatchewan",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Basic",
+       "price_monthly": null,
+       "price_annual": 105.0,
+       "verified": true,
+       "note": "Before tax. $20 manual-renewal fee waived with auto-renew."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 161.0,
+       "verified": true,
+       "note": "Before tax."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 206.0,
+       "verified": true,
+       "note": "Before tax."
+      }
+     ],
+     "sources": [
+      {
+       "label": "CAA Saskatchewan membership page",
+       "url": "https://info.caask.ca/sask-essential"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "MB",
+     "city": null,
+     "label": "CAA Manitoba",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 80.0,
+       "verified": true
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 124.0,
+       "verified": true
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 154.0,
+       "verified": true
+      },
+      {
+       "id": "everyday",
+       "name": "Everyday",
+       "price_monthly": null,
+       "price_annual": 30.0,
+       "verified": true,
+       "note": "No roadside."
+      }
+     ],
+     "sources": [
+      {
+       "label": "CAA Manitoba membership page",
+       "url": "https://caamanitoba.com/membership"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "ON",
+     "city": null,
+     "label": "CAA South Central Ontario",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Basic",
+       "price_monthly": null,
+       "price_annual": 80.0,
+       "verified": true,
+       "note": "Join page shows totals as HST included."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 124.0,
+       "verified": true,
+       "note": "HST included per join page."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 154.0,
+       "verified": true,
+       "note": "HST included per join page."
+      },
+      {
+       "id": "everyday",
+       "name": "Everyday",
+       "price_monthly": null,
+       "price_annual": 30.0,
+       "verified": true,
+       "note": "No roadside."
+      }
+     ],
+     "sources": [
+      {
+       "label": "CAASCO compare memberships",
+       "url": "https://www.caasco.com/membership/compare-memberships"
+      },
+      {
+       "label": "CAASCO join page",
+       "url": "https://www.caasco.com/membership/Join"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "ON",
+     "city": null,
+     "label": "CAA North & East Ontario",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 115.0,
+       "verified": true,
+       "note": "Taxes extra. Family add-on $80/yr."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 165.0,
+       "verified": true,
+       "note": "Taxes extra. Family add-on $130/yr."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 205.0,
+       "verified": true,
+       "note": "Taxes extra. Family add-on $170/yr."
+      },
+      {
+       "id": "everyday",
+       "name": "Everyday",
+       "price_monthly": null,
+       "price_annual": 30.0,
+       "verified": true,
+       "note": "No roadside. Taxes extra."
+      }
+     ],
+     "sources": [
+      {
+       "label": "CAA North & East Ontario membership page",
+       "url": "https://caaneo.ca/node/1126"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "QC",
+     "city": null,
+     "label": "CAA-Quebec",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": null,
+       "price_annual": 99.99,
+       "verified": true,
+       "note": "Excluding taxes."
+      },
+      {
+       "id": "plus",
+       "name": "Plus",
+       "price_monthly": null,
+       "price_annual": 175.99,
+       "verified": true,
+       "note": "Excluding taxes."
+      },
+      {
+       "id": "premier",
+       "name": "Premier",
+       "price_monthly": null,
+       "price_annual": 244.99,
+       "verified": true,
+       "note": "Excluding taxes."
+      }
+     ],
+     "sources": [
+      {
+       "label": "CAA-Quebec compare cards",
+       "url": "https://www.caaquebec.com/en/membership/compare-cards"
+      },
+      {
+       "label": "CAA-Quebec CAA Classic",
+       "url": "https://www.caaquebec.com/en/membership/caa-classic"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    }
+   ]
+  },
+  "starlink_residential": {
+   "level": "country",
+   "why": "Starlink sets residential prices per country in local currency; inside the US it can add a one-time congestion charge in busy areas, but the monthly price is the same.",
+   "locations": [
+    {
+     "country": "US",
+     "state": null,
+     "city": null,
+     "label": "United States",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "res_100",
+       "name": "Residential 100 Mbps",
+       "price_monthly": 55.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Raised from $50 on 2026-06-18; only in select areas. Busy areas may add a one-time congestion charge at checkout (reported as $100-$1,500, unconfirmed)"
+      },
+      {
+       "id": "res_200",
+       "name": "Residential 200 Mbps",
+       "price_monthly": 85.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Raised from $80 on 2026-06-18"
+      },
+      {
+       "id": "res_max",
+       "name": "Residential MAX",
+       "price_monthly": 130.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Raised from $120 on 2026-06-18"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Drive Tesla Canada: Starlink price increase US/Canada (May 2026)",
+       "url": "https://driveteslacanada.ca/news/starlink-price-increase-us-canada/"
+      },
+      {
+       "label": "LiveEarthViewer Starlink cost guide (checked Sep 2026)",
+       "url": "https://liveearthviewer.com/starlink/learn/how-much-does-starlink-cost"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": null,
+     "city": null,
+     "label": "Canada",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "res_100",
+       "name": "Residential 100 Mbps",
+       "price_monthly": 75.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "From 2026-06-18 (was C$70). Price from a news report, not starlink.com (the official site could not be read)"
+      },
+      {
+       "id": "res_200",
+       "name": "Residential 200 Mbps",
+       "price_monthly": 115.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Was C$110"
+      },
+      {
+       "id": "res_max",
+       "name": "Residential MAX",
+       "price_monthly": 150.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Was C$140"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Drive Tesla Canada: Starlink price increase US/Canada",
+       "url": "https://driveteslacanada.ca/news/starlink-price-increase-us-canada/"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "GB",
+     "state": null,
+     "city": null,
+     "label": "United Kingdom",
+     "currency": "GBP",
+     "plans": [
+      {
+       "id": "res_100",
+       "name": "Residential 100 Mbps",
+       "price_monthly": 40.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "'From' price. A GBP 10/month kit fee was added for new customers in June 2026 and reportedly dropped in July 2026. Higher tiers not priced in the sources"
+      }
+     ],
+     "sources": [
+      {
+       "label": "ISPreview (20 Jul 2026)",
+       "url": "https://www.ispreview.co.uk/?p=47392"
+      },
+      {
+       "label": "ISPreview kit fee report (10 Jun 2026)",
+       "url": "https://www.ispreview.co.uk/index.php/2026/06/new-uk-starlink-broadband-customers-hit-by-10-monthly-kit-fee.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "AU",
+     "state": null,
+     "city": null,
+     "label": "Australia",
+     "currency": "AUD",
+     "plans": [
+      {
+       "id": "res_100",
+       "name": "Residential 100 Mbps",
+       "price_monthly": 75.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "New customers also pay A$15/month hardware rental unless they buy the kit. Taxes included (AU prices are GST-inclusive)"
+      },
+      {
+       "id": "res_200",
+       "name": "Residential 200 Mbps",
+       "price_monthly": 110.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "+A$15/month rental for new customers"
+      },
+      {
+       "id": "res_max",
+       "name": "Residential MAX",
+       "price_monthly": 150.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "+A$15/month rental for new customers"
+      }
+     ],
+     "sources": [
+      {
+       "label": "WhistleOut AU Starlink plans (table updated 19 Oct 2026)",
+       "url": "https://www.whistleout.com.au/Broadband/News/starlink-monthly-rental-fee"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "DE",
+     "state": null,
+     "city": null,
+     "label": "Germany",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "res_100",
+       "name": "Residential 100 Mbit/s",
+       "price_monthly": 35.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Raised from EUR 29 in May 2026"
+      },
+      {
+       "id": "res_200",
+       "name": "Residential 200 Mbit/s",
+       "price_monthly": 55.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Was EUR 49"
+      },
+      {
+       "id": "res_max",
+       "name": "Residential MAX",
+       "price_monthly": 75.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Was EUR 69"
+      }
+     ],
+     "sources": [
+      {
+       "label": "heise: Starlink raises prices in Germany",
+       "url": "https://heise.de/-11302803"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "FR",
+     "state": null,
+     "city": null,
+     "label": "France",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "res_100",
+       "name": "R\u00e9sidentiel 100 Mbit/s",
+       "price_monthly": 35.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Raised from EUR 29 (May/June 2026)"
+      },
+      {
+       "id": "res_200",
+       "name": "R\u00e9sidentiel 200 Mbit/s",
+       "price_monthly": 45.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Was EUR 39"
+      },
+      {
+       "id": "res_max",
+       "name": "R\u00e9sidentiel Max",
+       "price_monthly": 65.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Was EUR 59"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Selectra: Starlink augmente ses prix en France (27 May 2026)",
+       "url": "https://selectra.info/telecom/actualites/marche/starlink-augmente-prix-en-france-et-debits-aussi"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "MX",
+     "state": null,
+     "city": null,
+     "label": "Mexico",
+     "currency": "MXN",
+     "plans": [
+      {
+       "id": "residential",
+       "name": "Residencial (kit est\u00e1ndar)",
+       "price_monthly": 1350.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Plus a MXN 55/month regulatory charge. Tier names not given in the source"
+      }
+     ],
+     "sources": [
+      {
+       "label": "El CEO (26 May 2026)",
+       "url": "https://elceo.com/negocios/starlink-de-elon-musk-aumenta-tarifas-y-recargos-en-mexico-kits-superan-los-22000-pesos/"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "PH",
+     "state": null,
+     "city": null,
+     "label": "Philippines",
+     "currency": "PHP",
+     "plans": [
+      {
+       "id": "residential",
+       "name": "Residential",
+       "price_monthly": 4099.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Raised from PHP 3,700 (May 2026). Only one residential tier named in the source"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Unbox.ph: Starlink price hike 2026 (20 May 2026)",
+       "url": "https://unbox.ph/news/starlink-price-hike-2026/"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    }
+   ]
+  },
+  "planet_fitness": {
+   "level": "city",
+   "why": "Each Planet Fitness club (mostly franchised) sets its own dues and fees, and each country has its own pricing.",
+   "locations": [
+    {
+     "country": "US",
+     "state": "OH",
+     "city": "Columbus",
+     "label": "Columbus (S High Street), OH",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $59 startup, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $10 startup, no commitment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/columbus-s-high-street-oh"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "TX",
+     "city": "Houston",
+     "label": "Houston (Energy Corridor), TX",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $29 startup, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup fee, no commitment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/houston-energy-corridor-tx"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "CA",
+     "city": "Los Angeles",
+     "label": "Los Angeles (Wilmington Ave), CA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $49 startup, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup fee, no commitment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/los-angeles-wilmington-ave-ca"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "CA",
+     "city": "San Francisco",
+     "label": "San Francisco (Kearny St), CA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "Promo; $49 annual fee, $1 startup, 12-month commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $0 startup, no commitment; plus tax"
+      },
+      {
+       "id": "classic_paid_in_full",
+       "name": "Classic Paid in Full",
+       "price_monthly": null,
+       "price_annual": 249.0,
+       "verified": true,
+       "note": "One payment for 12 months, no annual fee"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/san-francisco-ca"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "NY",
+     "city": "New York",
+     "label": "Manhattan (Herald Square), NY",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 19.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$59 annual fee, $59 startup, 12-month commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 37.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "No annual fee, $1 startup, no commitment; plus tax"
+      },
+      {
+       "id": "classic_no_commit",
+       "name": "Classic No Commitment",
+       "price_monthly": 24.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$59 annual fee, $29 startup; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/manhattan-herald-square-ny"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "NY",
+     "city": "Brooklyn",
+     "label": "Brooklyn (Bay Ridge), NY",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 19.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$59 annual fee, $59 startup, 12-month commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 37.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "No annual fee, $1 startup, no commitment; plus tax"
+      },
+      {
+       "id": "classic_no_commit",
+       "name": "Classic No Commitment",
+       "price_monthly": 24.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$59 annual fee, $1 startup; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/brooklyn-bay-ridge-ny"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "HI",
+     "city": "Honolulu",
+     "label": "Honolulu (Ala Moana), HI",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 19.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$59 annual fee, $59 startup, 12-month commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 37.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "No annual fee, $1 startup, no commitment; plus tax"
+      },
+      {
+       "id": "classic_no_commit",
+       "name": "Classic No Commitment",
+       "price_monthly": 24.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$59 annual fee, $1 startup; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/honolulu-ala-moana-hi"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "IL",
+     "city": "Chicago",
+     "label": "Chicago (Avondale), IL",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $59 startup, 12-month commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $20 startup, no commitment; plus tax"
+      },
+      {
+       "id": "classic_paid_in_full",
+       "name": "Classic Paid in Full",
+       "price_monthly": null,
+       "price_annual": 229.0,
+       "verified": true,
+       "note": "One payment for 12 months, no annual fee"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/chicago-avondale-il"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "FL",
+     "city": "Miami",
+     "label": "Miami (Allapattah), FL",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $39 startup, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup fee, no commitment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/miami-allapattah-fl"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "MA",
+     "city": "Boston",
+     "label": "Boston (Back Bay), MA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup fee, no commitment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/boston-back-bay-ma"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "WA",
+     "city": "Seattle",
+     "label": "Seattle (Ballard), WA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup fee, no commitment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/seattle-ballard-wa"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "CO",
+     "city": "Denver",
+     "label": "Denver (Downtown), CO",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $49 startup, 12-month commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup fee, no commitment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/denver-downtown-co"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "DC",
+     "city": "Washington",
+     "label": "Washington (Gallery Place), DC",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $49 startup, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup fee, no commitment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/washington-gallery-place-dc"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "GA",
+     "city": "Atlanta",
+     "label": "Atlanta (Cumberland Mall), GA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 10.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "Limited-time promo (regular $15); $49 annual fee, $1 startup; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup fee, no commitment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/atlanta-cumberland-mall-ga"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "AZ",
+     "city": "Phoenix",
+     "label": "Phoenix (Arcadia), AZ",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $49 startup, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 startup fee, no commitment; plus tax"
+      },
+      {
+       "id": "classic_paid_in_full",
+       "name": "Classic Paid in Full",
+       "price_monthly": null,
+       "price_annual": 229.0,
+       "verified": true,
+       "note": "One payment for 12 months, no annual fee"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.com/gyms/phoenix-arcadia-az"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "ON",
+     "city": "Toronto",
+     "label": "North York (Yonge & Sheppard), ON",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 enrolment, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Promo (regular $29.99); $49 annual fee, $1 enrolment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.ca/gyms/north-york-yonge-sheppard"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "ON",
+     "city": "Toronto",
+     "label": "Etobicoke, ON",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $49 enrolment, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $1 enrolment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.ca/gyms/etobicoke"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": "AB",
+     "city": "Calgary",
+     "label": "Calgary (Sage Hill), AB",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic",
+       "price_monthly": 15.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $59 enrolment, no commitment; plus tax"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "$49 annual fee, $10 enrolment; plus tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.ca/gyms/calgary-sage-hill-ab"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "AU",
+     "state": "NSW",
+     "city": "Sydney",
+     "label": "Auburn, NSW",
+     "currency": "AUD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic Weekly",
+       "price_monthly": 30.33,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$7.00/week billed fortnightly (shown as monthly equivalent); $49 annual fee; $0 join (promo to 30 Oct 2026, else $59)"
+      },
+      {
+       "id": "classic_12m",
+       "name": "Classic 12 Month",
+       "price_monthly": 30.33,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$7.00/week billed fortnightly; 12-month commitment, $99 early exit fee"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 47.45,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$10.95/week billed fortnightly (shown as monthly equivalent); $49 annual fee; $0 join (promo, else $10)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club offers page",
+       "url": "https://planetfitnessaustralia.com.au/gyms/sydney-auburn-nsw/offers"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "AU",
+     "state": "QLD",
+     "city": "Brisbane",
+     "label": "Chermside, QLD",
+     "currency": "AUD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Classic Weekly",
+       "price_monthly": 30.33,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$7.00/week billed fortnightly (shown as monthly equivalent); $49 annual fee; $0 join (promo to 30 Oct 2026, else $59)"
+      },
+      {
+       "id": "classic_12m",
+       "name": "Classic 12 Month",
+       "price_monthly": 30.33,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$7.00/week billed fortnightly; 12-month commitment, $99 early exit fee"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 47.45,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$10.95/week billed fortnightly (shown as monthly equivalent); $49 annual fee; $0 join (promo, else $10)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club offers page",
+       "url": "https://planetfitnessaustralia.com.au/gyms/chermside-qld/offers"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "ES",
+     "state": "MD",
+     "city": "Madrid",
+     "label": "Chamart\u00edn, Madrid",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Cl\u00e1sico",
+       "price_monthly": 18.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "No annual fee, no commitment; Cl\u00e1sico \u20ac30 / Premium \u20ac10 start fee"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Premium",
+       "price_monthly": 27.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Spain's Black Card equivalent; no annual fee, no commitment"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.es/gimnasios/chamartin-madrid.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "ES",
+     "state": "B",
+     "city": "Barcelona",
+     "label": "Eixample (Casp), Barcelona",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Cl\u00e1sico",
+       "price_monthly": 18.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "No annual fee, no commitment; Cl\u00e1sico \u20ac30 / Premium \u20ac10 start fee"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Premium",
+       "price_monthly": 27.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Spain's Black Card equivalent; no annual fee, no commitment"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.es/gimnasios/eixample-casp-barcelona.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "ES",
+     "state": "SE",
+     "city": "Sevilla",
+     "label": "Macarena, Sevilla",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Cl\u00e1sico",
+       "price_monthly": 18.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "No annual fee, no commitment; Cl\u00e1sico \u20ac30 / Premium \u20ac1 start fee"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Premium",
+       "price_monthly": 27.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Spain's Black Card equivalent; no annual fee, no commitment"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.planetfitness.es/gimnasios/macarena-sevilla.html"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "MX",
+     "state": null,
+     "city": null,
+     "label": "Mexico (all clubs, starting price)",
+     "currency": "MXN",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Membres\u00eda Cl\u00e1sica",
+       "price_monthly": 279.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "'From' price on national site; varies by club"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 499.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "'From' price on national site; varies by club"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Planet Fitness Mexico home",
+       "url": "https://www.planetfitness.mx"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "PA",
+     "state": null,
+     "city": null,
+     "label": "Panama (all clubs, starting price)",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "classic",
+       "name": "Membres\u00eda Cl\u00e1sica",
+       "price_monthly": 25.98,
+       "price_annual": null,
+       "verified": true,
+       "note": "$11.99 every 2 weeks (shown as monthly equivalent); 'from' price, may vary by club"
+      },
+      {
+       "id": "black_card",
+       "name": "PF Black Card",
+       "price_monthly": 34.65,
+       "price_annual": null,
+       "verified": true,
+       "note": "$15.99 every 2 weeks (shown as monthly equivalent); 'from' price"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Planet Fitness Panama home",
+       "url": "https://www.planetfitness.pa"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    }
+   ]
+  },
+  "crunch_fitness": {
+   "level": "city",
+   "why": "Crunch clubs are largely franchised and each club sets its own plan prices; Australia runs its own tiers.",
+   "locations": [
+    {
+     "country": "US",
+     "state": "IL",
+     "city": "Rockford",
+     "label": "Crunch Rockford, IL",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 9.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 15.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 25.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/rockford"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "IL",
+     "city": "Mount Prospect",
+     "label": "Crunch Mount Prospect, IL",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 9.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 15.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/mount-prospect"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "NY",
+     "city": "Staten Island",
+     "label": "Crunch Staten Island South, NY",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 39.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 44.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/si-south"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "NY",
+     "city": "Queens",
+     "label": "Crunch Rochdale (Jamaica, Queens), NY",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 21.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Only Base price shown; commitment not stated"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 34.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/rochdale"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "CA",
+     "city": "Vista",
+     "label": "Crunch Vista, CA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 9.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 19.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 26.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 34.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/vista"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "CA",
+     "city": "Los Angeles",
+     "label": "Crunch Van Nuys, CA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 14.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 19.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 26.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 34.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/van-nuys"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "CA",
+     "city": "Granite Bay",
+     "label": "Crunch Granite Bay, CA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 12.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 17.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 26.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 36.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/granite-bay"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "TX",
+     "city": "Houston",
+     "label": "Crunch Kirkwood (Houston), TX",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 9.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 15.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 25.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/kirkwood"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "PA",
+     "city": "York",
+     "label": "Crunch York, PA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 11.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 17.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 34.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/york"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "PA",
+     "city": "Pleasant Hills",
+     "label": "Crunch Pleasant Hills, PA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 9.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 15.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 25.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/pleasant-hills"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "MA",
+     "city": "East Longmeadow",
+     "label": "Crunch Springfield (East Longmeadow), MA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 11.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 17.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 34.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/springfield-ma"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "GA",
+     "city": "Gainesville",
+     "label": "Crunch Gainesville, GA",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 9.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 15.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/gainesville-ga"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "FL",
+     "city": "Maitland",
+     "label": "Crunch Maitland, FL",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 9.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 15.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 24.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/maitland"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "OK",
+     "city": "Oklahoma City",
+     "label": "Crunch Oklahoma City Northwest, OK",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 9.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 15.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 26.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 36.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/okc-northwest"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "KS",
+     "city": "Topeka",
+     "label": "Crunch Topeka, KS",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 9.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "With 12-month commitment"
+      },
+      {
+       "id": "base_monthly",
+       "name": "Base (no annual commitment)",
+       "price_monthly": 15.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "Month-to-month"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 25.99,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "peak_results",
+       "name": "Peak Results",
+       "price_monthly": 29.99,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/topeka"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "US",
+     "state": "NY",
+     "city": "New York",
+     "label": "Crunch Union Square (Signature club), NY",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "one_crunch",
+       "name": "One Crunch",
+       "price_monthly": 114.75,
+       "price_annual": null,
+       "verified": true,
+       "note": "Signature club plan"
+      },
+      {
+       "id": "all_crunch",
+       "name": "All Crunch",
+       "price_monthly": 127.2,
+       "price_annual": null,
+       "verified": true,
+       "note": "Signature club plan"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com/locations/union-square"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "AU",
+     "state": "NSW",
+     "city": "Sydney",
+     "label": "Crunch Alexandria, NSW",
+     "currency": "AUD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 47.45,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$10.95/week (monthly equivalent); 12-month commitment, home club only"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 69.12,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$15.95/week (monthly equivalent); no lock-in, all clubs"
+      },
+      {
+       "id": "summit",
+       "name": "Summit",
+       "price_monthly": 108.12,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$24.95/week (monthly equivalent); no lock-in, all clubs"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com.au/our-clubs/alexandria/"
+      },
+      {
+       "label": "Memberships page",
+       "url": "https://www.crunch.com.au/memberships/"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "AU",
+     "state": "NSW",
+     "city": "Sydney",
+     "label": "Crunch Parramatta, NSW",
+     "currency": "AUD",
+     "plans": [
+      {
+       "id": "base",
+       "name": "Base",
+       "price_monthly": 47.45,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$10.95/week (monthly equivalent); 12-month commitment, home club only"
+      },
+      {
+       "id": "peak",
+       "name": "Peak",
+       "price_monthly": 69.12,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$15.95/week (monthly equivalent); no lock-in, all clubs"
+      },
+      {
+       "id": "summit",
+       "name": "Summit",
+       "price_monthly": 108.12,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$24.95/week (monthly equivalent); no lock-in, all clubs"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Club page",
+       "url": "https://www.crunch.com.au/our-clubs/parramatta/"
+      },
+      {
+       "label": "Memberships page",
+       "url": "https://www.crunch.com.au/memberships/"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    }
+   ]
+  },
+  "classpass": {
+   "level": "city",
+   "why": "ClassPass sets credit bundles and prices per market (metro area and country).",
+   "locations": [
+    {
+     "country": "US",
+     "state": "OH",
+     "city": "Columbus",
+     "label": "Columbus, OH",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "credits_8",
+       "name": "8 credits",
+       "price_monthly": 19.0,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "credits_15",
+       "name": "15 credits",
+       "price_monthly": 35.0,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "credits_28",
+       "name": "28 credits",
+       "price_monthly": 59.0,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "credits_38",
+       "name": "38 credits",
+       "price_monthly": 79.0,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "credits_68",
+       "name": "68 credits",
+       "price_monthly": 139.0,
+       "price_annual": null,
+       "verified": true
+      },
+      {
+       "id": "credits_125",
+       "name": "125 credits",
+       "price_monthly": 249.0,
+       "price_annual": null,
+       "verified": true
+      }
+     ],
+     "sources": [
+      {
+       "label": "ClassPass plans page (location set to Columbus, OH)",
+       "url": "https://classpass.com/plans"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "GB",
+     "state": null,
+     "city": "London",
+     "label": "London",
+     "currency": "GBP",
+     "plans": [
+      {
+       "id": "credits_52",
+       "name": "52 credits",
+       "price_monthly": 69.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "Plan after free trial; other sizes exist but not confirmed"
+      }
+     ],
+     "sources": [
+      {
+       "label": "TopReferrals UK (checked 18 Oct 2026)",
+       "url": "https://topreferrals.co.uk/compare/is-classpass-referral-worth-it"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "SG",
+     "state": null,
+     "city": "Singapore",
+     "label": "Singapore",
+     "currency": "SGD",
+     "plans": [
+      {
+       "id": "credits_8",
+       "name": "8 credits",
+       "price_monthly": 19.0,
+       "price_annual": null,
+       "verified": false
+      },
+      {
+       "id": "credits_27",
+       "name": "27 credits",
+       "price_monthly": 65.0,
+       "price_annual": null,
+       "verified": false
+      },
+      {
+       "id": "credits_45",
+       "name": "45 credits",
+       "price_monthly": 99.0,
+       "price_annual": null,
+       "verified": false
+      },
+      {
+       "id": "credits_65",
+       "name": "65 credits",
+       "price_monthly": 139.0,
+       "price_annual": null,
+       "verified": false
+      },
+      {
+       "id": "credits_95",
+       "name": "95 credits",
+       "price_monthly": 199.0,
+       "price_annual": null,
+       "verified": false
+      },
+      {
+       "id": "credits_142",
+       "name": "142 credits",
+       "price_monthly": 299.0,
+       "price_annual": null,
+       "verified": false
+      }
+     ],
+     "sources": [
+      {
+       "label": "Vibefam review (updated Jul 2026)",
+       "url": "https://vibefam.com/my-unfiltered-classpass-review-part-1-2/"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    }
+   ]
+  },
+  "hellofresh": {
+   "level": "country",
+   "why": "Each HelloFresh country site sets its own per-serving prices and shipping fees; within a country prices are the same.",
+   "locations": [
+    {
+     "country": "US",
+     "state": null,
+     "city": null,
+     "label": "United States",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "2p_2m",
+       "name": "2 people, 2 meals/week",
+       "price_monthly": 216.49,
+       "price_annual": null,
+       "verified": false,
+       "note": "$12.49/serving, $49.96/week; plus shipping and tax"
+      },
+      {
+       "id": "2p_3m",
+       "name": "2 people, 3 meals/week",
+       "price_monthly": 285.74,
+       "price_annual": null,
+       "verified": false,
+       "note": "$10.99/serving, $65.94/week; plus shipping and tax"
+      }
+     ],
+     "sources": [
+      {
+       "label": "NerdWallet (updated Jul 2026)",
+       "url": "https://www.nerdwallet.com/finance/learn/how-much-does-hello-fresh-cost"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "AU",
+     "state": null,
+     "city": null,
+     "label": "Australia",
+     "currency": "AUD",
+     "plans": [
+      {
+       "id": "2p_2m",
+       "name": "2 people, 2 meals/week",
+       "price_monthly": 259.83,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$14.99/serving, A$59.96/week (monthly equivalent); plus shipping"
+      },
+      {
+       "id": "2p_3m",
+       "name": "2 people, 3 meals/week",
+       "price_monthly": 337.74,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$12.99/serving, A$77.94/week (monthly equivalent); plus shipping"
+      },
+      {
+       "id": "2p_4m",
+       "name": "2 people, 4 meals/week",
+       "price_monthly": 426.05,
+       "price_annual": null,
+       "verified": true,
+       "note": "A$12.29/serving, A$98.32/week; plus shipping"
+      }
+     ],
+     "sources": [
+      {
+       "label": "HelloFresh AU meal plans",
+       "url": "https://www.hellofresh.com.au/meal-kits/meal-plans"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "GB",
+     "state": null,
+     "city": null,
+     "label": "United Kingdom",
+     "currency": "GBP",
+     "plans": [
+      {
+       "id": "2p_5m",
+       "name": "2 people, 5 recipes/week",
+       "price_monthly": 225.25,
+       "price_annual": null,
+       "verified": true,
+       "note": "\u00a351.98/week including shipping (monthly equivalent); meals from \u00a33.50/portion"
+      }
+     ],
+     "sources": [
+      {
+       "label": "HelloFresh UK menu and plans",
+       "url": "https://www.hellofresh.co.uk/food-box/menu-and-plans"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "DE",
+     "state": null,
+     "city": null,
+     "label": "Germany",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "2p_2m",
+       "name": "2 people, 2 meals/week",
+       "price_monthly": 179.79,
+       "price_annual": null,
+       "verified": false,
+       "note": "\u20ac10.37/serving, \u20ac41.49/week; + \u20ac5.99 shipping"
+      },
+      {
+       "id": "2p_3m",
+       "name": "2 people, 3 meals/week",
+       "price_monthly": 203.62,
+       "price_annual": null,
+       "verified": false,
+       "note": "\u20ac7.83/serving, \u20ac46.99/week; + \u20ac5.99 shipping"
+      },
+      {
+       "id": "2p_4m",
+       "name": "2 people, 4 meals/week",
+       "price_monthly": 253.46,
+       "price_annual": null,
+       "verified": false,
+       "note": "\u20ac7.31/serving, \u20ac58.49/week; + \u20ac5.99 shipping"
+      }
+     ],
+     "sources": [
+      {
+       "label": "kochbox.de price overview (2026)",
+       "url": "https://kochbox.de/wissen/hellofresh-kosten/"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "FR",
+     "state": null,
+     "city": null,
+     "label": "France",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "2p_3m",
+       "name": "2 people, 3 meals/week",
+       "price_monthly": 181.74,
+       "price_annual": null,
+       "verified": false,
+       "note": "\u20ac6.99/serving, \u20ac41.94/week; + \u20ac5.99 shipping"
+      },
+      {
+       "id": "2p_4m",
+       "name": "2 people, 4 meals/week",
+       "price_monthly": 229.32,
+       "price_annual": null,
+       "verified": false,
+       "note": "\u20ac6.62/serving, \u20ac52.92/week; + \u20ac5.99 shipping"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Parrain du Web (updated 14 Aug 2026)",
+       "url": "https://parrainduweb.fr/blog/hellofresh-prix"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    }
+   ]
+  },
+  "skillshare": {
+   "level": "country",
+   "why": "Skillshare says prices vary by location; app-store prices are set per country.",
+   "locations": [
+    {
+     "country": "US",
+     "state": null,
+     "city": null,
+     "label": "United States",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": 13.99,
+       "price_annual": 167.88,
+       "verified": true,
+       "note": "Web price; App Store annual is $169.99"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 31.99,
+       "price_annual": null,
+       "verified": true,
+       "note": "App Store 'Monthly Premium Membership'; a 'Premium Membership' item at $18.99 is also listed (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "Skillshare pricing page",
+       "url": "https://www.skillshare.com/en/pricing"
+      },
+      {
+       "label": "App Store (US) in-app purchases",
+       "url": "https://apps.apple.com/us/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": null,
+     "city": null,
+     "label": "Canada",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 139.99,
+       "verified": true,
+       "note": "App Store 'Annual Premium Membership' (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 20.49,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at $19.99 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (CA) in-app purchases",
+       "url": "https://apps.apple.com/ca/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "GB",
+     "state": null,
+     "city": null,
+     "label": "United Kingdom",
+     "currency": "GBP",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 83.99,
+       "verified": true,
+       "note": "App Store 'Annual Premium Membership' (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 12.99,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at \u00a313.99 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (GB) in-app purchases",
+       "url": "https://apps.apple.com/gb/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "AU",
+     "state": null,
+     "city": null,
+     "label": "Australia",
+     "currency": "AUD",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 144.99,
+       "verified": true,
+       "note": "App Store 'Annual Premium Membership' (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 19.99,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at A$23.99 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (AU) in-app purchases",
+       "url": "https://apps.apple.com/au/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "DE",
+     "state": null,
+     "city": null,
+     "label": "Germany",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 95.99,
+       "verified": true,
+       "note": "App Store 'Annual Premium Membership' (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 13.99,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at \u20ac15.99 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (DE) in-app purchases",
+       "url": "https://apps.apple.com/de/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "FR",
+     "state": null,
+     "city": null,
+     "label": "France",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 95.99,
+       "verified": true,
+       "note": "App Store 'Annual Premium Membership' (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 13.99,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at \u20ac15.99 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (FR) in-app purchases",
+       "url": "https://apps.apple.com/fr/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "ES",
+     "state": null,
+     "city": null,
+     "label": "Spain",
+     "currency": "EUR",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 95.99,
+       "verified": true,
+       "note": "App Store 'Annual Premium Membership' (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 13.99,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at \u20ac15.99 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (ES) in-app purchases",
+       "url": "https://apps.apple.com/es/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "MX",
+     "state": null,
+     "city": null,
+     "label": "Mexico",
+     "currency": "MXN",
+     "plans": [
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 299.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at MX$169. Annual omitted: listed at both MX$609 and MX$1,999 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (MX) in-app purchases",
+       "url": "https://apps.apple.com/mx/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "BR",
+     "state": null,
+     "city": null,
+     "label": "Brazil",
+     "currency": "BRL",
+     "plans": [
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 61.9,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at R$44,90. Annual omitted: listed at both R$167,90 and R$409,90 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (BR) in-app purchases",
+       "url": "https://apps.apple.com/br/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "IN",
+     "state": null,
+     "city": null,
+     "label": "India",
+     "currency": "INR",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 1999.0,
+       "verified": false,
+       "note": "App Store 'Annual Premium Membership'; also listed at \u20b92,749 (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 669.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at \u20b9599 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (IN) in-app purchases",
+       "url": "https://apps.apple.com/in/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "JP",
+     "state": null,
+     "city": null,
+     "label": "Japan",
+     "currency": "JPY",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 11200.0,
+       "verified": true,
+       "note": "App Store 'Annual Premium Membership' (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 1650.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "App Store 'Monthly Premium Membership' (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (JP) in-app purchases",
+       "url": "https://apps.apple.com/jp/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "PH",
+     "state": null,
+     "city": null,
+     "label": "Philippines",
+     "currency": "PHP",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 1190.0,
+       "verified": true,
+       "note": "App Store 'Annual Premium Membership' (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 399.0,
+       "price_annual": null,
+       "verified": true,
+       "note": "App Store 'Monthly Premium Membership' (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (PH) in-app purchases",
+       "url": "https://apps.apple.com/ph/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "VN",
+     "state": null,
+     "city": null,
+     "label": "Vietnam",
+     "currency": "VND",
+     "plans": [
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 339000.0,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store 'Monthly Premium Membership'; also listed at 189.000\u0111. Annual omitted: listed at both 699.000\u0111 and 2.299.000\u0111 (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (VN) in-app purchases",
+       "url": "https://apps.apple.com/vn/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "SG",
+     "state": null,
+     "city": null,
+     "label": "Singapore",
+     "currency": "SGD",
+     "plans": [
+      {
+       "id": "annual",
+       "name": "Annual",
+       "price_monthly": null,
+       "price_annual": 138.98,
+       "verified": true,
+       "note": "App Store 'Annual Premium Membership' (App Store price, tax-inclusive)"
+      },
+      {
+       "id": "monthly",
+       "name": "Monthly (app stores)",
+       "price_monthly": 20.98,
+       "price_annual": null,
+       "verified": true,
+       "note": "App Store 'Monthly Premium Membership' (tax-inclusive except US/CA)"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (SG) in-app purchases",
+       "url": "https://apps.apple.com/sg/app/skillshare-creativity-classes/id916819843?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    }
+   ]
+  },
+  "coffee_meets_bagel": {
+   "level": "country",
+   "why": "Coffee Meets Bagel sets prices per country store and shows more than one price point per plan; the current app was only reachable in the US and Canada App Stores.",
+   "locations": [
+    {
+     "country": "US",
+     "state": null,
+     "city": null,
+     "label": "United States",
+     "currency": "USD",
+     "plans": [
+      {
+       "id": "premium",
+       "name": "Premium",
+       "price_monthly": 34.99,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store '1-month Premium'; also listed at $39.99. 3-month Premium $74.99 / $89.99"
+      },
+      {
+       "id": "platinum",
+       "name": "Platinum",
+       "price_monthly": 46.99,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store '1-month Platinum'; also listed at $54.99. 3-month Platinum $99.99"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (US) in-app purchases",
+       "url": "https://apps.apple.com/us/app/coffee-meets-bagel-dating-app/id6502307144?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    },
+    {
+     "country": "CA",
+     "state": null,
+     "city": null,
+     "label": "Canada",
+     "currency": "CAD",
+     "plans": [
+      {
+       "id": "premium",
+       "name": "Premium",
+       "price_monthly": 42.99,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store '1-month Premium'; also listed at CA$49.99. 3-month Premium CA$91.99 / CA$119.99"
+      },
+      {
+       "id": "platinum",
+       "name": "Platinum",
+       "price_monthly": 59.99,
+       "price_annual": null,
+       "verified": false,
+       "note": "App Store '1-month Platinum'; also listed at CA$69.99"
+      }
+     ],
+     "sources": [
+      {
+       "label": "App Store (CA) in-app purchases",
+       "url": "https://apps.apple.com/ca/app/coffee-meets-bagel-dating-app/id6502307144?see-all=in-app-purchases"
+      }
+     ],
+     "checked_at": "2026-10-19"
+    }
+   ]
+  }
+ }
+}

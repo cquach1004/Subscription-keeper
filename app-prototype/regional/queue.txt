@@ -1,0 +1,9 @@
+new-england ME NH VT MA RI CT
+southeast NC SC GA FL
+deep-south AL MS TN KY
+great-lakes OH MI IN IL WI
+plains MN IA MO KS NE ND SD
+south-central TX OK AR LA
+mountain CO UT WY MT ID NV
+southwest AZ NM
+pacific CA OR WA AK HI

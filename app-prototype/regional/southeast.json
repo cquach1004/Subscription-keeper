@@ -1,0 +1,1426 @@
+[
+ {
+  "id": "hotwire_fision",
+  "name": "Hotwire Communications (Fision Internet)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "FL",
+   "NC",
+   "SC",
+   "GA",
+   "TX",
+   "AZ",
+   "NV",
+   "CA",
+   "PA"
+  ],
+  "service_area_note": "Fiber mostly sold in bulk to HOAs, condos and apartment communities; largest in Florida",
+  "official_url": "https://www.hotwirecommunications.com/",
+  "plans": [
+   {
+    "id": "bulk_community",
+    "name": "Community bulk plan",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Base internet is usually included in HOA dues or rent; no public rate card"
+   },
+   {
+    "id": "gig_1000_retail",
+    "name": "Gigabit 1000 (retail, non-bulk)",
+    "price_monthly": 259.99,
+    "price_annual": null,
+    "effective_monthly": 259.99,
+    "verified": false,
+    "note": "From third-party copy of retail rate sheet; bulk residents usually pay much less to upgrade (median about $74.99 per FCC labels)"
+   }
+  ],
+  "default_plan": "bulk_community",
+  "features": [
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical fiber speeds",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "no_contract",
+    "name": "No contract on upgrade tiers",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Residents of Hotwire-wired communities who want faster upgrade tiers.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Check what your HOA bulk contract already includes before paying for an upgrade."
+  ],
+  "sources": [
+   {
+    "label": "Hotwire Communications home page (footprint)",
+    "url": "https://www.hotwirecommunications.com/"
+   },
+   {
+    "label": "MyUtilitySearch Hotwire pricing summary (Oct 2026)",
+    "url": "https://myutilitysearch.com/hotwire-internet/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "comporium",
+  "name": "Comporium Internet",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "SC",
+   "NC"
+  ],
+  "service_area_note": "York, Lancaster, Lexington and nearby SC counties plus parts of the Charlotte area and Brevard, NC",
+  "official_url": "https://www.comporium.com/internet",
+  "plans": [
+   {
+    "id": "standard_400",
+    "name": "Standard 400 Mbps",
+    "price_monthly": 39.94,
+    "price_annual": null,
+    "effective_monthly": 39.94,
+    "verified": true,
+    "note": "Price for 24 months"
+   },
+   {
+    "id": "ultra_600",
+    "name": "Ultra 600 Mbps",
+    "price_monthly": 49.94,
+    "price_annual": null,
+    "effective_monthly": 49.94,
+    "verified": true,
+    "note": "Price for 24 months"
+   },
+   {
+    "id": "zipstream_1gig",
+    "name": "Zipstream 1 Gig",
+    "price_monthly": 65.94,
+    "price_annual": null,
+    "effective_monthly": 65.94,
+    "verified": true,
+    "note": "Price for 24 months"
+   }
+  ],
+  "default_plan": "standard_400",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "premium_wifi",
+    "name": "Premium WiFi add-on ($9.99/mo)",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Households in the Rock Hill / Fort Mill / Lancaster area of SC.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Advertised prices last 24 months; check the rate after that."
+  ],
+  "sources": [
+   {
+    "label": "Comporium internet plans",
+    "url": "https://www.comporium.com/internet"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "epb_fiber",
+  "name": "EPB Fiber Optics",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "TN",
+   "GA"
+  ],
+  "service_area_note": "Chattanooga / Hamilton County, TN and adjoining parts of north Georgia",
+  "official_url": "https://epb.com/home-store/internet/",
+  "plans": [
+   {
+    "id": "basic_300",
+    "name": "Basic Internet 300 Mbps",
+    "price_monthly": 57.99,
+    "price_annual": null,
+    "effective_monthly": 57.99,
+    "verified": true,
+    "note": "Before tax"
+   },
+   {
+    "id": "gig_1",
+    "name": "1 GIG",
+    "price_monthly": 67.99,
+    "price_annual": null,
+    "effective_monthly": 67.99,
+    "verified": true,
+    "note": "Before tax"
+   },
+   {
+    "id": "gig_2_5",
+    "name": "2.5 GIGS",
+    "price_monthly": 77.99,
+    "price_annual": null,
+    "effective_monthly": 77.99,
+    "verified": true,
+    "note": "Before tax"
+   },
+   {
+    "id": "gig_5",
+    "name": "5 GIGS",
+    "price_monthly": 97.99,
+    "price_annual": null,
+    "effective_monthly": 97.99,
+    "verified": true,
+    "note": "Before tax"
+   }
+  ],
+  "default_plan": "gig_1",
+  "features": [
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical fiber",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "multi_gig",
+    "name": "Up to 25 Gig tiers",
+    "plans": "gig_5",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "North Georgia homes inside EPB's Chattanooga-area footprint.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "EPB internet plans",
+    "url": "https://epb.com/home-store/internet/"
+   },
+   {
+    "label": "Wikipedia: EPB (service area)",
+    "url": "https://en.wikipedia.org/wiki/EPB"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "truvista",
+  "name": "Truvista Fiber",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "SC",
+   "GA"
+  ],
+  "service_area_note": "Fairfield, Kershaw, Chester and nearby SC counties; Stephens, Rabun, Habersham and Franklin area of NE Georgia",
+  "official_url": "https://truvista.net/",
+  "plans": [
+   {
+    "id": "everyday_250",
+    "name": "Everyday 250 Mbps",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price varies by address; not published"
+   },
+   {
+    "id": "family_500",
+    "name": "Family 500 Mbps",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price varies by address; not published"
+   },
+   {
+    "id": "smart_home_1g",
+    "name": "Smart Home 1 Gig",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price varies by address; not published"
+   },
+   {
+    "id": "advance_2g",
+    "name": "Advance 2 Gig",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price varies by address; not published"
+   },
+   {
+    "id": "ultra_5g",
+    "name": "Ultra 5 Gig",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price varies by address; not published"
+   }
+  ],
+  "default_plan": "smart_home_1g",
+  "features": [
+   {
+    "id": "fiber",
+    "name": "Fiber internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Rural/small-town households in the SC Midlands and NE Georgia mountains.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Call 1-800-768-1212 or use Shop Now for your address's price."
+  ],
+  "sources": [
+   {
+    "label": "Truvista plans page",
+    "url": "https://truvista.net/no-tv-contracts"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "wow_internet",
+  "name": "WOW! Internet",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AL",
+   "FL",
+   "GA",
+   "SC",
+   "TN",
+   "MI",
+   "IL",
+   "IN"
+  ],
+  "service_area_note": "Cable/fiber in select metros, e.g. Pinellas County FL, Columbus and Augusta GA, Charleston SC",
+  "official_url": "https://www.wowway.com/internet",
+  "plans": [
+   {
+    "id": "cable_300",
+    "name": "300 Mbps",
+    "price_monthly": 30.0,
+    "price_annual": null,
+    "effective_monthly": 30.0,
+    "verified": false,
+    "note": "Matches official 'plans start at $30/mo'; AutoPay required"
+   },
+   {
+    "id": "cable_600",
+    "name": "600 Mbps",
+    "price_monthly": 45.0,
+    "price_annual": null,
+    "effective_monthly": 45.0,
+    "verified": false,
+    "note": "Reviews.org table, Apr 2026; AutoPay required"
+   },
+   {
+    "id": "cable_1g",
+    "name": "Internet 1 Gig",
+    "price_monthly": 60.0,
+    "price_annual": null,
+    "effective_monthly": 60.0,
+    "verified": false,
+    "note": "Reviews.org table, Apr 2026; AutoPay required"
+   },
+   {
+    "id": "fiber_1g",
+    "name": "Fiber 1 Gig",
+    "price_monthly": 80.0,
+    "price_annual": null,
+    "effective_monthly": 80.0,
+    "verified": false,
+    "note": "Reviews.org table, Apr 2026; AutoPay + paperless"
+   }
+  ],
+  "default_plan": "cable_600",
+  "features": [
+   {
+    "id": "no_contract",
+    "name": "No annual contract",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "price_lock",
+    "name": "Price Lock for Life (+$5/mo)",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Households in WOW cities wanting no-contract cable or fiber.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Optional Price Lock for Life adds $5/mo and freezes your rate while you keep the same speed."
+  ],
+  "sources": [
+   {
+    "label": "WOW internet page",
+    "url": "https://www.wowway.com/internet"
+   },
+   {
+    "label": "Reviews.org WOW review (Apr 2026)",
+    "url": "https://www.reviews.org/internet-service/wow-internet-review/"
+   },
+   {
+    "label": "Wikipedia: Wide Open West (states)",
+    "url": "https://en.wikipedia.org/wiki/Wide_Open_West"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "greenlight_nc",
+  "name": "Greenlight Community Broadband",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NC"
+  ],
+  "service_area_note": "City of Wilson, NC municipal fiber (Wilson and nearby areas)",
+  "official_url": "https://www.greenlightnc.com/",
+  "plans": [
+   {
+    "id": "internet",
+    "name": "Fiber internet",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Prices not published online; call for packages"
+   }
+  ],
+  "default_plan": "internet",
+  "features": [
+   {
+    "id": "municipal_fiber",
+    "name": "Municipal fiber",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Wilson, NC residents wanting city-owned fiber.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Greenlight home page",
+    "url": "https://www.greenlightnc.com/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "ajc",
+  "name": "The Atlanta Journal-Constitution (AJC)",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "GA"
+  ],
+  "service_area_note": "Atlanta and Georgia news; digital-only since Jan 2026, readable anywhere",
+  "official_url": "https://www.ajc.com/start/",
+  "plans": [
+   {
+    "id": "digital_monthly",
+    "name": "Digital monthly",
+    "price_monthly": 9.99,
+    "price_annual": null,
+    "effective_monthly": 9.99,
+    "verified": false,
+    "note": "Rate AJC quoted to print subscribers switching to digital (Dec 2025); new-subscriber rate not shown"
+   },
+   {
+    "id": "digital_annual",
+    "name": "Digital annual",
+    "price_monthly": null,
+    "price_annual": 99.0,
+    "effective_monthly": 8.25,
+    "verified": false,
+    "note": "Rate AJC quoted to print subscribers switching to digital (Dec 2025)"
+   }
+  ],
+  "default_plan": "digital_monthly",
+  "features": [
+   {
+    "id": "unlimited_access",
+    "name": "Unlimited articles, newsletters, podcasts",
+    "plans": "all",
+    "overlap_tag": "local_news"
+   }
+  ],
+  "best_for": "Readers who follow Atlanta and Georgia news.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "AJC stopped printing on Dec 31, 2025; subscriptions are digital-only."
+  ],
+  "sources": [
+   {
+    "label": "AJC: Newspaper to digital (Dec 2025)",
+    "url": "https://feeds.ajc.com/wellness/2025/12/newspaper-to-digital-how-to-keep-reading-the-ajc-without-interruption"
+   },
+   {
+    "label": "AJC subscribe page",
+    "url": "https://www.ajc.com/start/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "tampa_bay_times",
+  "name": "Tampa Bay Times",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "FL"
+  ],
+  "service_area_note": "Tampa Bay area news; digital readable anywhere",
+  "official_url": "https://subscribe.tampabay.com/",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital subscription",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Pricing page did not render; check site for intro and regular rates"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "unlimited_access",
+    "name": "Unlimited digital access",
+    "plans": "all",
+    "overlap_tag": "local_news"
+   }
+  ],
+  "best_for": "Readers who follow Tampa Bay and Florida news.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Tampa Bay Times subscribe page",
+    "url": "https://subscribe.tampabay.com/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "post_and_courier",
+  "name": "The Post and Courier",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "SC"
+  ],
+  "service_area_note": "Charleston and South Carolina news; home delivery in the Charleston area",
+  "official_url": "https://www.postandcourier.com/subscribe/",
+  "plans": [
+   {
+    "id": "digital_all_access",
+    "name": "Digital All-Access",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not shown on subscribe page"
+   },
+   {
+    "id": "home_delivery",
+    "name": "Home delivery (includes Digital All-Access)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not shown on subscribe page"
+   }
+  ],
+  "default_plan": "digital_all_access",
+  "features": [
+   {
+    "id": "unlimited_access",
+    "name": "Unlimited digital access",
+    "plans": "all",
+    "overlap_tag": "local_news"
+   },
+   {
+    "id": "print",
+    "name": "Print delivery",
+    "plans": "home_delivery",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Readers who follow Charleston and SC news.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Cancel anytime, per the subscribe page."
+  ],
+  "sources": [
+   {
+    "label": "Post and Courier subscribe page",
+    "url": "https://www.postandcourier.com/subscribe/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "eos_fitness",
+  "name": "EoS Fitness",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ",
+   "CA",
+   "FL",
+   "GA",
+   "NV",
+   "TX",
+   "UT"
+  ],
+  "service_area_note": "Gyms in Florida, metro Atlanta and the Southwest",
+  "official_url": "https://eosfitness.com/",
+  "plans": [
+   {
+    "id": "will_do",
+    "name": "Will Do",
+    "price_monthly": 9.99,
+    "price_annual": null,
+    "effective_monthly": 9.99,
+    "verified": true,
+    "note": "Starting price; plus $59.99 annual fee and up to $49.99 enrollment"
+   },
+   {
+    "id": "will_crush",
+    "name": "Will Crush",
+    "price_monthly": 24.99,
+    "price_annual": null,
+    "effective_monthly": 24.99,
+    "verified": true,
+    "note": "Starting price; plus $59.99 annual fee"
+   },
+   {
+    "id": "will_power",
+    "name": "Will Power",
+    "price_monthly": 29.99,
+    "price_annual": null,
+    "effective_monthly": 29.99,
+    "verified": true,
+    "note": "Starting price; plus $59.99 annual fee"
+   }
+  ],
+  "default_plan": "will_do",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "multi_club",
+    "name": "Access to other clubs",
+    "plans": "will_crush",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Budget-to-mid gym-goers in Florida or Atlanta.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "ACH autopay saves $2.99/mo."
+  ],
+  "sources": [
+   {
+    "label": "EoS Fitness home page",
+    "url": "https://eosfitness.com/"
+   },
+   {
+    "label": "EoS Fitness press release (Jul 2026)",
+    "url": "https://www.businesswire.com/news/home/20260716881770/en/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "youfit",
+  "name": "Youfit Gyms",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "FL",
+   "LA",
+   "RI",
+   "VA"
+  ],
+  "service_area_note": "Mostly Florida, with a few gyms in Louisiana, Rhode Island and Virginia",
+  "official_url": "https://www.youfit.com/",
+  "plans": [
+   {
+    "id": "basic",
+    "name": "Basic",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Memberships 'as low as $5 biweekly'; per-plan prices not published"
+   },
+   {
+    "id": "premium",
+    "name": "Premium",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not published"
+   },
+   {
+    "id": "premium_plus",
+    "name": "Premium+",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not published"
+   }
+  ],
+  "default_plan": "basic",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "guest",
+    "name": "Guest privileges",
+    "plans": "premium_plus",
+    "overlap_tag": null
+   },
+   {
+    "id": "multi_club",
+    "name": "Other Youfit locations",
+    "plans": "premium_plus",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Florida residents wanting a low-cost gym.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Annual fee varies by membership type; ask the club."
+  ],
+  "sources": [
+   {
+    "label": "Youfit home page",
+    "url": "https://www.youfit.com/"
+   },
+   {
+    "label": "Youfit Lantana gym page",
+    "url": "https://youfit.com/gyms/lantana"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "chuze_fitness",
+  "name": "Chuze Fitness",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ",
+   "CA",
+   "CO",
+   "FL",
+   "GA",
+   "NM",
+   "TX"
+  ],
+  "service_area_note": "Gyms in the West plus Jacksonville, Gainesville and St. Augustine, FL",
+  "official_url": "https://chuzefitness.com/",
+  "plans": [
+   {
+    "id": "basic",
+    "name": "Basic (starting price)",
+    "price_monthly": 9.99,
+    "price_annual": null,
+    "effective_monthly": 9.99,
+    "verified": true,
+    "note": "'As low as $9.99/mo'; varies by location; plus $59.99 annual fee"
+   }
+  ],
+  "default_plan": "basic",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "classes",
+    "name": "Group classes (higher tiers)",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Northeast Florida gym-goers wanting a low-cost club.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Pay by ACH to avoid the $2.99/mo card fee."
+  ],
+  "sources": [
+   {
+    "label": "Chuze Fitness home page",
+    "url": "https://chuzefitness.com/"
+   },
+   {
+    "label": "Chuze locations",
+    "url": "https://chuzefitness.com/locations/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "o2_fitness",
+  "name": "O2 Fitness",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NC",
+   "SC"
+  ],
+  "service_area_note": "Clubs across North Carolina and the Charleston, SC area",
+  "official_url": "https://www.o2fitnessclubs.com/membership",
+  "plans": [
+   {
+    "id": "month_to_month",
+    "name": "Month-to-month membership",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not published; varies by club"
+   }
+  ],
+  "default_plan": "month_to_month",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "classes",
+    "name": "Group classes",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "pt_sessions",
+    "name": "2 free personal training sessions",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Carolinas residents wanting a full-service gym.",
+  "free_trial_days": 21,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "O2 Fitness membership page",
+    "url": "https://www.o2fitnessclubs.com/membership"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "autobell_unlimited",
+  "name": "Autobell Car Wash Unlimited",
+  "category": "auto",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NC",
+   "SC",
+   "VA",
+   "MD"
+  ],
+  "service_area_note": "Full-service car washes in the Carolinas, Virginia and Maryland",
+  "official_url": "https://www.autobell.com/product-category/unlimited-plans/",
+  "plans": [
+   {
+    "id": "exterior",
+    "name": "Exterior Unlimited",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not shown on site"
+   },
+   {
+    "id": "quality",
+    "name": "Quality Unlimited",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not shown on site"
+   },
+   {
+    "id": "full_service",
+    "name": "Full Service Unlimited",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not shown on site"
+   },
+   {
+    "id": "super",
+    "name": "Super Unlimited",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not shown on site"
+   }
+  ],
+  "default_plan": "exterior",
+  "features": [
+   {
+    "id": "unlimited_washes",
+    "name": "Unlimited washes",
+    "plans": "all",
+    "overlap_tag": "car_wash"
+   },
+   {
+    "id": "interior",
+    "name": "Interior cleaning",
+    "plans": "full_service",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Charlotte-area drivers who want full-service washes.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Payments are non-refundable; cancel at any location."
+  ],
+  "sources": [
+   {
+    "label": "Autobell unlimited plans",
+    "url": "https://www.autobell.com/product-category/unlimited-plans/"
+   },
+   {
+    "label": "Autobell Unlimited terms",
+    "url": "https://www.autobell.com/unlimited-terms"
+   },
+   {
+    "label": "Slickdeals post listing states (2023)",
+    "url": "https://slickdeals.net/f/16396012-first-month-5-only-autobell-car-wash-north-carolina-south-carolina-maryland-virginia"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "massey_services",
+  "name": "Massey Services",
+  "category": "lawn_pest",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AL",
+   "FL",
+   "GA",
+   "LA",
+   "NC",
+   "OK",
+   "SC",
+   "TN",
+   "TX",
+   "VA"
+  ],
+  "service_area_note": "190+ service centers in 10 states; headquartered in Orlando",
+  "official_url": "https://www.masseyservices.com/",
+  "plans": [
+   {
+    "id": "pest_prevention",
+    "name": "Pest Prevention",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Quote-based"
+   },
+   {
+    "id": "greenup_lawn",
+    "name": "GreenUP lawn program",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Quote-based"
+   }
+  ],
+  "default_plan": "pest_prevention",
+  "features": [
+   {
+    "id": "pest",
+    "name": "Recurring pest control",
+    "plans": "all",
+    "overlap_tag": "pest_control"
+   },
+   {
+    "id": "lawn",
+    "name": "Lawn fertilization",
+    "plans": "all",
+    "overlap_tag": "lawn_care"
+   },
+   {
+    "id": "termite",
+    "name": "Termite protection",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Southeast homeowners wanting pest and lawn from one company.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Massey Services home page",
+    "url": "https://www.masseyservices.com/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "arrow_exterminators",
+  "name": "Arrow Exterminators",
+  "category": "lawn_pest",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AL",
+   "AZ",
+   "FL",
+   "GA",
+   "KY",
+   "LA",
+   "MS",
+   "NC",
+   "SC",
+   "TN",
+   "TX",
+   "VA"
+  ],
+  "service_area_note": "200+ service centers, mostly in the Southeast; based in Atlanta",
+  "official_url": "https://www.arrowexterminators.com/",
+  "plans": [
+   {
+    "id": "quarterly_pest",
+    "name": "Quarterly pest control",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Quote after free inspection"
+   }
+  ],
+  "default_plan": "quarterly_pest",
+  "features": [
+   {
+    "id": "pest",
+    "name": "Recurring pest control",
+    "plans": "all",
+    "overlap_tag": "pest_control"
+   },
+   {
+    "id": "mosquito",
+    "name": "Mosquito programs",
+    "plans": "all",
+    "overlap_tag": "mosquito"
+   }
+  ],
+  "best_for": "Atlanta-area and Southeast homeowners wanting no-contract quarterly service.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "No annual contract required, per This Old House."
+  ],
+  "sources": [
+   {
+    "label": "Arrow Exterminators home page",
+    "url": "https://www.arrowexterminators.com/"
+   },
+   {
+    "label": "This Old House Arrow review (May 2026)",
+    "url": "https://thisoldhouse.com/pest-control/reviews/arrow-exterminators"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "cooks_pest_control",
+  "name": "Cook's Pest Control",
+  "category": "lawn_pest",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AL",
+   "AR",
+   "FL",
+   "GA",
+   "MS",
+   "TN"
+  ],
+  "service_area_note": "Southeast; based in Decatur, Alabama",
+  "official_url": "https://www.cookspest.com/",
+  "plans": [
+   {
+    "id": "annual_pest",
+    "name": "Annual pest plan (quarterly visits)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": 37.0,
+    "verified": false,
+    "note": "Example quote: $159 initial, $111 per quarterly visit (about $37/mo), 15-month contract; varies by home"
+   }
+  ],
+  "default_plan": "annual_pest",
+  "features": [
+   {
+    "id": "pest",
+    "name": "Recurring pest control",
+    "plans": "all",
+    "overlap_tag": "pest_control"
+   }
+  ],
+  "best_for": "Georgia and Florida Panhandle homeowners wanting a local pest company.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Termite and mosquito are billed separately from the general pest plan."
+  ],
+  "sources": [
+   {
+    "label": "Cook's Pest Control home page",
+    "url": "https://www.cookspest.com/"
+   },
+   {
+    "label": "This Old House Cook's review (May 2026)",
+    "url": "https://www.thisoldhouse.com/pest-control/cooks-pest-control-review"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "turner_pest_control",
+  "name": "Turner Pest Control (TurnerGuard)",
+  "category": "lawn_pest",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "FL"
+  ],
+  "service_area_note": "Jacksonville, Orlando, Tampa, Naples, Sarasota and other Florida markets",
+  "official_url": "https://www.turnerpest.com/",
+  "plans": [
+   {
+    "id": "turnerguard_from",
+    "name": "TurnerGuard plans (starting price)",
+    "price_monthly": 29.99,
+    "price_annual": null,
+    "effective_monthly": 29.99,
+    "verified": true,
+    "note": "'Starting at $29.99 per month'; plan tier not specified"
+   },
+   {
+    "id": "turnerguard_complete",
+    "name": "TurnerGuard Complete Home Protection",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price depends on home/yard size"
+   }
+  ],
+  "default_plan": "turnerguard_from",
+  "features": [
+   {
+    "id": "pest",
+    "name": "Pest control",
+    "plans": "all",
+    "overlap_tag": "pest_control"
+   },
+   {
+    "id": "termite",
+    "name": "Termite protection",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "lawn",
+    "name": "Lawn and shrub care",
+    "plans": "turnerguard_complete",
+    "overlap_tag": "lawn_care"
+   },
+   {
+    "id": "mosquito",
+    "name": "Mosquito protection",
+    "plans": "turnerguard_complete",
+    "overlap_tag": "mosquito"
+   }
+  ],
+  "best_for": "Florida homeowners wanting pest, termite and lawn in one monthly bill.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Turner Pest Control home page",
+    "url": "https://www.turnerpest.com/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "fpl_surgeshield",
+  "name": "FPL SurgeShield",
+  "category": "home",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "FL"
+  ],
+  "service_area_note": "Florida Power & Light customers (incl. FPL Northwest FL); billed on the FPL bill",
+  "official_url": "https://www.fpl.com/northwest/save/programs/surge-protection/surgeshield-enroll.html",
+  "plans": [
+   {
+    "id": "surgeshield",
+    "name": "SurgeShield",
+    "price_monthly": 11.95,
+    "price_annual": null,
+    "effective_monthly": 11.95,
+    "verified": true,
+    "note": "Plus tax; meter-based surge protection plus appliance warranty"
+   },
+   {
+    "id": "electronics",
+    "name": "Electronics Surge Protection",
+    "price_monthly": 12.95,
+    "price_annual": null,
+    "effective_monthly": 12.95,
+    "verified": false,
+    "note": "From BrandsMart USA partner page"
+   },
+   {
+    "id": "bundle",
+    "name": "SurgeShield + Electronics bundle",
+    "price_monthly": 18.95,
+    "price_annual": null,
+    "effective_monthly": 18.95,
+    "verified": false,
+    "note": "From BrandsMart USA partner page"
+   }
+  ],
+  "default_plan": "surgeshield",
+  "features": [
+   {
+    "id": "appliance_surge",
+    "name": "Appliance surge warranty ($5,000 per appliance)",
+    "plans": "all",
+    "overlap_tag": "home_warranty"
+   },
+   {
+    "id": "electronics_surge",
+    "name": "Electronics coverage (up to $6,000/yr)",
+    "plans": "bundle",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "FPL customers in lightning-heavy Florida.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "FPL SurgeShield enroll",
+    "url": "https://www.fpl.com/northwest/save/programs/surge-protection/surgeshield-enroll.html"
+   },
+   {
+    "label": "BrandsMart USA FPL SurgeShield",
+    "url": "https://www.brandsmartusa.com/pages/fpl-surgeshield"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "the_produce_box",
+  "name": "The Produce Box",
+  "category": "food",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NC"
+  ],
+  "service_area_note": "Home delivery of local NC produce in Raleigh, Durham and the Triangle",
+  "official_url": "https://www.theproducebox.com/",
+  "plans": [
+   {
+    "id": "membership",
+    "name": "Annual membership",
+    "price_monthly": null,
+    "price_annual": 25.0,
+    "effective_monthly": 2.08,
+    "verified": true,
+    "note": "Boxes and items billed separately"
+   }
+  ],
+  "default_plan": "membership",
+  "features": [
+   {
+    "id": "local_produce",
+    "name": "Weekly local produce boxes",
+    "plans": "all",
+    "overlap_tag": "produce_delivery"
+   },
+   {
+    "id": "editable_sub",
+    "name": "Editable subscriptions",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Triangle households wanting weekly local farm produce.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "The Produce Box home page",
+    "url": "https://www.theproducebox.com/"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ },
+ {
+  "id": "fresh_harvest_atlanta",
+  "name": "Fresh Harvest",
+  "category": "food",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "GA"
+  ],
+  "service_area_note": "Organic produce basket delivery in metro Atlanta",
+  "official_url": "https://www.freshharvestga.com/",
+  "plans": [
+   {
+    "id": "standard_basket",
+    "name": "Standard basket (weekly)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Price not available; official site blocked automated reading"
+   }
+  ],
+  "default_plan": "standard_basket",
+  "features": [
+   {
+    "id": "organic_produce",
+    "name": "Weekly organic produce basket",
+    "plans": "all",
+    "overlap_tag": "produce_delivery"
+   },
+   {
+    "id": "addons",
+    "name": "Add-ons: dairy, meat, bread, pantry",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Atlanta households wanting a local organic CSA-style box.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Mini, family and fruit-only basket sizes available."
+  ],
+  "sources": [
+   {
+    "label": "Explore Georgia: food delivery in Atlanta",
+    "url": "https://www.exploregeorgia.org/blog/five-must-try-food-delivery-services-in-atlanta"
+   }
+  ],
+  "checked_at": "2026-10-21"
+ }
+]

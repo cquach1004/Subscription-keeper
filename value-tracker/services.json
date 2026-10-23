@@ -1,0 +1,2219 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-19",
+  "currency": "USD",
+  "region": "US",
+  "notes": "List prices before tax. Plans with verified=false are estimates to confirm. effective_monthly = price_monthly, or price_annual/12 when the plan is annual-only. checked_at is when prices were last researched; official_url is the company pricing page (not link-checked from the build environment); sources are the pages the prices were read from.",
+  "value_models": {
+    "usage": "cost per use = annual cost / uses per year; compared to the service's benchmark.",
+    "insurance": "value comes from protection, not frequent use; judged mainly by overlaps and claims.",
+    "storage": "judged by whether a smaller storage tier would fit what you store.",
+    "perks": "net value = dollar value of perks used per year minus the annual fee."
+  },
+  "overlap_tags": [
+    {
+      "tag": "ai_assistant",
+      "label": "AI assistant",
+      "advice": "Most people need one paid AI assistant. Keep the one you open daily; drop the other or move it to a free tier."
+    },
+    {
+      "tag": "cloud_storage",
+      "label": "Cloud storage",
+      "advice": "You may be paying for storage in more than one place (iCloud+, OneDrive, Google). Consolidate where your photos and backups live."
+    },
+    {
+      "tag": "vpn",
+      "label": "VPN",
+      "advice": "VPN is bundled in several services; you only need one."
+    },
+    {
+      "tag": "password_manager",
+      "label": "Password manager",
+      "advice": "Apple Passwords and Google Password Manager are free; paid ones in security suites overlap."
+    },
+    {
+      "tag": "identity_monitoring",
+      "label": "Identity / dark web monitoring",
+      "advice": "Monitoring from two providers gives the same alerts twice."
+    },
+    {
+      "tag": "data_removal",
+      "label": "Data broker removal",
+      "advice": "Two removal services hit mostly the same broker list."
+    },
+    {
+      "tag": "identity_insurance",
+      "label": "Identity theft insurance",
+      "advice": "You can only claim a loss once; duplicate policies rarely add value. Check your homeowner's/renter's policy too."
+    },
+    {
+      "tag": "email_alias",
+      "label": "Email aliases",
+      "advice": "iCloud+ Hide My Email already gives unlimited aliases on Apple devices."
+    },
+    {
+      "tag": "notes",
+      "label": "Notes app",
+      "advice": "OneNote comes with Microsoft 365, and Apple Notes is free."
+    },
+    {
+      "tag": "business_news",
+      "label": "Business news",
+      "advice": "WSJ, CNBC and Apple News+ cover the same market news; pick the format you actually use."
+    },
+    {
+      "tag": "music",
+      "label": "Music streaming",
+      "advice": "Apple One, YouTube Premium and Amazon Prime each include a music service."
+    },
+    {
+      "tag": "video_streaming",
+      "label": "Video streaming",
+      "advice": "Rotate video services month to month instead of holding all of them."
+    },
+    {
+      "tag": "antivirus",
+      "label": "Antivirus",
+      "advice": "Microsoft Defender is free on Windows and included in Microsoft 365."
+    },
+    {
+      "tag": "roadside",
+      "label": "Roadside assistance",
+      "advice": "Check your car insurance, vehicle warranty and credit cards before renewing AAA."
+    }
+  ],
+  "services": [
+    {
+      "id": "spotify",
+      "name": "Spotify Premium",
+      "category": "music",
+      "user_listed": true,
+      "value_model": "usage",
+      "use_unit": "day you listened",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 0.5,
+        "poor_at_or_above": 1.5
+      },
+      "plans": [
+        {
+          "id": "individual",
+          "name": "Individual",
+          "price_monthly": 12.99,
+          "price_annual": null,
+          "effective_monthly": 12.99,
+          "verified": true
+        },
+        {
+          "id": "student",
+          "name": "Student",
+          "price_monthly": 6.99,
+          "price_annual": null,
+          "effective_monthly": 6.99,
+          "verified": true
+        },
+        {
+          "id": "duo",
+          "name": "Duo (2 accounts)",
+          "price_monthly": 18.99,
+          "price_annual": null,
+          "effective_monthly": 18.99,
+          "verified": true
+        },
+        {
+          "id": "family",
+          "name": "Family (up to 6)",
+          "price_monthly": 21.99,
+          "price_annual": null,
+          "effective_monthly": 21.99,
+          "verified": true
+        }
+      ],
+      "default_plan": "individual",
+      "features": [
+        {
+          "id": "ad_free",
+          "name": "Ad-free listening",
+          "plans": "all"
+        },
+        {
+          "id": "offline",
+          "name": "Offline downloads",
+          "plans": "all"
+        },
+        {
+          "id": "audiobooks",
+          "name": "15 hrs/month of audiobooks",
+          "plans": [
+            "individual",
+            "duo",
+            "family"
+          ]
+        },
+        {
+          "id": "lossless",
+          "name": "Lossless audio",
+          "plans": "all"
+        },
+        {
+          "id": "dj",
+          "name": "AI DJ and AI playlists",
+          "plans": "all"
+        },
+        {
+          "id": "podcasts",
+          "name": "Video podcasts",
+          "plans": "all"
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2026-02",
+          "summary": "US prices rose $1-2 on every plan (Individual $11.99 to $12.99)."
+        }
+      ],
+      "tips": [
+        "Duo or Family split with others cuts per-person cost to about $9.50 or $3.67.",
+        "If you have Apple One or YouTube Premium you already pay for a music service."
+      ],
+      "sources": [
+        "https://www.soundguys.com/spotify-confirms-us-subscription-price-hike-151412/"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.spotify.com/us/premium/",
+      "varies_by_region": false,
+      "free_trial_days": 30,
+      "free_trial_verified": false,
+      "discounts": [
+        {
+          "type": "student",
+          "label": "Student plan $6.99/mo",
+          "verified": true,
+          "amount": 72.0,
+          "note": "vs Individual; needs student verification"
+        },
+        {
+          "type": "family",
+          "label": "Duo or Family plan shared with others",
+          "verified": true,
+          "note": "Family $21.99 split 6 ways is about $3.67 each"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "No pause; after cancelling, the account and playlists stay on the free tier.",
+        "verified": false
+      }
+    },
+    {
+      "id": "netflix",
+      "name": "Netflix",
+      "category": "video",
+      "user_listed": true,
+      "value_model": "usage",
+      "use_unit": "evening/title watched",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 1.0,
+        "poor_at_or_above": 4.0
+      },
+      "plans": [
+        {
+          "id": "ads",
+          "name": "Standard with Ads",
+          "price_monthly": 8.99,
+          "price_annual": null,
+          "effective_monthly": 8.99,
+          "verified": true
+        },
+        {
+          "id": "standard",
+          "name": "Standard",
+          "price_monthly": 19.99,
+          "price_annual": null,
+          "effective_monthly": 19.99,
+          "verified": true
+        },
+        {
+          "id": "premium",
+          "name": "Premium (4K, 4 screens)",
+          "price_monthly": 26.99,
+          "price_annual": null,
+          "effective_monthly": 26.99,
+          "verified": true
+        }
+      ],
+      "default_plan": "standard",
+      "features": [
+        {
+          "id": "ad_free",
+          "name": "No ads",
+          "plans": [
+            "standard",
+            "premium"
+          ]
+        },
+        {
+          "id": "hd",
+          "name": "1080p HD",
+          "plans": "all"
+        },
+        {
+          "id": "uhd",
+          "name": "4K + HDR, spatial audio",
+          "plans": [
+            "premium"
+          ]
+        },
+        {
+          "id": "screens",
+          "name": "Watch on 2 screens (4 on Premium)",
+          "plans": "all"
+        },
+        {
+          "id": "downloads",
+          "name": "Downloads",
+          "plans": [
+            "standard",
+            "premium"
+          ]
+        },
+        {
+          "id": "extra_member",
+          "name": "Extra member slot (+$7.99 / $9.99)",
+          "plans": [
+            "standard",
+            "premium"
+          ]
+        },
+        {
+          "id": "games",
+          "name": "Netflix Games",
+          "plans": "all"
+        },
+        {
+          "id": "live",
+          "name": "Live events (sports, specials)",
+          "plans": "all"
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2026-03",
+          "summary": "Price increase on all plans: Standard now $19.99, Premium $26.99."
+        }
+      ],
+      "tips": [
+        "Most people don't need Premium; 4K only matters on a 4K TV.",
+        "Rotate: cancel between shows you want and resubscribe for a month at a time."
+      ],
+      "sources": [
+        "https://www.fox5ny.com/news/netflix-raising-prices-again-all-plans-how-much-more-youll-be-paying",
+        "https://stream-wiser.com/prices"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://help.netflix.com/en/node/24926",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "carrier",
+          "label": "Included with some phone plans (e.g. T-Mobile)",
+          "verified": false,
+          "note": "Check your carrier plan"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "No pause; profiles and history are kept for about 10 months after cancelling.",
+        "verified": false
+      }
+    },
+    {
+      "id": "evernote",
+      "name": "Evernote",
+      "category": "productivity",
+      "user_listed": true,
+      "value_model": "usage",
+      "use_unit": "day you used it",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 0.5,
+        "poor_at_or_above": 2.0
+      },
+      "plans": [
+        {
+          "id": "starter",
+          "name": "Starter",
+          "price_monthly": null,
+          "price_annual": 99.0,
+          "effective_monthly": 8.25,
+          "verified": true,
+          "note": "Monthly-equivalent of $99/yr; monthly billing is higher."
+        },
+        {
+          "id": "advanced",
+          "name": "Advanced",
+          "price_monthly": null,
+          "price_annual": 249.99,
+          "effective_monthly": 20.83,
+          "verified": true
+        }
+      ],
+      "default_plan": "starter",
+      "features": [
+        {
+          "id": "sync",
+          "name": "Sync across devices",
+          "plans": "all",
+          "overlap_tag": "notes"
+        },
+        {
+          "id": "offline",
+          "name": "Offline notebooks",
+          "plans": "all"
+        },
+        {
+          "id": "doc_search",
+          "name": "Search inside PDFs and images",
+          "plans": "all"
+        },
+        {
+          "id": "clipper",
+          "name": "Web clipper",
+          "plans": "all"
+        },
+        {
+          "id": "ai",
+          "name": "AI Assistant / AI search",
+          "plans": "all"
+        },
+        {
+          "id": "tasks",
+          "name": "Tasks and calendar",
+          "plans": "all"
+        },
+        {
+          "id": "unlimited",
+          "name": "Unlimited notes and notebooks",
+          "plans": [
+            "advanced"
+          ]
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2025-2026",
+          "summary": "Plans renamed to Starter/Advanced; Starter caps at 1,000 notes and 20 notebooks."
+        }
+      ],
+      "tips": [
+        "OneNote (in Microsoft 365) and Apple Notes cover most note-taking for no extra cost.",
+        "Check your note count: Starter's 1,000-note cap may push you to Advanced."
+      ],
+      "sources": [
+        "https://www.eesel.ai/blog/evernote-pricing"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://evernote.com/compare-plans",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "annual",
+          "label": "Pay yearly ($99/yr Starter)",
+          "verified": true,
+          "note": "Monthly billing costs more"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": null,
+        "billing_date_resets": true,
+        "notes": "No pause option; cancel and resubscribe later at the current list price. Account drops to Free and its 50-note limit.",
+        "verified": false
+      }
+    },
+    {
+      "id": "wsj",
+      "name": "The Wall Street Journal",
+      "category": "news",
+      "user_listed": true,
+      "value_model": "usage",
+      "use_unit": "article read",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 0.5,
+        "poor_at_or_above": 2.0
+      },
+      "plans": [
+        {
+          "id": "digital",
+          "name": "Digital",
+          "price_monthly": 38.99,
+          "price_annual": null,
+          "effective_monthly": 38.99,
+          "verified": true,
+          "intro_offer": "$4/mo for the first 12 months",
+          "intro": {
+            "price": 4.0,
+            "period": "month",
+            "months": 12,
+            "kind": "intro",
+            "new_customers_only": true
+          }
+        },
+        {
+          "id": "print_digital",
+          "name": "Print + Digital",
+          "price_monthly": 56.99,
+          "price_annual": null,
+          "effective_monthly": 56.99,
+          "verified": true
+        }
+      ],
+      "default_plan": "digital",
+      "features": [
+        {
+          "id": "articles",
+          "name": "Unlimited articles and app",
+          "plans": "all",
+          "overlap_tag": "business_news"
+        },
+        {
+          "id": "enewspaper",
+          "name": "Digital print edition",
+          "plans": "all"
+        },
+        {
+          "id": "audio",
+          "name": "Audio articles and podcasts",
+          "plans": "all"
+        },
+        {
+          "id": "newsletters",
+          "name": "Subscriber newsletters",
+          "plans": "all"
+        },
+        {
+          "id": "puzzles",
+          "name": "Puzzles",
+          "plans": "all"
+        },
+        {
+          "id": "print",
+          "name": "Home delivery",
+          "plans": [
+            "print_digital"
+          ]
+        }
+      ],
+      "recent_changes": [],
+      "tips": [
+        "The intro rate ends after 12 months and the price jumps about 10x; set a reminder.",
+        "Calling to cancel often triggers a retention offer near the intro price.",
+        "Apple News+ (in Apple One Premier) includes a selection of WSJ stories."
+      ],
+      "sources": [
+        "https://subger.com/en/ke/service/wall-street-journal"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://store.wsj.com/",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "retention",
+          "label": "Ask for a retention rate when cancelling",
+          "verified": false,
+          "note": "Often near the intro price"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": false,
+        "billing_date_resets": true,
+        "notes": "Digital has no pause (print has vacation holds). Cancelling ends the intro rate.",
+        "verified": false
+      }
+    },
+    {
+      "id": "cnbc",
+      "name": "CNBC+ / CNBC Pro",
+      "category": "news",
+      "user_listed": true,
+      "value_model": "usage",
+      "use_unit": "hour watched",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 1.0,
+        "poor_at_or_above": 3.0
+      },
+      "plans": [
+        {
+          "id": "plus",
+          "name": "CNBC+",
+          "price_monthly": 14.99,
+          "price_annual": null,
+          "effective_monthly": 14.99,
+          "verified": true
+        },
+        {
+          "id": "pro",
+          "name": "CNBC Pro",
+          "price_monthly": 34.99,
+          "price_annual": 299.99,
+          "effective_monthly": 34.99,
+          "verified": true
+        }
+      ],
+      "default_plan": "plus",
+      "features": [
+        {
+          "id": "live",
+          "name": "Live CNBC and CNBC World stream",
+          "plans": "all",
+          "overlap_tag": "business_news"
+        },
+        {
+          "id": "intl",
+          "name": "Asia and Europe live feeds",
+          "plans": "all"
+        },
+        {
+          "id": "pro_articles",
+          "name": "Exclusive Pro stories and articles",
+          "plans": [
+            "pro"
+          ]
+        },
+        {
+          "id": "pro_insight",
+          "name": "Analyst calls, Pro Playbook and real-time alerts",
+          "plans": [
+            "pro"
+          ]
+        },
+        {
+          "id": "pro_talks",
+          "name": "Live Pro Talks and special reports",
+          "plans": [
+            "pro"
+          ]
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2025-01",
+          "summary": "CNBC+ launched as a lower-priced streaming tier without a cable login."
+        }
+      ],
+      "tips": [
+        "Jim Cramer's Investing Club is a separate subscription ($49.99/mo or $399.99/yr), not part of Pro.",
+        "If you have cable or a live-TV streamer, CNBC is already included.",
+        "Overlaps with WSJ for market news; most people need one, not both."
+      ],
+      "sources": [
+        "https://apps.apple.com/app/id398018310",
+        "https://agoodmovietowatch.com/platforms/cnbc/",
+        "https://www.newscaststudio.com/2025/01/02/cnbc-plus-launch"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.cnbc.com/",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "annual",
+          "label": "CNBC Pro billed yearly ($299.99/yr)",
+          "verified": true,
+          "amount": 119.89
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "No pause option; cancel and resubscribe later at the current list price.",
+        "verified": false
+      }
+    },
+    {
+      "id": "aaa",
+      "name": "AAA Membership",
+      "category": "auto",
+      "user_listed": true,
+      "value_model": "insurance",
+      "use_unit": "service call (tow, jump, lockout)",
+      "use_period": "year",
+      "benchmark": {
+        "good_at_or_below": 75,
+        "poor_at_or_above": 150
+      },
+      "plans": [
+        {
+          "id": "classic",
+          "name": "Classic",
+          "price_monthly": null,
+          "price_annual": 72,
+          "effective_monthly": 6.0,
+          "verified": true,
+          "note": "Prices vary by regional club; Hoosier club shown."
+        },
+        {
+          "id": "plus",
+          "name": "Plus",
+          "price_monthly": null,
+          "price_annual": 157,
+          "effective_monthly": 13.08,
+          "verified": true
+        },
+        {
+          "id": "premier",
+          "name": "Premier",
+          "price_monthly": null,
+          "price_annual": 246,
+          "effective_monthly": 20.5,
+          "verified": true
+        }
+      ],
+      "default_plan": "classic",
+      "features": [
+        {
+          "id": "tow",
+          "name": "Towing (3 / 100 / 200 miles)",
+          "plans": "all",
+          "overlap_tag": "roadside"
+        },
+        {
+          "id": "roadside",
+          "name": "Jump start, flat tire, fuel delivery, lockout (4 calls/yr)",
+          "plans": "all",
+          "overlap_tag": "roadside"
+        },
+        {
+          "id": "discounts",
+          "name": "Hotel, rental car and retail discounts",
+          "plans": "all"
+        },
+        {
+          "id": "travel",
+          "name": "Trip interruption coverage",
+          "plans": "all"
+        },
+        {
+          "id": "extra_cards",
+          "name": "2 extra household cardholders",
+          "plans": "all"
+        },
+        {
+          "id": "home_lockout",
+          "name": "Home lockout reimbursement",
+          "plans": [
+            "premier"
+          ]
+        }
+      ],
+      "recent_changes": [],
+      "tips": [
+        "Car insurance roadside add-ons, new-car warranties and some credit cards cover tows; check before renewing.",
+        "Plus/Premier mostly pay off if you drive long distances or rural roads (longer tows)."
+      ],
+      "sources": [
+        "https://www.hoosier.aaa.com/membership/compare-aaa-membership-plans"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.aaa.com/membership",
+      "varies_by_region": true,
+      "discounts": [
+        {
+          "type": "autopay",
+          "label": "Enrollment fee waived with auto-renew",
+          "verified": true,
+          "note": "Promo seen at AAA Hoosier; varies by club"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": null,
+        "billing_date_resets": null,
+        "notes": "No pause; a lapsed membership may owe the club's enrollment fee again to rejoin.",
+        "verified": false
+      }
+    },
+    {
+      "id": "icloud",
+      "name": "Apple iCloud+",
+      "category": "storage",
+      "user_listed": true,
+      "value_model": "storage",
+      "use_unit": "GB stored",
+      "use_period": "month",
+      "benchmark": null,
+      "plans": [
+        {
+          "id": "50gb",
+          "name": "50 GB",
+          "price_monthly": 0.99,
+          "price_annual": null,
+          "effective_monthly": 0.99,
+          "verified": true,
+          "storage_gb": 50
+        },
+        {
+          "id": "200gb",
+          "name": "200 GB",
+          "price_monthly": 2.99,
+          "price_annual": null,
+          "effective_monthly": 2.99,
+          "verified": true,
+          "storage_gb": 200
+        },
+        {
+          "id": "2tb",
+          "name": "2 TB",
+          "price_monthly": 9.99,
+          "price_annual": null,
+          "effective_monthly": 9.99,
+          "verified": true,
+          "storage_gb": 2000
+        },
+        {
+          "id": "6tb",
+          "name": "6 TB",
+          "price_monthly": 29.99,
+          "price_annual": null,
+          "effective_monthly": 29.99,
+          "verified": true,
+          "storage_gb": 6000
+        },
+        {
+          "id": "12tb",
+          "name": "12 TB",
+          "price_monthly": 59.99,
+          "price_annual": null,
+          "effective_monthly": 59.99,
+          "verified": true,
+          "storage_gb": 12000
+        }
+      ],
+      "default_plan": "200gb",
+      "features": [
+        {
+          "id": "storage",
+          "name": "Cloud storage and device backup",
+          "plans": "all",
+          "overlap_tag": "cloud_storage"
+        },
+        {
+          "id": "hide_email",
+          "name": "Hide My Email aliases",
+          "plans": "all",
+          "overlap_tag": "email_alias"
+        },
+        {
+          "id": "relay",
+          "name": "iCloud Private Relay",
+          "plans": "all",
+          "overlap_tag": "vpn"
+        },
+        {
+          "id": "custom_domain",
+          "name": "Custom email domain",
+          "plans": "all"
+        },
+        {
+          "id": "homekit",
+          "name": "HomeKit Secure Video",
+          "plans": "all"
+        },
+        {
+          "id": "family",
+          "name": "Share with up to 5 family members",
+          "plans": "all"
+        }
+      ],
+      "recent_changes": [],
+      "tips": [
+        "Already included in Apple One (50 GB / 200 GB / 2 TB); don't pay for both.",
+        "Check Settings > iCloud to see how much you use; many people can drop a tier."
+      ],
+      "sources": [
+        "https://blog.internxt.com/apple-icloud-pricing/"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://support.apple.com/en-us/108047",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "family",
+          "label": "Share any 200 GB+ plan with up to 5 family members",
+          "verified": true
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": 0,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": null,
+        "notes": "No pause; you can downgrade any time. Backups stop if you're over the new limit.",
+        "verified": false
+      }
+    },
+    {
+      "id": "m365",
+      "name": "Microsoft 365",
+      "category": "productivity",
+      "user_listed": true,
+      "value_model": "usage",
+      "use_unit": "day you used Office/Outlook/OneDrive",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 0.5,
+        "poor_at_or_above": 2.0
+      },
+      "plans": [
+        {
+          "id": "personal",
+          "name": "Personal",
+          "price_monthly": 9.99,
+          "price_annual": 99.99,
+          "effective_monthly": 9.99,
+          "verified": true
+        },
+        {
+          "id": "family",
+          "name": "Family (up to 6)",
+          "price_monthly": 12.99,
+          "price_annual": 129.99,
+          "effective_monthly": 12.99,
+          "verified": true
+        },
+        {
+          "id": "premium",
+          "name": "Premium",
+          "price_monthly": 19.99,
+          "price_annual": 199.99,
+          "effective_monthly": 19.99,
+          "verified": true
+        },
+        {
+          "id": "classic_personal",
+          "name": "Personal Classic (no Copilot)",
+          "price_monthly": null,
+          "price_annual": 69.99,
+          "effective_monthly": 5.83,
+          "verified": true,
+          "note": "Hidden plan; reachable by starting to cancel."
+        }
+      ],
+      "default_plan": "personal",
+      "features": [
+        {
+          "id": "apps",
+          "name": "Desktop Word, Excel, PowerPoint",
+          "plans": "all"
+        },
+        {
+          "id": "onenote",
+          "name": "OneNote",
+          "plans": "all",
+          "overlap_tag": "notes"
+        },
+        {
+          "id": "onedrive",
+          "name": "1 TB OneDrive per person",
+          "plans": "all",
+          "overlap_tag": "cloud_storage"
+        },
+        {
+          "id": "copilot",
+          "name": "Copilot AI in Office apps (60 credits/mo)",
+          "plans": [
+            "personal",
+            "family",
+            "premium"
+          ],
+          "overlap_tag": "ai_assistant"
+        },
+        {
+          "id": "defender",
+          "name": "Microsoft Defender",
+          "plans": "all",
+          "overlap_tag": "antivirus"
+        },
+        {
+          "id": "outlook",
+          "name": "Ad-free Outlook",
+          "plans": "all"
+        },
+        {
+          "id": "clipchamp",
+          "name": "Clipchamp premium video editing",
+          "plans": "all"
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2025-01",
+          "summary": "Copilot bundled in; prices rose $3/mo. Classic plans without AI kept at old price."
+        }
+      ],
+      "tips": [
+        "Don't use Copilot? Switch to Personal Classic at $69.99/yr (start the cancel flow to see it).",
+        "Family covers 6 people with 1 TB each for $30/yr more than Personal."
+      ],
+      "sources": [
+        "https://office-watch.com/2026/microsoft-365-plans-overview/"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.microsoft.com/en-us/microsoft-365/buy/compare-all-microsoft-365-products",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "annual",
+          "label": "Pay yearly instead of monthly",
+          "verified": true,
+          "amount": 19.89,
+          "note": "Personal; Family saves $25.89"
+        },
+        {
+          "type": "retention",
+          "label": "Personal Classic without Copilot, $69.99/yr",
+          "verified": true,
+          "amount": 30.0,
+          "note": "Shown when you start to cancel"
+        },
+        {
+          "type": "family",
+          "label": "Family plan covers 6 people for $30/yr more than Personal",
+          "verified": true
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": false,
+        "billing_date_resets": true,
+        "notes": "No pause. The hidden Classic plan may not be offered again after cancelling.",
+        "verified": false
+      }
+    },
+    {
+      "id": "cloaked",
+      "name": "Cloaked",
+      "category": "privacy",
+      "user_listed": true,
+      "value_model": "insurance",
+      "use_unit": "time you used an alias or masked number",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 1.0,
+        "poor_at_or_above": 3.0
+      },
+      "plans": [
+        {
+          "id": "individual",
+          "name": "Individual",
+          "price_monthly": 14.99,
+          "price_annual": 119.99,
+          "effective_monthly": 14.99,
+          "verified": true,
+          "note": "$119.99/yr when billed annually ($10.00/mo)."
+        }
+      ],
+      "default_plan": "individual",
+      "features": [
+        {
+          "id": "aliases",
+          "name": "Unlimited email and phone aliases",
+          "plans": "all",
+          "overlap_tag": "email_alias"
+        },
+        {
+          "id": "data_removal",
+          "name": "Data broker removal (350+ brokers)",
+          "plans": "all",
+          "overlap_tag": "data_removal"
+        },
+        {
+          "id": "call_guard",
+          "name": "Call Guard spam blocking",
+          "plans": "all"
+        },
+        {
+          "id": "password",
+          "name": "Password manager",
+          "plans": "all",
+          "overlap_tag": "password_manager"
+        },
+        {
+          "id": "vpn",
+          "name": "VPN",
+          "plans": "all",
+          "overlap_tag": "vpn"
+        },
+        {
+          "id": "dark_web",
+          "name": "Dark web monitoring",
+          "plans": "all",
+          "overlap_tag": "identity_monitoring"
+        },
+        {
+          "id": "insurance",
+          "name": "$1M identity theft insurance",
+          "plans": "all",
+          "overlap_tag": "identity_insurance"
+        }
+      ],
+      "recent_changes": [],
+      "tips": [
+        "Overlaps heavily with McAfee+ (VPN, passwords, data cleanup, monitoring). Pick one.",
+        "iCloud+ Hide My Email gives free email aliases if you're on Apple."
+      ],
+      "sources": [
+        "https://allaboutcookies.org/cloaked-review"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.cloaked.com/pricing",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "annual",
+          "label": "Pay yearly ($119.99/yr)",
+          "verified": true,
+          "amount": 59.89
+        },
+        {
+          "type": "family",
+          "label": "Couple or Family plan",
+          "verified": false,
+          "note": "Price not confirmed"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": null,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": null,
+        "billing_date_resets": null,
+        "notes": "Pause policy unknown.",
+        "verified": false
+      }
+    },
+    {
+      "id": "southwest_card",
+      "name": "Southwest Rapid Rewards Card (Chase)",
+      "category": "travel",
+      "user_listed": true,
+      "value_model": "perks",
+      "use_unit": "dollars of perks used",
+      "use_period": "year",
+      "benchmark": null,
+      "plans": [
+        {
+          "id": "plus",
+          "name": "Plus",
+          "price_monthly": null,
+          "price_annual": 99,
+          "effective_monthly": 8.25,
+          "verified": true
+        },
+        {
+          "id": "premier",
+          "name": "Premier",
+          "price_monthly": null,
+          "price_annual": 149,
+          "effective_monthly": 12.42,
+          "verified": true
+        },
+        {
+          "id": "priority",
+          "name": "Priority",
+          "price_monthly": null,
+          "price_annual": 229,
+          "effective_monthly": 19.08,
+          "verified": true
+        }
+      ],
+      "default_plan": "plus",
+      "features": [
+        {
+          "id": "anniversary",
+          "name": "Anniversary points (3k / 6k / 7.5k)",
+          "plans": "all"
+        },
+        {
+          "id": "bag",
+          "name": "Free first checked bag for you + up to 8 companions",
+          "plans": "all"
+        },
+        {
+          "id": "boarding",
+          "name": "Group 5 boarding",
+          "plans": "all"
+        },
+        {
+          "id": "companion_boost",
+          "name": "10k points toward Companion Pass",
+          "plans": "all"
+        },
+        {
+          "id": "discount",
+          "name": "Flight discount (10% / 15%)",
+          "plans": [
+            "plus",
+            "premier"
+          ]
+        },
+        {
+          "id": "seats",
+          "name": "Seat selection / Extra Legroom upgrades",
+          "plans": "all"
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2025-07",
+          "summary": "Fees raised (Priority to $229) after Southwest began charging $35 for a first checked bag."
+        },
+        {
+          "date": "2027-01",
+          "summary": "Announced Rapid Rewards changes take effect; re-check value then."
+        }
+      ],
+      "tips": [
+        "Value check: (checked bags you'd pay $35 each for) + (anniversary points at ~1.3\u00a2) + discounts vs. the fee.",
+        "Rapid Rewards membership itself is free; only the card has a fee."
+      ],
+      "sources": [
+        "https://nerdwallet.com/credit-cards/news/southwest-cards-hike-fees-and-welcome-offers-add-perks-and-bonus-categories"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://creditcards.chase.com/travel-credit-cards/southwest",
+      "varies_by_region": false,
+      "discounts": [],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": null,
+        "billing_date_resets": null,
+        "notes": "Card fees can't be paused; ask Chase for a product change to avoid the fee.",
+        "verified": false
+      }
+    },
+    {
+      "id": "mcafee",
+      "name": "McAfee+",
+      "category": "privacy",
+      "user_listed": true,
+      "value_model": "insurance",
+      "use_unit": "month protected",
+      "use_period": "month",
+      "benchmark": null,
+      "plans": [
+        {
+          "id": "essential",
+          "name": "Essential",
+          "price_monthly": null,
+          "price_annual": 39,
+          "effective_monthly": 3.25,
+          "verified": false,
+          "note": "First-year price; renewal not confirmed."
+        },
+        {
+          "id": "premium",
+          "name": "Premium Individual",
+          "price_monthly": null,
+          "price_annual": 149,
+          "effective_monthly": 12.42,
+          "verified": true,
+          "intro_offer": "$49 first year",
+          "intro": {
+            "price": 49.0,
+            "period": "year",
+            "months": 12,
+            "kind": "intro",
+            "new_customers_only": true
+          }
+        },
+        {
+          "id": "advanced",
+          "name": "Advanced Individual",
+          "price_monthly": null,
+          "price_annual": 199.99,
+          "effective_monthly": 16.67,
+          "verified": false,
+          "note": "Renewal price estimated.",
+          "intro_offer": "$89 first year",
+          "intro": {
+            "price": 89.0,
+            "period": "year",
+            "months": 12,
+            "kind": "intro",
+            "new_customers_only": true
+          }
+        }
+      ],
+      "default_plan": "premium",
+      "features": [
+        {
+          "id": "antivirus",
+          "name": "Antivirus",
+          "plans": "all",
+          "overlap_tag": "antivirus"
+        },
+        {
+          "id": "vpn",
+          "name": "Unlimited Secure VPN",
+          "plans": "all",
+          "overlap_tag": "vpn"
+        },
+        {
+          "id": "password",
+          "name": "Password manager",
+          "plans": "all",
+          "overlap_tag": "password_manager"
+        },
+        {
+          "id": "monitoring",
+          "name": "Identity / dark web monitoring",
+          "plans": "all",
+          "overlap_tag": "identity_monitoring"
+        },
+        {
+          "id": "data_cleanup",
+          "name": "Personal Data Cleanup",
+          "plans": [
+            "premium",
+            "advanced"
+          ],
+          "overlap_tag": "data_removal"
+        },
+        {
+          "id": "insurance",
+          "name": "$1M identity theft coverage",
+          "plans": [
+            "advanced"
+          ],
+          "overlap_tag": "identity_insurance"
+        },
+        {
+          "id": "credit",
+          "name": "Credit lock and transaction monitoring",
+          "plans": [
+            "advanced"
+          ]
+        }
+      ],
+      "recent_changes": [],
+      "tips": [
+        "Renewal jumps ~3x after year one; call or chat to ask for the first-year price again.",
+        "Windows Defender (free) and Microsoft 365's Defender cover basic antivirus."
+      ],
+      "sources": [
+        "https://tomsguide.com/computing/antivirus/mcafee-plus-premium-review-2026"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.mcafee.com/",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "retention",
+          "label": "Ask for the first-year price again at renewal",
+          "verified": false,
+          "note": "Renewal is about 3x the intro"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": false,
+        "billing_date_resets": true,
+        "notes": "No pause; the first-year intro price is lost once it renews.",
+        "verified": false
+      }
+    },
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "category": "ai",
+      "user_listed": true,
+      "value_model": "usage",
+      "use_unit": "day you used it",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 0.75,
+        "poor_at_or_above": 3.0
+      },
+      "plans": [
+        {
+          "id": "go",
+          "name": "Go",
+          "price_monthly": 8.0,
+          "price_annual": null,
+          "effective_monthly": 8.0,
+          "verified": false
+        },
+        {
+          "id": "plus",
+          "name": "Plus",
+          "price_monthly": 20.0,
+          "price_annual": null,
+          "effective_monthly": 20.0,
+          "verified": true
+        },
+        {
+          "id": "pro100",
+          "name": "Pro 100",
+          "price_monthly": 100.0,
+          "price_annual": null,
+          "effective_monthly": 100.0,
+          "verified": false
+        },
+        {
+          "id": "pro",
+          "name": "Pro 200",
+          "price_monthly": 200.0,
+          "price_annual": null,
+          "effective_monthly": 200.0,
+          "verified": true
+        },
+        {
+          "id": "pro500",
+          "name": "Pro 500",
+          "price_monthly": 500.0,
+          "price_annual": null,
+          "effective_monthly": 500.0,
+          "verified": false
+        }
+      ],
+      "default_plan": "plus",
+      "features": [
+        {
+          "id": "models",
+          "name": "Advanced reasoning models",
+          "plans": "all",
+          "overlap_tag": "ai_assistant"
+        },
+        {
+          "id": "deep_research",
+          "name": "Deep Research",
+          "plans": [
+            "plus",
+            "pro100",
+            "pro",
+            "pro500"
+          ]
+        },
+        {
+          "id": "images",
+          "name": "Image generation",
+          "plans": "all"
+        },
+        {
+          "id": "voice",
+          "name": "Advanced voice",
+          "plans": "all"
+        },
+        {
+          "id": "agent",
+          "name": "Agent mode",
+          "plans": [
+            "plus",
+            "pro100",
+            "pro",
+            "pro500"
+          ]
+        },
+        {
+          "id": "gpts",
+          "name": "Custom GPTs and projects",
+          "plans": "all"
+        },
+        {
+          "id": "codex",
+          "name": "Codex coding agent",
+          "plans": [
+            "plus",
+            "pro100",
+            "pro",
+            "pro500"
+          ]
+        },
+        {
+          "id": "sora",
+          "name": "Sora video",
+          "plans": [
+            "plus",
+            "pro100",
+            "pro",
+            "pro500"
+          ]
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2025-2026",
+          "summary": "Lower-priced Go tier added; Free and Go may show ads."
+        },
+        {
+          "date": "2026-09-29",
+          "summary": "Pro split into Pro 100, Pro 200 and a new Pro 500 tier."
+        }
+      ],
+      "tips": [
+        "Paying for ChatGPT and Claude (and Copilot in Microsoft 365) is the most common AI overlap.",
+        "If you use it a few times a week, Free or Go may be enough."
+      ],
+      "sources": [
+        "https://www.cometapi.com/chatgpt-pricing-2026-free-vs-go-vs-plus-vs-pro/"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://openai.com/chatgpt/pricing/",
+      "varies_by_region": false,
+      "discounts": [],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "No pause; cancel at the end of the billing period and resubscribe any time.",
+        "verified": false
+      }
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "category": "ai",
+      "user_listed": true,
+      "value_model": "usage",
+      "use_unit": "day you used it",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 0.75,
+        "poor_at_or_above": 3.0
+      },
+      "plans": [
+        {
+          "id": "pro",
+          "name": "Pro",
+          "price_monthly": 20.0,
+          "price_annual": 200.0,
+          "effective_monthly": 20.0,
+          "verified": true
+        },
+        {
+          "id": "max5",
+          "name": "Max 5x",
+          "price_monthly": 100.0,
+          "price_annual": null,
+          "effective_monthly": 100.0,
+          "verified": true
+        },
+        {
+          "id": "max20",
+          "name": "Max 20x",
+          "price_monthly": 200.0,
+          "price_annual": null,
+          "effective_monthly": 200.0,
+          "verified": true
+        }
+      ],
+      "default_plan": "pro",
+      "features": [
+        {
+          "id": "models",
+          "name": "Latest Claude models, higher limits",
+          "plans": "all",
+          "overlap_tag": "ai_assistant"
+        },
+        {
+          "id": "projects",
+          "name": "Projects and memory",
+          "plans": "all"
+        },
+        {
+          "id": "research",
+          "name": "Research",
+          "plans": "all"
+        },
+        {
+          "id": "code",
+          "name": "Claude Code",
+          "plans": "all"
+        },
+        {
+          "id": "connectors",
+          "name": "Connectors (Gmail, Drive, etc.)",
+          "plans": "all"
+        }
+      ],
+      "recent_changes": [],
+      "tips": [
+        "Annual Pro is $200/yr ($16.67/mo), saving $40 vs monthly.",
+        "If you keep both Claude and ChatGPT, note which one you reach for each day for a month."
+      ],
+      "sources": [
+        "https://www.eesel.ai/blog/claude-pro-pricing"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://claude.com/pricing",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "annual",
+          "label": "Pro billed yearly ($200/yr)",
+          "verified": true,
+          "amount": 40.0
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "No pause; cancel at the end of the billing period and resubscribe any time.",
+        "verified": false
+      }
+    },
+    {
+      "id": "youtube_premium",
+      "name": "YouTube Premium",
+      "category": "video",
+      "user_listed": false,
+      "value_model": "usage",
+      "use_unit": "day you watched",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 0.5,
+        "poor_at_or_above": 1.5
+      },
+      "plans": [
+        {
+          "id": "individual",
+          "name": "Individual",
+          "price_monthly": 15.99,
+          "price_annual": 159.99,
+          "effective_monthly": 15.99,
+          "verified": false
+        },
+        {
+          "id": "family",
+          "name": "Family",
+          "price_monthly": 26.99,
+          "price_annual": null,
+          "effective_monthly": 26.99,
+          "verified": false
+        },
+        {
+          "id": "lite",
+          "name": "Premium Lite",
+          "price_monthly": 8.99,
+          "price_annual": null,
+          "effective_monthly": 8.99,
+          "verified": false
+        }
+      ],
+      "default_plan": "individual",
+      "features": [
+        {
+          "id": "ad_free",
+          "name": "Ad-free video",
+          "plans": "all"
+        },
+        {
+          "id": "background",
+          "name": "Background play",
+          "plans": "all"
+        },
+        {
+          "id": "downloads",
+          "name": "Downloads",
+          "plans": "all"
+        },
+        {
+          "id": "music",
+          "name": "YouTube Music Premium",
+          "plans": [
+            "individual",
+            "family"
+          ],
+          "overlap_tag": "music"
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2026-04",
+          "summary": "US prices rose: Individual $15.99, Family $26.99, Lite $8.99; $159.99/yr annual option."
+        }
+      ],
+      "tips": [
+        "Includes a full music service; overlaps with Spotify and Apple Music."
+      ],
+      "sources": [],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.youtube.com/premium",
+      "varies_by_region": false,
+      "free_trial_days": 30,
+      "free_trial_verified": false,
+      "discounts": [
+        {
+          "type": "family",
+          "label": "Family plan for up to 6 people",
+          "verified": true
+        },
+        {
+          "type": "student",
+          "label": "Student plan",
+          "verified": false,
+          "note": "Price not confirmed"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": true,
+        "max_months": 6,
+        "fee_while_paused": 0,
+        "restart_fee": 0,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "Pause for 1 to 6 months from membership settings; billing resumes automatically.",
+        "verified": false
+      }
+    },
+    {
+      "id": "amazon_prime",
+      "name": "Amazon Prime",
+      "category": "shopping",
+      "user_listed": false,
+      "value_model": "usage",
+      "use_unit": "order or stream",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 1.5,
+        "poor_at_or_above": 5.0
+      },
+      "plans": [
+        {
+          "id": "monthly",
+          "name": "Prime (monthly)",
+          "price_monthly": 14.99,
+          "price_annual": null,
+          "effective_monthly": 14.99,
+          "verified": true
+        },
+        {
+          "id": "annual",
+          "name": "Prime (annual)",
+          "price_monthly": null,
+          "price_annual": 139.0,
+          "effective_monthly": 11.58,
+          "verified": true
+        },
+        {
+          "id": "video_only",
+          "name": "Prime Video only",
+          "price_monthly": 8.99,
+          "price_annual": null,
+          "effective_monthly": 8.99,
+          "verified": true
+        }
+      ],
+      "default_plan": "annual",
+      "features": [
+        {
+          "id": "shipping",
+          "name": "Free fast shipping",
+          "plans": "all"
+        },
+        {
+          "id": "video",
+          "name": "Prime Video (with ads)",
+          "plans": "all",
+          "overlap_tag": "video_streaming"
+        },
+        {
+          "id": "ad_free_video",
+          "name": "Prime Video ad-free (+$2.99)",
+          "plans": "all"
+        },
+        {
+          "id": "music",
+          "name": "Amazon Music Prime",
+          "plans": "all",
+          "overlap_tag": "music"
+        },
+        {
+          "id": "photos",
+          "name": "Unlimited photo storage",
+          "plans": "all",
+          "overlap_tag": "cloud_storage"
+        },
+        {
+          "id": "grubhub",
+          "name": "Grubhub+ delivery",
+          "plans": "all"
+        },
+        {
+          "id": "rx",
+          "name": "RxPass",
+          "plans": "all"
+        },
+        {
+          "id": "gaming",
+          "name": "Prime Gaming",
+          "plans": "all"
+        }
+      ],
+      "recent_changes": [],
+      "tips": [
+        "Annual billing saves about $41/yr vs monthly."
+      ],
+      "sources": [
+        "https://stream-wiser.com/prices"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.amazon.com/amazonprime",
+      "varies_by_region": false,
+      "free_trial_days": 30,
+      "free_trial_verified": false,
+      "discounts": [
+        {
+          "type": "annual",
+          "label": "Pay yearly ($139/yr)",
+          "verified": true,
+          "amount": 40.88
+        },
+        {
+          "type": "student",
+          "label": "Prime Student",
+          "verified": false,
+          "note": "Discounted rate for students; price not confirmed"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "No pause; you may get a partial refund on cancel if benefits are unused.",
+        "verified": false
+      }
+    },
+    {
+      "id": "disney_plus",
+      "name": "Disney+ (and bundles)",
+      "category": "video",
+      "user_listed": false,
+      "value_model": "usage",
+      "use_unit": "evening/title watched",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 1.0,
+        "poor_at_or_above": 4.0
+      },
+      "plans": [
+        {
+          "id": "basic",
+          "name": "Disney+ Basic (ads)",
+          "price_monthly": 12.49,
+          "price_annual": null,
+          "effective_monthly": 12.49,
+          "verified": true
+        },
+        {
+          "id": "premium",
+          "name": "Disney+ Premium",
+          "price_monthly": 21.49,
+          "price_annual": 214.99,
+          "effective_monthly": 21.49,
+          "verified": true
+        },
+        {
+          "id": "duo_ads",
+          "name": "Disney+ / Hulu (ads)",
+          "price_monthly": 12.99,
+          "price_annual": null,
+          "effective_monthly": 12.99,
+          "verified": true
+        },
+        {
+          "id": "trio_ads",
+          "name": "Disney+ / Hulu / HBO Max (ads)",
+          "price_monthly": 21.99,
+          "price_annual": null,
+          "effective_monthly": 21.99,
+          "verified": true
+        },
+        {
+          "id": "trio_noads",
+          "name": "Disney+ / Hulu / HBO Max (no ads)",
+          "price_monthly": 34.99,
+          "price_annual": null,
+          "effective_monthly": 34.99,
+          "verified": true
+        }
+      ],
+      "default_plan": "basic",
+      "features": [
+        {
+          "id": "disney",
+          "name": "Disney, Pixar, Marvel, Star Wars",
+          "plans": "all",
+          "overlap_tag": "video_streaming"
+        },
+        {
+          "id": "hulu",
+          "name": "Hulu",
+          "plans": [
+            "duo_ads",
+            "trio_ads",
+            "trio_noads"
+          ]
+        },
+        {
+          "id": "max",
+          "name": "HBO Max",
+          "plans": [
+            "trio_ads",
+            "trio_noads"
+          ]
+        }
+      ],
+      "recent_changes": [],
+      "tips": [
+        "The Disney+/Hulu bundle costs almost the same as Disney+ alone."
+      ],
+      "sources": [
+        "https://stream-wiser.com/prices"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.disneyplus.com/",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "bundle",
+          "label": "Disney+/Hulu bundle costs about the same as Disney+ alone",
+          "verified": true,
+          "note": "$12.99 vs $12.49 with ads"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "Disney+ has no pause; Hulu standalone has offered pauses of up to 12 weeks.",
+        "verified": false
+      }
+    },
+    {
+      "id": "hbo_max",
+      "name": "HBO Max",
+      "category": "video",
+      "user_listed": false,
+      "value_model": "usage",
+      "use_unit": "evening/title watched",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 1.0,
+        "poor_at_or_above": 4.0
+      },
+      "plans": [
+        {
+          "id": "basic",
+          "name": "Basic (ads)",
+          "price_monthly": 10.99,
+          "price_annual": 109.99,
+          "effective_monthly": 10.99,
+          "verified": true
+        },
+        {
+          "id": "standard",
+          "name": "Standard",
+          "price_monthly": 18.49,
+          "price_annual": 184.99,
+          "effective_monthly": 18.49,
+          "verified": true
+        },
+        {
+          "id": "premium",
+          "name": "Premium (4K)",
+          "price_monthly": 22.99,
+          "price_annual": 229.99,
+          "effective_monthly": 22.99,
+          "verified": true
+        }
+      ],
+      "default_plan": "standard",
+      "features": [
+        {
+          "id": "catalog",
+          "name": "HBO, Warner Bros., DC",
+          "plans": "all",
+          "overlap_tag": "video_streaming"
+        },
+        {
+          "id": "uhd",
+          "name": "4K",
+          "plans": [
+            "premium"
+          ]
+        }
+      ],
+      "recent_changes": [],
+      "tips": [
+        "Cheaper inside the Disney+/Hulu/HBO Max bundle if you want all three."
+      ],
+      "sources": [
+        "https://stream-wiser.com/prices"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.hbomax.com/",
+      "varies_by_region": false,
+      "discounts": [
+        {
+          "type": "bundle",
+          "label": "Disney+/Hulu/HBO Max bundle",
+          "verified": true,
+          "note": "$21.99 with ads for all three"
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "No pause option; cancel and resubscribe later at the current list price.",
+        "verified": false
+      }
+    },
+    {
+      "id": "google_ai_pro",
+      "name": "Google AI Pro (Google One)",
+      "category": "ai",
+      "user_listed": false,
+      "value_model": "usage",
+      "use_unit": "day you used Gemini or storage",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 0.75,
+        "poor_at_or_above": 3.0
+      },
+      "plans": [
+        {
+          "id": "ai_pro",
+          "name": "AI Pro",
+          "price_monthly": 19.99,
+          "price_annual": null,
+          "effective_monthly": 19.99,
+          "verified": true
+        }
+      ],
+      "default_plan": "ai_pro",
+      "features": [
+        {
+          "id": "gemini",
+          "name": "Gemini Pro, Deep Research",
+          "plans": "all",
+          "overlap_tag": "ai_assistant"
+        },
+        {
+          "id": "storage",
+          "name": "5 TB Google storage, shareable with family",
+          "plans": "all",
+          "overlap_tag": "cloud_storage"
+        },
+        {
+          "id": "notebooklm",
+          "name": "NotebookLM expanded",
+          "plans": "all"
+        },
+        {
+          "id": "workspace_ai",
+          "name": "Gemini in Gmail and Docs",
+          "plans": "all"
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2026",
+          "summary": "Storage raised from 2 TB to 5 TB at the same price."
+        }
+      ],
+      "tips": [
+        "Combines an AI assistant and cloud storage; could replace both ChatGPT Plus and iCloud 2 TB for some people."
+      ],
+      "sources": [
+        "https://www.techradar.com/ai-platforms-assistants/google-has-doubled-its-storage-allowance-for-its-ai-pro-plan-and-its-just-one-upped-chatgpt-heres-how-they-compare"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://one.google.com/about/plans",
+      "varies_by_region": false,
+      "free_trial_days": 30,
+      "free_trial_verified": false,
+      "discounts": [],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "No pause option; cancel and resubscribe later at the current list price. Files over the free 15 GB become read-only.",
+        "verified": false
+      }
+    },
+    {
+      "id": "apple_one",
+      "name": "Apple One",
+      "category": "bundle",
+      "user_listed": false,
+      "value_model": "usage",
+      "use_unit": "day you used an included service",
+      "use_period": "month",
+      "benchmark": {
+        "good_at_or_below": 0.75,
+        "poor_at_or_above": 2.0
+      },
+      "plans": [
+        {
+          "id": "individual",
+          "name": "Individual",
+          "price_monthly": 21.95,
+          "price_annual": null,
+          "effective_monthly": 21.95,
+          "verified": true
+        },
+        {
+          "id": "family",
+          "name": "Family",
+          "price_monthly": 27.95,
+          "price_annual": null,
+          "effective_monthly": 27.95,
+          "verified": true
+        },
+        {
+          "id": "premier",
+          "name": "Premier",
+          "price_monthly": 39.95,
+          "price_annual": null,
+          "effective_monthly": 39.95,
+          "verified": true
+        }
+      ],
+      "default_plan": "individual",
+      "features": [
+        {
+          "id": "music",
+          "name": "Apple Music",
+          "plans": "all",
+          "overlap_tag": "music"
+        },
+        {
+          "id": "tv",
+          "name": "Apple TV",
+          "plans": "all",
+          "overlap_tag": "video_streaming"
+        },
+        {
+          "id": "arcade",
+          "name": "Apple Arcade",
+          "plans": "all"
+        },
+        {
+          "id": "icloud",
+          "name": "iCloud+ (50 GB / 200 GB / 2 TB)",
+          "plans": "all",
+          "overlap_tag": "cloud_storage"
+        },
+        {
+          "id": "news",
+          "name": "Apple News+",
+          "plans": [
+            "premier"
+          ],
+          "overlap_tag": "business_news"
+        },
+        {
+          "id": "fitness",
+          "name": "Fitness+",
+          "plans": [
+            "premier"
+          ]
+        }
+      ],
+      "recent_changes": [
+        {
+          "date": "2026-08-28",
+          "summary": "All plans up $2/mo (Individual $21.95, Family $27.95, Premier $39.95)."
+        }
+      ],
+      "tips": [
+        "Only worth it if you'd use 2+ included services; otherwise buy iCloud+ alone."
+      ],
+      "sources": [
+        "https://blog.internxt.com/apple-icloud-pricing/"
+      ],
+      "checked_at": "2026-10-19",
+      "official_url": "https://www.apple.com/apple-one/",
+      "varies_by_region": false,
+      "free_trial_days": 30,
+      "free_trial_verified": false,
+      "discounts": [
+        {
+          "type": "family",
+          "label": "Family plan shares with up to 5 people",
+          "verified": true
+        }
+      ],
+      "pause_policy": {
+        "can_pause": false,
+        "max_months": null,
+        "fee_while_paused": null,
+        "restart_fee": null,
+        "keeps_price_on_restart": true,
+        "billing_date_resets": true,
+        "notes": "No pause option; cancel and resubscribe later at the current list price.",
+        "verified": false
+      }
+    }
+  ]
+}
