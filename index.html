@@ -241,6 +241,23 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 @media (max-width: 560px) { .pie-wrap { grid-template-columns: 136px 1fr; gap: 12px; } .pie-box { width: 136px; height: 136px; } .pie-mid b { font-size: 17px; } .pie-mid span { font-size: 11px; }
   .pie-legend li { grid-template-columns: 10px 1fr auto; gap: 6px; padding: 2px 0; font-size: 12px; } .pie-legend .pct, .pie-legend .n { display: none; } .pie-legend .sw { width: 10px; height: 10px; border-radius: 3px; } }
 
+.sv-sum { display: flex; gap: 14px 28px; flex-wrap: wrap; justify-content: space-between; margin-bottom: 14px; }
+.sv-sum .big { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
+.sv-saved { text-align: right; }
+.sv-list { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 10px; }
+.sv-item { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: grid; gap: 10px; }
+.sv-main { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; font-size: 14px; }
+.sv-txt { display: grid; gap: 3px; min-width: 0; }
+.sv-kind { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--accent); }
+.sv-kind.sv-overlap, .sv-kind.sv-unused, .sv-kind.sv-costly { color: var(--warn); }
+.sv-kind.sv-free { color: var(--good); }
+.sv-amt { display: grid; justify-items: end; font-weight: 700; font-size: 17px; color: var(--good); white-space: nowrap; }
+.sv-act { display: flex; gap: 8px; justify-content: flex-end; }
+.sv-more .sv-list { margin-top: 6px; }
+.sv-hidden ul { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 4px; }
+.sv-hidden li { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.sv-hidden summary { cursor: pointer; color: var(--accent); font-weight: 600; padding: 6px 0; }
+@media (max-width: 560px) { .sv-saved { text-align: left; } .sv-main .logo { width: 30px; height: 30px; font-size: 11px; } }
 .ov-sum { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
 .ov-sum .big { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
 .ov-key { display: flex; gap: 14px; font-size: 12px; color: var(--muted); }
@@ -550,7 +567,7 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
     <nav class="tabs" role="tablist" aria-label="Screens">
       <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg>Overview</button>
       <button role="tab" id="tab-usage" data-view="usage" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3.5 16.5a8.5 8.5 0 1 1 17 0"/><path d="M12 16.5l4.2-5.2"/></svg>Usage</button>
-      <button role="tab" id="tab-overlaps" data-view="overlaps" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg>Overlaps</button>
+      <button role="tab" id="tab-overlaps" data-view="overlaps" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 17l5-5 4 4 7-7"/><path d="M15 9h5v5"/></svg>Savings</button>
       <button role="tab" id="tab-add" data-view="add" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/></svg>Add</button>
       <button role="tab" id="tab-admin" data-view="admin" aria-selected="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 19.5 6v5.5c0 4.4-3.1 7.9-7.5 9-4.4-1.1-7.5-4.6-7.5-9V6z"/></svg>Admin</button>
     </nav>
@@ -961,6 +978,49 @@ function dropList() {
 function savings() { return dropList().reduce((a, s) => a + (monthly(s) || 0), 0); }
 // Savings that would mean moving your data: hard-to-switch ones that are unused or in a same-job overlap.
 function hardList() { return state.subs.filter(s => isHard(s) && ((rate(s).key === "unused" && s.cycle === "month") || activeOverlaps().some(o => o.members.some(m => m.main && m.sub === s)))); }
+// Savings page (Cuong, v73): every way to pay less in one ranked list, each with a dollar amount.
+// "Leave" ideas (cancel, drop an overlap, switch to a free option) skip hard-to-switch subscriptions;
+// same-service ideas (a cheaper plan that keeps your features, yearly billing) apply to all.
+// Done and Not for me are kept per idea in state.savings; Done adds the yearly amount to "You've saved".
+const SAVE_KIND = { overlap: "Paying twice", unused: "Not used this month", costly: "Costly for how much you use it", free: "Free option", plan: "Cheaper plan", yearly: "Pay yearly" };
+// Plans only some people qualify for are never suggested as a cheaper plan.
+const SPECIAL_PLAN = /student|teacher|educat|military|veteran|senior|nonprofit|medicaid|snap|ebt|low.income|access/i;
+const lowerFirst = t => /^[A-Z][a-z]/.test(t) ? t[0].toLowerCase() + t.slice(1) : t;
+const saveState = () => (state.savings ||= { done: {}, skip: {} });
+function savingsItems() {
+  const out = [], ov = new Map(), usPrices = profile().country === catalogCountry();
+  activeOverlaps().forEach(o => { const d = droppable(o); if (d && !ov.has(d.id)) ov.set(d.id, o); });
+  state.subs.forEach(s => {
+    const r = rate(s), mo = monthly(s) || 0, v = svcOf(s), plan = planOf(v, s.plan);
+    if (r.paused || r.needs) return;
+    const free = isHard(s) || r.waiting || r.key === "great" ? null : alternativesOf(s).find(a => a.monthly === 0);
+    const freeText = free ? ` Free option: ${free.name}${free.v.provider_type ? ` (${PROVIDER_LABEL[free.v.provider_type] || "public"})` : ""}.` : "";
+    const o = ov.get(s.id);
+    let leave = null;
+    if (o) { const others = [...new Set(o.members.filter(m => m.sub !== s).map(m => m.sub.name))];
+      leave = { kind: "overlap", text: `Drop ${s.name}. ${others.join(" and ")} already ${others.length > 1 ? "cover" : "covers"} ${lowerFirst(o.label)}.` }; }
+    else if (r.key === "unused" && s.cycle === "month" && !isHard(s)) leave = { kind: "unused", text: `Cancel ${s.name}. You haven't used it this month.${freeText}` };
+    else if (r.key === "poor" && !isHard(s)) leave = { kind: "costly", text: `${s.name} costs ${r.cpu != null ? `${money(r.cpu)} per ${measureOf(s).per1 || "use"}` : "more than it's worth to you"}. Cancel it, or use it more.${freeText}` };
+    else if (free) leave = { kind: "free", text: `Free option${free.main ? ` for ${lowerFirst(tagLabel(free.main))}` : ""}: ${free.name}. Worth a look if you can live with less.${free.v.eligibility ? ` Who can use it: ${free.v.eligibility}.` : ""}` };
+    if (leave && mo > 0) out.push({ ...leave, sub: s, mo });
+    if (!usPrices || r.waiting || !plan || plan.effective_monthly == null) return;
+    const cheaper = v.plans.filter(p => p.effective_monthly != null && p.effective_monthly < plan.effective_monthly && !SPECIAL_PLAN.test(p.name) && s.used.every(id => featuresFor(v, p.id).some(f => f.id === id)))
+      .sort((a, b) => a.effective_monthly - b.effective_monthly)[0];
+    if (cheaper) out.push({ kind: "plan", sub: s, mo: Math.min(mo, plan.effective_monthly - cheaper.effective_monthly),
+      text: `Switch ${s.name} to the ${cheaper.name} plan (${money(cheaper.effective_monthly)}/mo). It keeps ${s.used.length ? "every feature you checked" : "the main features"}${v.value_model === "storage" ? ", if your files fit" : ""}.${cheaper.verified === false ? " Price not confirmed." : ""}` });
+    if (s.cycle === "month" && plan.price_monthly && plan.price_annual && plan.price_monthly * 12 > plan.price_annual)
+      out.push({ kind: "yearly", sub: s, mo: (plan.price_monthly * 12 - plan.price_annual) / 12,
+        text: `Pay for ${s.name} yearly: ${money(plan.price_annual)}/yr instead of ${money(plan.price_monthly * 12)}.` });
+  });
+  const st = saveState();
+  return out.filter(x => x.mo >= 0.01).map(x => ({ ...x, key: `${x.sub.id}:${x.kind}`, yr: x.mo * 12 }))
+    .map(x => ({ ...x, done: !!st.done[x.key], skip: !!st.skip[x.key] })).sort((a, b) => b.mo - a.mo);
+}
+// Open ideas, and what they add up to a month. Ideas for the same subscription overlap (you can't cancel it and
+// also downgrade it), so each subscription counts once, at its biggest open idea.
+const openSavings = () => savingsItems().filter(x => !x.done && !x.skip);
+function savingsTotal(items = openSavings()) { const best = new Map(); items.forEach(x => best.set(x.sub.id, Math.max(best.get(x.sub.id) || 0, x.mo))); return [...best.values()].reduce((a, b) => a + b, 0); }
+const savedYear = () => Object.values(saveState().done).reduce((a, d) => a + (d.yr || 0), 0);
 // Value board buckets (Cuong, v57): only subscriptions rated on value. Protection plans, perks cards, storage plans,
 // and ones still missing a price or usage are "not rated", since they pay off in convenience or reduced risk.
 function valueBucket(s) {
@@ -1306,11 +1366,11 @@ function monthBarsHtml() {
     ${rows.length > 1 ? `<div class="small muted">${Math.abs(diff) < 0.5 ? `Same as last month` : `${diff > 0 ? "Up" : "Down"} ${money(Math.abs(diff))} from ${name(rows[last - 1].m, { month: "long" })}`}</div>` : ""}</section>`;
 }
 function saveHtml(total) {
-  const list = dropList(), amt = savings(), top = list[0], pct = total ? Math.round(amt / total * 100) : 0;
+  const items = openSavings(), amt = savingsTotal(items), top = items[0], pct = total ? Math.round(amt / total * 100) : 0;
   return `<div class="stat save"><div class="label">Could save / mo</div><div class="value num">${money(amt)}</div>
     ${amt ? `<div class="small muted">${pct}% of what you pay</div>` : `<div class="small muted">Nothing easy to cut right now</div>`}
     ${hardList().length ? `<div class="small muted" title="${esc(hardList().map(s => s.name).join(", "))}">+ ${money(hardList().reduce((a, s) => a + (monthly(s) || 0), 0))} more if you move your data</div>` : ""}
-    ${top ? `<button class="save-top" data-id="${top.id}"><span class="small muted">Review first</span><span class="st-row">${logoHtml(svcOf(top))}<b>${esc(top.name)}</b></span><span class="small muted"><b class="num" style="color:var(--good)">${total ? Math.round(monthly(top) / total * 100) : 0}% saving</b> · ${money(monthly(top))}/mo · ${rate(top).key === "unused" ? "unused" : "overlaps"}</span></button>` : ""}</div>`;
+    ${top ? `<button class="save-top" data-go="overlaps"><span class="small muted">Top idea</span><span class="st-row">${logoHtml(svcOf(top.sub))}<b>${esc(top.sub.name)}</b></span><span class="small muted"><b class="num" style="color:var(--good)">${money(top.mo)}/mo</b> · ${esc(SAVE_KIND[top.kind].toLowerCase())}</span></button>` : ""}</div>`;
 }
 function valueBoardHtml() {
   const B = { great: ["Great value", "var(--good)"], fair: ["Fair value", "var(--accent)"], costly: ["Costly", "var(--warn)"] };
@@ -1414,7 +1474,8 @@ function homeView() {
     ${videosHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
-  f.querySelectorAll(".row, .vb-item, .vb-other .chip, .save-top").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
+  f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
+  f.querySelectorAll(".save-top").forEach(b => b.addEventListener("click", () => { view = "overlaps"; render(); window.scrollTo(0, 0); }));
   pieWire(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
@@ -1440,13 +1501,36 @@ function rowHtml(s) {
 
 // Overlaps as a picture: each overlap shows its services' monthly cost as bars on one shared scale,
 // with the one you could drop in the cost color. The advice text sits behind "Why?".
+function savingsListHtml() {
+  const all = savingsItems(), open = all.filter(x => !x.done && !x.skip), hidden = all.filter(x => x.done || x.skip), amt = savingsTotal(open), saved = savedYear();
+  const row = x => `<li class="sv-item" data-key="${esc(x.key)}">
+      <button class="sv-main" data-id="${x.sub.id}">${logoHtml(svcOf(x.sub))}<span class="sv-txt"><span class="sv-kind sv-${x.kind}">${esc(SAVE_KIND[x.kind])}</span><span>${esc(x.text)}</span></span>
+        <span class="sv-amt num">${money(x.mo)}<span class="small muted">/mo</span><span class="small muted">${money(x.yr)}/yr</span></span></button>
+      <div class="sv-act"><button class="btn small" data-done="${esc(x.key)}">Done</button><button class="btn ghost small" data-skip="${esc(x.key)}">Not for me</button></div></li>`;
+  return `<div class="section-head"><h2>Ways to pay less, biggest first</h2></div>
+    <div class="card sv-sum"><div><div class="small muted">Could save</div><div class="big num">${money(amt)}<span class="small muted" style="font-weight:500"> /mo</span></div><div class="small muted">${money(amt * 12)} a year</div></div>
+      <div class="sv-saved"><div class="small muted">You've saved</div><div class="big num" style="color:var(--good)">${money(saved)}<span class="small muted" style="font-weight:500"> /yr</span></div><div class="small muted">from ideas marked Done</div></div></div>
+    ${open.length ? `<ol class="sv-list">${open.slice(0, 8).map(row).join("")}</ol>${open.length > 8 ? `<details class="sv-hidden sv-more"><summary class="small">Show ${open.length - 8} smaller idea${open.length === 9 ? "" : "s"}</summary><ol class="sv-list" start="9">${open.slice(8).map(row).join("")}</ol></details>` : ""}
+      <p class="small muted">Some ideas are for the same subscription, so the total counts each subscription once. Amounts use list prices${profile().country === catalogCountry() ? "" : " where we have them for your location"}.</p>`
+      : `<p class="muted">${state.subs.length ? "Nothing to cut right now. Keep your usage up to date and we'll flag new ideas here." : "Add your subscriptions to see ways to save."}</p>`}
+    ${hardList().length ? `<p class="small muted">Not listed: ${esc(hardList().map(s => s.name).join(", "))}, marked hard to switch. Moving your data could save ${money(hardList().reduce((a, s) => a + (monthly(s) || 0), 0))} more a month.</p>` : ""}
+    ${hidden.length ? `<details class="sv-hidden"><summary class="small">Done or hidden (${hidden.length})</summary><ul>${hidden.map(x => `<li><span class="small"><b>${esc(x.sub.name)}</b> · ${esc(SAVE_KIND[x.kind])} · ${x.done ? `Done, ${money(x.yr)}/yr` : "Not for me"}</span><button class="btn ghost small" data-undo="${esc(x.key)}">Undo</button></li>`).join("")}</ul></details>` : ""}`;
+}
+function hookSavings(f) {
+  const st = saveState(), redo = () => { save(); render(); };
+  f.querySelectorAll(".sv-main").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  f.querySelectorAll("[data-done]").forEach(b => b.addEventListener("click", () => { const x = savingsItems().find(i => i.key === b.dataset.done); if (!x) return;
+    st.done[x.key] = { yr: Math.round(x.yr * 100) / 100, at: today(), name: x.sub.name, kind: x.kind }; delete st.skip[x.key]; redo(); }));
+  f.querySelectorAll("[data-skip]").forEach(b => b.addEventListener("click", () => { st.skip[b.dataset.skip] = true; redo(); }));
+  f.querySelectorAll("[data-undo]").forEach(b => b.addEventListener("click", () => { delete st.done[b.dataset.undo]; delete st.skip[b.dataset.undo]; redo(); }));
+}
 function overlapsView() {
   const list = activeOverlaps().map(o => { const d = droppable(o), subs = new Map();
     o.members.forEach(m => { const x = subs.get(m.sub.id) || { sub: m.sub, feats: [] }; x.feats.push(m.feature); subs.set(m.sub.id, x); });
     return { ...o, d, subs: [...subs.values()].sort((a, b) => (monthly(b.sub) || 0) - (monthly(a.sub) || 0)) }; });
   const max = Math.max(1, ...list.flatMap(o => o.subs.map(x => monthly(x.sub) || 0)));
   const drops = new Map(list.filter(o => o.d).map(o => [o.d.id, o.d])), save = [...drops.values()].reduce((a, s) => a + (monthly(s) || 0), 0);
-  const f = el(`<div class="section-head"><h2>Things you pay twice or more</h2><span class="small muted">${list.length ? `${list.length} found. Tap a service to open it.` : ""}</span></div>
+  const f = el(`${savingsListHtml()}<div class="section-head" style="margin-top:28px"><h2>Things you pay twice or more</h2><span class="small muted">${list.length ? `${list.length} found. Tap a service to open it.` : ""}</span></div>
     ${list.length ? `<div class="card ov-sum"><div><div class="small muted">Drop one in each overlap and save up to</div><div class="big num">${money(save)}<span class="small muted" style="font-weight:500"> /mo</span></div></div>
       <div class="ov-key"><span><i style="background:var(--c-value)"></i>Keep</span><span><i style="background:var(--c-cost)"></i>Could drop</span></div></div>` : ""}
     <div class="cards">${list.map(o => `<article class="card">
@@ -1458,6 +1542,7 @@ function overlapsView() {
         <details class="ov-why"><summary>Why?</summary><p>${o.subs.map(x => `<b>${esc(x.sub.name)}</b>: ${esc([...new Set(x.feats)].join(", "))}`).join(". ")}.</p>${o.advice ? `<p class="muted">${esc(o.advice)}</p>` : ""}</details>
       </article>`).join("") || `<p class="muted">No overlaps in your list right now.</p>`}</div>`);
   f.querySelectorAll(".ov-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  hookSavings(f);
   return f;
 }
 
@@ -1654,7 +1739,7 @@ function exploreDetail(v) {
   const f = el(`<button class="btn ghost" id="x-back">← Back to Add</button>
     <div class="sheet-head" style="margin:8px 0 16px">${logoHtml(v)}<div><h2>${esc(v.name)}</h2><div class="small muted">${esc(catLabel(v.category))} · prices ${fr.label.toLowerCase()} (checked ${esc(checkedOn(v))})${v.official_url ? ` · <a href="${esc(v.official_url)}" target="_blank" rel="noopener" style="color:var(--accent)">Official pricing page</a>` : ""}</div></div></div>
     ${mine ? `<p class="tip" style="margin:0 0 16px"><b>On your list</b> on the ${esc(planOf(v, mine.plan).name)} plan. <button class="btn ghost small" id="x-mine">Open it</button></p>` : ""}
-    ${ov.length ? `<p class="admin-note" style="margin:0 0 16px">You already pay for this kind of service: ${esc(ov.join(", "))}. Check the Overlaps tab before adding another.</p>` : ""}
+    ${ov.length ? `<p class="admin-note" style="margin:0 0 16px">You already pay for this kind of service: ${esc(ov.join(", "))}. Check the Savings tab before adding another.</p>` : ""}
     ${v.best_for && !altTo(v).length ? `<p class="small muted" style="margin:0 0 12px">Best for: ${esc(v.best_for)}</p>` : ""}
     ${variesByRegion(v) && !loc && !v.provider_type ? `<p class="admin-note" style="margin:0 0 16px">Prices depend on where you live. These are sample US prices; check the provider's site with your address.</p>` : ""}
     ${publicHtml(v)}
@@ -1937,7 +2022,7 @@ function verdictText(s, r) {
   if (r.checksUsed) return `No roadside calls in the last 12 months, but you used other member benefits. One roadside call in a year would make it clearly worth it.`;
   if (s.svc === "aaa" && r.model === "insurance") return `Nothing used in the last 12 months. That's fine for protection, but one roadside call in a year is what makes it clearly worth it. Tick what you use each month under How you use it.`;
   if (["car_insurance", "home_insurance"].includes(svcOf(s).category)) return `Insurance prices change at every renewal. Get two or three quotes about a month before yours renews, and ask about bundling home and auto.`;
-  if (r.model === "insurance") return `You pay for protection, not daily use. Check the Overlaps tab to see if another subscription already covers the same things.`;
+  if (r.model === "insurance") return `You pay for protection, not daily use. Check the Savings tab to see if another subscription already covers the same things.`;
   if (r.model === "storage") return `Judge this by how much you store. Pick the smallest plan that fits your photos and backups.`;
   if (r.model === "perks") return `Each month, set the dollar value of the perks you used (free bags, points, credits). If they add up to less than ${money(monthly(s))} a month, the fee isn't paying off.`;
   if (r.key === "unused") return isHard(s) ? `You haven't used it this month. Before you cancel, export what you've stored in it; cancelling would save ${money(monthly(s) * 12)} a year.` : `You haven't used it this month. Cancelling saves ${money(monthly(s) * 12)} a year.`;
@@ -2369,7 +2454,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 72 · Standalone copy · Oct 23", VERSION_NUM = 72;
+const APP_VERSION = "Prototype · Version 73 · Standalone copy · Oct 23", VERSION_NUM = 73;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
