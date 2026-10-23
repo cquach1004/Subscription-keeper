@@ -376,6 +376,8 @@ header.top nav.tabs { grid-column: 1 / -1; justify-self: start; }
 .avatar { width: 42px; height: 42px; border-radius: 50%; border: 2px solid rgba(255,255,255,.55); padding: 0; display: grid; place-items: center;
   font: 600 15px var(--f-body); color: #fff; background: linear-gradient(150deg, #4f6fd0, #1e3a8a); box-shadow: 0 4px 14px rgba(0,0,0,.25); }
 .avatar svg { width: 22px; height: 22px; }
+.me-sheet { grid-auto-rows: max-content; grid-template-rows: none; align-content: start; }
+.me-item input.me-check { width: 20px; height: 20px; flex: none; accent-color: var(--accent); }
 .me-sheet .me-head { display: flex; align-items: center; gap: 14px; }
 .me-sheet .avatar { width: 56px; height: 56px; font-size: 20px; border-color: var(--line); }
 .me-list { background: var(--surface); border-radius: 20px; box-shadow: var(--card-shadow); overflow: hidden; }
@@ -2075,14 +2077,11 @@ function settingsView() {
       <p class="note full" style="margin:0">Check a recent receipt: a $20.00 plan charged as $21.20 means 6%. Many US states don't tax digital subscriptions, and some countries include VAT in the price, so you can turn tax off for any single subscription.</p>
       <p class="note full" style="margin:0">Some prices depend on your state, city or club, like AAA, home internet and gyms. Explore starts those at your location. Outside the US our catalog doesn't have list prices yet, so you enter what you pay. We only use your location to pick prices and to hide services that aren't offered where you live.</p>
     </form>
-    <div class="section-head" style="margin-top:22px"><h2>Staff tools</h2></div>
-    <label class="feature" style="color:var(--ink);font-weight:500;border:0"><input type="checkbox" id="p-admin" ${admin.show ? "checked" : ""}>Show the Admin tab</label>
-    <p class="note">In the real app, only signed-in staff see Admin. This switch stands in for that sign-in.</p>`);
+`);
   const upd = () => { const c = document.getElementById("p-country").value;
     const tax = parseFloat(document.getElementById("p-tax").value);
     state.profile = { country: c, region: c === p.country ? document.getElementById("p-region").value.trim() : "", city: document.getElementById("p-city").value.trim(), postal: document.getElementById("p-postal").value.trim(), tax: isNaN(tax) ? null : Math.min(30, Math.max(0, tax)) }; save(); setTimeout(render); };
   ["p-country", "p-region", "p-city", "p-postal", "p-tax"].forEach(id => f.getElementById(id).addEventListener("change", upd));
-  f.getElementById("p-admin").addEventListener("change", e => { admin.show = e.target.checked; saveAdmin(); render(); });
   return f;
 }
 
@@ -2592,7 +2591,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 83 · Standalone copy · Oct 23", VERSION_NUM = 83;
+const APP_VERSION = "Prototype · Version 84 · Standalone copy · Oct 23", VERSION_NUM = 84;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2647,6 +2646,10 @@ function openMe() {
         <div><h3 style="margin:0 0 10px">Style</h3><div class="styles">${Object.entries(STYLES).map(([k, x]) => `<button type="button" class="style-opt" data-style="${k}" aria-pressed="${k === stylePref()}">
           <span class="sw" style="background:${x.sw[0]}"><i style="width:34%;background:${x.sw[1]}"></i><i style="width:22%;background:${x.sw[3]}"></i><i style="width:14%;background:${x.sw[2]}"></i></span>
           <span class="nm"><b>${x.name}</b><span>${x.note}</span></span></button>`).join("")}</div></div>
+        <div><h3 style="margin:0 0 10px">Staff tools</h3><div class="me-list">
+          <label class="me-item" style="display:flex;color:var(--ink);font-size:15px">${IC('<path d="M12 3.5 19.5 6v5.5c0 4.4-3.1 7.9-7.5 9-4.4-1.1-7.5-4.6-7.5-9V6z"/>')}<span class="me-l">Show the Admin tab</span>
+            <input type="checkbox" id="me-admin" class="me-check" ${admin.show ? "checked" : ""}></label></div>
+          <p class="note" style="margin:6px 0 0">In the real app, only signed-in staff see Admin. This switch stands in for that sign-in.</p></div>
         <p class="note" style="margin:0">Dark mode Auto follows your phone or computer setting.${stylePref() === "midnight" ? " Midnight is always dark." : ""} ${esc(APP_VERSION)}.</p>
       </aside>`));
     drawAvatar(document.getElementById("me-av"));
@@ -2658,6 +2661,7 @@ function openMe() {
       drawAvatar(document.getElementById("me-av")); drawAvatar(document.getElementById("me-btn")); document.getElementById("me-title").textContent = firstName() || "Your profile"; });
     document.getElementById("me-name").addEventListener("change", () => render());
     root.querySelectorAll(".style-opt").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-style", b.dataset.style); } catch {} applyTheme(themePref()); draw(false); }));
+    document.getElementById("me-admin").addEventListener("change", e => { admin.show = e.target.checked; saveAdmin(); render(); });
     document.getElementById("me-grp").addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
     root.querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-theme", b.dataset.t); } catch {} applyTheme(b.dataset.t); draw(false); }));
     document.getElementById("me-loc").addEventListener("click", () => { close(); view = "settings"; render(); window.scrollTo(0, 0); });
