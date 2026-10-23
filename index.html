@@ -598,7 +598,9 @@ const SAMPLE = [
   ["spotify", 9, ["ad_free","offline"], 4], ["netflix", 4, ["ad_free","hd"], 12], ["icloud", 120, ["storage","family"], 1],
   ["m365", 9, ["apps","onedrive"], 22], ["evernote", 12, ["sync"], 8], ["chatgpt", 5, ["models"], 15], ["claude", 15, ["models","projects"], 19],
   ["wsj", 3, ["articles"], 27], ["cnbc", 1, ["live"], 3], ["aaa", 0, [], 10], ["southwest_card", 40, ["bag"], 6],
-  ["mcafee", 3, ["antivirus"], 18], ["cloaked", 6, ["aliases"], 25]
+  ["mcafee", 3, ["antivirus"], 18], ["cloaked", 6, ["aliases"], 25],
+  // v75 (Cuong): Amazon Prime, Progressive car insurance and 1Password with a past year of data.
+  ["amazon_prime", 6, ["shipping","video","nfl"], 14], ["progressive_auto", 0, ["coverage"], 9], ["onepassword", 0, ["vault","watchtower"], 21]
 ];
 // Brand logos (Simple Icons, CC0 paths) for services that have one; others fall back to a lettered tile.
 // In the real app, logos would be fetched by domain on the server, cached, and overridable in Admin.
@@ -610,7 +612,7 @@ function logoHtml(v, cls = "logo") {
   return `<span class="${cls}" style="background:${L.hex}" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="${lum > 0.62 ? "#111" : "#fff"}" d="${L.d}"/></svg></span>`;
 }
 // Example start dates (months ago) for the sample rows.
-const SAMPLE_START = { spotify: 38, netflix: 61, icloud: 30, m365: 20, evernote: 50, chatgpt: 8, claude: 5, wsj: 10, cnbc: 3, aaa: 95, southwest_card: 26, mcafee: 14, cloaked: 7 };
+const SAMPLE_START = { spotify: 38, netflix: 61, icloud: 30, m365: 20, evernote: 50, chatgpt: 8, claude: 5, wsj: 10, cnbc: 3, aaa: 95, southwest_card: 26, mcafee: 14, cloaked: 7, amazon_prime: 84, progressive_auto: 40, onepassword: 72 };
 const MODEL_LABEL = { insurance: "Protection plan", storage: "Storage plan", perks: "Perks card" };
 
 const STORE_KEY = "sk-proto-v2";
@@ -664,14 +666,19 @@ function newSub(svcId, extra = {}) {
     price: priceFor(plan, cycle), uses: 0, rate: 0, per: v.use_period === "year" ? "year" : "month", used: svcId === "amazon_prime" ? ["shipping", "video"] : [], day: 1, ...extra };
 }
 function seed() {
-  return { subs: SAMPLE.filter(([id]) => CATALOG[id]).map(([id, uses, used, day]) => {
+  return { subs: SAMPLE.filter(([id]) => CATALOG[id]).map(seedSub) };
+}
+function seedSub([id, uses, used, day]) {
+  {
     const ids = featuresFor(CATALOG[id], CATALOG[id].default_plan).map(f => f.id);
     const start = pastStart(SAMPLE_START[id] ?? 12, day);
     const sub = newSub(id, { used: used.filter(f => ids.includes(f)), day, start, example: true, ...(id === "aaa" ? { members: 6 } : {}),
       ...(id === "wsj" ? { intro: { kind: "intro", price: 4, ends: stepDate(start, "month", 12) } } : {}),
       // Cuong's ChatGPT: started Mar 15, 2026 at $21.20/mo (with tax), paused in September, restarted this month.
-      ...(id === "chatgpt" ? { start: "2026-03-15", priceMine: true, myTotal: 21.2, pauses: [{ from: "2026-09-15", to: "2026-10-15", fee: 0, restartFee: 0 }] } : {}) });
-    setUse(sub, uses, measureOf(sub).per); return sub; }) };
+      ...(id === "chatgpt" ? { start: "2026-03-15", priceMine: true, myTotal: 21.2, pauses: [{ from: "2026-09-15", to: "2026-10-15", fee: 0, restartFee: 0 }] } : {}),
+      // Insurers don't list prices, so the example uses a made-up monthly premium the user would have entered.
+      ...(id === "progressive_auto" ? { cycle: "month", priceMine: true, myTotal: 148 } : {}) });
+    setUse(sub, uses, measureOf(sub).per); return sub; }
 }
 function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { return null; } }
 function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
@@ -1068,7 +1075,7 @@ function upcomingHtml() {
 
 // First visit: each person picks their own subscriptions (Cuong shares the prototype for feedback, 2026-10-19).
 // Nothing is shared between viewers: lists live in this browser only.
-const FRESH = () => ({ subs: [], unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
+const FRESH = () => ({ subs: [], sampleV: 1, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
 function welcomeView() {
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
@@ -1101,7 +1108,7 @@ function welcomeView() {
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, start: today(), day: +today().slice(8) })) };
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = state.sampleV = 1; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
@@ -1478,7 +1485,7 @@ function homeView() {
   pieWire(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
-  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; save(); render(); });
+  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = state.sampleV = 1; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
   f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
   return f;
@@ -2455,7 +2462,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 74 · Standalone copy · Oct 23", VERSION_NUM = 74;
+const APP_VERSION = "Prototype · Version 75 · Standalone copy · Oct 23", VERSION_NUM = 75;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2564,6 +2571,10 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   if (!state.cardV) { state.subs.filter(s => svcOf(s).category === "travel").forEach(s => { const w = s.needsUse; setUse(s, Math.round(s.uses * 10) / 10, "month"); if (w) s.needsUse = true; }); state.cardV = 1; }
   if (!state.aaaV) { state.subs.filter(s => s.svc === "aaa").forEach(s => { s.measure = measureOf(s).id; setUse(s, 0, "month"); }); state.aaaV = 1; }
   closeMonths();
+  // v75: example lists get the newly added sample subscriptions, with a year of history.
+  if (!state.sampleV) { if (state.subs.some(s => s.example)) SAMPLE.filter(([id]) => CATALOG[id] && !state.subs.some(s => s.svc === id)).forEach(row => {
+      const s = seedSub(row); s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; genHistory(s); state.subs.push(s); });
+    state.sampleV = 1; }
   if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { s.measure = "replace"; if (!s.hist?.replace) genHistory(s); s.used = ["data_removal"]; }); state.cloakedV = 1; }
   save();
   render();
