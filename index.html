@@ -241,6 +241,30 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 @media (max-width: 560px) { .pie-wrap { grid-template-columns: 136px 1fr; gap: 12px; } .pie-box { width: 136px; height: 136px; } .pie-mid b { font-size: 17px; } .pie-mid span { font-size: 11px; }
   .pie-legend li { grid-template-columns: 10px 1fr auto; gap: 6px; padding: 2px 0; font-size: 12px; } .pie-legend .pct, .pie-legend .n { display: none; } .pie-legend .sw { width: 10px; height: 10px; border-radius: 3px; } }
 
+.facts { display: grid; gap: 10px; margin-bottom: 16px; }
+.facts-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.facts-head h3 { margin: 0; }
+.facts-view { min-height: 92px; }
+.fact { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; animation: factIn .35s ease; }
+.fact-big { font-size: 34px; font-weight: 700; color: var(--accent); letter-spacing: -.02em; display: grid; line-height: 1.05; min-width: 92px; }
+.fact-big span { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+.fact p { margin: 0; font-size: 15px; }
+@keyframes factIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .fact { animation: none; } }
+.facts-nav { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.facts-nav .btn { font-size: 20px; line-height: 1; padding: 4px 12px; }
+.facts-dots { display: flex; gap: 6px; }
+.facts-dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: var(--line); cursor: pointer; }
+.facts-dots button[aria-current] { background: var(--accent); width: 20px; border-radius: 4px; }
+.checkin { display: grid; gap: 10px; margin-bottom: 18px; } .checkin h3 { margin: 0; }
+.ci-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.ci-list { list-style: none; margin: 0; padding: 0 4px 0 0; display: grid; gap: 6px; max-height: 380px; overflow-y: auto; }
+.ci-list li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); }
+.ci-nm { display: grid; min-width: 0; } .ci-nm b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+.ci-act { display: flex; gap: 2px; flex-wrap: wrap; justify-content: flex-end; }
+.ci-act .btn { padding: 6px 8px; }
+.checkin-done { margin: 0 0 14px; }
+@media (max-width: 560px) { .ci-list li { grid-template-columns: auto 1fr; } .ci-act { grid-column: 1 / -1; justify-content: flex-start; } .fact-big { font-size: 28px; min-width: 76px; } }
 .sv-sum { display: flex; gap: 10px 28px; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 18px; }
 .sv-sum .big { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
 .co { display: grid; gap: 10px; }
@@ -1452,6 +1476,7 @@ function usageView() {
     return `<div class="u-row" data-sub="${s.id}">${logoHtml(svcOf(s))}<div class="u-nm"><button class="u-open" data-id="${s.id}">${esc(s.name)}</button><span class="small muted">${esc(m.label)}</span></div>
       <span class="pill ${r.key}">${esc(r.label)}</span>${m.checks ? checksHtml(s, m, cur) : slider(m, n, `data-u="${s.id}" aria-label="${esc(m.label)}, ${esc(s.name)}"`)}</div>`; };
   const f = el(`<div class="section-head"><h2>Usage</h2><span class="small muted">How last month went, and what you're using this month.</span></div>
+    ${state.subs.length ? checkinHtml() : ""}
     <h3 style="margin:4px 0 10px">${esc(prevName)}: what your money bought</h3>
     ${last.length ? `<div class="u-pies">${Object.keys(BUCKETS).map(k => bucketDonut(k, by(k), total)).join("")}</div>
       <p class="note" style="margin:8px 0 0">Each ring is that group's share of the ${money(total)} you paid last month for rated subscriptions.${last.some(x => x.free) ? " Free services count as Great value but add nothing to the rings." : ""}</p>`
@@ -1461,6 +1486,7 @@ function usageView() {
     ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Add tab.</p>`}
     <details class="note home-how u-how" style="margin-top:12px"><summary>How we rate value</summary>Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>`);
   f.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  wireCheckin(f);
   wireChecks(f, (s, box) => { const r = rate(s), pill = box.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; });
   f.querySelectorAll("[data-u]").forEach(inp => { const s = state.subs.find(x => x.id === inp.dataset.u), m = measureOf(s);
     inp.oninput = () => { inp.nextElementSibling.textContent = slideText(m, +inp.value); };
@@ -1477,6 +1503,65 @@ function closeMonths() { const t = today();
     if (!s.needsUse) rows.forEach(r => { if (r.d > s.closedAt && r.d <= t && !r.paused && s.hist?.[m.id]?.[r.key] == null) {
       ((s.hist ||= {})[m.id] ||= {})[r.key] = s.uses; ((s.histSrc ||= {})[m.id] ||= {})[r.key] = "kept"; } });
     s.closedAt = t; }); }
+// "Did You Know?" carousel (Cuong, v78): one fact at a time, moving on every 7 seconds (not with reduced motion).
+// These are made-up sample facts for the demo, and the card says so. Replace with sourced facts before launch.
+const FACTS = [
+  ["12", "subscriptions", "The average US household paid for 12 subscriptions last year, up from 9 three years earlier."],
+  ["40+", "new AI plans", "More than 40 new paid AI assistant plans launched in the last 3 months."],
+  ["1 in 3", "people", "One in three people found a subscription they'd forgotten they were still paying for."],
+  ["$40", "a month", "Households that check their subscriptions every month spend about $40 a month less."],
+  ["15%", "price rise", "Streaming prices went up by about 15% on average last year."],
+  ["6 in 10", "free trials", "Six in ten free trials turn into paid plans, often because people forget to cancel."],
+  ["17%", "saved", "Paying yearly instead of monthly saves about 17% on the same plan."],
+];
+let factAt = 0, factTimer = null;
+const factsHtml = () => `<section class="card facts" aria-roledescription="carousel" aria-label="Did you know?">
+  <div class="facts-head"><h3>Did You Know?</h3><span class="tag">Sample facts for the demo</span></div>
+  <div class="facts-view" aria-live="polite">${factSlide(factAt)}</div>
+  <div class="facts-nav"><button class="btn ghost small" data-fact="-1" aria-label="Previous fact">&lsaquo;</button>
+    <span class="facts-dots">${FACTS.map((_, i) => `<button data-fact-go="${i}" aria-label="Fact ${i + 1} of ${FACTS.length}" ${i === factAt ? 'aria-current="true"' : ""}></button>`).join("")}</span>
+    <button class="btn ghost small" data-fact="1" aria-label="Next fact">&rsaquo;</button></div></section>`;
+const factSlide = i => { const [big, unit, text] = FACTS[i]; return `<div class="fact"><div class="fact-big num">${esc(big)}<span>${esc(unit)}</span></div><p>${esc(text)}</p></div>`; };
+function wireFacts(root) {
+  const box = root.querySelector(".facts"); if (!box) return;
+  const show = i => { factAt = (i + FACTS.length) % FACTS.length; box.querySelector(".facts-view").innerHTML = factSlide(factAt);
+    box.querySelectorAll("[data-fact-go]").forEach((d, k) => d.toggleAttribute("aria-current", k === factAt)); };
+  box.querySelectorAll("[data-fact]").forEach(b => b.onclick = () => { show(factAt + +b.dataset.fact); start(); });
+  box.querySelectorAll("[data-fact-go]").forEach(b => b.onclick = () => { show(+b.dataset.factGo); start(); });
+  let paused = false; box.onmouseenter = box.onfocusin = () => paused = true; box.onmouseleave = box.onfocusout = () => paused = false;
+  let x0 = null; box.addEventListener("touchstart", e => x0 = e.touches[0].clientX, { passive: true });
+  box.addEventListener("touchend", e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) { show(factAt + (dx < 0 ? 1 : -1)); start(); } x0 = null; });
+  const start = () => { clearInterval(factTimer); if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    factTimer = setInterval(() => { if (!box.isConnected) return clearInterval(factTimer); if (!paused && !document.hidden) show(factAt + 1); }, 7000); };
+  start();
+}
+// Monthly check-in on Usage (Cuong, v78): did you add, change, pause or cancel anything this month?
+// "No changes" or acting on one hides the question until next month (state.checkin = "YYYY-MM").
+let checkinOpen = false;
+function checkinHtml() {
+  const mo = today().slice(0, 7), name = new Date().toLocaleDateString(undefined, { month: "long" });
+  if (state.checkin === mo && !checkinOpen) return `<p class="small muted checkin-done">Checked for changes in ${esc(name)}. <button class="btn ghost small" data-ci="reopen">Something changed?</button></p>`;
+  const subs = state.subs.slice().sort((a, b) => a.name.localeCompare(b.name));
+  return `<section class="card checkin"><h3>Anything change in ${esc(name)}?</h3><p class="small muted" style="margin:0">Keep your list up to date so your savings and value ratings stay right.</p>
+    <div class="ci-btns"><button class="btn" data-ci="add">I added one</button><button class="btn" data-ci="edit" aria-expanded="${checkinOpen}">I changed, paused or cancelled one</button><button class="btn ghost" data-ci="none">No changes</button></div>
+    ${checkinOpen ? `<ul class="ci-list">${subs.map(s => `<li>${logoHtml(svcOf(s))}<span class="ci-nm"><b>${esc(s.name)}</b>${pausedNow(s) ? `<span class="small muted">Paused</span>` : ""}</span>
+      <span class="ci-act"><button class="btn ghost small" data-ci-plan="${s.id}">Change plan</button><button class="btn ghost small" data-ci-pause="${s.id}">${pausedNow(s) ? "Restarted" : "Paused"}</button><button class="btn ghost small" data-ci-del="${s.id}">Cancelled</button></span></li>`).join("")}</ul>
+      <button class="btn ghost small" data-ci="done">Done</button>` : ""}</section>`;
+}
+function wireCheckin(root) {
+  const mo = today().slice(0, 7), done = () => { state.checkin = mo; checkinOpen = false; save(); render(); };
+  root.querySelectorAll("[data-ci]").forEach(b => b.onclick = () => { const k = b.dataset.ci;
+    if (k === "add") { state.checkin = mo; save(); view = "add"; render(); window.scrollTo(0, 0); }
+    else if (k === "none" || k === "done") done();
+    else { checkinOpen = k === "reopen" ? true : !checkinOpen; render(); } });
+  root.querySelectorAll("[data-ci-plan]").forEach(b => b.onclick = () => { state.checkin = mo; save(); openSheet(b.dataset.ciPlan); });
+  // A pause starts (or ends) today; while paused it costs nothing and isn't rated.
+  root.querySelectorAll("[data-ci-pause]").forEach(b => b.onclick = () => { const s = state.subs.find(x => x.id === b.dataset.ciPause), cp = currentPause(s);
+    if (cp) cp.to = today(); else (s.pauses ||= []).push({ from: today(), to: null, fee: 0, restartFee: 0 });
+    state.checkin = mo; save(); render(); });
+  root.querySelectorAll("[data-ci-del]").forEach(b => b.onclick = () => { const s = state.subs.find(x => x.id === b.dataset.ciDel);
+    if (!confirm(`Remove ${s.name} from your list?`)) return; state.subs = state.subs.filter(x => x !== s); state.checkin = mo; save(); render(); });
+}
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
@@ -1489,6 +1574,7 @@ function homeView() {
       ${saveHtml(total)}
       ${benchHtml(total)}
     </section>
+    ${factsHtml()}
     <div class="charts">${monthBarsHtml()}${pieHtml()}</div>
     ${trendHtml()}
     ${videosHtml()}
@@ -1497,6 +1583,7 @@ function homeView() {
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   f.querySelectorAll(".save-top").forEach(b => b.addEventListener("click", () => { view = "overlaps"; render(); window.scrollTo(0, 0); }));
   pieWire(f);
+  wireFacts(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 2; save(); render(); });
@@ -2477,7 +2564,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 77 · Standalone copy · Oct 23", VERSION_NUM = 77;
+const APP_VERSION = "Prototype · Version 78 · Standalone copy · Oct 23", VERSION_NUM = 78;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
