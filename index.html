@@ -1504,7 +1504,7 @@ function closeMonths() { const t = today();
       ((s.hist ||= {})[m.id] ||= {})[r.key] = s.uses; ((s.histSrc ||= {})[m.id] ||= {})[r.key] = "kept"; } });
     s.closedAt = t; }); }
 // "Did You Know?" carousel (Cuong, v78): one fact at a time, moving on every 7 seconds (not with reduced motion).
-// These are made-up sample facts for the demo, and the card says so. Replace with sourced facts before launch.
+// These are made-up sample facts for the demo (Cuong: the whole demo is sample data, so no label). Replace with sourced facts before launch.
 const FACTS = [
   ["12", "subscriptions", "The average US household paid for 12 subscriptions last year, up from 9 three years earlier."],
   ["40+", "new AI plans", "More than 40 new paid AI assistant plans launched in the last 3 months."],
@@ -1520,7 +1520,7 @@ const factsHtml = () => `<section class="card facts" aria-roledescription="carou
     <span class="facts-dots">${FACTS.map((_, i) => `<button data-fact-go="${i}" aria-label="Fact ${i + 1} of ${FACTS.length}" ${i === factAt ? 'aria-current="true"' : ""}></button>`).join("")}</span>
     <button data-fact="1" aria-label="Next fact">&rsaquo;</button></span></div>
   <div class="facts-view" aria-live="polite">${factSlide(factAt)}</div>
-  <div class="facts-src">Sample facts for the demo</div></section>`;
+</section>`;
 const factSlide = i => { const [big, unit, text] = FACTS[i]; return `<div class="fact"><div class="fact-big num">${esc(big)}<span>${esc(unit)}</span></div><p>${esc(text)}</p></div>`; };
 function wireFacts(root) {
   const box = root.querySelector(".facts"); if (!box) return;
@@ -2564,7 +2564,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 80 · Standalone copy · Oct 23", VERSION_NUM = 80;
+const APP_VERSION = "Prototype · Version 81 · Standalone copy · Oct 23", VERSION_NUM = 81;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
