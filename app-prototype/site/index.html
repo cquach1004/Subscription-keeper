@@ -929,11 +929,15 @@ const money = n => n == null ? "—" : new Intl.NumberFormat(undefined, { style:
 const svcOf = s => CATALOG[s.svc] || { color: "#6b7785", mark: s.name.slice(0, 2), category: "Other", use_unit: "uses", value_model: "usage",
   benchmark: { good_at_or_below: 1, poor_at_or_above: 3 }, features: [], plans: [], tips: [] };
 
+// Free for good, not a free trial or an intro price that will end.
+const isFree = s => !pausedNow(s) && !introActive(s) && regularTotal(s) === 0;
 // Usage services are rated on cost per use against the tracker's benchmark. Protection, storage and perks plans are judged differently.
 function rate(s) {
   const v = svcOf(s);
   if (pausedNow(s)) return { key: "ok", label: "Paused", cpu: null, paused: true };
   if (needsPrice(s)) return { key: "ok", label: "Add your price", cpu: null, needs: true };
+  // Free services (library, parks, free tiers) are always great value: nothing paid, nothing to lose (Cuong, v76).
+  if (isFree(s)) return { key: "great", label: "Free", cpu: null, free: true };
   // No usage from the user yet (just added): no rating and no advice until they tell us (Cuong, 2026-10-20).
   const m = measureOf(s);
   if (m.checks) { const keys = (valueSeries(s)?.rows.slice(1) || []).slice(-12).map(r => r.key), used = (keys.length ? keys : [today().slice(0, 7)]).flatMap(k => checkedIn(s, m, k));
@@ -1410,6 +1414,7 @@ function benchHtml(total) {
 const periodKeys = s => { const rows = valueSeries(s)?.rows.slice(1) || [];
   return { cur: rows.at(-1)?.key || today().slice(0, 7), prev: rows.at(-2)?.key || null, prevRow: rows.at(-2) || null }; };
 function lastMonthOf(s) {
+  if (isFree(s)) return { s, bucket: "great", cost: 0, free: true };
   const m = measureOf(s), { prev, prevRow } = periodKeys(s);
   if (!prevRow || prevRow.paused || m.costOnly || s.needsUse || needsPrice(s)) return null;
   const used = s.hist?.[m.id]?.[prev] ?? s.uses, b = valueBucket({ ...s, uses: used });
@@ -1426,7 +1431,7 @@ function bucketDonut(k, items, total) {
     <div class="u-pie-body"><div class="u-donut"><svg viewBox="0 0 120 120" role="img" aria-label="${name}: ${items.length} subscriptions, ${money(sum)}, ${total ? Math.round(sum / total * 100) : 0}% of last month's spending">
       <circle cx="60" cy="60" r="48.5" fill="none" stroke="var(--line)" stroke-width="17"/>${arcs}</svg>
       <div class="pie-mid"><b class="num">${total ? Math.round(sum / total * 100) : 0}%</b><span>${money(sum)}</span></div></div>
-    <ul class="u-legend">${items.map(x => `<li><button data-id="${x.s.id}">${esc(x.s.name)}</button><span class="num">${money(x.cost)}</span></li>`).join("") || `<li class="muted">None</li>`}</ul></div></section>`;
+    <ul class="u-legend">${items.map(x => `<li><button data-id="${x.s.id}">${esc(x.s.name)}</button><span class="num">${x.free ? "Free" : money(x.cost)}</span></li>`).join("") || `<li class="muted">None</li>`}</ul></div></section>`;
 }
 function usageView() {
   const last = state.subs.map(lastMonthOf).filter(Boolean), total = last.reduce((a, x) => a + x.cost, 0);
@@ -1440,7 +1445,7 @@ function usageView() {
   const f = el(`<div class="section-head"><h2>Usage</h2><span class="small muted">How last month went, and what you're using this month.</span></div>
     <h3 style="margin:4px 0 10px">${esc(prevName)}: what your money bought</h3>
     ${last.length ? `<div class="u-pies">${Object.keys(BUCKETS).map(k => bucketDonut(k, by(k), total)).join("")}</div>
-      <p class="note" style="margin:8px 0 0">Each ring is that group's share of the ${money(total)} you paid last month for rated subscriptions.</p>`
+      <p class="note" style="margin:8px 0 0">Each ring is that group's share of the ${money(total)} you paid last month for rated subscriptions.${last.some(x => x.free) ? " Free services count as Great value but add nothing to the rings." : ""}</p>`
       : `<p class="muted">Nothing to show for last month yet. Once a month ends with your usage set, it shows here.</p>`}
     ${unrated.length ? `<div class="vb-other"><span class="small muted">Not rated for last month (protection plans, paused, new, or missing usage or price):</span>${unrated.map(s => `<button class="chip" data-id="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div>` : ""}
     <div class="section-head" style="margin-top:26px"><h2 style="font-size:20px">${esc(curName)} so far</h2><span class="small muted">Slide to match how you're using each one. Whatever a slider shows when the month ends is saved as that month's usage.</span></div>
@@ -2017,6 +2022,7 @@ function verdictText(s, r) {
   if (introActive(s) && s.uses && regularTotal(s) != null) { const cpu = monthlyOf(s, regularTotal(s)) / s.uses;
     return `Good deal for now. When the ${s.intro.kind === "trial" ? "trial" : "intro price"} ends, each use will cost ${money(cpu)}. Decide before ${fmtDate(s.intro.ends)}.`; }
   if (r.needs) return `Enter what you pay in the price check below so we can rate this subscription.`;
+  if (r.free) return `It's free, so it's great value whenever you use it.`;
   if (r.waiting) return `Tell us how often you use it under How you use it below. Once we know, we'll tell you whether it's worth what you pay and suggest ways to save.`;
   const v = svcOf(s), feats = featuresFor(v, s.plan), plan = planOf(v, s.plan);
   const cheaper = v.plans.filter(p => p.effective_monthly < (plan?.effective_monthly ?? 0)).sort((a, b) => a.effective_monthly - b.effective_monthly)[0];
@@ -2462,7 +2468,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 75 · Standalone copy · Oct 23", VERSION_NUM = 75;
+const APP_VERSION = "Prototype · Version 76 · Standalone copy · Oct 23", VERSION_NUM = 76;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
