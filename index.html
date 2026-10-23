@@ -571,7 +571,7 @@ const COLORS = { spotify: ["#1db954","Sp"], netflix: ["#e50914","N"], icloud: ["
 // Sample usage for the example rows: [service, usage in that service's unit and period (see USAGE_BY_CAT), feature ids in use, renewal day].
 const SAMPLE = [
   ["spotify", 9, ["ad_free","offline"], 4], ["netflix", 4, ["ad_free","hd"], 12], ["icloud", 120, ["storage","family"], 1],
-  ["m365", 9, ["apps","onedrive"], 22], ["evernote", 2, ["sync"], 8], ["chatgpt", 5, ["models"], 15], ["claude", 15, ["models","projects"], 19],
+  ["m365", 9, ["apps","onedrive"], 22], ["evernote", 12, ["sync"], 8], ["chatgpt", 5, ["models"], 15], ["claude", 15, ["models","projects"], 19],
   ["wsj", 3, ["articles"], 27], ["cnbc", 1, ["live"], 3], ["aaa", 0, [], 10], ["southwest_card", 40, ["bag"], 6],
   ["mcafee", 3, ["antivirus"], 18], ["cloaked", 6, ["aliases"], 25]
 ];
@@ -833,6 +833,8 @@ const USAGE_BY_SVC = {
     parts: [{ feature: "video", name: "Prime Video on its own", monthly: 8.99 }, { feature: "nfl", name: "Thursday Night Football", monthly: 8.99, months: [9, 10, 11, 12], within: "video" }] }),
   cloaked: U("replace", "Listings removed a month", "listing removed", "listings removed", "month", 100, { per1: "removal", fixed: true, job: "data_removal", jobName: "data broker removal" }),
   uber_one: U("uses", "Trips a month", "trip", "trips", "month", 100),
+  // Evernote (Cuong, v70). $0.50 a note is our estimate, so the plan pays off at about one note a day.
+  evernote: U("notes", "Notes created or retrieved this month", "note", "notes", "month", 100, { worth: 0.5, note: "Count each note you write, or open to look something up." }),
   // AAA (Cuong, v68): tick what you used each month, nothing ticked by default. A year with at least one roadside call counts as worth it.
   aaa: U("uses", "Services used this month", "roadside call", "roadside calls", "month", 10, { per1: "call", checks: [
     { id: "roadside", name: "Roadside call (tow, jump start, flat tire, fuel, lockout)", short: "Roadside call" },
@@ -995,7 +997,7 @@ function upcomingHtml() {
 
 // First visit: each person picks their own subscriptions (Cuong shares the prototype for feedback, 2026-10-19).
 // Nothing is shared between viewers: lists live in this browser only.
-const FRESH = () => ({ subs: [], unitsV: 1, aaaV: 1, cardV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
+const FRESH = () => ({ subs: [], unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
 function welcomeView() {
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
@@ -1028,7 +1030,7 @@ function welcomeView() {
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, start: today(), day: +today().slice(8) })) };
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = 1; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
@@ -1403,7 +1405,7 @@ function homeView() {
   pieWire(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
-  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = 1; save(); render(); });
+  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
   f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
   return f;
@@ -2343,7 +2345,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 69 · Standalone copy · Oct 23", VERSION_NUM = 69;
+const APP_VERSION = "Prototype · Version 70 · Standalone copy · Oct 23", VERSION_NUM = 70;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2448,6 +2450,7 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   // Subscriptions added recently with no usage entered yet wait for the user's input before any rating (one-time check).
   if (!state.needsV) { state.subs.filter(s => !s.example && !s.uses && !s.hist && s.start && dayDiff(s.start, today()) <= 45).forEach(s => s.needsUse = true); state.needsV = 1; }
   if (!state.unitsV) { state.subs.forEach(migrateUse); state.unitsV = 1; }
+  if (!state.evV) { state.subs.filter(s => s.svc === "evernote").forEach(migrateUse); state.evV = 1; }
   if (!state.cardV) { state.subs.filter(s => svcOf(s).category === "travel").forEach(s => { const w = s.needsUse; setUse(s, Math.round(s.uses * 10) / 10, "month"); if (w) s.needsUse = true; }); state.cardV = 1; }
   if (!state.aaaV) { state.subs.filter(s => s.svc === "aaa").forEach(s => { s.measure = measureOf(s).id; setUse(s, 0, "month"); }); state.aaaV = 1; }
   closeMonths();
