@@ -600,7 +600,7 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
       <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg>Overview</button>
       <button role="tab" id="tab-usage" data-view="usage" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3.5 16.5a8.5 8.5 0 1 1 17 0"/><path d="M12 16.5l4.2-5.2"/></svg>Usage</button>
       <button role="tab" id="tab-overlaps" data-view="overlaps" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 17l5-5 4 4 7-7"/><path d="M15 9h5v5"/></svg>Savings</button>
-      <button role="tab" id="tab-add" data-view="add" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/></svg>Add</button>
+      <button role="tab" id="tab-add" data-view="add" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z" stroke-linejoin="round"/></svg>Explore</button>
       <button role="tab" id="tab-admin" data-view="admin" aria-selected="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 19.5 6v5.5c0 4.4-3.1 7.9-7.5 9-4.4-1.1-7.5-4.6-7.5-9V6z"/></svg>Admin</button>
     </nav>
   </header>
@@ -1124,7 +1124,7 @@ function welcomeView() {
     <div class="loc-row" style="margin-bottom:18px"><label>Country<select id="w-country">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === country ? "selected" : ""}>${n}</option>`).join("")}</select></label>
       ${country === "US" ? `<label>State<select id="w-state"><option value="">Choose your state</option>${Object.entries(US_STATES).map(([k, n]) => `<option value="${k}" ${k === p.region ? "selected" : ""}>${n}</option>`).join("")}</select></label>` : ""}</div>
     <h3 style="margin:8px 0">2. Which subscriptions do you have?</h3>
-    <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. You can add others, or ones we don't list, later from the Add tab.</p>
+    <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. You can add others, or ones we don't list, later from the Explore tab.</p>
     <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
     <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
     ${groups.map(c => `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog">${more.filter(v => v.category === c).map(tile).join("")}</div>`).join("")}
@@ -1222,7 +1222,7 @@ try { samTurns = JSON.parse(sessionStorage.getItem("sk-sam") || "[]"); } catch {
 const saveSam = () => { try { sessionStorage.setItem("sk-sam", JSON.stringify(samTurns.slice(-20))); } catch {} };
 const SAM_SUGGEST = ["Which of my subscriptions is the worst value?", "What are cheaper alternatives to Netflix?", "How much do I spend on video each month?", "Are there free options from my library?"];
 const FAQ = [
-  ["How do I add a subscription?", "Open the Add tab, pick the service, and enter what you pay and how often you use it."],
+  ["How do I add a subscription?", "Open the Explore tab, pick the service, and enter what you pay and how often you use it."],
   ["How do you decide if something is good value?", "We divide what you pay each month by how often you use it, then compare that cost per use with what's typical for that kind of service."],
   ["Where do the prices come from?", "Official pricing pages, checked by our team. Unconfirmed prices are marked, and you can always enter what you pay."],
   ["Can you cancel a subscription for me?", "Not yet. Each subscription's details link to its official page, where you can cancel it."],
@@ -1428,7 +1428,7 @@ function valueBoardHtml() {
       <div class="vb-head"><span class="dot"></span><b>${B[k][0]}</b><span class="small muted">${g.length} · ${money(sum(g))}/mo${all ? ` · ${Math.round(sum(g) / all * 100)}%` : ""}</span></div>
       ${g.map(s => `<button class="vb-item" data-id="${s.id}">${logoHtml(svcOf(s))}<span class="vb-nm"><b>${esc(s.name)}</b>${k === "costly" ? `<span class="small" style="color:var(--warn)">${esc(why(s))}</span>` : ""}</span><span class="num small">${money(monthly(s))}</span></button>`).join("") || `<p class="small muted" style="margin:4px 0">None</p>`}
     </section>`).join("")}</div>`
-    : state.subs.length ? `<p class="muted" style="margin:0 0 10px">Tell us how often you use each one to see which are worth it.</p>` : `<p class="muted">No subscriptions yet. Add your first one from the Add tab.</p>`}
+    : state.subs.length ? `<p class="muted" style="margin:0 0 10px">Tell us how often you use each one to see which are worth it.</p>` : `<p class="muted">No subscriptions yet. Add your first one from the Explore tab.</p>`}
     ${other.length ? `<div class="vb-other"><span class="small muted">${rated ? "Not rated on value (protection, perks, or missing details):" : ""}</span>${other.map(s => `<button class="chip" data-id="${s.id}" title="${esc(rate(s).label)}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div>` : ""}`;
 }
 function benchHtml(total) {
@@ -1483,7 +1483,7 @@ function usageView() {
       : `<p class="muted">Nothing to show for last month yet. Once a month ends with your usage set, it shows here.</p>`}
     ${unrated.length ? `<div class="vb-other"><span class="small muted">Not rated for last month (protection plans, paused, new, or missing usage or price):</span>${unrated.map(s => `<button class="chip" data-id="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div>` : ""}
     <div class="section-head" style="margin-top:26px"><h2 style="font-size:20px">${esc(curName)} so far</h2><span class="small muted">Slide to match how you're using each one. Whatever a slider shows when the month ends is saved as that month's usage.</span></div>
-    ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Add tab.</p>`}
+    ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Explore tab.</p>`}
     <details class="note home-how u-how" style="margin-top:12px"><summary>How we rate value</summary>Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>`);
   f.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   wireCheckin(f);
@@ -1845,7 +1845,7 @@ function exploreDetail(v) {
     .sort((a, b) => alts.includes(b.id) - alts.includes(a.id));
   const ov = mine ? [] : overlapsWith(v);
   const cell = (n, unit) => n == null ? `<span class="muted">—</span>` : `<span class="num">${fmt(n)}</span><span class="muted">/${unit}</span>`;
-  const f = el(`<button class="btn ghost" id="x-back">← Back to Add</button>
+  const f = el(`<button class="btn ghost" id="x-back">← Back to Explore</button>
     <div class="sheet-head" style="margin:8px 0 16px">${logoHtml(v)}<div><h2>${esc(v.name)}</h2><div class="small muted">${esc(catLabel(v.category))} · prices ${fr.label.toLowerCase()} (checked ${esc(checkedOn(v))})${v.official_url ? ` · <a href="${esc(v.official_url)}" target="_blank" rel="noopener" style="color:var(--accent)">Official pricing page</a>` : ""}</div></div></div>
     ${mine ? `<p class="tip" style="margin:0 0 16px"><b>On your list</b> on the ${esc(planOf(v, mine.plan).name)} plan. <button class="btn ghost small" id="x-mine">Open it</button></p>` : ""}
     ${ov.length ? `<p class="admin-note" style="margin:0 0 16px">You already pay for this kind of service: ${esc(ov.join(", "))}. Check the Savings tab before adding another.</p>` : ""}
@@ -1898,7 +1898,7 @@ function addView() {
   const mine = new Set(state.subs.map(s => s.svc)), country = profile().country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no"), hidden = Object.keys(CATALOG).length - offered.length;
   const cats = [...new Set(offered.map(v => v.category))].sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
-  const f = el(`<div class="section-head"><h2>Add a subscription</h2><span class="small muted">Browse by category or search. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span></div>
+  const f = el(`<div class="section-head"><h2>Explore and add</h2><span class="small muted">Browse by category or search. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span></div>
     <h3 style="margin:4px 0 8px">1. Which subscription?</h3>
     <input id="a-q" type="search" placeholder="Search, e.g. Hulu, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:10px">
     <div class="chips a-cats" role="group" aria-label="Category">${["all", "mine-alts", "public", ...cats].map(c => `<button class="chip x-cat" data-cat="${c}" aria-pressed="${exploreCat === c}">${c === "all" ? "All" : c === "mine-alts" ? "Alternatives To Mine" : c === "public" ? "Free Public Services" : esc(catLabel(c))}</button>`).join("")}</div>
@@ -2564,7 +2564,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 79 · Standalone copy · Oct 23", VERSION_NUM = 79;
+const APP_VERSION = "Prototype · Version 80 · Standalone copy · Oct 23", VERSION_NUM = 80;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
