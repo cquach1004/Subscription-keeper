@@ -1,0 +1,7648 @@
+{
+ "generated_at": "2026-10-19",
+ "note": "Regional providers, shown only to users in service_states. verified=false means the price came from a news or review site.",
+ "services": [
+  {
+   "id": "freshdirect_deliverypass",
+   "name": "FreshDirect DeliveryPass",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NY",
+    "NJ",
+    "CT"
+   ],
+   "service_area_note": "Year-round residential delivery zones in NY, NJ and CT; seasonal areas may carry a surcharge",
+   "official_url": "https://www.freshdirect.com/",
+   "plans": [
+    {
+     "id": "one_month",
+     "name": "DeliveryPass 1 month",
+     "price_monthly": 12.99,
+     "price_annual": null,
+     "effective_monthly": 12.99,
+     "verified": true,
+     "note": "One-month membership"
+    },
+    {
+     "id": "six_month",
+     "name": "DeliveryPass 6 months",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": 13.17,
+     "verified": true,
+     "note": "$79 per 6 months (~$13.17/mo)"
+    },
+    {
+     "id": "annual",
+     "name": "DeliveryPass 1 year",
+     "price_monthly": null,
+     "price_annual": 129.0,
+     "effective_monthly": 10.75,
+     "verified": true,
+     "note": "$129/year"
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "free_delivery",
+     "name": "Unlimited free delivery on qualifying orders",
+     "plans": "all",
+     "overlap_tag": "grocery_delivery"
+    }
+   ],
+   "best_for": "NYC-area households ordering groceries several times a month.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Not valid for FreshDirect At The Office orders"
+   ],
+   "sources": [
+    {
+     "label": "FreshDirect DeliveryPass product page",
+     "url": "https://www.freshdirect.com/pdp.jsp?productId=mkt_dpss_onemonth&catId=gro_gear_dlvpass"
+    },
+    {
+     "label": "DeliveryPass areas FAQ",
+     "url": "https://www.freshdirect.com/help/faq/faq_about_deliverypass_areas"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#334155",
+   "mark": "FD"
+  },
+  {
+   "id": "giant_food_pass",
+   "name": "Giant Food (Landover) delivery & pickup pass",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MD",
+    "VA",
+    "DC",
+    "DE"
+   ],
+   "service_area_note": "Giant Food stores and delivery in the Baltimore-Washington area, Delaware and Virginia",
+   "official_url": "https://giantfood.com/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Monthly pass",
+     "price_monthly": 12.95,
+     "price_annual": null,
+     "effective_monthly": 12.95,
+     "verified": false,
+     "note": "Third-party report (2023); giantfood.com was down for maintenance on check date"
+    },
+    {
+     "id": "six_month",
+     "name": "6-month pass",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": 11.5,
+     "verified": false,
+     "note": "Reported $69 per 6 months (2023), unconfirmed"
+    },
+    {
+     "id": "annual",
+     "name": "Annual pass",
+     "price_monthly": null,
+     "price_annual": 99.0,
+     "effective_monthly": 8.25,
+     "verified": false,
+     "note": "Reported $99/year (2023), unconfirmed"
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "free_delivery",
+     "name": "Unlimited free delivery and pickup on qualifying orders",
+     "plans": "all",
+     "overlap_tag": "grocery_delivery"
+    }
+   ],
+   "best_for": "Giant Food shoppers in MD/VA/DC/DE who order online often.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Krazy Coupon Lady: Giant Food delivery",
+     "url": "https://thekrazycouponlady.com/coupons-for/giant/giant-food-delivery"
+    },
+    {
+     "label": "Giant Food online perks (official)",
+     "url": "https://giantfood.com/pages/online-perks"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#b45309",
+   "mark": "GF"
+  },
+  {
+   "id": "giant_company_choice_pass",
+   "name": "The Giant Company / Martin's Choice Pass",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "PA",
+    "MD",
+    "VA",
+    "WV"
+   ],
+   "service_area_note": "Giant (Carlisle, PA) and Martin's stores in PA, MD, VA and WV",
+   "official_url": "https://giantfoodstores.com/pages/subscriptions",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Choice Pass monthly",
+     "price_monthly": 12.95,
+     "price_annual": null,
+     "effective_monthly": 12.95,
+     "verified": false,
+     "note": "Launch price (Jan 2021); official page did not render prices"
+    },
+    {
+     "id": "annual",
+     "name": "Choice Pass annual",
+     "price_monthly": null,
+     "price_annual": 98.0,
+     "effective_monthly": 8.17,
+     "verified": false,
+     "note": "Launch price (Jan 2021)"
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "free_delivery",
+     "name": "Unlimited free delivery and pickup on qualifying orders",
+     "plans": "all",
+     "overlap_tag": "grocery_delivery"
+    }
+   ],
+   "best_for": "Pennsylvania Giant/Martin's shoppers who order delivery twice a month or more.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Non-member delivery fee is $7.95 with a $60 minimum"
+   ],
+   "sources": [
+    {
+     "label": "Supermarket News: Choice Pass launch",
+     "url": "https://www.supermarketnews.com/grocery-trends-data/the-giant-company-launches-choice-pass-online-grocery-subscription"
+    },
+    {
+     "label": "Giant store delivery page",
+     "url": "https://stores.giantfoodstores.com/pa/philadelphia/2550-grant-ave/delivery"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#4d7c0f",
+   "mark": "GC"
+  },
+  {
+   "id": "stop_and_shop_pass",
+   "name": "Stop & Shop delivery & pickup pass",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NY",
+    "NJ",
+    "CT",
+    "MA",
+    "RI"
+   ],
+   "service_area_note": "Stop & Shop stores in New York, New Jersey and New England",
+   "official_url": "https://stopandshop.com/",
+   "plans": [
+    {
+     "id": "pass",
+     "name": "Delivery & pickup pass",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not confirmed; stopandshop.com was down for maintenance on check date"
+    }
+   ],
+   "default_plan": "pass",
+   "features": [
+    {
+     "id": "free_delivery",
+     "name": "Free delivery and pickup on qualifying orders",
+     "plans": "all",
+     "overlap_tag": "grocery_delivery"
+    }
+   ],
+   "best_for": "Stop & Shop shoppers in NY/NJ who order online regularly.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Stop & Shop subscriptions page",
+     "url": "https://stopandshop.com/pages/subscriptions"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#9d174d",
+   "mark": "SS"
+  },
+  {
+   "id": "harris_teeter_htplus",
+   "name": "Harris Teeter HT Plus",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NC",
+    "SC",
+    "VA",
+    "MD",
+    "DC",
+    "DE",
+    "GA",
+    "FL"
+   ],
+   "service_area_note": "Harris Teeter stores in the Southeast and Mid-Atlantic (VA, MD, DC, DE)",
+   "official_url": "https://www.harristeeter.com/pr/ht-plus/overview",
+   "plans": [
+    {
+     "id": "plus_99",
+     "name": "HT Plus (2-hour delivery)",
+     "price_monthly": 12.99,
+     "price_annual": 99.0,
+     "effective_monthly": 8.25,
+     "verified": true,
+     "note": "Free delivery in as little as 2 hours on $35+ orders"
+    },
+    {
+     "id": "plus_69",
+     "name": "HT Plus (next-day delivery)",
+     "price_monthly": 8.99,
+     "price_annual": 69.0,
+     "effective_monthly": 5.75,
+     "verified": true,
+     "note": "Free next-day delivery on $35+ orders"
+    }
+   ],
+   "default_plan": "plus_99",
+   "features": [
+    {
+     "id": "free_delivery",
+     "name": "Free delivery on $35+ orders",
+     "plans": "all",
+     "overlap_tag": "grocery_delivery"
+    },
+    {
+     "id": "free_pickup",
+     "name": "Free pickup on $35+ orders",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "fuel_points",
+     "name": "2x fuel points",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "streaming",
+     "name": "Disney+, Hulu or ESPN+ (with ads) with annual plan",
+     "plans": "all",
+     "overlap_tag": "streaming_bundle"
+    }
+   ],
+   "best_for": "Harris Teeter shoppers who want delivery plus fuel rewards.",
+   "free_trial_days": 30,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "HT Plus overview",
+     "url": "https://www.harristeeter.com/pr/ht-plus/overview"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#c2410c",
+   "mark": "HT"
+  },
+  {
+   "id": "albertsons_freshpass",
+   "name": "Safeway / Acme FreshPass (Albertsons)",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AK",
+    "AZ",
+    "AR",
+    "CA",
+    "CO",
+    "CT",
+    "DE",
+    "DC",
+    "HI",
+    "ID",
+    "IL",
+    "IN",
+    "IA",
+    "LA",
+    "ME",
+    "MD",
+    "MA",
+    "MT",
+    "NE",
+    "NV",
+    "NH",
+    "NJ",
+    "NM",
+    "NY",
+    "ND",
+    "OR",
+    "PA",
+    "RI",
+    "SD",
+    "TX",
+    "UT",
+    "VT",
+    "VA",
+    "WA",
+    "WY"
+   ],
+   "service_area_note": "Albertsons Cos. banners; in the Mid-Atlantic via Safeway (MD, VA, DC, DE) and Acme (NJ, PA, DE, MD, NY)",
+   "official_url": "https://www.safeway.com/lp/subscriptions-delivery.3132.html",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "FreshPass monthly",
+     "price_monthly": 12.99,
+     "price_annual": null,
+     "effective_monthly": 12.99,
+     "verified": false,
+     "note": "Launch price (Aug 2021); official page did not show standard price"
+    },
+    {
+     "id": "annual",
+     "name": "FreshPass annual",
+     "price_monthly": null,
+     "price_annual": 99.0,
+     "effective_monthly": 8.25,
+     "verified": false,
+     "note": "Launch price (Aug 2021)"
+    },
+    {
+     "id": "snap",
+     "name": "FreshPass discounted (SNAP)",
+     "price_monthly": 5.99,
+     "price_annual": 49.0,
+     "effective_monthly": 4.08,
+     "verified": true,
+     "note": "For verified SNAP recipients"
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "free_delivery",
+     "name": "Free delivery on $30+ orders",
+     "plans": "all",
+     "overlap_tag": "grocery_delivery"
+    },
+    {
+     "id": "monthly_credit",
+     "name": "$5 monthly credit (annual plan)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "private_label_discount",
+     "name": "5% off O Organics and Open Nature",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Safeway or Acme shoppers who order delivery regularly.",
+   "free_trial_days": 30,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "State list is approximate: covers all Albertsons Cos. states; delivery not everywhere"
+   ],
+   "sources": [
+    {
+     "label": "Safeway delivery subscription FAQ",
+     "url": "https://www.safeway.com/mobile/delivery-subscription-faq.html"
+    },
+    {
+     "label": "Business Wire: FreshPass launch",
+     "url": "https://www.businesswire.com/news/home/20210816005198/en"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#c2410c",
+   "mark": "SA"
+  },
+  {
+   "id": "optimum_internet",
+   "name": "Optimum Internet (Altice)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AZ",
+    "AR",
+    "CA",
+    "CT",
+    "ID",
+    "KS",
+    "KY",
+    "LA",
+    "MS",
+    "MO",
+    "NV",
+    "NJ",
+    "NM",
+    "NY",
+    "NC",
+    "OH",
+    "OK",
+    "PA",
+    "TX",
+    "VA",
+    "WV"
+   ],
+   "service_area_note": "Cable and fiber, largest in NY metro (Long Island, NYC suburbs), northern NJ and CT",
+   "official_url": "https://www.optimum.com/internet",
+   "plans": [
+    {
+     "id": "300",
+     "name": "300 Mbps",
+     "price_monthly": 35.0,
+     "price_annual": null,
+     "effective_monthly": 35.0,
+     "verified": true,
+     "note": "Includes $10 autopay discount; 12-month price"
+    },
+    {
+     "id": "500",
+     "name": "500 Mbps",
+     "price_monthly": 45.0,
+     "price_annual": null,
+     "effective_monthly": 45.0,
+     "verified": true,
+     "note": "Includes $10 autopay discount; 12-month price"
+    },
+    {
+     "id": "1gig",
+     "name": "1 Gig",
+     "price_monthly": 55.0,
+     "price_annual": null,
+     "effective_monthly": 55.0,
+     "verified": true,
+     "note": "Includes $10 autopay discount; 36-month price"
+    }
+   ],
+   "default_plan": "300",
+   "features": [
+    {
+     "id": "internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "gateway",
+     "name": "One free gateway",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Households in the NY/NJ/CT metro without fiber options.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "After promo, price can rise up to $15/mo per year"
+   ],
+   "sources": [
+    {
+     "label": "Optimum internet plans",
+     "url": "https://www.optimum.com/internet"
+    },
+    {
+     "label": "Reviews.org Optimum coverage",
+     "url": "https://www.reviews.org/internet-service/optimum-coverage-and-availability/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#9d174d",
+   "mark": "OI"
+  },
+  {
+   "id": "astound_broadband",
+   "name": "Astound Broadband (formerly RCN)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NY",
+    "MA",
+    "PA",
+    "DC",
+    "MD",
+    "VA",
+    "IL",
+    "IN",
+    "TX",
+    "WA",
+    "OR",
+    "CA"
+   ],
+   "service_area_note": "In the region: NYC area, Philadelphia, Lehigh Valley, NE Pennsylvania, DC metro, Montgomery and Anne Arundel counties",
+   "official_url": "https://www.astound.com/internet/",
+   "plans": [
+    {
+     "id": "wifi",
+     "name": "Astound WiFi",
+     "price_monthly": 40.0,
+     "price_annual": null,
+     "effective_monthly": 40.0,
+     "verified": true,
+     "note": "Promo price with autopay/e-bill; 12 months"
+    },
+    {
+     "id": "gig",
+     "name": "Gig WiFi",
+     "price_monthly": 45.0,
+     "price_annual": null,
+     "effective_monthly": 45.0,
+     "verified": true,
+     "note": "Promo price; page showed $45 and $50 variants by market"
+    }
+   ],
+   "default_plan": "gig",
+   "features": [
+    {
+     "id": "internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "no_contract",
+     "name": "No contract",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Urban customers in Philly, NYC or DC wanting a cable alternative.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Professional install is $99.95; self-install free"
+   ],
+   "sources": [
+    {
+     "label": "Astound internet plans",
+     "url": "https://www.astound.com/internet/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#be123c",
+   "mark": "AB"
+  },
+  {
+   "id": "breezeline",
+   "name": "Breezeline (Cogeco)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CT",
+    "DE",
+    "FL",
+    "ME",
+    "MD",
+    "MA",
+    "NH",
+    "NY",
+    "OH",
+    "PA",
+    "SC",
+    "VA",
+    "WV"
+   ],
+   "service_area_note": "Cable and fiber in smaller markets incl. PA, MD Eastern Shore, DE, WV and VA",
+   "official_url": "https://www.breezeline.com/internet",
+   "plans": [
+    {
+     "id": "500",
+     "name": "500 Mbps",
+     "price_monthly": 40.0,
+     "price_annual": null,
+     "effective_monthly": 40.0,
+     "verified": true,
+     "note": "Includes $10 EcoSave + AutoPay discount; up to 5-year price"
+    },
+    {
+     "id": "1gig",
+     "name": "1 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not shown on page"
+    }
+   ],
+   "default_plan": "500",
+   "features": [
+    {
+     "id": "internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "price_lock",
+     "name": "Up to 5-year price guarantee",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Suburban and small-town customers wanting a long price lock.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Breezeline internet",
+     "url": "https://www.breezeline.com/internet"
+    },
+    {
+     "label": "Wikipedia: Breezeline",
+     "url": "https://en.wikipedia.org/wiki/Breezeline"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#334155",
+   "mark": "Br"
+  },
+  {
+   "id": "glo_fiber",
+   "name": "Glo Fiber (Shentel)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "VA",
+    "WV",
+    "PA",
+    "MD",
+    "DE",
+    "OH"
+   ],
+   "service_area_note": "Fiber in growing parts of VA, WV, PA, MD, DE and OH; Shentel cable in VA/WV",
+   "official_url": "https://www.glofiber.com/",
+   "plans": [
+    {
+     "id": "300",
+     "name": "300 Mbps",
+     "price_monthly": 55.0,
+     "price_annual": null,
+     "effective_monthly": 55.0,
+     "verified": false,
+     "note": "From FCC broadband label data via ISPReports (June 2026)"
+    },
+    {
+     "id": "1_2gig",
+     "name": "1.2 Gig",
+     "price_monthly": 85.0,
+     "price_annual": null,
+     "effective_monthly": 85.0,
+     "verified": false,
+     "note": "From FCC broadband label data via ISPReports (June 2026)"
+    },
+    {
+     "id": "2gig",
+     "name": "2 Gig",
+     "price_monthly": 120.0,
+     "price_annual": null,
+     "effective_monthly": 120.0,
+     "verified": false,
+     "note": "From FCC broadband label data via ISPReports (June 2026)"
+    }
+   ],
+   "default_plan": "300",
+   "features": [
+    {
+     "id": "internet",
+     "name": "Symmetric fiber internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    }
+   ],
+   "best_for": "Customers in Glo Fiber build areas wanting symmetric fiber.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Official prices vary by address"
+   ],
+   "sources": [
+    {
+     "label": "Glo Fiber home",
+     "url": "https://www.glofiber.com/"
+    },
+    {
+     "label": "ISPReports Glo Fiber pricing",
+     "url": "https://ispreports.org/compare-internet-service-providers/google-fiber-vs-glo-fiber"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#0369a1",
+   "mark": "GF"
+  },
+  {
+   "id": "brightspeed_fiber",
+   "name": "Brightspeed Fiber",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AL",
+    "AR",
+    "GA",
+    "IN",
+    "IL",
+    "KS",
+    "LA",
+    "MI",
+    "MO",
+    "MS",
+    "NJ",
+    "NC",
+    "OH",
+    "OK",
+    "PA",
+    "SC",
+    "TN",
+    "TX",
+    "VA",
+    "WI"
+   ],
+   "service_area_note": "Former CenturyLink areas; in region mostly rural/suburban NJ, PA and VA",
+   "official_url": "https://www.brightspeed.com/",
+   "plans": [
+    {
+     "id": "200",
+     "name": "200 Mbps",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": true,
+     "note": "With autopay and paperless"
+    },
+    {
+     "id": "500",
+     "name": "500 Mbps",
+     "price_monthly": 39.99,
+     "price_annual": null,
+     "effective_monthly": 39.99,
+     "verified": true,
+     "note": "With autopay and paperless"
+    },
+    {
+     "id": "1gig",
+     "name": "1 Gig",
+     "price_monthly": 49.99,
+     "price_annual": null,
+     "effective_monthly": 49.99,
+     "verified": true,
+     "note": "With autopay and paperless"
+    },
+    {
+     "id": "2gig",
+     "name": "2 Gig",
+     "price_monthly": 59.99,
+     "price_annual": null,
+     "effective_monthly": 59.99,
+     "verified": true,
+     "note": "With autopay and paperless"
+    }
+   ],
+   "default_plan": "500",
+   "features": [
+    {
+     "id": "internet",
+     "name": "Symmetric fiber internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "no_contract",
+     "name": "No annual contract",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rural and suburban homes in former CenturyLink areas now on fiber.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Brightspeed home",
+     "url": "https://www.brightspeed.com/"
+    },
+    {
+     "label": "Brightspeed coverage",
+     "url": "https://www.brightspeed.com/local/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#c2410c",
+   "mark": "BF"
+  },
+  {
+   "id": "onelife_fitness",
+   "name": "Onelife Fitness (incl. former Sport&Health)",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "GA",
+    "MD",
+    "NC",
+    "SC",
+    "VA",
+    "WV",
+    "DC"
+   ],
+   "service_area_note": "Clubs in DC metro, Virginia, Maryland, West Virginia and the Southeast; Sport&Health now redirects to Onelife",
+   "official_url": "https://www.onelifefitness.com/membership",
+   "plans": [
+    {
+     "id": "basic",
+     "name": "Basic (one club)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by club; not listed online"
+    },
+    {
+     "id": "elite",
+     "name": "Elite (one club)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by club"
+    },
+    {
+     "id": "premier",
+     "name": "Premier (multi-club)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by club"
+    }
+   ],
+   "default_plan": "basic",
+   "features": [
+    {
+     "id": "gym",
+     "name": "Gym access",
+     "plans": "all",
+     "overlap_tag": "gym_access"
+    },
+    {
+     "id": "multi_club",
+     "name": "Multi-club access",
+     "plans": "all",
+     "overlap_tag": "gym_access"
+    }
+   ],
+   "best_for": "DC-area and Virginia members wanting full-service clubs.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Onelife membership",
+     "url": "https://www.onelifefitness.com/membership"
+    },
+    {
+     "label": "Onelife locations",
+     "url": "https://www.onelifefitness.com/gyms"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#c2410c",
+   "mark": "OF"
+  },
+  {
+   "id": "retro_fitness",
+   "name": "Retro Fitness",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL",
+    "MD",
+    "MA",
+    "MI",
+    "NJ",
+    "NY",
+    "PA",
+    "TX",
+    "UT"
+   ],
+   "service_area_note": "Franchise gyms concentrated in NJ, NY and PA",
+   "official_url": "https://www.retrofitness.com/",
+   "plans": [
+    {
+     "id": "standard",
+     "name": "Membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Prices set per franchise location; not listed online"
+    }
+   ],
+   "default_plan": "standard",
+   "features": [
+    {
+     "id": "gym",
+     "name": "Gym access",
+     "plans": "all",
+     "overlap_tag": "gym_access"
+    }
+   ],
+   "best_for": "Budget-to-mid gym users in New Jersey and New York.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "State list from site guest-pass form"
+   ],
+   "sources": [
+    {
+     "label": "Retro Fitness",
+     "url": "https://www.retrofitness.com/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#be123c",
+   "mark": "RF"
+  },
+  {
+   "id": "puregym_us",
+   "name": "PureGym (formerly Blink Fitness)",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NY",
+    "NJ",
+    "MD",
+    "VA"
+   ],
+   "service_area_note": "Former Blink Fitness gyms in NYC area, NJ, MD and VA",
+   "official_url": "https://www.puregym.com/us/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Month-to-month",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by gym; not listed online"
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "gym",
+     "name": "Gym access",
+     "plans": "all",
+     "overlap_tag": "gym_access"
+    },
+    {
+     "id": "no_contract",
+     "name": "No long-term contract",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Budget gym users in the NYC metro.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "PureGym US",
+     "url": "https://www.puregym.com/us/"
+    },
+    {
+     "label": "PureGym US gyms",
+     "url": "https://www.puregym.com/us/gyms"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#4d7c0f",
+   "mark": "PB"
+  },
+  {
+   "id": "merritt_clubs",
+   "name": "Merritt Clubs",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MD"
+   ],
+   "service_area_note": "8 clubs in the greater Baltimore area",
+   "official_url": "https://www.merrittclubs.com/membership/",
+   "plans": [
+    {
+     "id": "platinum",
+     "name": "Platinum (all clubs)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not listed; contact club"
+    },
+    {
+     "id": "gold",
+     "name": "Gold (6 clubs)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not listed"
+    },
+    {
+     "id": "express",
+     "name": "Express (2 clubs)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not listed"
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "gym",
+     "name": "Gym access",
+     "plans": "all",
+     "overlap_tag": "gym_access"
+    },
+    {
+     "id": "classes",
+     "name": "Group fitness classes",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Baltimore-area members wanting full-service clubs.",
+   "free_trial_days": 3,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Merritt Clubs membership",
+     "url": "https://www.merrittclubs.com/membership/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#334155",
+   "mark": "MC"
+  },
+  {
+   "id": "ymca_metro_washington",
+   "name": "YMCA of Metropolitan Washington",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "DC",
+    "MD",
+    "VA"
+   ],
+   "service_area_note": "Branches in DC, suburban Maryland and Northern Virginia (sample YMCA association)",
+   "official_url": "https://ymcadc.org/membership/",
+   "plans": [
+    {
+     "id": "adult",
+     "name": "Membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Rates not listed online; financial assistance available"
+    }
+   ],
+   "default_plan": "adult",
+   "features": [
+    {
+     "id": "gym",
+     "name": "Gym and pool access",
+     "plans": "all",
+     "overlap_tag": "gym_access"
+    },
+    {
+     "id": "childcare",
+     "name": "Child care while working out",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Families in the DC area wanting pools, classes and child care.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Membership includes access to participating YMCAs nationwide"
+   ],
+   "sources": [
+    {
+     "label": "YMCA DC membership",
+     "url": "https://ymcadc.org/membership/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#0f766e",
+   "mark": "Yo"
+  },
+  {
+   "id": "baltimore_banner",
+   "name": "The Baltimore Banner",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MD"
+   ],
+   "service_area_note": "Baltimore and Maryland news (incl. Montgomery County)",
+   "official_url": "https://www.thebanner.com/subscribe/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown (subscribe page errored)"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "digital",
+     "name": "Unlimited digital access",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Baltimore-area readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Nonprofit Venetoulis Institute also owns the Post-Gazette"
+   ],
+   "sources": [
+    {
+     "label": "Banner subscribe",
+     "url": "https://www.thebanner.com/subscribe/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#7c3aed",
+   "mark": "BB"
+  },
+  {
+   "id": "philadelphia_inquirer",
+   "name": "The Philadelphia Inquirer",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "PA",
+    "NJ",
+    "DE"
+   ],
+   "service_area_note": "Philadelphia region incl. South Jersey",
+   "official_url": "https://www.inquirer.com/subscribe/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Unlimited digital",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price loads dynamically; not confirmed"
+    },
+    {
+     "id": "sunday_print",
+     "name": "Sunday print + digital",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Not confirmed"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "digital",
+     "name": "Unlimited digital access",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Philadelphia-area readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Inquirer subscribe",
+     "url": "https://www.inquirer.com/subscribe/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#9d174d",
+   "mark": "PI"
+  },
+  {
+   "id": "richmond_times_dispatch",
+   "name": "Richmond Times-Dispatch",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "VA"
+   ],
+   "service_area_note": "Richmond and central Virginia",
+   "official_url": "https://richmond.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "All digital access",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not confirmed; site blocked to fetch"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "digital",
+     "name": "Unlimited digital access",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Central Virginia readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Richmond Times-Dispatch",
+     "url": "https://richmond.com/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#2563eb",
+   "mark": "RT"
+  },
+  {
+   "id": "newsday",
+   "name": "Newsday",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NY"
+   ],
+   "service_area_note": "Long Island and NYC",
+   "official_url": "https://www.newsday.com/subscribe",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Digital monthly",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": false,
+     "note": "App Store listing; promo intro rates common"
+    },
+    {
+     "id": "annual",
+     "name": "Digital annual",
+     "price_monthly": null,
+     "price_annual": 149.99,
+     "effective_monthly": 12.5,
+     "verified": false,
+     "note": "App Store in-app price"
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "digital",
+     "name": "Unlimited digital access",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Long Island readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Newsday on App Store",
+     "url": "https://apps.apple.com/us/app/newsday/id358571317"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#be123c",
+   "mark": "Ne"
+  },
+  {
+   "id": "nj_com",
+   "name": "NJ.com (Star-Ledger)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NJ"
+   ],
+   "service_area_note": "New Jersey statewide; Star-Ledger print ended in 2025",
+   "official_url": "https://www.nj.com/",
+   "plans": [
+    {
+     "id": "all_access",
+     "name": "All Access",
+     "price_monthly": 9.99,
+     "price_annual": 99.99,
+     "effective_monthly": 8.33,
+     "verified": false,
+     "note": "2023 snapshot via Adapty; app also listed $11.99/$119.99"
+    }
+   ],
+   "default_plan": "all_access",
+   "features": [
+    {
+     "id": "digital",
+     "name": "Unlimited digital access",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "New Jersey readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Adapty NJ.com paywall (2023)",
+     "url": "https://adapty.io/paywall-library/nj-com/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#0f766e",
+   "mark": "NJ"
+  },
+  {
+   "id": "pittsburgh_post_gazette",
+   "name": "Pittsburgh Post-Gazette",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "PA"
+   ],
+   "service_area_note": "Pittsburgh and western PA; nonprofit-owned since May 2026, print Thu & Sun",
+   "official_url": "https://www.post-gazette.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not confirmed after ownership change"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "digital",
+     "name": "Unlimited digital access",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Pittsburgh-area readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "WTOP: Post-Gazette finds buyer",
+     "url": "https://wtop.com/national/2026/04/pittsburgh-post-gazette-announces-it-has-found-a-buyer-to-keep-the-newspaper-open/"
+    },
+    {
+     "label": "Voices of Winchester: P-G lives on",
+     "url": "https://voicesofwinchester.org/5253/media/the-pittsburgh-post-gazette-lives-on/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#334155",
+   "mark": "PP"
+  },
+  {
+   "id": "constellation_home",
+   "name": "Constellation Home (formerly BGE Home) service plans",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MD",
+    "PA",
+    "TX",
+    "GA"
+   ],
+   "service_area_note": "Home service plans mainly in Maryland (Baltimore); also PA, TX, GA",
+   "official_url": "https://www.constellationhome.com/md/home-service-plans/",
+   "plans": [
+    {
+     "id": "whole_house",
+     "name": "Whole House",
+     "price_monthly": 65.95,
+     "price_annual": null,
+     "effective_monthly": 65.95,
+     "verified": true,
+     "note": "Maryland price"
+    },
+    {
+     "id": "home_comfort",
+     "name": "Home Comfort",
+     "price_monthly": 36.95,
+     "price_annual": null,
+     "effective_monthly": 36.95,
+     "verified": true,
+     "note": "Maryland price"
+    },
+    {
+     "id": "select",
+     "name": "Select Service",
+     "price_monthly": 29.95,
+     "price_annual": null,
+     "effective_monthly": 29.95,
+     "verified": true,
+     "note": "Maryland price"
+    },
+    {
+     "id": "water_sewer",
+     "name": "Water Line & Sewer Line",
+     "price_monthly": 11.95,
+     "price_annual": null,
+     "effective_monthly": 11.95,
+     "verified": true,
+     "note": "Starting price, MD"
+    }
+   ],
+   "default_plan": "home_comfort",
+   "features": [
+    {
+     "id": "hvac",
+     "name": "Heating/cooling repair coverage",
+     "plans": "all",
+     "overlap_tag": "home_warranty"
+    },
+    {
+     "id": "appliances",
+     "name": "Appliance coverage",
+     "plans": "all",
+     "overlap_tag": "home_warranty"
+    }
+   ],
+   "best_for": "Maryland homeowners wanting utility-linked repair plans.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Constellation Home MD plans",
+     "url": "https://www.constellationhome.com/md/home-service-plans/"
+    },
+    {
+     "label": "This Old House review",
+     "url": "https://www.thisoldhouse.com/home-finances/reviews/bge-home"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#9d174d",
+   "mark": "CH"
+  },
+  {
+   "id": "washington_gas_homeserve",
+   "name": "Washington Gas home repair plans (HomeServe)",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "DC",
+    "MD",
+    "VA"
+   ],
+   "service_area_note": "Washington Gas customers in DC, Maryland and Virginia",
+   "official_url": "https://www.washingtongas.com/ways-to-save/home-owners/home-repair-plans",
+   "plans": [
+    {
+     "id": "gas_line",
+     "name": "Gas Line Coverage",
+     "price_monthly": 5.49,
+     "price_annual": null,
+     "effective_monthly": 5.49,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "water_line",
+     "name": "Exterior Water Service Line",
+     "price_monthly": 5.99,
+     "price_annual": null,
+     "effective_monthly": 5.99,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "water_heater",
+     "name": "Water Heater Repair & Replacement",
+     "price_monthly": 12.99,
+     "price_annual": null,
+     "effective_monthly": 12.99,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "ext_electric",
+     "name": "Exterior Electrical",
+     "price_monthly": 5.99,
+     "price_annual": null,
+     "effective_monthly": 5.99,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "int_electric",
+     "name": "Interior Electrical",
+     "price_monthly": 5.99,
+     "price_annual": null,
+     "effective_monthly": 5.99,
+     "verified": true,
+     "note": ""
+    }
+   ],
+   "default_plan": "gas_line",
+   "features": [
+    {
+     "id": "repair",
+     "name": "Covered repairs up to benefit limit",
+     "plans": "all",
+     "overlap_tag": "home_warranty"
+    }
+   ],
+   "best_for": "Washington Gas customers wanting cheap single-system coverage.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Washington Gas home repair plans",
+     "url": "https://www.washingtongas.com/ways-to-save/home-owners/home-repair-plans"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#0369a1",
+   "mark": "WG"
+  },
+  {
+   "id": "dominion_homeserve",
+   "name": "Dominion Energy repair plans (HomeServe)",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "VA",
+    "NC",
+    "SC"
+   ],
+   "service_area_note": "Dominion Energy electric customers; plans vary by ZIP",
+   "official_url": "https://www.homeserve.com/en-us/partners/dominion/",
+   "plans": [
+    {
+     "id": "water_line",
+     "name": "Exterior Water Service Line",
+     "price_monthly": 7.95,
+     "price_annual": null,
+     "effective_monthly": 7.95,
+     "verified": false,
+     "note": "Shown on HomeServe partner page; ZIP-dependent"
+    },
+    {
+     "id": "other",
+     "name": "Other plans (HVAC, plumbing, electrical)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Prices need ZIP code"
+    }
+   ],
+   "default_plan": "water_line",
+   "features": [
+    {
+     "id": "repair",
+     "name": "Covered repairs up to benefit limit",
+     "plans": "all",
+     "overlap_tag": "home_warranty"
+    }
+   ],
+   "best_for": "Dominion customers wanting utility-partnered repair plans.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "HomeServe Dominion partner page",
+     "url": "https://www.homeserve.com/en-us/partners/dominion/"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#be123c",
+   "mark": "DE"
+  },
+  {
+   "id": "pseg_worryfree",
+   "name": "PSEG WorryFree",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NJ",
+    "NY"
+   ],
+   "service_area_note": "PSE&G customers in New Jersey; PSEG Long Island via HomeServe",
+   "official_url": "https://worryfree.pseg.com/",
+   "plans": [
+    {
+     "id": "heating",
+     "name": "Heating protection plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Prices not shown online"
+    },
+    {
+     "id": "cooling",
+     "name": "Cooling protection plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Prices not shown online"
+    }
+   ],
+   "default_plan": "heating",
+   "features": [
+    {
+     "id": "hvac",
+     "name": "Heating/cooling repair coverage",
+     "plans": "all",
+     "overlap_tag": "home_warranty"
+    },
+    {
+     "id": "appliances",
+     "name": "Appliance plans",
+     "plans": "all",
+     "overlap_tag": "home_warranty"
+    }
+   ],
+   "best_for": "PSE&G customers in NJ wanting repair plans billed with utility.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "PSEG WorryFree",
+     "url": "https://worryfree.pseg.com/"
+    },
+    {
+     "label": "HomeServe PSEG WorryFree LI",
+     "url": "https://www.homeserve.com/sc/web/mail/worryfree/w"
+    }
+   ],
+   "checked_at": "2026-10-19",
+   "region_group": "mid-atlantic",
+   "color": "#7c3aed",
+   "mark": "PW"
+  },
+  {
+   "id": "boston_organics",
+   "name": "Boston Organics (GrubMarket)",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MA"
+   ],
+   "service_area_note": "Recurring organic produce box delivery in Greater Boston",
+   "official_url": "https://bostonorganics.grubmarket.com/",
+   "plans": [
+    {
+     "id": "recurring_box",
+     "name": "Recurring produce box",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Box size/mix and schedule are chosen at signup; official site shows no box prices without login. Price unknown."
+    }
+   ],
+   "default_plan": "recurring_box",
+   "features": [
+    {
+     "id": "schedule",
+     "name": "Choose delivery schedule",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "custom_mix",
+     "name": "Customize box size and mix",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Greater Boston households wanting a recurring local/organic produce box.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Now operated by GrubMarket; confirm delivery area by ZIP."
+   ],
+   "sources": [
+    {
+     "label": "Boston Organics (GrubMarket) site",
+     "url": "https://bostonorganics.grubmarket.com/"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#0369a1",
+   "mark": "BO"
+  },
+  {
+   "id": "gwi_fiber",
+   "name": "GWI (Great Works Internet) Fiber",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "ME"
+   ],
+   "service_area_note": "Fiber internet in parts of Maine (e.g. South Portland, Biddeford, Brunswick, Sanford)",
+   "official_url": "https://gwi.net/",
+   "plans": [
+    {
+     "id": "swim",
+     "name": "Swim 500 Mbps",
+     "price_monthly": 70,
+     "price_annual": null,
+     "effective_monthly": 70,
+     "verified": true,
+     "note": "Symmetrical 500/500"
+    },
+    {
+     "id": "fly",
+     "name": "Fly 1 Gbps",
+     "price_monthly": 90,
+     "price_annual": null,
+     "effective_monthly": 90,
+     "verified": true,
+     "note": "Symmetrical 1 Gig; marked most popular"
+    },
+    {
+     "id": "soar",
+     "name": "Soar 2 Gbps",
+     "price_monthly": 110,
+     "price_annual": null,
+     "effective_monthly": 110,
+     "verified": true,
+     "note": "Symmetrical 2 Gig"
+    },
+    {
+     "id": "res_250",
+     "name": "Residential 250 Mbps",
+     "price_monthly": 59.95,
+     "price_annual": null,
+     "effective_monthly": 59.95,
+     "verified": true,
+     "note": "Per official broadband label; not an intro rate, no contract"
+    }
+   ],
+   "default_plan": "fly",
+   "features": [
+    {
+     "id": "no_contract",
+     "name": "No contract or early termination fee",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "unlimited_data",
+     "name": "Unlimited data",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "phone_addon",
+     "name": "Home phone add-on $30/mo",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Mainers in GWI fiber areas wanting symmetrical speeds with no contract.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Available speeds depend on address."
+   ],
+   "sources": [
+    {
+     "label": "GWI home page",
+     "url": "https://gwi.net/"
+    },
+    {
+     "label": "GWI 250 Mbps broadband label",
+     "url": "https://gwi.net/consumer-broadband-labels/residential-250-mbps"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#0369a1",
+   "mark": "GW"
+  },
+  {
+   "id": "fidium_fiber",
+   "name": "Fidium Fiber (Consolidated Communications)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "ME",
+    "NH",
+    "VT",
+    "MA",
+    "CA",
+    "PA",
+    "MN",
+    "TX",
+    "IL"
+   ],
+   "service_area_note": "Fiber internet, largest footprint in northern New England; also parts of CA, PA, MN, TX, IL",
+   "official_url": "https://www.fidiumfiber.com/",
+   "plans": [
+    {
+     "id": "300m",
+     "name": "300 Mbps",
+     "price_monthly": 30,
+     "price_annual": null,
+     "effective_monthly": 30,
+     "verified": true,
+     "note": "First-year promo price with AutoPay + paperless; standard rate after 12 months not shown"
+    },
+    {
+     "id": "1gig",
+     "name": "1 Gig",
+     "price_monthly": 50,
+     "price_annual": null,
+     "effective_monthly": 50,
+     "verified": true,
+     "note": "'From $50/mo' first-year promo"
+    },
+    {
+     "id": "2gig",
+     "name": "2 Gig",
+     "price_monthly": 65,
+     "price_annual": null,
+     "effective_monthly": 65,
+     "verified": true,
+     "note": "First-year promo per homepage headline"
+    },
+    {
+     "id": "5gig",
+     "name": "5 Gig (WiFi 7)",
+     "price_monthly": 85,
+     "price_annual": null,
+     "effective_monthly": 85,
+     "verified": true,
+     "note": "First-year promo"
+    },
+    {
+     "id": "8gig",
+     "name": "8 Gig (WiFi 7)",
+     "price_monthly": 125,
+     "price_annual": null,
+     "effective_monthly": 125,
+     "verified": true,
+     "note": "First-year promo"
+    }
+   ],
+   "default_plan": "1gig",
+   "features": [
+    {
+     "id": "no_contract",
+     "name": "No contract, unlimited data",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "free_install",
+     "name": "Free installation",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "wifi_gateway",
+     "name": "WiFi gateway included on some plans",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Northern New England homes in Fidium's fiber footprint.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Prices rise after the first year; Fidium does not publish standard rates on the homepage.",
+    "State list is approximate; Consolidated reports service in about 12 states."
+   ],
+   "sources": [
+    {
+     "label": "Fidium Fiber home page",
+     "url": "https://www.fidiumfiber.com/"
+    },
+    {
+     "label": "Fierce Network: Fidium state rollout (2022)",
+     "url": "https://www.fierce-network.com/broadband/consolidated-debuts-fidium-fiber-5-new-states"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#334155",
+   "mark": "FF"
+  },
+  {
+   "id": "burlington_telecom",
+   "name": "Burlington Telecom",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "VT"
+   ],
+   "service_area_note": "Municipal-origin fiber network in Burlington, Vermont area (owned by Archtop Fiber)",
+   "official_url": "https://burlingtontelecom.com/",
+   "plans": [
+    {
+     "id": "5mb",
+     "name": "5 Mbps (internet only)",
+     "price_monthly": 43,
+     "price_annual": null,
+     "effective_monthly": 43,
+     "verified": true,
+     "note": "2025 price sheet"
+    },
+    {
+     "id": "150mb",
+     "name": "150 Mbps (internet only)",
+     "price_monthly": 58,
+     "price_annual": null,
+     "effective_monthly": 58,
+     "verified": true,
+     "note": "2025 price sheet"
+    },
+    {
+     "id": "300mb",
+     "name": "300 Mbps",
+     "price_monthly": 68,
+     "price_annual": null,
+     "effective_monthly": 68,
+     "verified": true,
+     "note": "2025 price sheet"
+    },
+    {
+     "id": "1gig",
+     "name": "1 Gig",
+     "price_monthly": 73,
+     "price_annual": null,
+     "effective_monthly": 73,
+     "verified": true,
+     "note": "2025 price sheet; may have changed in 2026"
+    }
+   ],
+   "default_plan": "1gig",
+   "features": [
+    {
+     "id": "money_back",
+     "name": "30-day money-back guarantee",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "smart_wifi",
+     "name": "Smart WiFi add-on $12/mo",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Burlington-area residents wanting local fiber.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "$65 installation fee; prices exclude taxes and equipment."
+   ],
+   "sources": [
+    {
+     "label": "Burlington Telecom 2025 pricing (PDF)",
+     "url": "https://burlingtontelecom.com/wp-content/uploads/2025/02/2025-Pricing_Burlington-Telecom.pdf"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#2563eb",
+   "mark": "BT"
+  },
+  {
+   "id": "ecfiber",
+   "name": "ECFiber (East Central Vermont Fiber)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "VT"
+   ],
+   "service_area_note": "Community-owned fiber district covering ~31 towns in east-central Vermont",
+   "official_url": "https://www.ecfiber.net/",
+   "plans": [
+    {
+     "id": "basic",
+     "name": "Basic 100/100 Mbps",
+     "price_monthly": 72,
+     "price_annual": null,
+     "effective_monthly": 72,
+     "verified": false,
+     "note": "$72/mo per Oct 2024 news report; official rate page not reached. Faster tiers exist but prices not confirmed."
+    }
+   ],
+   "default_plan": "basic",
+   "features": [
+    {
+     "id": "symmetrical",
+     "name": "Symmetrical speeds",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "community_owned",
+     "name": "Community-owned network",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rural east-central Vermont towns in the ECFiber district.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Vermont Business Magazine (Oct 2024)",
+     "url": "https://vermontbiz.com/node/234912"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#c2410c",
+   "mark": "EC"
+  },
+  {
+   "id": "whip_city_fiber",
+   "name": "Whip City Fiber (Westfield Gas & Electric)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MA"
+   ],
+   "service_area_note": "Municipal fiber from Westfield, MA, also serving many western MA hill towns",
+   "official_url": "https://whipcityfiber.com/",
+   "plans": [
+    {
+     "id": "gigabit",
+     "name": "Gigabit Internet",
+     "price_monthly": 75,
+     "price_annual": null,
+     "effective_monthly": 75,
+     "verified": false,
+     "note": "Per Town of Heath page; up to 1000 Mbps"
+    },
+    {
+     "id": "economy",
+     "name": "Economy Internet (25 Mbps)",
+     "price_monthly": 59,
+     "price_annual": null,
+     "effective_monthly": 59,
+     "verified": false,
+     "note": "Per Town of Heath page"
+    }
+   ],
+   "default_plan": "gigabit",
+   "features": [
+    {
+     "id": "phone",
+     "name": "Premier Phone $19.99/mo bundled",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Westfield and western Massachusetts hill-town residents.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "One-time $99 activation plus a distance-based drop fee in some towns.",
+    "Pricing can differ by partner town."
+   ],
+   "sources": [
+    {
+     "label": "Town of Heath: Internet Service",
+     "url": "https://townofheath.org/p/149/Internet-Service-in-Heath"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#4d7c0f",
+   "mark": "WC"
+  },
+  {
+   "id": "gonetspeed",
+   "name": "GoNetspeed",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CT",
+    "ME",
+    "MA",
+    "VT",
+    "NY",
+    "PA",
+    "AL",
+    "MO"
+   ],
+   "service_area_note": "Fiber internet in parts of CT, ME, MA, VT plus NY, PA, AL, MO (NJ, RI coming soon)",
+   "official_url": "https://www.gonetspeed.com/",
+   "plans": [
+    {
+     "id": "500m",
+     "name": "500 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by area; shown only after address check"
+    },
+    {
+     "id": "1gig",
+     "name": "1 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by area"
+    },
+    {
+     "id": "3gig",
+     "name": "3 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Promo: 3 Gig for the price of 1 Gig for 12 months (AutoPay + paperless)"
+    },
+    {
+     "id": "6gig",
+     "name": "6 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by area"
+    }
+   ],
+   "default_plan": "1gig",
+   "features": [
+    {
+     "id": "free_install",
+     "name": "Free installation and router",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "no_contract",
+     "name": "No contracts or data caps",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Homes in GoNetspeed fiber towns across New England.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "GoNetspeed home page",
+     "url": "https://www.gonetspeed.com/"
+    },
+    {
+     "label": "GoNetspeed Vermont",
+     "url": "https://www.gonetspeed.com/vt/"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#9d174d",
+   "mark": "Go"
+  },
+  {
+   "id": "edge_fitness",
+   "name": "The Edge Fitness Clubs",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CT",
+    "MA",
+    "RI",
+    "DE",
+    "MI",
+    "MO",
+    "NJ",
+    "IL",
+    "PA"
+   ],
+   "service_area_note": "HVLP gym chain, largest presence in Connecticut",
+   "official_url": "https://www.theedgefitnessclubs.com/",
+   "plans": [
+    {
+     "id": "basic",
+     "name": "Basic",
+     "price_monthly": 15.99,
+     "price_annual": null,
+     "effective_monthly": 15.99,
+     "verified": true,
+     "note": "Johnston RI rate; $59.99 enrollment there"
+    },
+    {
+     "id": "fit",
+     "name": "Fit",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": true,
+     "note": "Johnston RI grand-opening rate; varies by club"
+    },
+    {
+     "id": "strong",
+     "name": "Strong",
+     "price_monthly": 39.99,
+     "price_annual": null,
+     "effective_monthly": 39.99,
+     "verified": true,
+     "note": "Johnston RI grand-opening rate; chain range is $15.99-$49.99/mo"
+    }
+   ],
+   "default_plan": "fit",
+   "features": [
+    {
+     "id": "annual_fee",
+     "name": "Annual enhancement fee (amount not published)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "multi_club",
+     "name": "Higher tiers add amenities/access",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Budget-to-mid gym members in CT, RI and MA.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Prices vary by club; check your location page."
+   ],
+   "sources": [
+    {
+     "label": "Edge membership pricing FAQ",
+     "url": "https://www.theedgefitnessclubs.com/support/membership-pricing"
+    },
+    {
+     "label": "Edge Johnston, RI",
+     "url": "https://www.theedgefitnessclubs.com/johnston-ri"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#0369a1",
+   "mark": "EF"
+  },
+  {
+   "id": "healthworks_fitness",
+   "name": "Healthworks Fitness Centers for Women",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MA"
+   ],
+   "service_area_note": "Women's gyms in Back Bay, Cambridge (Porter Sq) and Brookline",
+   "official_url": "https://healthworksfitness.com/",
+   "plans": [
+    {
+     "id": "membership",
+     "name": "Club membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Dues not published; $69.99 annual facilities enhancement fee. Commit plans have $200 early buy-out."
+    }
+   ],
+   "default_plan": "membership",
+   "features": [
+    {
+     "id": "classes",
+     "name": "Group classes",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "flex_plans",
+     "name": "Pay As You Go+, Flex, Non-commit and Commit options",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Women in Boston/Cambridge/Brookline wanting a women-only club.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "10-day full refund window after joining."
+   ],
+   "sources": [
+    {
+     "label": "Healthworks FAQ",
+     "url": "https://healthworksfitness.com/hw-faqs-v1/"
+    },
+    {
+     "label": "Healthworks promotion",
+     "url": "https://healthworksfitness.com/membership-promotion/"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#c2410c",
+   "mark": "HF"
+  },
+  {
+   "id": "ymca_southern_maine",
+   "name": "YMCA of Southern Maine",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "ME"
+   ],
+   "service_area_note": "Y branches in Portland, Casco Bay (Freeport) and Northern York County (Biddeford)",
+   "official_url": "https://www.ymcaofsouthernmaine.org/",
+   "plans": [
+    {
+     "id": "adult",
+     "name": "Adult",
+     "price_monthly": 70,
+     "price_annual": null,
+     "effective_monthly": 70,
+     "verified": true,
+     "note": "Rates effective Sep 1, 2025"
+    },
+    {
+     "id": "two_adults",
+     "name": "Two Adults",
+     "price_monthly": 95,
+     "price_annual": null,
+     "effective_monthly": 95,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "household",
+     "name": "Household",
+     "price_monthly": 101,
+     "price_annual": null,
+     "effective_monthly": 101,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "youth",
+     "name": "Youth Facility",
+     "price_monthly": 43,
+     "price_annual": null,
+     "effective_monthly": 43,
+     "verified": true,
+     "note": ""
+    }
+   ],
+   "default_plan": "adult",
+   "features": [
+    {
+     "id": "guest_passes",
+     "name": "3 guest passes per year",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "pools",
+     "name": "Pools and group exercise",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Southern Maine families wanting gym, pool and programs.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Ask about financial assistance."
+   ],
+   "sources": [
+    {
+     "label": "YMCA of Southern Maine rates",
+     "url": "https://www.ymcaofsouthernmaine.org/rates"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#0369a1",
+   "mark": "Yo"
+  },
+  {
+   "id": "boston_globe",
+   "name": "The Boston Globe (Digital)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MA"
+   ],
+   "service_area_note": "Boston daily; digital available anywhere, coverage focused on MA/New England",
+   "official_url": "https://www.bostonglobe.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital Only",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Official help page lists $6.93/week, billed $27.72 every 4 weeks (~$30/mo); a 2025 media report cites ~$36. Confirm at checkout."
+    },
+    {
+     "id": "bostoncom",
+     "name": "Boston.com standalone",
+     "price_monthly": 10,
+     "price_annual": null,
+     "effective_monthly": 10,
+     "verified": false,
+     "note": "Per Oct 2026 media report; Boston.com moving to mostly paid"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "app",
+     "name": "Apps and ePaper",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "intro",
+     "name": "Intro offers often $1 for 6 months",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Readers who want in-depth Boston and New England news.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Libraries in MA may offer free Globe digital access.",
+    "Intro rate jumps to full price; set a reminder."
+   ],
+   "sources": [
+    {
+     "label": "Globe help: digital-only cost",
+     "url": "https://customerservice.bostonglobe.com/hc/en-us/articles/360020439672-How-much-does-a-Digital-Only-subscription-cost"
+    },
+    {
+     "label": "Dan Kennedy (Oct 2025)",
+     "url": "https://dankennedy.net/2025/10/23/boston-com-the-globes-free-site-since-its-launch-30-years-ago-is-adding-a-metered-paywall/"
+    },
+    {
+     "label": "Dan Kennedy (Oct 2026)",
+     "url": "https://dankennedy.net/2026/10/20/boston-com-shifts-to-mostly-paid-as-globe-media-ceo-linda-henry-says-free-news-no-longer-works"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#b45309",
+   "mark": "BG"
+  },
+  {
+   "id": "maine_trust_news",
+   "name": "Maine Trust for Local News (Press Herald, Sun Journal, Kennebec Journal)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "ME"
+   ],
+   "service_area_note": "Shared digital access to pressherald.com, centralmaine.com and sunjournal.com",
+   "official_url": "https://www.pressherald.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": 18.41,
+     "verified": true,
+     "note": "$16.99 every 4 weeks standard rate since Sep 15, 2025 (~$18.41/mo equivalent); intro $1 for 4 weeks"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "three_papers",
+     "name": "Access to Press Herald, Central Maine and Sun Journal sites",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "epaper",
+     "name": "ePapers and apps",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Mainers wanting Portland, Lewiston and Augusta news in one subscription.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Sun Journal: digital rate change",
+     "url": "https://www.sunjournal.com/?p=11100080"
+    },
+    {
+     "label": "Press Herald reader services",
+     "url": "https://www.pressherald.com/reader-services/"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#7c3aed",
+   "mark": "MT"
+  },
+  {
+   "id": "bangor_daily_news",
+   "name": "Bangor Daily News",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "ME"
+   ],
+   "service_area_note": "Bangor/northern and central Maine daily, digital statewide",
+   "official_url": "https://www.bangordailynews.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital Access",
+     "price_monthly": 19.99,
+     "price_annual": null,
+     "effective_monthly": 19.99,
+     "verified": false,
+     "note": "$19.99/mo renewal rate per BDN terms text; digital-only offer page not reached"
+    },
+    {
+     "id": "politics_insider",
+     "name": "Maine Politics Insider bundle (incl. digital)",
+     "price_monthly": 35,
+     "price_annual": 300,
+     "effective_monthly": 35,
+     "verified": true,
+     "note": "$17.50 first month, then $35/mo; or $300/yr"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "politics",
+     "name": "Maine Politics Insider newsletter",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Readers following Bangor-area and Maine politics news.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Maine 5.5% sales tax may apply."
+   ],
+   "sources": [
+    {
+     "label": "BDN Maine Politics Insider",
+     "url": "https://www.bangordailynews.com/politicsinsider/"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#7c3aed",
+   "mark": "BD"
+  },
+  {
+   "id": "hartford_courant",
+   "name": "Hartford Courant (Digital)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CT"
+   ],
+   "service_area_note": "Connecticut's largest daily; digital available anywhere",
+   "official_url": "https://www.courant.com/",
+   "plans": [
+    {
+     "id": "digital_monthly",
+     "name": "Unlimited Digital Access (monthly)",
+     "price_monthly": 19.99,
+     "price_annual": null,
+     "effective_monthly": 19.99,
+     "verified": true,
+     "note": "App Store in-app price; web offers may differ"
+    },
+    {
+     "id": "digital_annual",
+     "name": "Unlimited Digital Access (annual)",
+     "price_monthly": null,
+     "price_annual": 199.99,
+     "effective_monthly": 16.67,
+     "verified": true,
+     "note": "App Store in-app price"
+    }
+   ],
+   "default_plan": "digital_monthly",
+   "features": [
+    {
+     "id": "app",
+     "name": "News app and eNewspaper",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Connecticut readers wanting statewide and Hartford news.",
+   "free_trial_days": 30,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "App lists a free first month."
+   ],
+   "sources": [
+    {
+     "label": "Hartford Courant app (App Store)",
+     "url": "https://apps.apple.com/us/app/hartford-courant/id391113483"
+    },
+    {
+     "label": "Courant subscriber services",
+     "url": "https://courant.subscriber.services/"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#334155",
+   "mark": "HC"
+  },
+  {
+   "id": "union_leader",
+   "name": "New Hampshire Union Leader (Digital)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NH"
+   ],
+   "service_area_note": "Manchester-based statewide NH daily",
+   "official_url": "https://www.unionleader.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Unlimited Digital Access",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": 17.32,
+     "verified": true,
+     "note": "$15.99 every 4 weeks (~$17.32/mo)"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "eedition",
+     "name": "eEdition print replica",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "app",
+     "name": "Mobile app",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "New Hampshire readers wanting statewide news and politics.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Union Leader subscribe",
+     "url": "https://unionleader.com/subscribe"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#0369a1",
+   "mark": "NH"
+  },
+  {
+   "id": "seven_days_vt",
+   "name": "Seven Days Super Reader",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "VT"
+   ],
+   "service_area_note": "Free Burlington alt-weekly with voluntary reader membership",
+   "official_url": "https://www.sevendaysvt.com/",
+   "plans": [
+    {
+     "id": "super_reader",
+     "name": "Super Reader (pay what you want)",
+     "price_monthly": 10,
+     "price_annual": null,
+     "effective_monthly": 10,
+     "verified": true,
+     "note": "Suggested $10/mo; any amount, recurring or one-time; content is free"
+    }
+   ],
+   "default_plan": "super_reader",
+   "features": [
+    {
+     "id": "voluntary",
+     "name": "Voluntary support; pausable anytime",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Vermonters who want to support free local journalism.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Not tax-deductible; easy to pause."
+   ],
+   "sources": [
+    {
+     "label": "Seven Days Super Reader",
+     "url": "https://sevendaysvt.com/super-reader"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#2563eb",
+   "mark": "SD"
+  },
+  {
+   "id": "dead_river_service",
+   "name": "Dead River Company Service Plans",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "ME",
+    "NH",
+    "VT",
+    "MA",
+    "NY"
+   ],
+   "service_area_note": "Heating oil/propane supplier across northern New England (acquired Bourne's Energy, VT)",
+   "official_url": "https://www.deadriver.com/service-installation/service-plans",
+   "plans": [
+    {
+     "id": "easycomfort",
+     "name": "EasyComfort",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Annual tune-up plus most parts and labor; price not published (call 855-317-4837)"
+    },
+    {
+     "id": "shareplus",
+     "name": "SharePlus",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Annual tune-up plus 50% of most parts and labor; price not published"
+    }
+   ],
+   "default_plan": "easycomfort",
+   "features": [
+    {
+     "id": "tuneup",
+     "name": "Annual tune-up",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "tanksure",
+     "name": "TankSure tank coverage add-on",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Dead River oil or propane customers wanting predictable repair costs.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Auto-renews yearly; refundable within 90 days of renewal only if unused.",
+    "Plan ends if you stop buying fuel from Dead River."
+   ],
+   "sources": [
+    {
+     "label": "Dead River service plans",
+     "url": "https://www.deadriver.com/service-installation/service-plans"
+    },
+    {
+     "label": "Dead River plan terms",
+     "url": "https://www.deadriver.com/service-installation/service-plans/terms-and-conditions"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#0369a1",
+   "mark": "DR"
+  },
+  {
+   "id": "als_oil_service",
+   "name": "Al's Oil Service Contracts",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MA"
+   ],
+   "service_area_note": "Heating oil service in Worcester County, MA (Sutton, West Boylston area)",
+   "official_url": "https://www.alsoilservice.com/service-contract-options",
+   "plans": [
+    {
+     "id": "standard",
+     "name": "Standard Contract",
+     "price_monthly": null,
+     "price_annual": 425,
+     "effective_monthly": 35.42,
+     "verified": true,
+     "note": "Burner parts/labor plus annual cleaning"
+    },
+    {
+     "id": "deluxe",
+     "name": "Deluxe Contract",
+     "price_monthly": null,
+     "price_annual": 525,
+     "effective_monthly": 43.75,
+     "verified": true,
+     "note": "Adds circulator, aquastat, zone valves, etc."
+    },
+    {
+     "id": "tank",
+     "name": "Oil Tank Contract (add-on)",
+     "price_monthly": null,
+     "price_annual": 100,
+     "effective_monthly": 8.33,
+     "verified": true,
+     "note": "Per tank; requires Standard or Deluxe"
+    }
+   ],
+   "default_plan": "standard",
+   "features": [
+    {
+     "id": "cleaning",
+     "name": "Annual cleaning",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "emergency",
+     "name": "Free emergency calls on burner",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Worcester County oil-heat homes wanting a published-price service contract.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Al's Oil Service contract options",
+     "url": "https://www.alsoilservice.com/service-contract-options"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#334155",
+   "mark": "AO"
+  },
+  {
+   "id": "scott_williams_oil",
+   "name": "Scott Williams Oil Silver Platter Plans",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MA"
+   ],
+   "service_area_note": "Heating oil and HVAC service on Boston's South Shore (Quincy, Braintree, Weymouth, Brockton area)",
+   "official_url": "https://www.scottwilliamsoil.com/service/service-plans/",
+   "plans": [
+    {
+     "id": "heat",
+     "name": "Silver Platter heating oil plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "12-point tune-up plus repairs; price not published"
+    },
+    {
+     "id": "ac",
+     "name": "Silver Platter A/C plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not published"
+    },
+    {
+     "id": "tankguard",
+     "name": "TankGuard add-on",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Up to $2,000 toward tank replacement; price not published"
+    }
+   ],
+   "default_plan": "heat",
+   "features": [
+    {
+     "id": "tuneup",
+     "name": "Annual 12-point tune-up",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "South Shore oil-heat homes.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Scott Williams service plans",
+     "url": "https://www.scottwilliamsoil.com/service/service-plans/"
+    }
+   ],
+   "checked_at": "2026-10-20",
+   "region_group": "new-england",
+   "color": "#0369a1",
+   "mark": "SW"
+  },
+  {
+   "id": "hotwire_fision",
+   "name": "Hotwire Communications (Fision Internet)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL",
+    "NC",
+    "SC",
+    "GA",
+    "TX",
+    "AZ",
+    "NV",
+    "CA",
+    "PA"
+   ],
+   "service_area_note": "Fiber mostly sold in bulk to HOAs, condos and apartment communities; largest in Florida",
+   "official_url": "https://www.hotwirecommunications.com/",
+   "plans": [
+    {
+     "id": "bulk_community",
+     "name": "Community bulk plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Base internet is usually included in HOA dues or rent; no public rate card"
+    },
+    {
+     "id": "gig_1000_retail",
+     "name": "Gigabit 1000 (retail, non-bulk)",
+     "price_monthly": 259.99,
+     "price_annual": null,
+     "effective_monthly": 259.99,
+     "verified": false,
+     "note": "From third-party copy of retail rate sheet; bulk residents usually pay much less to upgrade (median about $74.99 per FCC labels)"
+    }
+   ],
+   "default_plan": "bulk_community",
+   "features": [
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber speeds",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "no_contract",
+     "name": "No contract on upgrade tiers",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Residents of Hotwire-wired communities who want faster upgrade tiers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Check what your HOA bulk contract already includes before paying for an upgrade."
+   ],
+   "sources": [
+    {
+     "label": "Hotwire Communications home page (footprint)",
+     "url": "https://www.hotwirecommunications.com/"
+    },
+    {
+     "label": "MyUtilitySearch Hotwire pricing summary (Oct 2026)",
+     "url": "https://myutilitysearch.com/hotwire-internet/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#be123c",
+   "mark": "HC"
+  },
+  {
+   "id": "comporium",
+   "name": "Comporium Internet",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "SC",
+    "NC"
+   ],
+   "service_area_note": "York, Lancaster, Lexington and nearby SC counties plus parts of the Charlotte area and Brevard, NC",
+   "official_url": "https://www.comporium.com/internet",
+   "plans": [
+    {
+     "id": "standard_400",
+     "name": "Standard 400 Mbps",
+     "price_monthly": 39.94,
+     "price_annual": null,
+     "effective_monthly": 39.94,
+     "verified": true,
+     "note": "Price for 24 months"
+    },
+    {
+     "id": "ultra_600",
+     "name": "Ultra 600 Mbps",
+     "price_monthly": 49.94,
+     "price_annual": null,
+     "effective_monthly": 49.94,
+     "verified": true,
+     "note": "Price for 24 months"
+    },
+    {
+     "id": "zipstream_1gig",
+     "name": "Zipstream 1 Gig",
+     "price_monthly": 65.94,
+     "price_annual": null,
+     "effective_monthly": 65.94,
+     "verified": true,
+     "note": "Price for 24 months"
+    }
+   ],
+   "default_plan": "standard_400",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "premium_wifi",
+     "name": "Premium WiFi add-on ($9.99/mo)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Households in the Rock Hill / Fort Mill / Lancaster area of SC.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Advertised prices last 24 months; check the rate after that."
+   ],
+   "sources": [
+    {
+     "label": "Comporium internet plans",
+     "url": "https://www.comporium.com/internet"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#be123c",
+   "mark": "CI"
+  },
+  {
+   "id": "epb_fiber",
+   "name": "EPB Fiber Optics",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TN",
+    "GA"
+   ],
+   "service_area_note": "Chattanooga / Hamilton County, TN and adjoining parts of north Georgia",
+   "official_url": "https://epb.com/home-store/internet/",
+   "plans": [
+    {
+     "id": "basic_300",
+     "name": "Basic Internet 300 Mbps",
+     "price_monthly": 57.99,
+     "price_annual": null,
+     "effective_monthly": 57.99,
+     "verified": true,
+     "note": "Before tax"
+    },
+    {
+     "id": "gig_1",
+     "name": "1 GIG",
+     "price_monthly": 67.99,
+     "price_annual": null,
+     "effective_monthly": 67.99,
+     "verified": true,
+     "note": "Before tax"
+    },
+    {
+     "id": "gig_2_5",
+     "name": "2.5 GIGS",
+     "price_monthly": 77.99,
+     "price_annual": null,
+     "effective_monthly": 77.99,
+     "verified": true,
+     "note": "Before tax"
+    },
+    {
+     "id": "gig_5",
+     "name": "5 GIGS",
+     "price_monthly": 97.99,
+     "price_annual": null,
+     "effective_monthly": 97.99,
+     "verified": true,
+     "note": "Before tax"
+    }
+   ],
+   "default_plan": "gig_1",
+   "features": [
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "multi_gig",
+     "name": "Up to 25 Gig tiers",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "North Georgia homes inside EPB's Chattanooga-area footprint.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "EPB internet plans",
+     "url": "https://epb.com/home-store/internet/"
+    },
+    {
+     "label": "Wikipedia: EPB (service area)",
+     "url": "https://en.wikipedia.org/wiki/EPB"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#b45309",
+   "mark": "EF"
+  },
+  {
+   "id": "truvista",
+   "name": "Truvista Fiber",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "SC",
+    "GA"
+   ],
+   "service_area_note": "Fairfield, Kershaw, Chester and nearby SC counties; Stephens, Rabun, Habersham and Franklin area of NE Georgia",
+   "official_url": "https://truvista.net/",
+   "plans": [
+    {
+     "id": "everyday_250",
+     "name": "Everyday 250 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by address; not published"
+    },
+    {
+     "id": "family_500",
+     "name": "Family 500 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by address; not published"
+    },
+    {
+     "id": "smart_home_1g",
+     "name": "Smart Home 1 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by address; not published"
+    },
+    {
+     "id": "advance_2g",
+     "name": "Advance 2 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by address; not published"
+    },
+    {
+     "id": "ultra_5g",
+     "name": "Ultra 5 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price varies by address; not published"
+    }
+   ],
+   "default_plan": "smart_home_1g",
+   "features": [
+    {
+     "id": "fiber",
+     "name": "Fiber internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    }
+   ],
+   "best_for": "Rural/small-town households in the SC Midlands and NE Georgia mountains.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Call 1-800-768-1212 or use Shop Now for your address's price."
+   ],
+   "sources": [
+    {
+     "label": "Truvista plans page",
+     "url": "https://truvista.net/no-tv-contracts"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#0369a1",
+   "mark": "TF"
+  },
+  {
+   "id": "wow_internet",
+   "name": "WOW! Internet",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AL",
+    "FL",
+    "GA",
+    "SC",
+    "TN",
+    "MI",
+    "IL",
+    "IN"
+   ],
+   "service_area_note": "Cable/fiber in select metros, e.g. Pinellas County FL, Columbus and Augusta GA, Charleston SC",
+   "official_url": "https://www.wowway.com/internet",
+   "plans": [
+    {
+     "id": "cable_300",
+     "name": "300 Mbps",
+     "price_monthly": 30.0,
+     "price_annual": null,
+     "effective_monthly": 30.0,
+     "verified": false,
+     "note": "Matches official 'plans start at $30/mo'; AutoPay required"
+    },
+    {
+     "id": "cable_600",
+     "name": "600 Mbps",
+     "price_monthly": 45.0,
+     "price_annual": null,
+     "effective_monthly": 45.0,
+     "verified": false,
+     "note": "Reviews.org table, Apr 2026; AutoPay required"
+    },
+    {
+     "id": "cable_1g",
+     "name": "Internet 1 Gig",
+     "price_monthly": 60.0,
+     "price_annual": null,
+     "effective_monthly": 60.0,
+     "verified": false,
+     "note": "Reviews.org table, Apr 2026; AutoPay required"
+    },
+    {
+     "id": "fiber_1g",
+     "name": "Fiber 1 Gig",
+     "price_monthly": 80.0,
+     "price_annual": null,
+     "effective_monthly": 80.0,
+     "verified": false,
+     "note": "Reviews.org table, Apr 2026; AutoPay + paperless"
+    }
+   ],
+   "default_plan": "cable_600",
+   "features": [
+    {
+     "id": "no_contract",
+     "name": "No annual contract",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "price_lock",
+     "name": "Price Lock for Life (+$5/mo)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Households in WOW cities wanting no-contract cable or fiber.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Optional Price Lock for Life adds $5/mo and freezes your rate while you keep the same speed."
+   ],
+   "sources": [
+    {
+     "label": "WOW internet page",
+     "url": "https://www.wowway.com/internet"
+    },
+    {
+     "label": "Reviews.org WOW review (Apr 2026)",
+     "url": "https://www.reviews.org/internet-service/wow-internet-review/"
+    },
+    {
+     "label": "Wikipedia: Wide Open West (states)",
+     "url": "https://en.wikipedia.org/wiki/Wide_Open_West"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#7c3aed",
+   "mark": "WI"
+  },
+  {
+   "id": "greenlight_nc",
+   "name": "Greenlight Community Broadband",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NC"
+   ],
+   "service_area_note": "City of Wilson, NC municipal fiber (Wilson and nearby areas)",
+   "official_url": "https://www.greenlightnc.com/",
+   "plans": [
+    {
+     "id": "internet",
+     "name": "Fiber internet",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Prices not published online; call for packages"
+    }
+   ],
+   "default_plan": "internet",
+   "features": [
+    {
+     "id": "municipal_fiber",
+     "name": "Municipal fiber",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    }
+   ],
+   "best_for": "Wilson, NC residents wanting city-owned fiber.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Greenlight home page",
+     "url": "https://www.greenlightnc.com/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#334155",
+   "mark": "GC"
+  },
+  {
+   "id": "ajc",
+   "name": "The Atlanta Journal-Constitution (AJC)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "GA"
+   ],
+   "service_area_note": "Atlanta and Georgia news; digital-only since Jan 2026, readable anywhere",
+   "official_url": "https://www.ajc.com/start/",
+   "plans": [
+    {
+     "id": "digital_monthly",
+     "name": "Digital monthly",
+     "price_monthly": 9.99,
+     "price_annual": null,
+     "effective_monthly": 9.99,
+     "verified": false,
+     "note": "Rate AJC quoted to print subscribers switching to digital (Dec 2025); new-subscriber rate not shown"
+    },
+    {
+     "id": "digital_annual",
+     "name": "Digital annual",
+     "price_monthly": null,
+     "price_annual": 99.0,
+     "effective_monthly": 8.25,
+     "verified": false,
+     "note": "Rate AJC quoted to print subscribers switching to digital (Dec 2025)"
+    }
+   ],
+   "default_plan": "digital_monthly",
+   "features": [
+    {
+     "id": "unlimited_access",
+     "name": "Unlimited articles, newsletters, podcasts",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Readers who follow Atlanta and Georgia news.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "AJC stopped printing on Dec 31, 2025; subscriptions are digital-only."
+   ],
+   "sources": [
+    {
+     "label": "AJC: Newspaper to digital (Dec 2025)",
+     "url": "https://feeds.ajc.com/wellness/2025/12/newspaper-to-digital-how-to-keep-reading-the-ajc-without-interruption"
+    },
+    {
+     "label": "AJC subscribe page",
+     "url": "https://www.ajc.com/start/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#4d7c0f",
+   "mark": "AJ"
+  },
+  {
+   "id": "tampa_bay_times",
+   "name": "Tampa Bay Times",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL"
+   ],
+   "service_area_note": "Tampa Bay area news; digital readable anywhere",
+   "official_url": "https://subscribe.tampabay.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Pricing page did not render; check site for intro and regular rates"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "unlimited_access",
+     "name": "Unlimited digital access",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Readers who follow Tampa Bay and Florida news.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Tampa Bay Times subscribe page",
+     "url": "https://subscribe.tampabay.com/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#9d174d",
+   "mark": "TB"
+  },
+  {
+   "id": "post_and_courier",
+   "name": "The Post and Courier",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "SC"
+   ],
+   "service_area_note": "Charleston and South Carolina news; home delivery in the Charleston area",
+   "official_url": "https://www.postandcourier.com/subscribe/",
+   "plans": [
+    {
+     "id": "digital_all_access",
+     "name": "Digital All-Access",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown on subscribe page"
+    },
+    {
+     "id": "home_delivery",
+     "name": "Home delivery (includes Digital All-Access)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown on subscribe page"
+    }
+   ],
+   "default_plan": "digital_all_access",
+   "features": [
+    {
+     "id": "unlimited_access",
+     "name": "Unlimited digital access",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    },
+    {
+     "id": "print",
+     "name": "Print delivery",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Readers who follow Charleston and SC news.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Cancel anytime, per the subscribe page."
+   ],
+   "sources": [
+    {
+     "label": "Post and Courier subscribe page",
+     "url": "https://www.postandcourier.com/subscribe/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#be123c",
+   "mark": "Pa"
+  },
+  {
+   "id": "eos_fitness",
+   "name": "EoS Fitness",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AZ",
+    "CA",
+    "FL",
+    "GA",
+    "NV",
+    "TX",
+    "UT"
+   ],
+   "service_area_note": "Gyms in Florida, metro Atlanta and the Southwest",
+   "official_url": "https://eosfitness.com/",
+   "plans": [
+    {
+     "id": "will_do",
+     "name": "Will Do",
+     "price_monthly": 9.99,
+     "price_annual": null,
+     "effective_monthly": 9.99,
+     "verified": true,
+     "note": "Starting price; plus $59.99 annual fee and up to $49.99 enrollment"
+    },
+    {
+     "id": "will_crush",
+     "name": "Will Crush",
+     "price_monthly": 24.99,
+     "price_annual": null,
+     "effective_monthly": 24.99,
+     "verified": true,
+     "note": "Starting price; plus $59.99 annual fee"
+    },
+    {
+     "id": "will_power",
+     "name": "Will Power",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": true,
+     "note": "Starting price; plus $59.99 annual fee"
+    }
+   ],
+   "default_plan": "will_do",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym access",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "multi_club",
+     "name": "Access to other clubs",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Budget-to-mid gym-goers in Florida or Atlanta.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "ACH autopay saves $2.99/mo."
+   ],
+   "sources": [
+    {
+     "label": "EoS Fitness home page",
+     "url": "https://eosfitness.com/"
+    },
+    {
+     "label": "EoS Fitness press release (Jul 2026)",
+     "url": "https://www.businesswire.com/news/home/20260716881770/en/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#c2410c",
+   "mark": "EF"
+  },
+  {
+   "id": "youfit",
+   "name": "Youfit Gyms",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL",
+    "LA",
+    "RI",
+    "VA"
+   ],
+   "service_area_note": "Mostly Florida, with a few gyms in Louisiana, Rhode Island and Virginia",
+   "official_url": "https://www.youfit.com/",
+   "plans": [
+    {
+     "id": "basic",
+     "name": "Basic",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Memberships 'as low as $5 biweekly'; per-plan prices not published"
+    },
+    {
+     "id": "premium",
+     "name": "Premium",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not published"
+    },
+    {
+     "id": "premium_plus",
+     "name": "Premium+",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not published"
+    }
+   ],
+   "default_plan": "basic",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym access",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "guest",
+     "name": "Guest privileges",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "multi_club",
+     "name": "Other Youfit locations",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Florida residents wanting a low-cost gym.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Annual fee varies by membership type; ask the club."
+   ],
+   "sources": [
+    {
+     "label": "Youfit home page",
+     "url": "https://www.youfit.com/"
+    },
+    {
+     "label": "Youfit Lantana gym page",
+     "url": "https://youfit.com/gyms/lantana"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#be123c",
+   "mark": "YG"
+  },
+  {
+   "id": "chuze_fitness",
+   "name": "Chuze Fitness",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AZ",
+    "CA",
+    "CO",
+    "FL",
+    "GA",
+    "NM",
+    "TX"
+   ],
+   "service_area_note": "Gyms in the West plus Jacksonville, Gainesville and St. Augustine, FL",
+   "official_url": "https://chuzefitness.com/",
+   "plans": [
+    {
+     "id": "basic",
+     "name": "Basic (starting price)",
+     "price_monthly": 9.99,
+     "price_annual": null,
+     "effective_monthly": 9.99,
+     "verified": true,
+     "note": "'As low as $9.99/mo'; varies by location; plus $59.99 annual fee"
+    }
+   ],
+   "default_plan": "basic",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym access",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "classes",
+     "name": "Group classes (higher tiers)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Northeast Florida gym-goers wanting a low-cost club.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Pay by ACH to avoid the $2.99/mo card fee."
+   ],
+   "sources": [
+    {
+     "label": "Chuze Fitness home page",
+     "url": "https://chuzefitness.com/"
+    },
+    {
+     "label": "Chuze locations",
+     "url": "https://chuzefitness.com/locations/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#2563eb",
+   "mark": "CF"
+  },
+  {
+   "id": "o2_fitness",
+   "name": "O2 Fitness",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NC",
+    "SC"
+   ],
+   "service_area_note": "Clubs across North Carolina and the Charleston, SC area",
+   "official_url": "https://www.o2fitnessclubs.com/membership",
+   "plans": [
+    {
+     "id": "month_to_month",
+     "name": "Month-to-month membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not published; varies by club"
+    }
+   ],
+   "default_plan": "month_to_month",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym access",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "classes",
+     "name": "Group classes",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "pt_sessions",
+     "name": "2 free personal training sessions",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Carolinas residents wanting a full-service gym.",
+   "free_trial_days": 21,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "O2 Fitness membership page",
+     "url": "https://www.o2fitnessclubs.com/membership"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#0369a1",
+   "mark": "OF"
+  },
+  {
+   "id": "autobell_unlimited",
+   "name": "Autobell Car Wash Unlimited",
+   "category": "auto",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NC",
+    "SC",
+    "VA",
+    "MD"
+   ],
+   "service_area_note": "Full-service car washes in the Carolinas, Virginia and Maryland",
+   "official_url": "https://www.autobell.com/product-category/unlimited-plans/",
+   "plans": [
+    {
+     "id": "exterior",
+     "name": "Exterior Unlimited",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown on site"
+    },
+    {
+     "id": "quality",
+     "name": "Quality Unlimited",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown on site"
+    },
+    {
+     "id": "full_service",
+     "name": "Full Service Unlimited",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown on site"
+    },
+    {
+     "id": "super",
+     "name": "Super Unlimited",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown on site"
+    }
+   ],
+   "default_plan": "exterior",
+   "features": [
+    {
+     "id": "unlimited_washes",
+     "name": "Unlimited washes",
+     "plans": "all",
+     "overlap_tag": "car_wash"
+    },
+    {
+     "id": "interior",
+     "name": "Interior cleaning",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Charlotte-area drivers who want full-service washes.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Payments are non-refundable; cancel at any location."
+   ],
+   "sources": [
+    {
+     "label": "Autobell unlimited plans",
+     "url": "https://www.autobell.com/product-category/unlimited-plans/"
+    },
+    {
+     "label": "Autobell Unlimited terms",
+     "url": "https://www.autobell.com/unlimited-terms"
+    },
+    {
+     "label": "Slickdeals post listing states (2023)",
+     "url": "https://slickdeals.net/f/16396012-first-month-5-only-autobell-car-wash-north-carolina-south-carolina-maryland-virginia"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#0369a1",
+   "mark": "AC"
+  },
+  {
+   "id": "massey_services",
+   "name": "Massey Services",
+   "category": "lawn_pest",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AL",
+    "FL",
+    "GA",
+    "LA",
+    "NC",
+    "OK",
+    "SC",
+    "TN",
+    "TX",
+    "VA"
+   ],
+   "service_area_note": "190+ service centers in 10 states; headquartered in Orlando",
+   "official_url": "https://www.masseyservices.com/",
+   "plans": [
+    {
+     "id": "pest_prevention",
+     "name": "Pest Prevention",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Quote-based"
+    },
+    {
+     "id": "greenup_lawn",
+     "name": "GreenUP lawn program",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Quote-based"
+    }
+   ],
+   "default_plan": "pest_prevention",
+   "features": [
+    {
+     "id": "pest",
+     "name": "Recurring pest control",
+     "plans": "all",
+     "overlap_tag": "pest_control"
+    },
+    {
+     "id": "lawn",
+     "name": "Lawn fertilization",
+     "plans": "all",
+     "overlap_tag": "lawn_care"
+    },
+    {
+     "id": "termite",
+     "name": "Termite protection",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Southeast homeowners wanting pest and lawn from one company.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Massey Services home page",
+     "url": "https://www.masseyservices.com/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#334155",
+   "mark": "MS"
+  },
+  {
+   "id": "arrow_exterminators",
+   "name": "Arrow Exterminators",
+   "category": "lawn_pest",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AL",
+    "AZ",
+    "FL",
+    "GA",
+    "KY",
+    "LA",
+    "MS",
+    "NC",
+    "SC",
+    "TN",
+    "TX",
+    "VA"
+   ],
+   "service_area_note": "200+ service centers, mostly in the Southeast; based in Atlanta",
+   "official_url": "https://www.arrowexterminators.com/",
+   "plans": [
+    {
+     "id": "quarterly_pest",
+     "name": "Quarterly pest control",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Quote after free inspection"
+    }
+   ],
+   "default_plan": "quarterly_pest",
+   "features": [
+    {
+     "id": "pest",
+     "name": "Recurring pest control",
+     "plans": "all",
+     "overlap_tag": "pest_control"
+    },
+    {
+     "id": "mosquito",
+     "name": "Mosquito programs",
+     "plans": "all",
+     "overlap_tag": "mosquito"
+    }
+   ],
+   "best_for": "Atlanta-area and Southeast homeowners wanting no-contract quarterly service.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "No annual contract required, per This Old House."
+   ],
+   "sources": [
+    {
+     "label": "Arrow Exterminators home page",
+     "url": "https://www.arrowexterminators.com/"
+    },
+    {
+     "label": "This Old House Arrow review (May 2026)",
+     "url": "https://thisoldhouse.com/pest-control/reviews/arrow-exterminators"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#be123c",
+   "mark": "AE"
+  },
+  {
+   "id": "cooks_pest_control",
+   "name": "Cook's Pest Control",
+   "category": "lawn_pest",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AL",
+    "AR",
+    "FL",
+    "GA",
+    "MS",
+    "TN"
+   ],
+   "service_area_note": "Southeast; based in Decatur, Alabama",
+   "official_url": "https://www.cookspest.com/",
+   "plans": [
+    {
+     "id": "annual_pest",
+     "name": "Annual pest plan (quarterly visits)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": 37.0,
+     "verified": false,
+     "note": "Example quote: $159 initial, $111 per quarterly visit (about $37/mo), 15-month contract; varies by home"
+    }
+   ],
+   "default_plan": "annual_pest",
+   "features": [
+    {
+     "id": "pest",
+     "name": "Recurring pest control",
+     "plans": "all",
+     "overlap_tag": "pest_control"
+    }
+   ],
+   "best_for": "Georgia and Florida Panhandle homeowners wanting a local pest company.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Termite and mosquito are billed separately from the general pest plan."
+   ],
+   "sources": [
+    {
+     "label": "Cook's Pest Control home page",
+     "url": "https://www.cookspest.com/"
+    },
+    {
+     "label": "This Old House Cook's review (May 2026)",
+     "url": "https://www.thisoldhouse.com/pest-control/cooks-pest-control-review"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#9d174d",
+   "mark": "CP"
+  },
+  {
+   "id": "turner_pest_control",
+   "name": "Turner Pest Control (TurnerGuard)",
+   "category": "lawn_pest",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL"
+   ],
+   "service_area_note": "Jacksonville, Orlando, Tampa, Naples, Sarasota and other Florida markets",
+   "official_url": "https://www.turnerpest.com/",
+   "plans": [
+    {
+     "id": "turnerguard_from",
+     "name": "TurnerGuard plans (starting price)",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": true,
+     "note": "'Starting at $29.99 per month'; plan tier not specified"
+    },
+    {
+     "id": "turnerguard_complete",
+     "name": "TurnerGuard Complete Home Protection",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price depends on home/yard size"
+    }
+   ],
+   "default_plan": "turnerguard_from",
+   "features": [
+    {
+     "id": "pest",
+     "name": "Pest control",
+     "plans": "all",
+     "overlap_tag": "pest_control"
+    },
+    {
+     "id": "termite",
+     "name": "Termite protection",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "lawn",
+     "name": "Lawn and shrub care",
+     "plans": "all",
+     "overlap_tag": "lawn_care"
+    },
+    {
+     "id": "mosquito",
+     "name": "Mosquito protection",
+     "plans": "all",
+     "overlap_tag": "mosquito"
+    }
+   ],
+   "best_for": "Florida homeowners wanting pest, termite and lawn in one monthly bill.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Turner Pest Control home page",
+     "url": "https://www.turnerpest.com/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#9d174d",
+   "mark": "TP"
+  },
+  {
+   "id": "fpl_surgeshield",
+   "name": "FPL SurgeShield",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL"
+   ],
+   "service_area_note": "Florida Power & Light customers (incl. FPL Northwest FL); billed on the FPL bill",
+   "official_url": "https://www.fpl.com/northwest/save/programs/surge-protection/surgeshield-enroll.html",
+   "plans": [
+    {
+     "id": "surgeshield",
+     "name": "SurgeShield",
+     "price_monthly": 11.95,
+     "price_annual": null,
+     "effective_monthly": 11.95,
+     "verified": true,
+     "note": "Plus tax; meter-based surge protection plus appliance warranty"
+    },
+    {
+     "id": "electronics",
+     "name": "Electronics Surge Protection",
+     "price_monthly": 12.95,
+     "price_annual": null,
+     "effective_monthly": 12.95,
+     "verified": false,
+     "note": "From BrandsMart USA partner page"
+    },
+    {
+     "id": "bundle",
+     "name": "SurgeShield + Electronics bundle",
+     "price_monthly": 18.95,
+     "price_annual": null,
+     "effective_monthly": 18.95,
+     "verified": false,
+     "note": "From BrandsMart USA partner page"
+    }
+   ],
+   "default_plan": "surgeshield",
+   "features": [
+    {
+     "id": "appliance_surge",
+     "name": "Appliance surge warranty ($5,000 per appliance)",
+     "plans": "all",
+     "overlap_tag": "home_warranty"
+    },
+    {
+     "id": "electronics_surge",
+     "name": "Electronics coverage (up to $6,000/yr)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "FPL customers in lightning-heavy Florida.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "FPL SurgeShield enroll",
+     "url": "https://www.fpl.com/northwest/save/programs/surge-protection/surgeshield-enroll.html"
+    },
+    {
+     "label": "BrandsMart USA FPL SurgeShield",
+     "url": "https://www.brandsmartusa.com/pages/fpl-surgeshield"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#9d174d",
+   "mark": "FS"
+  },
+  {
+   "id": "the_produce_box",
+   "name": "The Produce Box",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NC"
+   ],
+   "service_area_note": "Home delivery of local NC produce in Raleigh, Durham and the Triangle",
+   "official_url": "https://www.theproducebox.com/",
+   "plans": [
+    {
+     "id": "membership",
+     "name": "Annual membership",
+     "price_monthly": null,
+     "price_annual": 25.0,
+     "effective_monthly": 2.08,
+     "verified": true,
+     "note": "Boxes and items billed separately"
+    }
+   ],
+   "default_plan": "membership",
+   "features": [
+    {
+     "id": "local_produce",
+     "name": "Weekly local produce boxes",
+     "plans": "all",
+     "overlap_tag": "produce_delivery"
+    },
+    {
+     "id": "editable_sub",
+     "name": "Editable subscriptions",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Triangle households wanting weekly local farm produce.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "The Produce Box home page",
+     "url": "https://www.theproducebox.com/"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#7c3aed",
+   "mark": "PB"
+  },
+  {
+   "id": "fresh_harvest_atlanta",
+   "name": "Fresh Harvest",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "GA"
+   ],
+   "service_area_note": "Organic produce basket delivery in metro Atlanta",
+   "official_url": "https://www.freshharvestga.com/",
+   "plans": [
+    {
+     "id": "standard_basket",
+     "name": "Standard basket (weekly)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not available; official site blocked automated reading"
+    }
+   ],
+   "default_plan": "standard_basket",
+   "features": [
+    {
+     "id": "organic_produce",
+     "name": "Weekly organic produce basket",
+     "plans": "all",
+     "overlap_tag": "produce_delivery"
+    },
+    {
+     "id": "addons",
+     "name": "Add-ons: dairy, meat, bread, pantry",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Atlanta households wanting a local organic CSA-style box.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Mini, family and fruit-only basket sizes available."
+   ],
+   "sources": [
+    {
+     "label": "Explore Georgia: food delivery in Atlanta",
+     "url": "https://www.exploregeorgia.org/blog/five-must-try-food-delivery-services-in-atlanta"
+    }
+   ],
+   "checked_at": "2026-10-21",
+   "region_group": "southeast",
+   "color": "#334155",
+   "mark": "FH"
+  },
+  {
+   "id": "cspire_fiber",
+   "name": "C Spire Fiber (Home Internet)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MS",
+    "AL",
+    "TN"
+   ],
+   "service_area_note": "Fiber in select 'fiberhoods' across Mississippi plus parts of Alabama (e.g. Montgomery) and Tennessee (Memphis area)",
+   "official_url": "https://www.cspire.com/web/home-services/fiber-internet-dormant",
+   "plans": [
+    {
+     "id": "fiber_200",
+     "name": "Fiber 200",
+     "price_monthly": 39,
+     "price_annual": null,
+     "effective_monthly": 39,
+     "verified": true,
+     "note": "5-year price lock with bill credits; regular $50/mo; requires AutoPay + paperless"
+    },
+    {
+     "id": "fiber_500",
+     "name": "Fiber 500",
+     "price_monthly": 45,
+     "price_annual": null,
+     "effective_monthly": 45,
+     "verified": true,
+     "note": "$45 year 1, $55 years 2-5, regular $70; EXTRA10 code takes $10 off for 12 months"
+    },
+    {
+     "id": "fiber_1gig",
+     "name": "Fiber 1 Gig",
+     "price_monthly": 55,
+     "price_annual": null,
+     "effective_monthly": 55,
+     "verified": true,
+     "note": "$55 year 1, $65 years 2-5, regular $85"
+    },
+    {
+     "id": "fiber_2gig",
+     "name": "Fiber 2 Gig",
+     "price_monthly": 85,
+     "price_annual": null,
+     "effective_monthly": 85,
+     "verified": true,
+     "note": "$85 year 1, $95 years 2-5, regular $115"
+    },
+    {
+     "id": "fiber_8gig",
+     "name": "Fiber 8 Gig",
+     "price_monthly": 320,
+     "price_annual": null,
+     "effective_monthly": 320,
+     "verified": true,
+     "note": "$320 year 1, $330 years 2-5, regular $350"
+    }
+   ],
+   "default_plan": "fiber_200",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "price_lock",
+     "name": "5-year price lock",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber speeds",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    }
+   ],
+   "best_for": "Mississippi households in a C Spire fiberhood wanting locked-in fiber pricing.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Removing AutoPay or going 60 days past due ends the bill credits.",
+    "Note the year-1 vs years 2-5 vs regular price before signing up."
+   ],
+   "sources": [
+    {
+     "label": "C Spire fiber internet offers",
+     "url": "https://www.cspire.com/web/home-services/fiber-internet-dormant"
+    },
+    {
+     "label": "C Spire (Wikipedia, footprint)",
+     "url": "https://en.wikipedia.org/wiki/C_Spire"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#2563eb",
+   "mark": "CS"
+  },
+  {
+   "id": "cspire_wireless",
+   "name": "C Spire Wireless",
+   "category": "mobile",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MS",
+    "AL",
+    "TN"
+   ],
+   "service_area_note": "Regional carrier based in Mississippi; also parts of Alabama and Tennessee (Memphis area)",
+   "official_url": "https://cspire.com/web/wireless/plans",
+   "plans": [
+    {
+     "id": "connect_essentials",
+     "name": "Connect Essentials (25GB high-speed), 1 line",
+     "price_monthly": 60,
+     "price_annual": null,
+     "effective_monthly": 60,
+     "verified": true,
+     "note": "With $10 AutoPay discount; drops to $35/line with 4 lines. Site FAQ shows conflicting $50 figure"
+    },
+    {
+     "id": "connect_plus",
+     "name": "Connect Plus (75GB), 1 line",
+     "price_monthly": 70,
+     "price_annual": null,
+     "effective_monthly": 70,
+     "verified": true,
+     "note": "$45/line with 4 lines"
+    },
+    {
+     "id": "connect_premium",
+     "name": "Connect Premium (100GB), 1 line",
+     "price_monthly": 80,
+     "price_annual": null,
+     "effective_monthly": 80,
+     "verified": true,
+     "note": "$55/line with 4 lines"
+    },
+    {
+     "id": "connect_elite",
+     "name": "Connect Elite (250GB), 1 line",
+     "price_monthly": 100,
+     "price_annual": null,
+     "effective_monthly": 100,
+     "verified": true,
+     "note": "$75/line with 4 lines"
+    }
+   ],
+   "default_plan": "connect_essentials",
+   "features": [
+    {
+     "id": "unlimited_talk_text",
+     "name": "Unlimited talk, text and data",
+     "plans": "all",
+     "overlap_tag": "mobile_plan"
+    },
+    {
+     "id": "canada_mexico",
+     "name": "Calls to Canada/Mexico included",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Mississippi-area phone users who want a local carrier with multi-line discounts.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Plan page shows two different price sets; confirm the per-line price at checkout."
+   ],
+   "sources": [
+    {
+     "label": "C Spire wireless plans",
+     "url": "https://cspire.com/web/wireless/plans"
+    },
+    {
+     "label": "C Spire (Wikipedia, footprint)",
+     "url": "https://en.wikipedia.org/wiki/C_Spire"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#0f766e",
+   "mark": "CS"
+  },
+  {
+   "id": "appalachian_wireless",
+   "name": "Appalachian Wireless",
+   "category": "mobile",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KY",
+    "VA",
+    "WV"
+   ],
+   "service_area_note": "Regional carrier (East Kentucky Network) in eastern Kentucky and nearby Virginia/West Virginia",
+   "official_url": "https://appalachianwireless.com/plans",
+   "plans": [
+    {
+     "id": "unlimited_25",
+     "name": "Unlimited (25GB high-speed)",
+     "price_monthly": 55,
+     "price_annual": null,
+     "effective_monthly": 55,
+     "verified": true,
+     "note": "Plus per-line access fee ($20 phone) and taxes"
+    },
+    {
+     "id": "unlimited_plus_50",
+     "name": "Unlimited+ (50GB high-speed)",
+     "price_monthly": 70,
+     "price_annual": null,
+     "effective_monthly": 70,
+     "verified": true,
+     "note": "Plus access fee"
+    },
+    {
+     "id": "unlimited_pro_75",
+     "name": "Unlimited Pro (75GB)",
+     "price_monthly": 80,
+     "price_annual": null,
+     "effective_monthly": 80,
+     "verified": true,
+     "note": "Plus access fee"
+    },
+    {
+     "id": "unlimited_ultra_100",
+     "name": "Unlimited Ultra (100GB)",
+     "price_monthly": 90,
+     "price_annual": null,
+     "effective_monthly": 90,
+     "verified": true,
+     "note": "Plus access fee"
+    },
+    {
+     "id": "advance_pay_5gb",
+     "name": "Advance Pay Unlimited (5GB high-speed, prepaid)",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": true,
+     "note": "Renews every 29 days; $20 activation fee"
+    }
+   ],
+   "default_plan": "unlimited_25",
+   "features": [
+    {
+     "id": "unlimited_talk_text",
+     "name": "Unlimited talk, text and data",
+     "plans": "all",
+     "overlap_tag": "mobile_plan"
+    },
+    {
+     "id": "prepaid",
+     "name": "Prepaid (Advance Pay) options",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Eastern Kentucky residents who need the best local coverage in the mountains.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Postpaid prices exclude the $20/line phone access fee; $5/mo off when an unlimited line is on the account."
+   ],
+   "sources": [
+    {
+     "label": "Appalachian Wireless plans",
+     "url": "https://appalachianwireless.com/plans"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#7c3aed",
+   "mark": "AW"
+  },
+  {
+   "id": "cde_lightband",
+   "name": "CDE Lightband",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TN"
+   ],
+   "service_area_note": "Municipal fiber in Clarksville / Montgomery County, TN",
+   "official_url": "https://cdelightband.com/",
+   "plans": [
+    {
+     "id": "smartband_300",
+     "name": "Smartband 300 Mbps",
+     "price_monthly": 51.95,
+     "price_annual": null,
+     "effective_monthly": 51.95,
+     "verified": true,
+     "note": "Non-introductory price; Wi-Fi equipment extra"
+    },
+    {
+     "id": "smartband_600",
+     "name": "Smartband 600 Mbps",
+     "price_monthly": 71.95,
+     "price_annual": null,
+     "effective_monthly": 71.95,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "smartband_1gig",
+     "name": "Smartband 1 Gig",
+     "price_monthly": 92.95,
+     "price_annual": null,
+     "effective_monthly": 92.95,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "smartband_2_5gig",
+     "name": "Smartband 2.5 Gig",
+     "price_monthly": 121.95,
+     "price_annual": null,
+     "effective_monthly": 121.95,
+     "verified": true,
+     "note": ""
+    }
+   ],
+   "default_plan": "smartband_300",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Near-symmetrical fiber speeds",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    }
+   ],
+   "best_for": "Clarksville households wanting a city-owned fiber option.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "CDE Lightband residential internet",
+     "url": "https://cdelightband.com/?p=74957"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#2563eb",
+   "mark": "CL"
+  },
+  {
+   "id": "eplus_broadband",
+   "name": "EPlus Broadband (Jackson Energy Authority)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TN"
+   ],
+   "service_area_note": "Municipal fiber/cable in Jackson and Madison County, TN",
+   "official_url": "https://www.eplusbroadband.com/packages-pricing",
+   "plans": [
+    {
+     "id": "eplus_60",
+     "name": "EPlus 60 Internet",
+     "price_monthly": 60,
+     "price_annual": null,
+     "effective_monthly": 60,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "eplus_300",
+     "name": "EPlus 300 Internet",
+     "price_monthly": 64.99,
+     "price_annual": null,
+     "effective_monthly": 64.99,
+     "verified": true,
+     "note": "Standard rate; a $49.99 six-month promo ran through June 30, 2026"
+    },
+    {
+     "id": "eplus_gig",
+     "name": "EPlus Gig Internet",
+     "price_monthly": 79.99,
+     "price_annual": null,
+     "effective_monthly": 79.99,
+     "verified": true,
+     "note": "Standard rate; 300 and Gig only in upgraded areas"
+    }
+   ],
+   "default_plan": "eplus_300",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "no_contract",
+     "name": "No contract, no data caps",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Jackson, TN residents looking for city-owned internet.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Cancelling within 12 months adds a $100 install fee to the final bill."
+   ],
+   "sources": [
+    {
+     "label": "EPlus packages & pricing",
+     "url": "https://www.eplusbroadband.com/packages-pricing"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#c2410c",
+   "mark": "EB"
+  },
+  {
+   "id": "fpb_nextband",
+   "name": "Frankfort Plant Board NEXTBAND",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KY"
+   ],
+   "service_area_note": "Municipal fiber in Frankfort / Franklin County, KY",
+   "official_url": "https://fpb.cc/nextband",
+   "plans": [
+    {
+     "id": "essential_300",
+     "name": "Essential 300 Mbps",
+     "price_monthly": 55,
+     "price_annual": null,
+     "effective_monthly": 55,
+     "verified": true,
+     "note": "FAQ says residential pricing starts at $55/mo; assumed to be the entry tier"
+    },
+    {
+     "id": "family_500",
+     "name": "Family 500 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown on site; call 502-352-4372"
+    },
+    {
+     "id": "home_hero_1gig",
+     "name": "Home Hero 1 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown on site"
+    },
+    {
+     "id": "trail_blazer_5gig",
+     "name": "Trail Blazer 5 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not shown on site"
+    }
+   ],
+   "default_plan": "essential_300",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    }
+   ],
+   "best_for": "Frankfort households served by FPB utilities.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "FPB NEXTBAND FAQ",
+     "url": "https://fpb.cc/nextband-faq"
+    },
+    {
+     "label": "FPB NEXTBAND sign-up",
+     "url": "https://fpb.cc/nextband/sign-up"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#4d7c0f",
+   "mark": "FP"
+  },
+  {
+   "id": "glasgow_epb",
+   "name": "Glasgow Electric Plant Board Broadband",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KY"
+   ],
+   "service_area_note": "Municipal cable/fiber in Glasgow, KY",
+   "official_url": "https://www.glasgowepb.com/",
+   "plans": [
+    {
+     "id": "tier_100_fiber",
+     "name": "100 Mbps fiber / 25 Mbps HFC",
+     "price_monthly": 55,
+     "price_annual": null,
+     "effective_monthly": 55,
+     "verified": false,
+     "note": "Official rate notice effective Nov 1, 2024; no newer rate found"
+    },
+    {
+     "id": "tier_300_fiber",
+     "name": "300 Mbps fiber / 50 Mbps HFC",
+     "price_monthly": 60,
+     "price_annual": null,
+     "effective_monthly": 60,
+     "verified": false,
+     "note": "Rates effective Nov 2024"
+    },
+    {
+     "id": "tier_500_fiber",
+     "name": "500 Mbps fiber / 100 Mbps HFC",
+     "price_monthly": 70,
+     "price_annual": null,
+     "effective_monthly": 70,
+     "verified": false,
+     "note": "Rates effective Nov 2024"
+    },
+    {
+     "id": "tier_1gig_fiber",
+     "name": "1 Gbps fiber",
+     "price_monthly": 80,
+     "price_annual": null,
+     "effective_monthly": 80,
+     "verified": false,
+     "note": "Rates effective Nov 2024"
+    }
+   ],
+   "default_plan": "tier_300_fiber",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    }
+   ],
+   "best_for": "Glasgow, KY residents wanting the local utility's internet.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Glasgow EPB rate notice (Nov 2024)",
+     "url": "https://www.glasgowepb.com/new-glasgow-epb-broadband-rates-to-take-effect-november-1st/"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#334155",
+   "mark": "GE"
+  },
+  {
+   "id": "maxxsouth",
+   "name": "MaxxSouth Broadband",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MS",
+    "AL"
+   ],
+   "service_area_note": "Cable and fiber in north and central Mississippi (Starkville, Oxford, etc.) and parts of Alabama",
+   "official_url": "https://www.maxxsouth.com/internet-plans",
+   "plans": [
+    {
+     "id": "fiber_1gig_promo",
+     "name": "1 Gig (limited-time offer)",
+     "price_monthly": 39.99,
+     "price_annual": null,
+     "effective_monthly": 39.99,
+     "verified": true,
+     "note": "3-year price guarantee; standard rate card price $79.99"
+    },
+    {
+     "id": "fiber_2gig_promo",
+     "name": "Fiber 2 Gig (limited-time offer)",
+     "price_monthly": 59.99,
+     "price_annual": null,
+     "effective_monthly": 59.99,
+     "verified": true,
+     "note": "3-year price guarantee; standard $99.99"
+    },
+    {
+     "id": "essential_400",
+     "name": "Essential 400 Mbps (standard rate)",
+     "price_monthly": 46.99,
+     "price_annual": null,
+     "effective_monthly": 46.99,
+     "verified": true,
+     "note": "Rate card effective 6/15/26; $10 equipment fee"
+    },
+    {
+     "id": "prepaid_600",
+     "name": "Prepaid 600 Mbps",
+     "price_monthly": 9.99,
+     "price_annual": null,
+     "effective_monthly": 9.99,
+     "verified": true,
+     "note": "Prepaid, $50 activation fee, 20 Mbps upload"
+    }
+   ],
+   "default_plan": "fiber_1gig_promo",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "unlimited_data",
+     "name": "Unlimited data",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "price_guarantee",
+     "name": "3-year price guarantee on promos",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "North Mississippi households wanting cheap gig or prepaid internet.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Low-income households may qualify for the Internet Assistance Program (free or from $15/mo)."
+   ],
+   "sources": [
+    {
+     "label": "MaxxSouth internet plans",
+     "url": "https://www.maxxsouth.com/internet-plans"
+    },
+    {
+     "label": "MaxxSouth rate card 2026",
+     "url": "https://www.maxxsouth.com/sites/default/files/2026-06/MXS240100-RateCardUpdate2026.pdf"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#be123c",
+   "mark": "MB"
+  },
+  {
+   "id": "point_broadband",
+   "name": "Point Broadband",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AL",
+    "FL",
+    "GA",
+    "MD",
+    "MI",
+    "NY",
+    "OH",
+    "TN",
+    "TX",
+    "VA"
+   ],
+   "service_area_note": "Fiber in small markets: Baldwin County, Opelika, Lake Martin, Hazel Green AL; Hohenwald/Winchester/NE TN; plus 8 other states",
+   "official_url": "https://www.point-broadband.com/alabama",
+   "plans": [
+    {
+     "id": "fiber_300",
+     "name": "300 Mbps",
+     "price_monthly": 39,
+     "price_annual": null,
+     "effective_monthly": 39,
+     "verified": true,
+     "note": "Alabama promo price incl. AutoPay/e-bill discount; select markets"
+    },
+    {
+     "id": "fiber_500",
+     "name": "500 Mbps",
+     "price_monthly": 49,
+     "price_annual": null,
+     "effective_monthly": 49,
+     "verified": true,
+     "note": "$54 with 2-year price lock; new customers"
+    },
+    {
+     "id": "fiber_1gig",
+     "name": "1 Gig",
+     "price_monthly": 54,
+     "price_annual": null,
+     "effective_monthly": 54,
+     "verified": true,
+     "note": "Free 2-year price lock; new customers; gift card promo"
+    }
+   ],
+   "default_plan": "fiber_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "smarthome_wifi",
+     "name": "SmartHome Wi-Fi included",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Smaller Alabama and Tennessee towns with new fiber builds.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Prices are new-customer promos that include AutoPay discounts; check the post-promo rate."
+   ],
+   "sources": [
+    {
+     "label": "Point Broadband Alabama",
+     "url": "https://www.point-broadband.com/alabama"
+    },
+    {
+     "label": "Point Broadband areas we serve",
+     "url": "https://www.point-broadband.com/areas-we-serve"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#4d7c0f",
+   "mark": "PB"
+  },
+  {
+   "id": "ymca_middle_tn",
+   "name": "YMCA of Middle Tennessee",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TN"
+   ],
+   "service_area_note": "Nashville and surrounding Middle Tennessee counties",
+   "official_url": "https://ymcamidtn.org/join",
+   "plans": [
+    {
+     "id": "one",
+     "name": "One (adult 31-64)",
+     "price_monthly": 72,
+     "price_annual": null,
+     "effective_monthly": 72,
+     "verified": true,
+     "note": "$0 join fee promo through Oct 26"
+    },
+    {
+     "id": "young_one",
+     "name": "Young One (19-30)",
+     "price_monthly": 61,
+     "price_annual": null,
+     "effective_monthly": 61,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "two_plus",
+     "name": "Two Plus (family)",
+     "price_monthly": 135,
+     "price_annual": null,
+     "effective_monthly": 135,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "senior_one",
+     "name": "Senior One (65+)",
+     "price_monthly": 69,
+     "price_annual": null,
+     "effective_monthly": 69,
+     "verified": true,
+     "note": ""
+    }
+   ],
+   "default_plan": "one",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym, pool and classes",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "nationwide",
+     "name": "Nationwide YMCA access",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Nashville-area families wanting gym, pool and youth programs.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Seniors may get the membership free through Medicare Advantage fitness benefits."
+   ],
+   "sources": [
+    {
+     "label": "YMCA of Middle Tennessee join",
+     "url": "https://ymcamidtn.org/join"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#4d7c0f",
+   "mark": "Yo"
+  },
+  {
+   "id": "ymca_memphis",
+   "name": "YMCA of Memphis & the Mid-South",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TN"
+   ],
+   "service_area_note": "12 YMCA branches in the Memphis area",
+   "official_url": "https://ymcamemphis.org/main/join-today",
+   "plans": [
+    {
+     "id": "individual_adult",
+     "name": "Individual Adult (19+)",
+     "price_monthly": 57,
+     "price_annual": null,
+     "effective_monthly": 57,
+     "verified": true,
+     "note": "$75 join fee"
+    },
+    {
+     "id": "household",
+     "name": "Household",
+     "price_monthly": 83,
+     "price_annual": null,
+     "effective_monthly": 83,
+     "verified": true,
+     "note": "$75 join fee"
+    },
+    {
+     "id": "senior",
+     "name": "Senior (60+)",
+     "price_monthly": 53,
+     "price_annual": null,
+     "effective_monthly": 53,
+     "verified": true,
+     "note": "No join fee"
+    },
+    {
+     "id": "senior_couple",
+     "name": "Senior Couple",
+     "price_monthly": 83,
+     "price_annual": null,
+     "effective_monthly": 83,
+     "verified": true,
+     "note": "No join fee"
+    }
+   ],
+   "default_plan": "individual_adult",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym, pool and classes",
+     "plans": "all",
+     "overlap_tag": "gym"
+    }
+   ],
+   "best_for": "Memphis-area adults and families looking for a full-service gym.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "YMCA Memphis join today",
+     "url": "https://ymcamemphis.org/main/join-today"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#be123c",
+   "mark": "Yo"
+  },
+  {
+   "id": "ymca_central_ky",
+   "name": "YMCA of Central Kentucky",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KY"
+   ],
+   "service_area_note": "Lexington and Central Kentucky branches, including Frankfort",
+   "official_url": "https://www.ymcacky.org/rates-and-fees",
+   "plans": [
+    {
+     "id": "adult",
+     "name": "Adult (31-64), All-Access",
+     "price_monthly": 66,
+     "price_annual": null,
+     "effective_monthly": 66,
+     "verified": true,
+     "note": "$50 join fee"
+    },
+    {
+     "id": "young_adult",
+     "name": "Young Adult (18-30)",
+     "price_monthly": 42,
+     "price_annual": null,
+     "effective_monthly": 42,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "household",
+     "name": "Household, All-Access",
+     "price_monthly": 101,
+     "price_annual": null,
+     "effective_monthly": 101,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "senior_adult",
+     "name": "Senior Adult (65+)",
+     "price_monthly": 57,
+     "price_annual": null,
+     "effective_monthly": 57,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "adult_frankfort",
+     "name": "Adult, Frankfort-only access",
+     "price_monthly": 47,
+     "price_annual": null,
+     "effective_monthly": 47,
+     "verified": true,
+     "note": ""
+    }
+   ],
+   "default_plan": "adult",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym, pool and classes",
+     "plans": "all",
+     "overlap_tag": "gym"
+    }
+   ],
+   "best_for": "Lexington-area adults wanting an affordable full-service gym.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Frankfort-only memberships are cheaper if you only use that branch."
+   ],
+   "sources": [
+    {
+     "label": "YMCA of Central Kentucky rates",
+     "url": "https://www.ymcacky.org/rates-and-fees"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#4d7c0f",
+   "mark": "Yo"
+  },
+  {
+   "id": "ymca_louisville",
+   "name": "YMCA of Greater Louisville",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KY",
+    "IN"
+   ],
+   "service_area_note": "Greater Louisville plus Southern Indiana (Clark/Floyd counties)",
+   "official_url": "https://ymcalouisville.org/node/39",
+   "plans": [
+    {
+     "id": "community_individual",
+     "name": "Community-Wide Individual",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Prices not published on membership page"
+    },
+    {
+     "id": "community_family",
+     "name": "Community-Wide Family",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Prices not published; extra adults +$20/mo"
+    }
+   ],
+   "default_plan": "community_individual",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym, pool and classes",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "money_back",
+     "name": "30-day money-back guarantee",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Louisville families wanting a month-to-month gym with financial assistance.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Single-branch membership is a cheaper option."
+   ],
+   "sources": [
+    {
+     "label": "YMCA of Greater Louisville membership",
+     "url": "https://ymcalouisville.org/node/39"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#334155",
+   "mark": "Yo"
+  },
+  {
+   "id": "daily_memphian",
+   "name": "The Daily Memphian",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TN"
+   ],
+   "service_area_note": "Nonprofit digital news for Memphis and Shelby County",
+   "official_url": "https://dailymemphian.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not visible on public pages; veteran discount on annual"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "local_news",
+     "name": "Local news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Memphis readers wanting in-depth local coverage.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Free access is available through Shelby County libraries and for K-12 teachers."
+   ],
+   "sources": [
+    {
+     "label": "Daily Memphian subscription options",
+     "url": "https://dailymemphian.com/additional-subscription-options"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#334155",
+   "mark": "DM"
+  },
+  {
+   "id": "chattanooga_times_free_press",
+   "name": "Chattanooga Times Free Press",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TN",
+    "GA"
+   ],
+   "service_area_note": "Chattanooga region of Tennessee and north Georgia",
+   "official_url": "https://www.timesfreepress.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Subscribe page not readable; mostly digital (iPad) after ending most print days"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "local_news",
+     "name": "Local news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Chattanooga-area readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Chattanooga Times Free Press (Wikipedia)",
+     "url": "https://en.wikipedia.org/wiki/Chattanooga_Times_Free_Press"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#be123c",
+   "mark": "CT"
+  },
+  {
+   "id": "lexington_herald_leader",
+   "name": "Lexington Herald-Leader",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KY"
+   ],
+   "service_area_note": "Lexington and Central/Eastern Kentucky",
+   "official_url": "https://www.kentucky.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Rates not published; $9.99 one-time activation fee for new starts per FAQ"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "local_news",
+     "name": "Local news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Central Kentucky readers, including UK sports fans.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Herald-Leader subscriber FAQ",
+     "url": "https://mcciservices.newscyclecloud.com/LEX/htm/faq.htm"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#c2410c",
+   "mark": "LH"
+  },
+  {
+   "id": "vulcan_termite",
+   "name": "Vulcan Termite & Pest Control",
+   "category": "lawn_pest",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AL"
+   ],
+   "service_area_note": "Birmingham, AL metro (based in Pelham)",
+   "official_url": "https://www.vulcantermite.com/",
+   "plans": [
+    {
+     "id": "mosquito_season",
+     "name": "Seasonal mosquito control (Apr-Oct)",
+     "price_monthly": null,
+     "price_annual": 490,
+     "effective_monthly": 40.83,
+     "verified": true,
+     "note": "$490 for the full season when booked early"
+    },
+    {
+     "id": "pest_termite",
+     "name": "Custom pest / termite plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Quote-based; free estimate"
+    }
+   ],
+   "default_plan": "mosquito_season",
+   "features": [
+    {
+     "id": "mosquito",
+     "name": "Mosquito treatments",
+     "plans": "all",
+     "overlap_tag": "mosquito_control"
+    },
+    {
+     "id": "termite",
+     "name": "Sentricon termite baiting",
+     "plans": "all",
+     "overlap_tag": "termite_protection"
+    }
+   ],
+   "best_for": "Birmingham homeowners wanting a local pest and mosquito company.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Book mosquito service early to get the season price."
+   ],
+   "sources": [
+    {
+     "label": "Vulcan Termite & Pest Control",
+     "url": "https://www.vulcantermite.com/"
+    }
+   ],
+   "checked_at": "2026-10-22",
+   "region_group": "deep-south",
+   "color": "#0f766e",
+   "mark": "VT"
+  },
+  {
+   "id": "metronet_fiber",
+   "name": "Metronet Fiber (Home Internet)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CO",
+    "FL",
+    "IA",
+    "IL",
+    "IN",
+    "KY",
+    "MI",
+    "MN",
+    "MO",
+    "NE",
+    "NC",
+    "OH",
+    "OK",
+    "TX",
+    "VA",
+    "WI"
+   ],
+   "service_area_note": "Fiber in ~17 states, heavily Midwest (IN, IL, MI, OH, WI, MN, IA); now part of a T-Mobile joint venture",
+   "official_url": "https://metronet.com",
+   "plans": [
+    {
+     "id": "fiber_150",
+     "name": "150 Mb",
+     "price_monthly": 29.95,
+     "price_annual": null,
+     "effective_monthly": 29.95,
+     "verified": true,
+     "note": "Official homepage limited-time offer; excludes $12.95/mo Tech Assure fee, taxes, install"
+    },
+    {
+     "id": "fiber_500",
+     "name": "500 Mb",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official page shows no price; CNET (Jul 2025) cited $49/mo w/ 3-yr lock or $45 w/ 1-yr lock (third-party)"
+    },
+    {
+     "id": "fiber_1gig",
+     "name": "1 Gig",
+     "price_monthly": 49.95,
+     "price_annual": null,
+     "effective_monthly": 49.95,
+     "verified": true,
+     "note": "Official homepage offer; plus $12.95/mo Tech Assure fee; page referenced June 2025 offer terms so may be stale"
+    },
+    {
+     "id": "fiber_2gig",
+     "name": "2 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not shown on official page; address-dependent"
+    },
+    {
+     "id": "fiber_5gig",
+     "name": "5 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not shown; limited availability"
+    }
+   ],
+   "default_plan": "fiber_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber speeds",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "eero_router",
+     "name": "eero router included",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Midwest households in a Metronet fiber area wanting cheap gigabit.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Budget for the mandatory ~$12.95/mo Tech Assure fee on top of the advertised price."
+   ],
+   "sources": [
+    {
+     "label": "Metronet home",
+     "url": "https://metronet.com"
+    },
+    {
+     "label": "CNET Metronet review (Jul 2025)",
+     "url": "https://tech.yahoo.com/computing/articles/metronet-internet-review-plans-pricing-120000211.html"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#7c3aed",
+   "mark": "MF"
+  },
+  {
+   "id": "mediacom_internet",
+   "name": "Mediacom Xtream Internet",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IA",
+    "IL",
+    "MO",
+    "KS",
+    "FL",
+    "MN",
+    "GA",
+    "IN",
+    "WI"
+   ],
+   "service_area_note": "Cable/fiber mostly in smaller Midwest and Southern markets (says ~22 states; list here is partial)",
+   "official_url": "https://mediacomcable.com/deals",
+   "plans": [
+    {
+     "id": "internet_300",
+     "name": "Internet 300",
+     "price_monthly": 30,
+     "price_annual": null,
+     "effective_monthly": 30,
+     "verified": true,
+     "note": "2-yr promo price incl. $10/mo AutoPay+paperless discount; $75 install + $25 activation extra"
+    },
+    {
+     "id": "internet_1gig",
+     "name": "Internet 1 Gig",
+     "price_monthly": 50,
+     "price_annual": null,
+     "effective_monthly": 50,
+     "verified": true,
+     "note": "3-yr promo price per official deals page"
+    },
+    {
+     "id": "internet_2gig",
+     "name": "Internet 2 Gig",
+     "price_monthly": 70,
+     "price_annual": null,
+     "effective_monthly": 70,
+     "verified": true,
+     "note": "3-yr promo price; not available everywhere"
+    }
+   ],
+   "default_plan": "internet_300",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "eero_wifi",
+     "name": "eero WiFi included",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "mobile_bundle_discount",
+     "name": "$10/mo off per Xtream Mobile line (up to $30)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Small-town Midwest households where Mediacom is the main cable option.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Promo prices end after 2-3 years; note the standard rate.",
+    "Upload may be throttled 50% after 1 TB upstream use."
+   ],
+   "sources": [
+    {
+     "label": "Mediacom deals",
+     "url": "https://mediacomcable.com/deals"
+    },
+    {
+     "label": "Mediacom (Wikipedia, footprint)",
+     "url": "https://en.wikipedia.org/wiki/Mediacom"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#4d7c0f",
+   "mark": "MX"
+  },
+  {
+   "id": "altafiber_fioptics",
+   "name": "altafiber Fioptics (Home Internet)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "OH",
+    "KY",
+    "IN"
+   ],
+   "service_area_note": "Fiber in Greater Cincinnati/Dayton (OH), Northern Kentucky and SE Indiana; formerly Cincinnati Bell",
+   "official_url": "https://altafiber.com/shop-altafiber/internet",
+   "plans": [
+    {
+     "id": "starting",
+     "name": "Entry plan",
+     "price_monthly": 30,
+     "price_annual": null,
+     "effective_monthly": 30,
+     "verified": true,
+     "note": "Official page: 'prices starting at $30/mo' (plan/conditions not stated); $30 is also the bundled internet+TV price"
+    },
+    {
+     "id": "fiber_600",
+     "name": "600 Mbps",
+     "price_monthly": 55,
+     "price_annual": null,
+     "effective_monthly": 55,
+     "verified": false,
+     "note": "CNET/AOL review: $55/mo with 2-year price lock"
+    },
+    {
+     "id": "fiber_1gig",
+     "name": "1 Gig",
+     "price_monthly": 75,
+     "price_annual": null,
+     "effective_monthly": 75,
+     "verified": false,
+     "note": "CNET/AOL review: $75/mo with 3-year price lock; ~$15/mo increase after promo"
+    },
+    {
+     "id": "fiber_3gig",
+     "name": "3 Gig",
+     "price_monthly": 105,
+     "price_annual": null,
+     "effective_monthly": 105,
+     "verified": false,
+     "note": "CNET/AOL review; where available"
+    },
+    {
+     "id": "fioptics_home",
+     "name": "Fioptics Home WiFi add-on",
+     "price_monthly": 20,
+     "price_annual": null,
+     "effective_monthly": 20,
+     "verified": true,
+     "note": "Official: $20/mo add-on, free with 3 Gig"
+    }
+   ],
+   "default_plan": "fiber_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Fiber speeds up to 6 Gig in select areas",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    }
+   ],
+   "best_for": "Cincinnati-area households wanting fiber with a price lock.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "altafiber internet",
+     "url": "https://altafiber.com/shop-altafiber/internet"
+    },
+    {
+     "label": "altafiber plans",
+     "url": "https://altafiber.com/plans-and-pricing"
+    },
+    {
+     "label": "CNET/AOL altafiber review",
+     "url": "https://aol.com/altafiber-internet-review-plans-pricing-150000196.html"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#be123c",
+   "mark": "aF"
+  },
+  {
+   "id": "surf_internet",
+   "name": "Surf Internet (Fiber)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IN",
+    "IL",
+    "MI"
+   ],
+   "service_area_note": "Fiber mainly in rural/small-town northern Indiana, southwest Michigan and northern Illinois",
+   "official_url": "https://www.surfinternet.com",
+   "plans": [
+    {
+     "id": "surf_300",
+     "name": "300 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price varies by address; not published"
+    },
+    {
+     "id": "surf_500",
+     "name": "500 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price varies by address"
+    },
+    {
+     "id": "surf_1gig",
+     "name": "SURF 1 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price varies by address"
+    },
+    {
+     "id": "surf_2gig",
+     "name": "SURF 2 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price varies by address"
+    },
+    {
+     "id": "surf_ultimate",
+     "name": "SURF Ultimate (up to 8 Gig)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price varies by address"
+    }
+   ],
+   "default_plan": "surf_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber, no data caps",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "price_lock",
+     "name": "3-year price lock for new customers",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "all_in_pricing",
+     "name": "All-in pricing incl. equipment and taxes",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rural Indiana/Michigan homes getting fiber for the first time.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Surf Internet (llms.txt)",
+     "url": "https://www.surfinternet.com/llms.txt"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#c2410c",
+   "mark": "SI"
+  },
+  {
+   "id": "buckeye_broadband",
+   "name": "Buckeye Broadband (Internet)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "OH",
+    "MI"
+   ],
+   "service_area_note": "Northwest Ohio (Toledo, Sandusky/Erie County) and Southeast Michigan (Bedford, Temperance)",
+   "official_url": "https://www.buckeyebroadband.com/internet",
+   "plans": [
+    {
+     "id": "internet_200",
+     "name": "200 Mbps",
+     "price_monthly": 49.99,
+     "price_annual": null,
+     "effective_monthly": 49.99,
+     "verified": true,
+     "note": "Limited-time offer, 3-year price guarantee"
+    },
+    {
+     "id": "internet_400",
+     "name": "400 Mbps",
+     "price_monthly": 59.99,
+     "price_annual": null,
+     "effective_monthly": 59.99,
+     "verified": true,
+     "note": "Limited-time offer, 3-year price guarantee"
+    },
+    {
+     "id": "internet_600",
+     "name": "600 Mbps",
+     "price_monthly": 79.99,
+     "price_annual": null,
+     "effective_monthly": 79.99,
+     "verified": true,
+     "note": "Includes SmartNet WiFi; 3-year price guarantee"
+    },
+    {
+     "id": "internet_1gig",
+     "name": "1 Gig",
+     "price_monthly": 89.99,
+     "price_annual": null,
+     "effective_monthly": 89.99,
+     "verified": true,
+     "note": "Includes SmartNet WiFi; 3-year price guarantee"
+    }
+   ],
+   "default_plan": "internet_400",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "price_guarantee",
+     "name": "3-year price guarantee",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "no_contract",
+     "name": "No contract",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Toledo-area households wanting a locked 3-year price.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Buckeye Broadband internet",
+     "url": "https://www.buckeyebroadband.com/internet"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#2563eb",
+   "mark": "BB"
+  },
+  {
+   "id": "midco_internet",
+   "name": "Midco Internet",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MN",
+    "ND",
+    "SD",
+    "IA",
+    "KS",
+    "WI"
+   ],
+   "service_area_note": "Mainly Minnesota and the Dakotas, plus parts of Wisconsin, Kansas and Iowa",
+   "official_url": "https://www.midco.com/internet/",
+   "plans": [
+    {
+     "id": "starting",
+     "name": "Entry plan",
+     "price_monthly": 39,
+     "price_annual": null,
+     "effective_monthly": 39,
+     "verified": true,
+     "note": "Official: plans 'start at $39/mo' with AutoPay+paperless; 3-year price lock; modem $9-11/mo extra"
+    },
+    {
+     "id": "internet_500",
+     "name": "Internet 500",
+     "price_monthly": 69,
+     "price_annual": null,
+     "effective_monthly": 69,
+     "verified": false,
+     "note": "CNET/AOL review: $69 rising to $79 after 6 months (may predate the current 3-yr price lock)"
+    }
+   ],
+   "default_plan": "starting",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "price_lock",
+     "name": "3-year price lock",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "no_contract",
+     "name": "No contract",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Northern Wisconsin households in Midco's cable/fiber area.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Midco internet",
+     "url": "https://www.midco.com/internet/"
+    },
+    {
+     "label": "CNET/AOL Midco review",
+     "url": "https://www.aol.com/midco-internet-review-plans-pricing-160000804.html"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#2563eb",
+   "mark": "MI"
+  },
+  {
+   "id": "i3_broadband",
+   "name": "i3 Broadband (Fiber)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IL",
+    "MO",
+    "RI"
+   ],
+   "service_area_note": "Fiber in central and northern Illinois (Peoria, Bloomington, Rockford area), St. Louis area, and Rhode Island East Bay",
+   "official_url": "https://www.i3broadband.com",
+   "plans": [
+    {
+     "id": "fiber_plans",
+     "name": "Fiber plans (up to 8 Gig)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Prices not published on pages checked; address-dependent"
+    }
+   ],
+   "default_plan": "fiber_plans",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber up to 8 Gig",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    }
+   ],
+   "best_for": "Central/northern Illinois towns wanting symmetrical fiber.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "i3 Broadband Loves Park expansion",
+     "url": "https://www.i3broadband.com/?p=2840"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#b45309",
+   "mark": "iB"
+  },
+  {
+   "id": "hyvee_plus",
+   "name": "Hy-Vee Plus",
+   "category": "food",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IA",
+    "IL",
+    "KS",
+    "MN",
+    "MO",
+    "NE",
+    "SD",
+    "WI"
+   ],
+   "service_area_note": "Hy-Vee supermarkets across 8 Midwest states (Illinois and Wisconsin in this region)",
+   "official_url": "https://www.hy-vee.com/plus",
+   "plans": [
+    {
+     "id": "plus_annual",
+     "name": "Hy-Vee Plus (annual)",
+     "price_monthly": null,
+     "price_annual": 99,
+     "effective_monthly": 8.25,
+     "verified": false,
+     "note": "$99/yr at 2020 launch per trade press; official page did not show a current price"
+    }
+   ],
+   "default_plan": "plus_annual",
+   "features": [
+    {
+     "id": "free_delivery",
+     "name": "Free delivery and 2-hour express pickup",
+     "plans": "all",
+     "overlap_tag": "grocery_delivery"
+    },
+    {
+     "id": "fuel_savings",
+     "name": "Extra fuel savings",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "member_deals",
+     "name": "Member-only PERKS prices",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Hy-Vee shoppers who order delivery or pickup often.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Confirm the current price in the Hy-Vee app before joining; the $99 figure is from launch."
+   ],
+   "sources": [
+    {
+     "label": "Hy-Vee Plus",
+     "url": "https://www.hy-vee.com/plus"
+    },
+    {
+     "label": "Grocery Dive launch article (2020)",
+     "url": "https://www.grocerydive.com/news/hy-vee-launches-expanded-membership-program/589903/"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#0f766e",
+   "mark": "HP"
+  },
+  {
+   "id": "chicago_tribune",
+   "name": "Chicago Tribune (Digital)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IL"
+   ],
+   "service_area_note": "Chicago metro daily newspaper",
+   "official_url": "https://www.chicagotribune.com",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": 20,
+     "price_annual": null,
+     "effective_monthly": 20,
+     "verified": false,
+     "note": "Standard rate per Axios Chicago (Feb 2026); intro discounts common; official site blocked to our checker"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "news_access",
+     "name": "Unlimited digital news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    },
+    {
+     "id": "eedition",
+     "name": "e-Edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Chicago-area readers wanting full local news coverage.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Axios Chicago: what Chicago news costs (Feb 2026)",
+     "url": "https://www.axios.com/local/chicago/2026/02/05/news-local-subscriptions-2026-tribune-sun-times-paywall"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#334155",
+   "mark": "CT"
+  },
+  {
+   "id": "chicago_sun_times",
+   "name": "Chicago Sun-Times Membership",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IL"
+   ],
+   "service_area_note": "Chicago daily; content is free with registration, membership is a donation",
+   "official_url": "https://marketing.suntimes.com/cst-membership-faq",
+   "plans": [
+    {
+     "id": "member_monthly",
+     "name": "Monthly membership",
+     "price_monthly": 9,
+     "price_annual": null,
+     "effective_monthly": 9,
+     "verified": false,
+     "note": "Any amount accepted; $9/mo cited as standard by Axios (Feb 2026); site content is free with email registration"
+    }
+   ],
+   "default_plan": "member_monthly",
+   "features": [
+    {
+     "id": "member_events",
+     "name": "Members-only events and MemberCard discounts",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "news_access",
+     "name": "Supports free local news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Chicago readers who want to support free local news.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Reading is free with registration; membership is optional."
+   ],
+   "sources": [
+    {
+     "label": "Sun-Times membership FAQ",
+     "url": "https://marketing.suntimes.com/cst-membership-faq"
+    },
+    {
+     "label": "Axios Chicago (Feb 2026)",
+     "url": "https://www.axios.com/local/chicago/2026/02/05/news-local-subscriptions-2026-tribune-sun-times-paywall"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#2563eb",
+   "mark": "CS"
+  },
+  {
+   "id": "crains_chicago",
+   "name": "Crain's Chicago Business",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IL"
+   ],
+   "service_area_note": "Chicago business news",
+   "official_url": "https://www.chicagobusiness.com",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": 18,
+     "price_annual": null,
+     "effective_monthly": 18,
+     "verified": false,
+     "note": "Per Axios Chicago (Feb 2026)"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "news_access",
+     "name": "Chicago business news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Chicago professionals tracking local business.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Axios Chicago (Feb 2026)",
+     "url": "https://www.axios.com/local/chicago/2026/02/05/news-local-subscriptions-2026-tribune-sun-times-paywall"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#0369a1",
+   "mark": "CC"
+  },
+  {
+   "id": "cleveland_com",
+   "name": "cleveland.com / The Plain Dealer (Digital)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "OH"
+   ],
+   "service_area_note": "Northeast Ohio news (Advance Local)",
+   "official_url": "https://www.cleveland.com",
+   "plans": [
+    {
+     "id": "all_access",
+     "name": "All Access (monthly, app)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "App-store listings conflict: $9.99 or $11.99/mo; official subscribe page blocked to our checker"
+    },
+    {
+     "id": "all_access_annual",
+     "name": "All Access (annual, app)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "App-store listings conflict: $99.99 or $119.99/yr"
+    }
+   ],
+   "default_plan": "all_access",
+   "features": [
+    {
+     "id": "news_access",
+     "name": "Unlimited local news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Northeast Ohio readers, especially Browns/Guardians fans.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Adapty paywall library: cleveland.com",
+     "url": "https://adapty.io/paywall-library/cleveland-com/"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#be123c",
+   "mark": "cP"
+  },
+  {
+   "id": "detroit_free_press",
+   "name": "Detroit Free Press (Digital)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MI"
+   ],
+   "service_area_note": "Detroit/Michigan daily newspaper (Gannett)",
+   "official_url": "https://www.freep.com",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not verifiable: official subscribe page blocked to our checker; Gannett intro offers vary"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "news_access",
+     "name": "Unlimited digital news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    },
+    {
+     "id": "eedition",
+     "name": "e-Edition (plus e-editions of other Gannett papers)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Michigan readers following Detroit news and sports.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Detroit Free Press",
+     "url": "https://www.freep.com"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#0f766e",
+   "mark": "DF"
+  },
+  {
+   "id": "milwaukee_journal_sentinel",
+   "name": "Milwaukee Journal Sentinel (Digital)",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "WI"
+   ],
+   "service_area_note": "Milwaukee/Wisconsin daily newspaper (Gannett)",
+   "official_url": "https://www.jsonline.com",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Official page blocked; App Store lists in-app options from $19.99-$24.99/mo and an annual $69.99 option (terms unclear)"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "news_access",
+     "name": "Unlimited digital news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    }
+   ],
+   "best_for": "Wisconsin readers following Milwaukee news and Packers/Bucks.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "App Pricing Lab (App Store IAPs)",
+     "url": "https://apppricinglab.com/iap/apple/526882300"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#c2410c",
+   "mark": "MJ"
+  },
+  {
+   "id": "ymca_indianapolis",
+   "name": "YMCA of Greater Indianapolis",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IN"
+   ],
+   "service_area_note": "YMCA branches across the Indianapolis metro",
+   "official_url": "https://indymca.org",
+   "plans": [
+    {
+     "id": "adult",
+     "name": "Adult (30-64)",
+     "price_monthly": 68,
+     "price_annual": null,
+     "effective_monthly": 68,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "young_adult",
+     "name": "Young Adult (19-29)",
+     "price_monthly": 52,
+     "price_annual": null,
+     "effective_monthly": 52,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "senior",
+     "name": "Senior Adult (65+)",
+     "price_monthly": 63,
+     "price_annual": null,
+     "effective_monthly": 63,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "two_adult_household",
+     "name": "Two-Adult Household",
+     "price_monthly": 106,
+     "price_annual": null,
+     "effective_monthly": 106,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "one_adult_household",
+     "name": "One-Adult Household",
+     "price_monthly": 90.5,
+     "price_annual": null,
+     "effective_monthly": 90.5,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "youth",
+     "name": "Youth (18 and under)",
+     "price_monthly": 29.5,
+     "price_annual": null,
+     "effective_monthly": 29.5,
+     "verified": true,
+     "note": ""
+    }
+   ],
+   "default_plan": "adult",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym, pool and classes at all branches",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "financial_aid",
+     "name": "Financial assistance available",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Indy-area families wanting gym, pool and kids programs.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Single-location memberships (Avondale Meadows, Witham) cost less.",
+    "Joining fee not listed; ask before signing up."
+   ],
+   "sources": [
+    {
+     "label": "YMCA of Greater Indianapolis membership",
+     "url": "https://indymca.org/?p=207"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#7c3aed",
+   "mark": "Yo"
+  },
+  {
+   "id": "ymca_detroit",
+   "name": "YMCA of Metropolitan Detroit",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MI"
+   ],
+   "service_area_note": "YMCA branches across metro Detroit",
+   "official_url": "https://ymcadetroit.org",
+   "plans": [
+    {
+     "id": "adult",
+     "name": "Adult (27+)",
+     "price_monthly": 54,
+     "price_annual": null,
+     "effective_monthly": 54,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "young_adult",
+     "name": "Young Adult/Student (to 26)",
+     "price_monthly": 44,
+     "price_annual": null,
+     "effective_monthly": 44,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "adult_plus_one",
+     "name": "Adult + 1",
+     "price_monthly": 83,
+     "price_annual": null,
+     "effective_monthly": 83,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "family",
+     "name": "Family",
+     "price_monthly": 92,
+     "price_annual": null,
+     "effective_monthly": 92,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "y_for_all",
+     "name": "Y For All (income-based)",
+     "price_monthly": 43,
+     "price_annual": null,
+     "effective_monthly": 43,
+     "verified": true,
+     "note": "Household income under $50,000/yr"
+    }
+   ],
+   "default_plan": "adult",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym, pool and classes",
+     "plans": "all",
+     "overlap_tag": "gym"
+    }
+   ],
+   "best_for": "Metro Detroit residents wanting an affordable full-service gym.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Watch for 'Pay the Day' first-month promos."
+   ],
+   "sources": [
+    {
+     "label": "YMCA Detroit membership",
+     "url": "https://ymcadetroit.org/?p=16"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#7c3aed",
+   "mark": "Yo"
+  },
+  {
+   "id": "wisconsin_athletic_club",
+   "name": "Wisconsin Athletic Club (WAC)",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "WI"
+   ],
+   "service_area_note": "8 clubs in the Milwaukee area (West Allis, Greenfield, Wauwatosa, Downtown, North Shore, Menomonee Falls, Brookfield, Lake Country)",
+   "official_url": "https://www.thewac.com/membership",
+   "plans": [
+    {
+     "id": "individual",
+     "name": "Individual",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Prices only via online Build-a-Membership tool; not shown in page text"
+    },
+    {
+     "id": "advantage",
+     "name": "Advantage upgrade (tennis)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Extra fee; price not shown"
+    }
+   ],
+   "default_plan": "individual",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Access to all WAC clubs",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "pools",
+     "name": "Pools (outdoor at 3 clubs)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Milwaukee-area members wanting a multi-club gym with pools.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Month-to-month; 30-day notice to cancel.",
+    "Ask about the 'Get Started' fee."
+   ],
+   "sources": [
+    {
+     "label": "WAC membership",
+     "url": "https://thewac.com/membership"
+    },
+    {
+     "label": "WAC Build-a-Membership",
+     "url": "https://www.thewac.com/build-a-membership/"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#4d7c0f",
+   "mark": "WA"
+  },
+  {
+   "id": "fitworks",
+   "name": "FitWorks",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "OH"
+   ],
+   "service_area_note": "6 clubs in Northeast Ohio (Highland Heights, Mentor, Parma, Rocky River, Stow-Kent, Niles)",
+   "official_url": "https://www.fitworks.com",
+   "plans": [
+    {
+     "id": "standard",
+     "name": "Standard Membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Prices not published; shown per location at join.fitworks.com"
+    }
+   ],
+   "default_plan": "standard",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym access 365 days a year",
+     "plans": "all",
+     "overlap_tag": "gym"
+    }
+   ],
+   "best_for": "Northeast Ohio residents near a FitWorks club.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "First month free on 12-month memberships (current offer)."
+   ],
+   "sources": [
+    {
+     "label": "FitWorks",
+     "url": "https://www.fitworks.com"
+    },
+    {
+     "label": "FitWorks join",
+     "url": "https://join.fitworks.com"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#4d7c0f",
+   "mark": "Fi"
+  },
+  {
+   "id": "dte_surge_protection",
+   "name": "DTE Energy Surge Coverage Plans",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MI"
+   ],
+   "service_area_note": "DTE Energy electric customers in Southeast Michigan; billed on the DTE bill",
+   "official_url": "https://dteenergy.com/us/en/residential/service-request/additional-products-and-services/surge/surge-protection-plan-details.html",
+   "plans": [
+    {
+     "id": "electronic_surge",
+     "name": "Electronic Surge Coverage",
+     "price_monthly": 5.99,
+     "price_annual": null,
+     "effective_monthly": 5.99,
+     "verified": true,
+     "note": "Up to $1,000/event for electronics"
+    },
+    {
+     "id": "appliance_surge",
+     "name": "Appliance Surge Coverage",
+     "price_monthly": 5.99,
+     "price_annual": null,
+     "effective_monthly": 5.99,
+     "verified": true,
+     "note": "Up to $1,000/event for appliances"
+    },
+    {
+     "id": "premium_surge",
+     "name": "Premium Surge Coverage",
+     "price_monthly": 8.99,
+     "price_annual": null,
+     "effective_monthly": 8.99,
+     "verified": true,
+     "note": "Up to $1,000 electronics + $1,000 appliances per event"
+    },
+    {
+     "id": "whole_home_surge",
+     "name": "Whole Home Surge Protection (meter device)",
+     "price_monthly": 14.99,
+     "price_annual": null,
+     "effective_monthly": 14.99,
+     "verified": true,
+     "note": "Plus $99.99 one-time install"
+    },
+    {
+     "id": "surge_protection_plus",
+     "name": "Surge Protection Plus",
+     "price_monthly": 22.99,
+     "price_annual": null,
+     "effective_monthly": 22.99,
+     "verified": true,
+     "note": "Plus $99.99 or $249.99 one-time device fee; includes generator connection"
+    }
+   ],
+   "default_plan": "premium_surge",
+   "features": [
+    {
+     "id": "surge_coverage",
+     "name": "Surge damage repair/replacement",
+     "plans": "all",
+     "overlap_tag": "home_protection"
+    }
+   ],
+   "best_for": "DTE customers worried about surge damage to appliances and electronics.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "tips": [
+    "Coverage starts 15 days after enrolling.",
+    "Check whether homeowners insurance already covers surge damage."
+   ],
+   "sources": [
+    {
+     "label": "DTE surge plan details",
+     "url": "https://dteenergy.com/us/en/residential/service-request/additional-products-and-services/surge/surge-protection-plan-details.html"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#b45309",
+   "mark": "DE"
+  },
+  {
+   "id": "consumers_energy_asp",
+   "name": "Appliance Service Plan (ASP, formerly Consumers Energy)",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MI"
+   ],
+   "service_area_note": "Michigan; sold by Consumers Energy to Oncourse Home Solutions in 2024",
+   "official_url": "https://oncourse.com/ce/company/faqs",
+   "plans": [
+    {
+     "id": "asp",
+     "name": "Appliance Service Plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Prices vary by plan and are not published on pages checked"
+    }
+   ],
+   "default_plan": "asp",
+   "features": [
+    {
+     "id": "appliance_repair",
+     "name": "Furnace/appliance repair coverage",
+     "plans": "all",
+     "overlap_tag": "home_protection"
+    }
+   ],
+   "best_for": "Michigan homeowners wanting furnace/appliance repair coverage.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "No longer regulated by the Michigan PSC; compare with a home warranty."
+   ],
+   "sources": [
+    {
+     "label": "Consumers Energy sale announcement (2024)",
+     "url": "https://www.consumersenergy.com/news-releases/news-release-details/2024/02/05/consumers-energy-announces-the-sale-of-appliance-service-plan-business-to-oncourse-home-solutions"
+    },
+    {
+     "label": "Oncourse ASP FAQs",
+     "url": "https://oncourse.com/ce/company/faqs"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#c2410c",
+   "mark": "AS"
+  },
+  {
+   "id": "rose_pest_solutions",
+   "name": "Rose Pest Solutions Home Service Program",
+   "category": "lawn_pest",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MI",
+    "OH",
+    "IN",
+    "KY",
+    "PA",
+    "WV"
+   ],
+   "service_area_note": "Michigan-based pest control with branches in MI, OH, IN, KY, PA and WV",
+   "official_url": "https://www.rosepestsolutions.com/residential-services/home-service-program",
+   "plans": [
+    {
+     "id": "basic",
+     "name": "Home Service Basic",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "1-2 exterior visits/yr; single annual fee, quote only"
+    },
+    {
+     "id": "advantage",
+     "name": "Home Service Advantage",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "3+ visits/yr with free callbacks; quote only"
+    },
+    {
+     "id": "premium",
+     "name": "Home Service Premium",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "3-4 visits/yr with free callbacks; quote only"
+    }
+   ],
+   "default_plan": "advantage",
+   "features": [
+    {
+     "id": "pest_control",
+     "name": "Recurring pest control",
+     "plans": "all",
+     "overlap_tag": "pest_control"
+    },
+    {
+     "id": "free_callbacks",
+     "name": "Free return visits (Advantage/Premium)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Great Lakes homeowners wanting year-round pest prevention.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Rose Home Service Program",
+     "url": "https://www.rosepestsolutions.com/residential-services/home-service-program"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#c2410c",
+   "mark": "RP"
+  },
+  {
+   "id": "guardian_alarm",
+   "name": "Guardian Alarm (Home Security)",
+   "category": "home_security",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MI",
+    "OH",
+    "TN",
+    "AR"
+   ],
+   "service_area_note": "Michigan-based security company with offices in MI, OH and the Memphis/Little Rock areas",
+   "official_url": "https://guardianalarm.com",
+   "plans": [
+    {
+     "id": "security_automation",
+     "name": "Security + automation monitoring",
+     "price_monthly": 49.99,
+     "price_annual": null,
+     "effective_monthly": 49.99,
+     "verified": false,
+     "note": "Per SafeHome.org review (Aug 2026); requires 3-year agreement"
+    },
+    {
+     "id": "security_automation_video",
+     "name": "Security + automation + video",
+     "price_monthly": 59.99,
+     "price_annual": null,
+     "effective_monthly": 59.99,
+     "verified": false,
+     "note": "Per SafeHome.org review (Aug 2026)"
+    }
+   ],
+   "default_plan": "security_automation",
+   "features": [
+    {
+     "id": "pro_monitoring",
+     "name": "24/7 professional monitoring",
+     "plans": "all",
+     "overlap_tag": "home_security_monitoring"
+    }
+   ],
+   "best_for": "Michigan/Ohio homeowners wanting a local pro-installed system.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Requires a 3-year monitoring contract; equipment is extra."
+   ],
+   "sources": [
+    {
+     "label": "Guardian Alarm switch offer",
+     "url": "https://guardianalarm.com/switch"
+    },
+    {
+     "label": "SafeHome.org Guardian review",
+     "url": "https://www.safehome.org/security-systems/guardian/reviews/"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#be123c",
+   "mark": "GA"
+  },
+  {
+   "id": "delta_sonic_unlimited",
+   "name": "Delta Sonic Unlimited Car Wash",
+   "category": "auto",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "NY",
+    "PA",
+    "IL"
+   ],
+   "service_area_note": "32 locations in Western NY, PA and the Chicago suburbs",
+   "official_url": "https://deltasoniccarwash.com/car-wash/",
+   "plans": [
+    {
+     "id": "super_kiss",
+     "name": "Unlimited Super Kiss",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": false,
+     "note": "Standard rate per third-party guide (updated Sep 2026); promos $16.99-$20"
+    },
+    {
+     "id": "super_kiss_plus",
+     "name": "Unlimited Super Kiss Plus",
+     "price_monthly": 44.99,
+     "price_annual": null,
+     "effective_monthly": 44.99,
+     "verified": false,
+     "note": "Per third-party guide"
+    },
+    {
+     "id": "super_interior",
+     "name": "Unlimited Super Interior",
+     "price_monthly": 44.99,
+     "price_annual": null,
+     "effective_monthly": 44.99,
+     "verified": false,
+     "note": "Per third-party guide"
+    }
+   ],
+   "default_plan": "super_kiss",
+   "features": [
+    {
+     "id": "unlimited_washes",
+     "name": "Unlimited exterior washes",
+     "plans": "all",
+     "overlap_tag": "car_wash"
+    }
+   ],
+   "best_for": "Chicago-suburb drivers who wash more than twice a month.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Delta Sonic car wash",
+     "url": "https://deltasoniccarwash.com/car-wash/"
+    },
+    {
+     "label": "CarTipsDaily Delta Sonic prices",
+     "url": "https://cartipsdaily.com/delta-sonic-car-wash-prices"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#334155",
+   "mark": "DS"
+  },
+  {
+   "id": "crew_carwash_unlimited",
+   "name": "Crew Carwash Unlimited",
+   "category": "auto",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IN",
+    "IL",
+    "MN"
+   ],
+   "service_area_note": "Indiana-based express washes (mostly central Indiana) with some IL and MN sites",
+   "official_url": "https://crewcarwash.com",
+   "plans": [
+    {
+     "id": "unlimited",
+     "name": "Unlimited plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Prices not visible to our checker; sold via online plan page"
+    }
+   ],
+   "default_plan": "unlimited",
+   "features": [
+    {
+     "id": "unlimited_washes",
+     "name": "Unlimited washes",
+     "plans": "all",
+     "overlap_tag": "car_wash"
+    }
+   ],
+   "best_for": "Indianapolis-area drivers who wash often.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Crew Carwash Noblesville location",
+     "url": "https://locations.crewcarwash.com/in/noblesville/noblesville-ic/"
+    }
+   ],
+   "checked_at": "2026-10-23",
+   "region_group": "great-lakes",
+   "color": "#0f766e",
+   "mark": "CC"
+  }
+ ]
+}
