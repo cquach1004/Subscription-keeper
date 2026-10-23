@@ -258,6 +258,7 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .facts-src { font-size: 11px; color: var(--muted); }
 .checkin { margin-bottom: 18px; } .checkin h3 { margin: 0; flex: 1; font-size: 16px; }
 .checkin > * + * { margin-top: 10px; }
+.q-row { display: flex; flex-wrap: wrap; gap: 6px; } .q-row select, .q-row input { width: auto; flex: 1 1 110px; min-width: 0; }
 .ci-link { background: none; border: 0; padding: 0; color: var(--accent); font: inherit; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; margin-left: auto; }
 .u-cur { align-items: baseline; }
 .ci-btns { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -682,6 +683,9 @@ const SAMPLE_START = { spotify: 38, netflix: 61, icloud: 30, m365: 20, evernote:
   park_fitness_classes: 14, costco: 60, applecare: 18, orkin: 30, natural_lawn_america: 24, state_farm_home: 66, tinder: 9, audible: 40, duolingo: 30,
   la_fitness: 34, doordash_dashpass: 20, verizon_fios: 48, arlo_secure: 22, verizon_wireless: 96 };
 // Services with no list price (insurance, pest and lawn, LA Fitness): the example uses a made-up monthly amount, as if the user had typed it in.
+// Example quotes for the same coverage (v91), made up like the prices above: GEICO beats Progressive; State Farm beats Allstate.
+const SAMPLE_QUOTE = { progressive_auto: { by: "geico_auto", price: 792, per: "half" }, state_farm_home: { by: "allstate_home", price: 1704, per: "year" } };
+const sampleQuote = id => SAMPLE_QUOTE[id] && { ...SAMPLE_QUOTE[id], date: addMonths(-1) };
 const SAMPLE_PRICE = { progressive_auto: 148, state_farm_home: 135, orkin: 54, natural_lawn_america: 55, la_fitness: 40 };
 const MODEL_LABEL = { insurance: "Protection plan", storage: "Storage plan", perks: "Perks card" };
 
@@ -746,7 +750,7 @@ function seedSub([id, uses, used, day]) {
       ...(id === "wsj" ? { intro: { kind: "intro", price: 4, ends: stepDate(start, "month", 12) } } : {}),
       // Cuong's ChatGPT: started Mar 15, 2026 at $21.20/mo (with tax), paused in September, restarted this month.
       ...(id === "chatgpt" ? { start: "2026-03-15", priceMine: true, myTotal: 21.2, pauses: [{ from: "2026-09-15", to: "2026-10-15", fee: 0, restartFee: 0 }] } : {}),
-      ...(SAMPLE_PRICE[id] ? { cycle: "month", priceMine: true, myTotal: SAMPLE_PRICE[id] } : {}) });
+      ...(SAMPLE_PRICE[id] ? { cycle: "month", priceMine: true, myTotal: SAMPLE_PRICE[id] } : {}), ...(SAMPLE_QUOTE[id] ? { quote: sampleQuote(id) } : {}) });
     setUse(sub, uses, measureOf(sub).per); return sub; }
 }
 function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { return null; } }
@@ -922,7 +926,7 @@ const USAGE_BY_CAT = {
   // Digital books (v72): $6 a book is our estimate, so a $12 plan pays off at about two books a month.
   books: U("uses", "Books read or listened to this month", "book", "books", "month", 30, { worth: 6 }),
   // Protection plans and essentials are judged as plans, not by how often they're used. Insurance premiums are personal, so users enter theirs.
-  car_insurance: COST_ONLY, home_insurance: COST_ONLY,
+  car_insurance: { ...COST_ONLY, insure: "car" }, home_insurance: { ...COST_ONLY, insure: "home" },
   privacy: COST_ONLY, home_security: COST_ONLY, home: COST_ONLY, tech_support: COST_ONLY, lawn_pest: COST_ONLY, internet: COST_ONLY, mobile: COST_ONLY, pets: COST_ONLY, beauty: COST_ONLY, passwords: COST_ONLY,
 };
 // Lawn and pest control are judged on results (Cuong, v90): no pests or weeds at a fair market price is what you paid for.
@@ -942,6 +946,28 @@ const FAIR_PRICE = {
 };
 const fairPrice = s => { const m = measureOf(s); if (!m.results || profile().country !== catalogCountry() || /mosquito/i.test(s.svc)) return null; return FAIR_PRICE[m.pest ? "pest" : "lawn"]; };
 const priceyFor = s => { const fp = fairPrice(s), mo = monthly(s); return fp && mo > fp.hi * 1.15 ? fp : null; };
+// Insurance is judged on price for the same coverage, and on service (Cuong, v91): the best price for the same coverage
+// and terms is great value; paying more than another insurer's matching quote is not, unless their service is clearly worse.
+// Cheap with poor claims service isn't great value either. s.quote = { by, price, per, date } is the user's best matching quote;
+// s.service = good | ok | poor | none is their own experience with claims and support, which outranks the published rating.
+const INSURER_SERVICE = {
+  car: { avg: 77, hi: 80, lo: 72, unit: "%", what: "of customers satisfied with their claim",
+    src: "Insurance.com 2026 claims satisfaction survey", url: "https://www.insurance.com/auto-insurance/best-car-insurance-companies-for-claims/",
+    scores: { allstate_auto: 78, farmers_auto: 74, geico_auto: 76, liberty_mutual_auto: 77, nationwide_auto: 81, progressive_auto: 62, state_farm_auto: 80, travelers_auto: 82, usaa_auto: 87, american_family_auto: 82 } },
+  // USAA scored 737 but isn't officially ranked because it's only open to military families.
+  home: { avg: 642, hi: 652, lo: 632, unit: " of 1,000", what: "overall customer satisfaction",
+    src: "J.D. Power 2025 U.S. Home Insurance Study (via Money Talks News)", url: "https://www.moneytalksnews.com/slideshows/homeowners-rate-these-insurers-best-for-customer-service/",
+    scores: { state_farm_home: 657, allstate_home: 633, usaa_home: 737, liberty_mutual_home: 620, farmers_home: 631, nationwide_home: 641, travelers_home: 608, american_family_home: 643 } },
+};
+const SERVICE_EXP = { good: "Good", ok: "OK", poor: "Poor", none: "No claims yet" };
+const QUOTE_PER = { month: ["a month", 1], half: ["every 6 months", 6], year: ["a year", 12] };
+// Published service band for an insurer in the catalog: above, avg, below, or null when it isn't rated.
+const serviceBand = (svc, kind) => { const t = INSURER_SERVICE[kind], n = t?.scores[svc]; return n == null ? null : n >= t.hi ? "above" : n <= t.lo ? "below" : "avg"; };
+const BAND_LABEL = { above: "Above average", avg: "About average", below: "Below average" };
+const quoteMonthly = q => q && q.price > 0 ? q.price / QUOTE_PER[q.per || "month"][1] : null;
+// Your own experience wins; otherwise the published rating.
+const serviceOf = s => { const m = measureOf(s); return s.service === "good" ? "above" : s.service === "poor" ? "below" : serviceBand(s.svc, m.insure); };
+const BAND_RANK = { below: 0, avg: 1, above: 2 };
 const USAGE_BY_SVC = {
   youtube_premium: { worth: 0.5 },
   // Pro articles (Pro plan only) are worth what an article is at WSJ's "poor" benchmark ($2), the same scale the catalog uses for WSJ.
@@ -985,7 +1011,9 @@ function measuresOf(s) {
 }
 const measureOf = s => measuresOf(s)[0];
 const unitOf = (m, n) => n === 1 ? m.one : m.short;
-const useText = s => { const m = measureOf(s); if (m.costOnly) return "Not measured by use";
+const useText = s => { const m = measureOf(s);
+  if (m.insure) { const q = quoteMonthly(s.quote); return q == null ? "No quote to compare yet" : `Best quote ${money(q)}/mo`; }
+  if (m.costOnly) return "Not measured by use";
   if (m.checks) { const on = s.checks?.[periodKeys(s).cur] || []; return on.length ? on.map(id => m.checks.find(c => c.id === id)?.short || id).join(", ") + " this month" : m.results ? "No problems this month" : "Nothing used this month"; }
   if (m.per1 === "dollar") return `${money(s.rate)} of perks a ${m.per}`;
   return m.amount ? `${fmtN(s.rate)} ${m.short}` : `${fmtN(s.rate)} ${unitOf(m, s.rate)} a ${m.per}`; };
@@ -1026,6 +1054,13 @@ function rate(s) {
   if (isFree(s)) return { key: "great", label: "Free", cpu: null, free: true };
   // No usage from the user yet (just added): no rating and no advice until they tell us (Cuong, 2026-10-20).
   const m = measureOf(s);
+  if (m.insure) { const q = quoteMonthly(s.quote), mo = monthly(s), mine = serviceOf(s), theirs = s.quote ? serviceBand(s.quote.by, m.insure) : null;
+    if (q == null) return { key: "ok", label: "Compare a quote", cpu: null, model: "insurance", insure: true, mine };
+    const over = mo - q, better = mine && theirs && BAND_RANK[mine] > BAND_RANK[theirs];
+    if (over > Math.max(5, q * 0.05)) return better ? { key: "ok", label: "Costs more, better service", cpu: null, insure: true, quote: q, over, mine, theirs }
+      : { key: "poor", label: "Costs more than a matching quote", cpu: null, insure: true, quote: q, over, mine, theirs };
+    if (mine === "below") return { key: "ok", label: "Good price, weak service", cpu: null, insure: true, quote: q, over, mine, theirs };
+    return { key: "great", label: "Great value", cpu: null, insure: true, quote: q, over, mine, theirs }; }
   if (m.results) { const keys = (valueSeries(s)?.rows.slice(1) || []).slice(-3).map(r => r.key), ticks = (keys.length ? keys : [today().slice(0, 7)]).map(k => checkedIn(s, m, k));
     const calls = ticks.filter(t => t.includes("callback")).length, pricey = priceyFor(s);
     if (ticks.some(t => t.includes("unfixed"))) return { key: "poor", label: "Problem not fixed", cpu: null, results: true, unfixed: true };
@@ -1105,6 +1140,11 @@ function cheaperOptions(s) {
     if (s.cycle === "month" && plan.price_monthly && plan.price_annual && plan.price_monthly * 12 > plan.price_annual)
       out.push({ kind: "Same plan", name: "Pay yearly", save: Math.min(mo, (plan.price_monthly * 12 - plan.price_annual) / 12), note: `${money(plan.price_annual)} once a year.` });
   }
+  // A matching insurance quote (v91), unless that insurer's service is worse than yours.
+  if (r.insure && r.quote != null && r.over > 0 && !(r.mine && r.theirs && BAND_RANK[r.theirs] < BAND_RANK[r.mine])) {
+    const by = CATALOG[s.quote.by]?.name.replace(/ \((Car|Home)\)$/, "") || "Another insurer";
+    out.push({ kind: "Matching quote", name: by, save: r.over, note: `Your quote for the same coverage, ${fmtDate(s.quote.date)}.`, alt: CATALOG[s.quote.by] ? s.quote.by : undefined });
+  }
   if (!isHard(s) && r.key !== "great") {
     const alts = alternativesOf(s).filter(a => a.monthly != null && a.monthly < mo);
     const free = alts.find(a => a.monthly === 0), paid = alts.filter(a => a.monthly > 0 && a.kind !== "partial").sort((a, b) => a.monthly - b.monthly)[0];
@@ -1170,7 +1210,7 @@ function upcomingHtml() {
 
 // First visit: each person picks their own subscriptions (Cuong shares the prototype for feedback, 2026-10-19).
 // Nothing is shared between viewers: lists live in this browser only.
-const FRESH = () => ({ subs: [], sampleV: 2, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
+const FRESH = () => ({ subs: [], sampleV: 3, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
 function welcomeView() {
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
@@ -1203,7 +1243,7 @@ function welcomeView() {
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, start: today(), day: +today().slice(8) })) };
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 2; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 3; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
@@ -1507,6 +1547,7 @@ const periodKeys = s => { const rows = valueSeries(s)?.rows.slice(1) || [];
 function lastMonthOf(s) {
   if (isFree(s)) return { s, bucket: "great", cost: 0, free: true };
   const m = measureOf(s), { prev, prevRow } = periodKeys(s);
+  if (m.insure) { const r = rate(s); return !prevRow || prevRow.paused || needsPrice(s) || r.quote == null ? null : { s, bucket: r.key === "great" ? "great" : r.key === "poor" ? "costly" : "fair", cost: prevRow.spent }; }
   if (!prevRow || prevRow.paused || m.costOnly || s.needsUse || needsPrice(s)) return null;
   if (m.results) { const t = checkedIn(s, m, prev); return { s, bucket: t.includes("unfixed") ? "costly" : priceyFor(s) ? "fair" : "great", cost: prevRow.spent }; }
   const used = s.hist?.[m.id]?.[prev] ?? s.uses, b = valueBucket({ ...s, uses: used });
@@ -1651,7 +1692,7 @@ function homeView() {
   wireFacts(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
-  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 2; save(); render(); });
+  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 3; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
   f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
   return f;
@@ -2226,6 +2267,14 @@ function verdictText(s, r) {
     const mine = s.used.filter(id => id !== m.job).map(id => feats.find(f => f.id === id)?.name).filter(Boolean);
     return d <= 0.005 ? `${esc(s.name)} costs less than ${m.jobName} alone (${money(m.worth)}/mo at ${a?.name.split(",")[0] || "the cheapest option"}), so everything else is a bonus.`
       : `You pay ${money(d)}/mo more than ${m.jobName} alone would cost${a ? ` at ${a.name.split(",")[0]}` : ""}. ${mine.length ? `That buys the extras you care about: ${mine.join(", ")}.` : `If you don't need the extras (${extras.slice(0, 3).map(f => f.name.toLowerCase()).join(", ")}${extras.length > 3 ? " and more" : ""}), switching would save ${money(d * 12)} a year.`}`; }
+  if (r.insure) { const q = s.quote, by = q && (CATALOG[q.by]?.name.replace(/ \((Car|Home)\)$/, "") || q.name || "another insurer"), old = q?.date && q.date < addMonths(-12);
+    const svc = r.mine === "below" ? (s.service === "poor" ? "you rated its claims and support as poor" : "its published service rating is below average") : r.mine === "above" ? (s.service === "good" ? "you rated its claims and support as good" : "its published service rating is above average") : "";
+    if (!q || r.quote == null) return `Value here means the best price for the same coverage and terms, with good service. Get two or three quotes for exactly your coverage (same limits, deductibles and drivers or home) and enter the best one under How it compares.`;
+    const stale = old ? ` Your quote is over a year old, so get a fresh one.` : "";
+    if (r.key === "poor") return `You pay ${money(r.over)} a month (${money(r.over * 12)} a year) more than ${esc(by)} quoted for the same coverage${r.theirs === "below" ? `, though ${esc(by)}'s service rating is below average` : ""}. Ask ${esc(s.name.replace(/ \((Car|Home)\)$/, ""))} to match it, or switch at renewal.${stale}`;
+    if (r.key === "ok" && r.over > 0) return `You pay ${money(r.over)} a month more than ${esc(by)}'s quote, but ${svc || "your insurer's service is rated better"}, and ${esc(by)}'s is ${BAND_LABEL[r.theirs]?.toLowerCase() || "lower"}. Paying a little more for claims that go smoothly can be worth it.${stale}`;
+    if (r.key === "ok") return `Your price is as good as or better than ${esc(by)}'s quote, but ${svc}. Cheap isn't great value if a claim goes badly, so compare a quote from an insurer with better service.${stale}`;
+    return `Your price is as good as or better than ${esc(by)}'s quote for the same coverage${svc ? `, and ${svc}` : ""}. That's great value.${stale}`; }
   if (r.results) { const m = measureOf(s), fp = fairPrice(s), thing = m.pest ? "pests" : "weeds or lawn problems", range = fp ? `${money(fp.lo)} to ${money(fp.hi)}` : "";
     if (r.unfixed) return `You reported a problem that still isn't fixed. Ask ${esc(s.name)} for a free re-treatment (most plans include one). If it isn't sorted out, it's not giving you what you pay for, so get quotes from other companies.`;
     if (r.key === "poor") return `You had to call ${esc(s.name)} back in ${r.calls} of the last 3 months. If the ${thing} keep coming back, it may not be worth ${money(monthly(s))} a month. Ask for a re-treatment or compare quotes.`;
@@ -2370,7 +2419,7 @@ function valueChart(s) {
       return `<div class="vbars" style="--n:${mon.length}" role="img" aria-label="${mon.map(x => `${monthName(x.r.from)}: ${x.r.paused ? "paused" : vs.worth ? `value ${money(x.val)}, paid ${money(x.cost)}` : `paid ${money(x.cost)}`}`).join("; ")}">${mon.map(x => { const v = vs.worth ? x.val : x.cost, ok = !vs.worth || x.val >= x.cost;
         return `<div class="vbar${x.partial ? " part" : ""}"><div class="vplot">${x.r.paused ? `<span class="vlab" style="bottom:2px">Paused</span>` : `<i style="height:${pct(v)}%;background:${!vs.worth ? "var(--accent)" : ok ? "var(--good)" : "var(--c-cost)"}"></i><span class="vlab num" style="bottom:calc(${pct(v)}% + 2px)">${moneyShort(v)}</span>`}${vs.worth && !x.r.paused ? `<b class="vcost" style="bottom:${pct(x.cost)}%"></b>` : ""}</div><span class="vx">${monthName(x.r.from).slice(0, 3)}${x.partial ? "*" : ""}</span></div>`; }).join("")}</div>
       ${mon.at(-1)?.partial ? `<p class="note" style="margin:0">* This month so far.</p>` : ""}`; })()}
-    <p class="note" style="margin:0">${m.bundle ? `Value is a ${money(m.worth)} shipping fee on each order under $35${m.counted.length ? `, plus ${m.counted.map(p => p.months ? partText(p) : `${money(p.monthly)} a month for ${p.name}`).join(" and ")} because ${m.counted.length > 1 ? "they matter" : "it matters"} to you${m.included.length ? ` (${m.included.map(p => p.name).join(" and ")} comes with Prime Video, so it isn't counted twice)` : ""}` : ""}. Orders of $35 or more ship free without Prime, so they aren't counted.${(s.members || 1) > 1 ? ` Orders include everyone in your household (${s.members} people), and Prime Video counts once for the household.` : " If family members share your Prime, count their orders too and add them under Plan and price."} Check other features under Features that matter to me to count them. ` : m.fixed ? `Value is what you'd pay for ${esc(m.jobName)} on its own, for each month you were subscribed. Removals don't change it; they show the service is working. You can change the comparison under How you use it. ` : vs.worth ? `Each ${m.per1} counts as worth ${money(vs.worth)}${m.own ? ", the value you set" : m.id === "people" ? `, what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own` : m.bench ? `, the cost per ${esc(m.per1)} where we'd call ${esc(v.name)} costly` : ", our estimate"}. You can change this under How you use it. ` : ""}${s.hist?.[m.id] ? `Monthly ${esc(m.short)} come from ${Object.values(s.histSrc?.[m.id] || {}).includes("sync") ? `your ${esc(SYNC[s.svc]?.name || "")} data export (pulled ${esc(fmtDate(s.syncInfo?.at))})` : `your history${s.histTest ? " (test data for this prototype)" : ""}`}; months without an entry use your current rate.` : `This uses ${m.amount ? "today's number" : "your current rate"}, ${esc(useText(s))}, for every month you weren't paused${s.example ? ", and that usage is an example" : ""}.`}${s.cycle === "year" ? " Yearly charges are spread evenly across the months." : ""}</p>
+    <p class="note" style="margin:0">${m.bundle ? `Value is a ${money(m.worth)} shipping fee on each order under $35${m.counted.length ? `, plus ${m.counted.map(p => p.months ? partText(p) : `${money(p.monthly)} a month for ${p.name}`).join(" and ")} because ${m.counted.length > 1 ? "they matter" : "it matters"} to you${m.included.length ? ` (${m.included.map(p => p.name).join(" and ")} comes with Prime Video, so it isn't counted twice)` : ""}` : ""}. Orders of $35 or more ship free without Prime, so they aren't counted.${(s.members || 1) > 1 ? ` Orders include everyone in your household (${s.members} people), and Prime Video counts once for the household.` : " If family members share your Prime, count their orders too and add them under Plan and price."} Check other features under Features that matter to me to count them. ` : m.fixed ? `Value is what you'd pay for ${esc(m.jobName)} on its own, for each month you were subscribed. Removals don't change it; they show the service is working. You can change the comparison under How you use it. ` : vs.worth ? `Each ${m.per1} counts as worth ${money(vs.worth)}${m.own ? ", the value you set" : m.id === "people" ? `, what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own` : m.bench ? `, the cost per ${esc(m.per1)} where we'd call ${esc(v.name)} costly` : ", our estimate"}. You can change this under How you use it. ` : ""}${m.costOnly ? "" : s.hist?.[m.id] ? `Monthly ${esc(m.short)} come from ${Object.values(s.histSrc?.[m.id] || {}).includes("sync") ? `your ${esc(SYNC[s.svc]?.name || "")} data export (pulled ${esc(fmtDate(s.syncInfo?.at))})` : `your history${s.histTest ? " (test data for this prototype)" : ""}`}; months without an entry use your current rate.` : `This uses ${m.amount ? "today's number" : "your current rate"}, ${esc(useText(s))}, for every month you weren't paused${s.example ? ", and that usage is an example" : ""}.`}${s.cycle === "year" ? " Yearly charges are spread evenly across the months." : ""}</p>
     <details class="nums"><summary>See the numbers</summary><div class="tbl-wrap"><table class="tbl"><tr><th>Month</th><th>${esc(m.short[0].toUpperCase() + m.short.slice(1))} that month</th><th>Paid</th>${vs.worth ? "<th>Value</th>" : ""}<th>Total paid</th>${vs.worth ? "<th>Total value</th>" : ""}</tr>
       ${vs.rows.slice(1).map(r => `<tr><td>${monthName(r.from)}${r.paused ? " (paused)" : r.intro ? " (intro)" : ""}</td><td class="num">${fmtN(Math.round(r.uses * 10) / 10)}</td><td class="num">${money(r.spent)}</td>${vs.worth ? `<td class="num">${money(r.uses * vs.worth)}</td>` : ""}<td class="num">${money(r.cost)}</td>${vs.worth ? `<td class="num">${money(r.value)}</td>` : ""}</tr>`).join("")}</table></div></details>`;
   return { meta, body, seg };
@@ -2513,6 +2562,29 @@ function hookChart(root, s) {
   svg.addEventListener("pointermove", show); svg.addEventListener("pointerdown", show); svg.addEventListener("pointerleave", hide);
 }
 
+function insureHtml(s) {
+  const m = measureOf(s), t = INSURER_SERVICE[m.insure], q = s.quote || {}, v = svcOf(s), n = t.scores[s.svc], band = serviceBand(s.svc, m.insure);
+  const rivals = Object.values(CATALOG).filter(x => x.category === v.category && x.id !== s.svc).sort((a, b) => a.name.localeCompare(b.name));
+  return `<p class="small muted" style="margin:0">Rated on price and service: the best price for the same coverage and terms is great value, as long as claims and support are good.</p>
+    <div class="small"><b>Published service rating:</b> ${n == null ? `not in our ratings yet.` : `${BAND_LABEL[band]}, ${n}${t.unit} ${t.what} (average ${t.avg}${t.unit}). Source: <a href="${t.url}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(t.src)}</a>.`}</div>
+    <div style="display:grid;gap:6px"><b style="font-size:14px">Your claims and support experience</b>
+      <div class="seg" role="group" aria-label="Your claims and support experience">${Object.entries(SERVICE_EXP).map(([k, l]) => `<button type="button" data-svcx="${k}" aria-pressed="${(s.service || "") === k}">${l}</button>`).join("")}</div></div>
+    <div style="display:grid;gap:6px"><b style="font-size:14px">Best quote for the same coverage and terms</b>
+      <span class="small muted">Same limits, deductibles, drivers or home. Leave it blank if you haven't shopped around.</span>
+      <div class="q-row"><select id="q-by" aria-label="Insurer that quoted"><option value="">Insurer…</option>${rivals.map(x => `<option value="${x.id}" ${q.by === x.id ? "selected" : ""}>${esc(x.name.replace(/ \((Car|Home)\)$/, ""))}</option>`).join("")}<option value="other" ${q.by === "other" ? "selected" : ""}>Another insurer</option></select>
+        <input id="q-price" type="number" min="0" step="0.01" placeholder="Price" aria-label="Quoted price" value="${q.price ?? ""}">
+        <select id="q-per" aria-label="Quote period">${Object.entries(QUOTE_PER).map(([k, [l]]) => `<option value="${k}" ${(q.per || "month") === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>
+      ${s.quote ? `<span class="note">Quoted ${fmtDate(q.date)}${q.by && q.by !== "other" && serviceBand(q.by, m.insure) ? `. ${esc(CATALOG[q.by].name.replace(/ \((Car|Home)\)$/, ""))}'s service rating: ${BAND_LABEL[serviceBand(q.by, m.insure)].toLowerCase()}` : ""}. <button class="btn ghost small" id="q-clear">Clear quote</button></span>` : ""}</div>`;
+}
+function wireInsure(root, s, redraw) {
+  root.querySelectorAll("[data-svcx]").forEach(b => b.onclick = () => { s.service = s.service === b.dataset.svcx ? undefined : b.dataset.svcx; if (!s.service) delete s.service; save(); redraw(); });
+  const by = root.querySelector("#q-by"), pr = root.querySelector("#q-price"), per = root.querySelector("#q-per");
+  if (!by) return;
+  const upd = () => { const n = parseFloat(pr.value); if (!by.value || !(n > 0)) { if (!pr.value && !by.value && s.quote) { delete s.quote; save(); redraw(); } return; }  // wait until both are filled in
+    s.quote = { by: by.value, price: n, per: per.value, date: s.quote?.price === n && s.quote?.by === by.value ? s.quote.date : today() }; save(); redraw(); };
+  by.onchange = upd; pr.onchange = upd; per.onchange = upd;
+  root.querySelector("#q-clear")?.addEventListener("click", () => { delete s.quote; save(); redraw(); });
+}
 function openSheet(id) {
   const s = state.subs.find(x => x.id === id); if (!s) return;
   const root = document.getElementById("sheet-root");
@@ -2532,15 +2604,16 @@ function openSheet(id) {
           <button class="btn" id="close" aria-label="Close">Close</button></div>
         <div class="kv">
           <div class="stat"><div class="label">${introActive(s) ? (s.intro.kind === "trial" ? "Free trial" : "Intro price") : s.priceMine ? "You pay" : "Price"}</div><div class="value num">${money(total(s))}</div><div class="small muted">per ${s.cycle}${s.cycle === "year" ? ` (${money(monthly(s))}/mo)` : ""}${hh && (s.members || 1) > 1 && total(s) != null ? `<br>${s.members} people, ${money(monthly(s) / s.members)}/mo each` : ""}</div></div>
-          ${m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
+          ${m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.insure ? (b => `<div class="stat"><div class="label">Service rating</div><div class="value" style="font-size:20px">${b ? BAND_LABEL[b] : "—"}</div><div class="small muted">${s.service && s.service !== "none" && s.service !== "ok" ? "from your own experience" : b ? "from published ratings" : "not rated yet"}</div></div>`)(serviceOf(s)) : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
         </div>
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
-        ${sec("usage", m.results ? "How it's going" : "How you use it", esc(useText(s)), `
+        ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
+        ${m.insure ? insureHtml(s) : `
         ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>`
         : m.costOnly ? `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
           ${slider(m, s.rate, 'id="s-rate"')}
-          ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}
+          ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}`}
         ${m.fixed ? `<label>Compare with<select id="s-alt">${(ALTERNATIVES[m.job] || []).map((a, i) => `<option value="${i}" ${(s.alt || 0) === i && !m.own ? "selected" : ""}>${esc(a.name)} · ${money(a.monthly)}/mo</option>`).join("")}${m.own ? `<option selected>Your own price · ${money(m.worth)}/mo</option>` : ""}</select></label>
           <div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Or enter what ${esc(m.jobName)} alone would cost you</label>
           <input id="s-worth" type="number" min="0" step="0.01" value="${m.worth == null ? "" : (+m.worth).toFixed(2)}"><span class="small muted">${currency()}/mo</span>${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use the list</button>` : ""}</div>
@@ -2615,6 +2688,7 @@ function openSheet(id) {
     const sr = root.querySelector("#s-rate");
     if (sr) { sr.oninput = () => sr.nextElementSibling.textContent = slideText(m, +sr.value); sr.onchange = () => use(+sr.value, m.per); }
     wireChecks(root, () => setTimeout(draw));
+    wireInsure(root, s, () => setTimeout(draw));
     root.querySelectorAll("[data-switch]").forEach(b => b.onclick = () => { if (b.dataset.switch) s.switch = b.dataset.switch; else delete s.switch; save(); setTimeout(draw); });
     root.querySelectorAll("[data-alt]").forEach(b => b.onclick = () => { exploreOpen = b.dataset.alt; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
     root.querySelector("[data-alt-all]")?.addEventListener("click", () => { exploreOpen = null; exploreCat = "mine-alts"; view = "add"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
@@ -2676,7 +2750,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 90 · Standalone copy · Oct 23", VERSION_NUM = 90;
+const APP_VERSION = "Prototype · Version 91 · Standalone copy · Oct 23", VERSION_NUM = 91;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2794,6 +2868,7 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   if ((state.sampleV || 0) < 2) { if (state.subs.some(s => s.example)) SAMPLE.filter(([id]) => CATALOG[id] && !state.subs.some(s => s.svc === id)).forEach(row => {
       const s = seedSub(row); s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; genHistory(s); state.subs.push(s); });
     state.sampleV = 2; }
+  if (state.sampleV < 3) { if (state.subs.some(s => s.example)) state.subs.forEach(s => { if (SAMPLE_QUOTE[s.svc] && !s.quote) s.quote = sampleQuote(s.svc); }); state.sampleV = 3; }
   if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { s.measure = "replace"; if (!s.hist?.replace) genHistory(s); s.used = ["data_removal"]; }); state.cloakedV = 1; }
   save();
   render();
