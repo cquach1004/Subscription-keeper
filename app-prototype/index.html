@@ -67,6 +67,12 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .stat.save .value { color: var(--good); }
 .save-card .value { font-size: 34px; font-weight: 300; color: var(--good); margin-top: 4px; } .save-card .value .small { font-weight: 500; }
 .save-card .see-how { justify-self: start; display: block; }
+.rn-card { display: grid; gap: 2px; }
+.rn-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto 14px; gap: 10px; align-items: center; border: 0; border-top: 1px solid var(--line); background: none; padding: 10px 2px; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.rn-row:first-of-type { border-top: 0; } .rn-row b, .rn-row .small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .rn-row:hover b { color: var(--accent); }
+.rn-detail { display: grid; gap: 10px; margin: 0 0 10px 42px; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); font-size: 14px; }
+.rn-sec b { display: block; font-size: 13px; } .rn-sec p, .rn-sec ul { margin: 2px 0 0; } .rn-sec ul { padding-left: 18px; } .rn-detail .see-how { justify-self: start; }
+@media (max-width: 620px) { .rn-detail { margin-left: 0; } }
 .save-card { display: grid; gap: 10px; } .sv-tiers { display: grid; gap: 8px; max-width: 640px; }
 .sv-tier { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr) auto 14px; gap: 10px; align-items: center; width: 100%; border: 0; background: none; padding: 4px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; border-radius: 8px; }
 .sv-tier:disabled { cursor: default; } .sv-tier:not(:disabled):hover .sv-track { outline: 2px solid var(--line); outline-offset: 2px; } .sv-chev { color: var(--muted); font-size: 12px; }
@@ -1652,6 +1658,35 @@ function monthBarsHtml() {
 }
 // Where you can save (v106 "Could save" tile; v119, Cuong: renamed and moved below What you use least as its own card).
 // Just the monthly number and a "See how" link to the details on Savings.
+// Upcoming renewals (Cuong, v124, in Value mix's place): what renews in the next 30 days, soonest first. Tapping one opens what's new
+// (price changes and news we know of), its features, your usage and ways to save, with a link to the full details.
+let renewOpen = null, renewAll = false;
+function renewHtml() {
+  const list = state.subs.map(s => ({ s, d: nextRenewal(s) })).filter(x => x.d && daysUntil(x.d) <= 30 && !isFree(x.s)).sort((a, b) => a.d.localeCompare(b.d) || monthly(b.s) - monthly(a.s));
+  if (!list.length) return "";
+  const shown = renewAll ? list : list.slice(0, 5), per = s => s.cycle === "year" ? "yr" : "mo", c = profile().country;
+  const when = n => n <= 0 ? "Today" : n === 1 ? "Tomorrow" : `In ${n} days`;
+  const drop = new Map(activeOverlaps().map(o => [droppable(o)?.id, o]).filter(([k]) => k));
+  const detail = s => { const v = svcOf(s), plan = planOf(v, s.plan), r = rate(s), m = measureOf(s);
+    const news = [...TRENDS.filter(x => x.svc === s.svc && (!x.country || x.country === c)).map(x => x.title), ...(v.recent_changes || []).map(x => `${x.date}: ${x.summary}`)];
+    const feats = v.features ? featuresFor(v, s.plan).map(f => f.name) : [];
+    const opts = cheaperOptions(s).sort((a, b) => b.save - a.save).slice(0, 2), o = drop.get(s.id);
+    const ways = [...(o ? [`Drop it: ${o.label} also comes with ${[...new Set(o.members.filter(x => x.sub !== s).map(x => x.sub.name))].join(" and ")} (saves ${money(monthly(s))}/mo)`] : []),
+      ...opts.map(x => `${x.kind}: ${x.name}, saves ${money(x.save)}/mo${x.unconfirmed ? " (price unconfirmed)" : ""}`)];
+    const sec = (h, body) => `<div class="rn-sec"><b>${h}</b>${body}</div>`;
+    return `<div class="rn-detail">
+      ${sec("What's new", news.length ? `<ul>${news.slice(0, 3).map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<p>No new plans or price changes we know of.</p>`)}
+      ${sec(`Features${plan ? ` on ${esc(plan.name)}` : ""}`, feats.length ? `<p>${esc(feats.slice(0, 5).join(", "))}${feats.length > 5 ? `, and ${feats.length - 5} more` : ""}</p>` : `<p>No feature list for this one yet.</p>`)}
+      ${sec("Your usage", m.costOnly ? `<p>Not measured by use. ${esc(r.label)}.</p>` : s.needsUse ? `<p>Not entered yet. Add it so we can tell if it's worth renewing.</p>` : `<p>${esc(useText(s))} <span class="pill ${r.key}">${esc(r.label)}</span></p>`)}
+      ${sec("Ways to save", ways.length ? `<ul>${ways.map(x => `<li>${esc(x)}</li>`).join("")}</ul>${ways.some(x => x.includes("*")) ? `<p class="small muted">* ${esc(PUBLIC_NOTE)}</p>` : ""}` : `<p>Nothing cheaper found for how you use it.</p>`)}
+      <button type="button" class="see-how" data-rnid="${s.id}">Open full details</button></div>`; };
+  return `<section class="card rn-card" style="margin-bottom:14px"><h3 style="margin:0">Upcoming renewals</h3>
+    <p class="small muted" style="margin:2px 0 4px">Renewing in the next 30 days. Tap one to see what's new and whether it's worth keeping.</p>
+    ${shown.map(({ s, d }) => { const open = renewOpen === s.id, n = daysUntil(d);
+      return `<button type="button" class="rn-row" data-rn="${s.id}" aria-expanded="${open}">${logoHtml(svcOf(s))}<span style="min-width:0"><b>${esc(s.name)}</b><span class="small muted">${fmtDate(d).replace(/, \d{4}$/, "")} · ${money(total(s) ?? 0)}/${per(s)}</span></span>
+        <span class="small" style="color:${n <= 3 ? "var(--warn)" : "var(--muted)"}">${when(n)}</span><span class="sv-chev" aria-hidden="true">${open ? "&#9652;" : "&#9662;"}</span></button>${open ? detail(s) : ""}`; }).join("")}
+    ${list.length > 5 ? `<button type="button" class="btn ghost small" id="rn-all" style="padding-left:0;justify-self:start">${renewAll ? "Show fewer" : `Show ${list.length - 5} more`}</button>` : ""}</section>`;
+}
 // v122 (Cuong): bars split the total by where each saving comes from. Each subscription still counts once, at its biggest
 // saving: dropping it as a duplicate, switching to a free option, or a cheaper plan, yearly billing or another paid service.
 function saveTiers(list = savingsBySub()) {
@@ -1730,10 +1765,12 @@ function shelfView() {
   const f = el(`<div class="section-head"><h2>Shelf</h2><span class="small muted">Widgets taken off Overview. They still work here, and any of them can go back.</span></div>
     <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">Did You Know? was on Overview until Oct 24, 2026.</p>${factsHtml()}</section>
     <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">What's trending was on Overview until Oct 24, 2026. What you use most and least took its place.</p>${trendHtml()}</section>
+    <section class="shelf-item"><h3 style="margin:0">Value mix</h3><p class="note" style="margin:2px 0 8px">Was on Overview until Oct 24, 2026. Upcoming renewals took its place.</p><div class="summary n1" style="margin:0">${mixHtml()}</div></section>
     <section class="shelf-item"><h3 style="margin:0">vs average adult</h3><p class="note" style="margin:2px 0 0">Was on Overview until Oct 24, 2026. The Value mix chart took its place.</p>${benchHtml(total)}</section>`);
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   wireFacts(f);
+  f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   return f;
 }
 // Usage page (Cuong, v67): last month's value in three donuts (Great, Fair, Costly), then a slider per subscription for this month.
@@ -1887,8 +1924,8 @@ function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
   const hasExamples = state.subs.some(s => s.example);
-  // v119 (Cuong): Value mix moved to the last tile on Overview. v118: no empty widgets on Overview. Where you can save shows once there's a saving, Value mix once something is rated.
-  const saveAmt = savingsTotal(savingsBySub()), mix = mixHtml(true);
+  // v124 (Cuong): Value mix moved to Shelf; Upcoming renewals is the last card. v118: no empty widgets on Overview. Where you can save shows once there's a saving, Value mix once something is rated.
+  const saveAmt = savingsTotal(savingsBySub());
   const f = el(`
     <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
     ${state.subs.length ? `<section class="summary">
@@ -1904,7 +1941,7 @@ function homeView() {
     ${saveAmt > 0 ? saveHtml(saveAmt) : ""}
     ${moreCatsHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
-    ${mix ? `<section class="summary n1 mix-last">${mix}</section>` : ""}
+    ${renewHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
@@ -1920,6 +1957,9 @@ function homeView() {
   f.querySelectorAll("[data-reg]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.reg; startReg.has(k) ? startReg.delete(k) : startReg.add(k); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.getElementById("start-done")?.addEventListener("click", () => { state.startDone = true; save(); render(); window.scrollTo(0, 0); });
   wireSetup(f);
+  f.querySelectorAll("[data-rn]").forEach(b => b.addEventListener("click", () => { renewOpen = renewOpen === b.dataset.rn ? null : b.dataset.rn; const y = scrollY; render(); window.scrollTo(0, y); }));
+  f.querySelectorAll("[data-rnid]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.rnid)));
+  f.getElementById("rn-all")?.addEventListener("click", () => { renewAll = !renewAll; const y = scrollY; render(); window.scrollTo(0, y); });
   f.querySelectorAll("[data-tier]").forEach(b => b.addEventListener("click", () => { svTierOpen = svTierOpen === b.dataset.tier ? null : b.dataset.tier; const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-svid]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.svid)));
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
@@ -3086,7 +3126,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 123 · Oct 24", VERSION_NUM = 123;
+const APP_VERSION = "Prototype · Version 124 · Oct 24", VERSION_NUM = 124;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
