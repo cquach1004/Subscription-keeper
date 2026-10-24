@@ -209,6 +209,20 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 .pie-card { margin-bottom: 14px; }
 .trend-card { margin-bottom: 14px; }
 #ways { scroll-margin-top: 16px; }
+/* v113 (Cuong): Guess my total (new users) and Popular subscriptions with one-tap Add on Overview. */
+.gq-list { display: grid; gap: 0; margin: 6px 0 4px; }
+.gq { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+.gq:first-child { border-top: 0; } .gq .small { display: block; }
+.gq .seg button { min-width: 44px; }
+.gq .seg { flex-wrap: nowrap; } @media (max-width: 620px) { .gq.wide { grid-template-columns: 1fr; gap: 6px; } .gq.wide .seg { justify-self: start; } }
+.gq-out { display: grid; gap: 4px; margin-top: 10px; padding: 12px 14px; border-radius: 14px; background: var(--accent-soft); }
+.gq-out .big { font-size: 30px; }
+.pop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 6px; }
+.pop { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); font: inherit; text-align: left; cursor: pointer; min-width: 0; }
+.pop .logo { width: 28px; height: 28px; font-size: 11px; border-radius: 8px; flex: none; }
+.pop b { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pop .plus { color: var(--accent); font-weight: 700; flex: none; } .pop:hover { border-color: var(--accent); }
+@media (max-width: 620px) { .pop b { white-space: normal; font-size: 13px; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; } }
 .free-tog { display: flex; gap: 8px; align-items: flex-start; margin: -8px 0 18px; color: var(--ink); } .free-tog input { margin-top: 2px; flex: none; }
 .see-how { border: 0; background: none; padding: 0; margin-top: 6px; font: 600 14px var(--f-body); color: var(--accent); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 /* v105 (Cuong): What you use most / least, side by side (stacked on phones). */
@@ -1826,7 +1840,8 @@ function homeView() {
     </section>
     ${usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
-    ${useMostHtml()}
+    ${state.subs.length ? useMostHtml() : guessHtml()}
+    ${popularHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
@@ -1834,6 +1849,9 @@ function homeView() {
   f.querySelector(".see-how")?.addEventListener("click", () => { view = "overlaps"; render(); document.getElementById("ways")?.scrollIntoView(); });
   wireNudge(f);
   f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  f.querySelectorAll("[data-gq]").forEach(b => b.addEventListener("click", () => { (state.guess ||= {})[b.dataset.gq] = +b.dataset.n; save(); const y = scrollY; render(); window.scrollTo(0, y); }));
+  f.querySelectorAll("[data-pop]").forEach(b => b.addEventListener("click", () => { const s = newSub(b.dataset.pop, { needsUse: true, start: today(), day: +today().slice(8) });
+    s.measure = measuresOf(s)[0].id; state.subs.push(s); save(); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
@@ -1947,6 +1965,38 @@ const TRENDS = [
   { date: "2026-07", kind: "news", svc: "youtube_premium", country: "US", title: "Peacock coming to YouTube Premium in 2027", text: "Peacock is set to be included with YouTube Premium starting next year. Worth knowing if you pay for both.", src: "Yahoo Tech", url: "https://tech.yahoo.com/streaming/articles/streaming-price-hike-tracker-much-150929260.html" },
   { date: "2026-10-22", checked: true, kind: "popular", svc: "netflix", title: "Netflix is still the most popular", text: "About 325 million subscribers worldwide, ahead of Amazon Prime (200 million) and HBO Max (140 million).", src: "FlixPatrol", url: "https://flixpatrol.com/streaming-services/subscribers/" }];
 const TREND_KIND = { up: ["Price up", "poor"], down: ["Price down", "great"], new: ["New plan", "ok"], news: ["News", "ok"], popular: ["Popular", "great"] };
+// Guess my total (Cuong, v113): a few quick questions for someone with an empty list. Each "yes" counts the middle list price
+// of that kind of service in our catalog (default plans with a confirmed price), so it's an estimate, labeled as one.
+const GUESS = [["video", "Video streaming (Netflix, Disney+...)", 4], ["music", "Music streaming", 1], ["shopping", "Shopping membership (Prime, Walmart+...)", 1],
+  ["storage", "Cloud storage (iCloud, Google One...)", 1], ["ai", "AI assistant (ChatGPT, Claude...)", 1], ["gaming", "Gaming (Game Pass, PlayStation Plus...)", 1],
+  ["fitness", "Gym or fitness membership", 1], ["news", "News or magazine", 1], ["food", "Food delivery pass (DashPass, Uber One...)", 1]];
+function typicalPrice(cat) {
+  const a = Object.values(CATALOG).map(v => v.category === cat && planOf(v, v.default_plan)).filter(p => p && p.effective_monthly > 0 && p.verified !== false).map(p => p.effective_monthly).sort((x, y) => x - y);
+  return a.length ? a[Math.floor(a.length / 2)] : null;
+}
+function guessHtml() {
+  const g = state.guess || {}, rows = GUESS.map(([k, label, max]) => ({ k, label, max, n: g[k] || 0, each: typicalPrice(k) })).filter(r => r.each != null);
+  const sum = rows.reduce((a, r) => a + r.n * r.each, 0), answered = Object.keys(g).length > 0, b = benchFor(profile().country, "adult");
+  const seg = r => `<div class="seg" role="group" aria-label="${esc(r.label)}">${(r.max > 1 ? [0, 1, 2, 3, 4] : [0, 1]).map(n => `<button type="button" data-gq="${r.k}" data-n="${n}" aria-pressed="${r.n === n}">${r.max > 1 ? (n === 4 ? "4+" : n) : n ? "Yes" : "No"}</button>`).join("")}</div>`;
+  return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Guess my total</h3>
+    <p class="small muted" style="margin:2px 0 0">Not sure what you spend? Answer a few quick questions for a rough monthly estimate, then add the real ones below.</p>
+    <div class="gq-list">${rows.map(r => `<div class="gq${r.max > 1 ? " wide" : ""}"><span><span>${esc(r.label)}</span><span class="small muted">${r.max > 1 ? "How many? " : ""}About ${money(r.each)}/mo each</span></span>${seg(r)}</div>`).join("")}</div>
+    ${answered ? `<div class="gq-out"><span class="small muted">Your rough estimate</span><span class="big num">${money(sum)}<span class="small muted" style="font-weight:500"> /mo</span></span>
+      <span class="small muted">${money(sum * 12)} a year${b ? `. The average US adult pays ${money(b.amt)} a month (<a href="${esc(b.url)}" target="_blank" rel="noopener" style="color:var(--accent)">source</a>)` : ""}.</span>
+      <span class="small muted">Estimate only: each answer counts the middle list price of that kind of service in our catalog, before tax.</span></div>` : ""}</section>`;
+}
+// Popular subscriptions (Cuong, v113): well-known services, our pick rather than a ranking, each added with one tap.
+// Shown while the list is short; anything already on the list or not offered where the user lives is left out.
+const POPULAR = ["netflix", "spotify", "amazon_prime", "youtube_premium", "disney_plus", "hulu", "hbo_max", "apple_music", "peacock", "paramount_plus", "icloud", "google_one",
+  "chatgpt", "m365", "xbox_game_pass", "playstation_plus", "planet_fitness", "doordash_dashpass", "uber_one", "walmart_plus", "costco", "audible", "duolingo", "nyt"];
+function popularHtml() {
+  if (state.subs.length >= 10) return "";
+  const have = new Set(state.subs.map(s => s.svc)), list = POPULAR.filter(id => CATALOG[id] && !have.has(id) && availability(id, profile().country) !== "no").slice(0, 12);
+  if (!list.length) return "";
+  return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Popular subscriptions</h3>
+    <p class="small muted" style="margin:2px 0 0">Have any of these too? Tap to add it to your list. Find more on the Explore tab.</p>
+    <div class="pop-grid">${list.map(id => { const v = CATALOG[id]; return `<button class="pop" data-pop="${id}" aria-label="Add ${esc(v.name)}" title="${esc(v.name)}">${logoHtml(v)}<b>${esc(baseName(v.name) || v.name)}</b><span class="plus" aria-hidden="true">+</span></button>`; }).join("")}</div></section>`;
+}
 // What you use most / least (Cuong, v105, in place of What's trending). Units differ by service, so each one is ranked by
 // how far its usage goes past what it takes to be worth the price: uses x value per use / monthly cost (2 = twice its price).
 // Only paid, usage-tracked ones count; checkbox, cost-only, paused and not-yet-entered ones are left out.
@@ -2930,7 +2980,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 112 · Standalone copy · Oct 24", VERSION_NUM = 112;
+const APP_VERSION = "Prototype · Version 113 · Standalone copy · Oct 24", VERSION_NUM = 113;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
