@@ -47,7 +47,8 @@ button { cursor: pointer; }
 
 header.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
 .brand { display: flex; align-items: baseline; gap: 10px; }
-form.fields [hidden], form.fields[hidden], #a-hint[hidden], nav.tabs[hidden], .cat-item[hidden], .catalog[hidden], .w-h[hidden] { display: none !important; }
+form.fields [hidden], form.fields[hidden], #a-hint[hidden], nav.tabs[hidden], .cat-item[hidden], .catalog[hidden], .w-h[hidden], .w-more[hidden] { display: none !important; }
+.w-more { margin: -2px 0 12px; padding-left: 0; color: var(--accent); }
 .proto { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 2px 8px; }
 nav.tabs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
 nav.tabs button { border: 0; background: none; padding: 7px 14px; border-radius: 8px; font-weight: 600; color: var(--muted); }
@@ -746,6 +747,8 @@ let state = null, view = "home", picked = null;
 function buildCatalog(d) {
   DATA = d; d.overlap_tags.forEach(t => TAGS[t.tag] = t);
   d.services.forEach(s => { const [color, mark] = COLORS[s.id] || ["#6b7785", s.name.slice(0, 2)]; CATALOG[s.id] = { ...s, color, mark }; });
+  // v115 (Cuong): Apple One was the only "Bundles" entry, so it sits under Music (its core) and keeps a note saying what it bundles.
+  if (CATALOG.apple_one?.category === "bundle") CATALOG.apple_one = { ...CATALOG.apple_one, category: "music", bundleNote: "Bundle: Apple Music, Apple TV, Apple Arcade and iCloud+ for one price" };
   // Features the app knows about before the catalog does (Cuong asked for NFL on Prime, 2026-10-19).
   Object.entries(EXTRA_FEATURES).forEach(([id, fs]) => { const v = CATALOG[id]; if (v) fs.forEach(f => { if (f.replace) v.features = v.features.map(x => x.id === f.id ? f : x); else if (!v.features.some(x => x.id === f.id)) v.features = [...v.features, f]; }); });
 }
@@ -1326,11 +1329,14 @@ const FRESH = () => ({ subs: [], sampleV: 4, unitsV: 1, aaaV: 1, cardV: 1, evV: 
 function welcomeView() {
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
-  // v114 (Cuong): "Popular" holds only the same 12 picks as the Overview card; everything else is grouped by category.
-  const popular = POPULAR.map(id => CATALOG[id]).filter(v => v && availability(v.id, country) !== "no").slice(0, 12), pop = new Set(popular.map(v => v.id));
-  const more = offered.filter(v => !pop.has(v.id)).sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
-  const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category)).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
+  // v114 (Cuong): "Popular" holds only the same 12 picks as the Overview card. v115: every service also sits in its category (picks stay in step).
+  const popular = POPULAR.map(id => CATALOG[id]).filter(v => v && availability(v.id, country) !== "no").slice(0, 12);
+  const more = offered.slice().sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
+  const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
   const groups = [...new Set(more.map(v => v.category))];
+  // v115 (Cuong): each category shows its top 6, then "See all". Top = our popular picks, then national services (known logos first),
+  // then regional ones, then free public options (libraries etc.). Our ordering, not a sales ranking.
+  const rk = v => (POPULAR.includes(v.id) ? 0 : v.provider_type ? 6 : v.service_states || v.region_group ? 4 : 2) + (LOGOS[v.id] ? 0 : 1), wRank = (a, b) => rk(a) - rk(b) || a.name.localeCompare(b.name);
   const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2><span class="small muted">Track what you pay for, see what you actually use, and find cheaper options. Your list stays in this browser; nobody else sees it.</span></div>
     <h3 style="margin:8px 0">1. Where do you live?</h3>
     <div class="loc-row" style="margin-bottom:18px"><label>Country<select id="w-country">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === country ? "selected" : ""}>${n}</option>`).join("")}</select></label>
@@ -1339,7 +1345,8 @@ function welcomeView() {
     <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. You can add others, or ones we don't list, later from the Explore tab.</p>
     <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
     <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
-    ${groups.map(c => `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog">${more.filter(v => v.category === c).map(tile).join("")}</div>`).join("")}
+    ${groups.map(c => { const list = more.filter(v => v.category === c).sort(wRank);
+      return `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog" data-open="0">${list.map((v, i) => i < 6 ? tile(v) : tile(v).replace('<button ', '<button hidden data-extra="1" ')).join("")}</div>${list.length > 6 ? `<button type="button" class="btn ghost small w-more">See all ${list.length}</button>` : ""}`; }).join("")}
     <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)">
       <button class="btn primary" id="w-go">Start with 0 subscriptions</button>
       <button class="btn ghost small" id="w-example">Just looking? Try it with example data</button>
@@ -1347,9 +1354,13 @@ function welcomeView() {
   const $ = id => f.getElementById(id) || document.getElementById(id);
   f.querySelectorAll("[data-legal]").forEach(b => b.addEventListener("click", () => { lastView = "welcome"; openLegal(b.dataset.legal); }));
   const count = () => { $("w-go").textContent = `Start with ${picks.size} subscription${picks.size === 1 ? "" : "s"}`; };
-  f.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => { const id = b.dataset.svc; picks.has(id) ? picks.delete(id) : picks.add(id); b.setAttribute("aria-pressed", picks.has(id)); count(); }));
+  f.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => { const id = b.dataset.svc; picks.has(id) ? picks.delete(id) : picks.add(id);
+    document.querySelectorAll(`#view .cat-item[data-svc="${id}"]`).forEach(x => x.setAttribute("aria-pressed", picks.has(id))); count(); }));
+  f.querySelectorAll(".w-more").forEach(m => m.addEventListener("click", () => { const g = m.previousElementSibling, open = g.dataset.open !== "1";
+    g.dataset.open = open ? "1" : "0"; g.querySelectorAll("[data-extra]").forEach(b => b.hidden = !open); m.textContent = open ? "Show fewer" : `See all ${g.children.length}`; }));
   $("w-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase();
-    document.querySelectorAll("#view .catalog").forEach(g => { let n = 0; g.querySelectorAll(".cat-item").forEach(b => { b.hidden = !!q && !b.dataset.text.includes(q); n += !b.hidden; }); g.hidden = !n; g.previousElementSibling.hidden = !n; }); });
+    document.querySelectorAll("#view .catalog").forEach((g, gi) => { let n = 0; g.querySelectorAll(".cat-item").forEach(b => { b.hidden = q ? !b.dataset.text.includes(q) : (b.dataset.extra && g.dataset.open !== "1"); n += !b.hidden; });
+      if (gi === 0 && q) n = 0; g.hidden = !n; g.previousElementSibling.hidden = !n; const m = g.nextElementSibling; if (m?.classList.contains("w-more")) m.hidden = !!q || !n; }); });
   const setLoc = () => { const c = $("w-country").value; state.profile = { ...profile(), country: c, region: c === "US" ? ($("w-state")?.value || "") : "" }; };
   $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
   $("w-country").addEventListener("change", () => { setLoc(); save(); render(); });
@@ -2181,6 +2192,7 @@ function exploreDetail(v) {
     ${variesByRegion(v) && !loc && !v.provider_type ? `<p class="admin-note" style="margin:0 0 16px">Prices depend on where you live. These are sample US prices; check the provider's site with your address.</p>` : ""}
     ${publicHtml(v)}
     ${v.price_note ? `<p class="admin-note" style="margin:0 0 16px">${esc(v.price_note)}</p>` : ""}
+    ${v.bundleNote ? `<p class="small muted" style="margin:0 0 16px">${esc(v.bundleNote)}.</p>` : ""}
     ${v.service_states ? `<p class="small muted" style="margin:0 0 12px">Regional provider. Serves ${esc(v.service_states.map(s => US_STATES[s] || s).join(", "))}${v.service_area_note ? `. ${esc(v.service_area_note)}` : ""}.${!servesHere(v) ? ` <b style="color:var(--warn)">Not offered in ${esc(US_STATES[profile().region] || profile().region)}.</b>` : ""}</p>` : ""}
     ${loc ? locPickerHtml(v, loc) : ""}
     ${!inCatalog ? `<p class="admin-note" style="margin:0 0 16px">We don't have prices for ${esc(countryName(profile().country))} yet. Plans and features below are from the US catalog.</p>` : ""}
@@ -2982,7 +2994,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 114 · Standalone copy · Oct 24", VERSION_NUM = 114;
+const APP_VERSION = "Prototype · Version 115 · Standalone copy · Oct 24", VERSION_NUM = 115;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
