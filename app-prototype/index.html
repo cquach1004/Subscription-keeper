@@ -1366,7 +1366,7 @@ const FRESH = () => ({ subs: [], sampleV: 4, unitsV: 1, aaaV: 1, cardV: 1, evV: 
 // profile.about keeps the icon picks; profile.group (the spending average we compare with) follows: 55+ senior, student,
 // family (married or kids), else adult.
 let welcomeStep = 1;
-const ABOUT = [["student", "I am a student", '<path d="M3 9l9-4 9 4-9 4-9-4z"/><path d="M7 11v4c0 1.5 2.2 3 5 3s5-1.5 5-3v-4"/><path d="M21 9v5"/>'],
+const ABOUT = [["student", "I am a student/adult", '<path d="M3 9l9-4 9 4-9 4-9-4z"/><path d="M7 11v4c0 1.5 2.2 3 5 3s5-1.5 5-3v-4"/><path d="M21 9v5"/>'],
   ["married", "I am married", '<circle cx="9" cy="13" r="5"/><circle cx="15" cy="13" r="5"/><path d="M10 4l2 2 2-2"/>'],
   ["kids", "I have kids", '<circle cx="8" cy="7" r="3"/><circle cx="17" cy="10" r="2.2"/><path d="M3 20c0-3 2.2-5.5 5-5.5s5 2.5 5 5.5"/><path d="M13.5 20c0-2.3 1.6-4.2 3.5-4.2s3.5 1.9 3.5 4.2"/>']];
 const AGES = [["u25", "Under 25"], ["25", "25 to 34"], ["35", "35 to 44"], ["45", "45 to 54"], ["55", "55 and over"]];
@@ -1378,7 +1378,7 @@ function aboutView() {
     <h3 style="margin:8px 0 2px">Tell us about yourself</h3>
     <p class="small muted" style="margin:0 0 12px">Pick all that apply. It helps us suggest plans that fit, like student, family or senior pricing.</p>
     <div class="about-grid about-3">${ABOUT.map(([k, label, svg]) => `<button type="button" class="about-opt" data-about="${k}" aria-pressed="${about.has(k)}"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><span>${label}</span></button>`).join("")}</div>
-    <h3 style="margin:22px 0 8px">How old are you?</h3>
+    <h3 style="margin:22px 0 8px">My age group</h3>
     <div class="seg age-seg" role="radiogroup" aria-label="Age">${AGES.map(([k, l]) => `<button type="button" role="radio" data-age="${k}" aria-checked="${age === k}" aria-pressed="${age === k}">${l}</button>`).join("")}</div>
     <label class="share-box"><input type="checkbox" id="w-share" ${p.shares ? "checked" : ""}><span><b>I'm open to sharing plans</b><span class="small muted">With family or friends, like a family or duo plan, to split the cost.</span></span></label>
     <h3 style="margin:22px 0 8px">Where do you live?</h3>
@@ -3175,7 +3175,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 126 · Oct 24", VERSION_NUM = 126;
+const APP_VERSION = "Prototype · Version 127 · Oct 24", VERSION_NUM = 127;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
