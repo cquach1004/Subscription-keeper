@@ -208,6 +208,12 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 :root[data-mode="dark"] { --pie-1: #3987e5; --pie-2: #d95926; --pie-3: #199e70; --pie-4: #c98500; --pie-5: #d55181; --pie-6: #008300; --pie-7: #9085e9; --pie-8: #e66767; --pie-other: #6f7480; }
 .pie-card { margin-bottom: 14px; }
 .trend-card { margin-bottom: 14px; }
+/* v105 (Cuong): What you use most / least, side by side (stacked on phones). */
+.uml { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; } .uml > .card { margin: 0; gap: 4px; }
+@media (max-width: 620px) { .uml { grid-template-columns: 1fr; } }
+.uml-row { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; width: 100%; border: 0; background: none; padding: 7px 0; text-align: left; color: var(--ink); font: inherit; cursor: pointer; border-top: 1px solid var(--line); }
+.uml-row:first-of-type { border-top: 0; } .uml-row .logo { width: 30px; height: 30px; font-size: 12px; border-radius: 8px; }
+.uml-row b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .uml-row .small { display: block; }
 .trend { border-top: 1px solid var(--line); }
 .trend:first-of-type { border-top: 0; }
 .trend > summary { list-style: none; display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; padding: 8px 0; cursor: pointer; }
@@ -1644,8 +1650,10 @@ function mixHtml() {
 function shelfView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const f = el(`<div class="section-head"><h2>Shelf</h2><span class="small muted">Widgets taken off Overview. They still work here, and any of them can go back.</span></div>
+    <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">What's trending was on Overview until Oct 24, 2026. What you use most and least took its place.</p>${trendHtml()}</section>
     <section class="shelf-item"><h3 style="margin:0">vs average adult</h3><p class="note" style="margin:2px 0 0">Was on Overview until Oct 24, 2026. The Value mix chart took its place.</p>${benchHtml(total)}</section>`);
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
+  f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   return f;
 }
 // Usage page (Cuong, v67): last month's value in three donuts (Great, Fair, Costly), then a slider per subscription for this month.
@@ -1805,14 +1813,14 @@ function homeView() {
     ${usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
     ${factsHtml()}
-    ${trendHtml()}
+    ${useMostHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
   wireFacts(f);
   wireNudge(f);
-  f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
+  f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
@@ -1920,6 +1928,22 @@ const TRENDS = [
   { date: "2026-07", kind: "news", svc: "youtube_premium", country: "US", title: "Peacock coming to YouTube Premium in 2027", text: "Peacock is set to be included with YouTube Premium starting next year. Worth knowing if you pay for both.", src: "Yahoo Tech", url: "https://tech.yahoo.com/streaming/articles/streaming-price-hike-tracker-much-150929260.html" },
   { date: "2026-10-22", checked: true, kind: "popular", svc: "netflix", title: "Netflix is still the most popular", text: "About 325 million subscribers worldwide, ahead of Amazon Prime (200 million) and HBO Max (140 million).", src: "FlixPatrol", url: "https://flixpatrol.com/streaming-services/subscribers/" }];
 const TREND_KIND = { up: ["Price up", "poor"], down: ["Price down", "great"], new: ["New plan", "ok"], news: ["News", "ok"], popular: ["Popular", "great"] };
+// What you use most / least (Cuong, v105, in place of What's trending). Units differ by service, so each one is ranked by
+// how far its usage goes past what it takes to be worth the price: uses x value per use / monthly cost (2 = twice its price).
+// Only paid, usage-tracked ones count; checkbox, cost-only, paused and not-yet-entered ones are left out.
+function useRanked() {
+  return state.subs.filter(s => { const m = measureOf(s); return !m.costOnly && !m.checks && !m.fixed && m.worth != null && !s.needsUse && !pausedNow(s) && !isFree(s) && monthly(s) > 0; })
+    .map(s => ({ s, score: (s.uses || 0) * measureOf(s).worth / monthly(s) })).sort((a, b) => b.score - a.score || monthly(b.s) - monthly(a.s));
+}
+function useMostHtml() {
+  const list = useRanked(), n = list.length, k = n >= 6 ? 3 : Math.ceil(n / 2);
+  // 6 or more: top 3 and bottom 3. Fewer: split evenly, the odd one going to Most (so a single one shows there).
+  const most = list.slice(0, k), least = n >= 6 ? list.slice(-3).reverse() : list.slice(k).reverse();
+  const row = ({ s }) => { const r = rate(s); return `<button class="uml-row" data-id="${s.id}">${logoHtml(svcOf(s))}<span style="min-width:0"><b>${esc(s.name)}</b><span class="small muted">${esc(useText(s))}</span></span><span class="pill ${r.key}">${esc(r.label)}</span></button>`; };
+  const card = (title, items, empty) => `<section class="card"><h3 style="margin:0 0 4px">${title}</h3>${items.map(row).join("") || `<p class="small muted" style="margin:4px 0 0">${empty}</p>`}</section>`;
+  return `<div class="uml">${card("What you use most", most, "Add how often you use your subscriptions to see this.")}${card("What you use least", least, n ? "Add another subscription with usage to compare." : "Add how often you use your subscriptions to see this.")}</div>
+    <p class="note" style="margin:-6px 0 14px">Ranked by use for the price, since each service is measured differently. Protection plans, insurance and services you tick off aren't included.</p>`;
+}
 function trendHtml() {
   const c = profile().country, mine = new Set(state.subs.map(s => s.svc));
   const items = TRENDS.filter(x => !x.country || x.country === c).sort((a, b) => mine.has(b.svc) - mine.has(a.svc) || b.date.localeCompare(a.date));
@@ -2883,7 +2907,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 104 · Standalone copy · Oct 24", VERSION_NUM = 104;
+const APP_VERSION = "Prototype · Version 105 · Standalone copy · Oct 24", VERSION_NUM = 105;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
