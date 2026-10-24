@@ -206,6 +206,8 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 :root[data-mode="dark"] { --pie-1: #3987e5; --pie-2: #d95926; --pie-3: #199e70; --pie-4: #c98500; --pie-5: #d55181; --pie-6: #008300; --pie-7: #9085e9; --pie-8: #e66767; --pie-other: #6f7480; }
 .pie-card { margin-bottom: 14px; }
 .trend-card { margin-bottom: 14px; }
+#ways { scroll-margin-top: 16px; }
+.see-how { border: 0; background: none; padding: 0; margin-top: 6px; font: 600 14px var(--f-body); color: var(--accent); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 /* v105 (Cuong): What you use most / least, side by side (stacked on phones). */
 .uml { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; } .uml > .card { margin: 0; gap: 4px; }
 @media (max-width: 620px) { .uml { grid-template-columns: 1fr; } }
@@ -1593,11 +1595,11 @@ function monthBarsHtml() {
 </div>
     ${rows.length > 1 ? `<div class="small muted">${Math.abs(diff) < 0.5 ? `Same as last month` : `${diff > 0 ? "Up" : "Down"} ${money(Math.abs(diff))} from ${name(rows[last - 1].m, { month: "long" })}`}</div>` : ""}</section>`;
 }
+// Could save tile (v106, Cuong): just the number and a "See how" link to the details on Savings.
 function saveHtml(total) {
-  const list = savingsBySub(), amt = savingsTotal(list), pct = total ? Math.round(amt / total * 100) : 0;
+  const amt = savingsTotal(savingsBySub());
   return `<div class="stat save"><div class="label">Could save / mo</div><div class="value num">${money(amt)}</div>
-    ${amt ? `<div class="small muted">${pct}% of what you pay</div>` : `<div class="small muted">Nothing easy to cut right now</div>`}
-    ${hardList().length ? `<div class="small muted" title="${esc(hardList().map(s => s.name).join(", "))}">+ ${money(hardList().reduce((a, s) => a + (monthly(s) || 0), 0))} more if you move your data</div>` : ""}</div>`;
+    <button class="see-how" data-go="savings">See how</button></div>`;
 }
 function valueBoardHtml() {
   const B = { great: ["Great value", "var(--good)"], fair: ["Fair value", "var(--accent)"], costly: ["Costly", "var(--warn)"] };
@@ -1647,10 +1649,12 @@ function mixHtml() {
 function shelfView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const f = el(`<div class="section-head"><h2>Shelf</h2><span class="small muted">Widgets taken off Overview. They still work here, and any of them can go back.</span></div>
+    <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">Did You Know? was on Overview until Oct 24, 2026.</p>${factsHtml()}</section>
     <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">What's trending was on Overview until Oct 24, 2026. What you use most and least took its place.</p>${trendHtml()}</section>
     <section class="shelf-item"><h3 style="margin:0">vs average adult</h3><p class="note" style="margin:2px 0 0">Was on Overview until Oct 24, 2026. The Value mix chart took its place.</p>${benchHtml(total)}</section>`);
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
+  wireFacts(f);
   return f;
 }
 // Usage page (Cuong, v67): last month's value in three donuts (Great, Fair, Costly), then a slider per subscription for this month.
@@ -1809,13 +1813,12 @@ function homeView() {
     </section>
     ${usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
-    ${factsHtml()}
     ${useMostHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
-  wireFacts(f);
+  f.querySelector(".see-how")?.addEventListener("click", () => { view = "overlaps"; render(); document.getElementById("ways")?.scrollIntoView(); });
   wireNudge(f);
   f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
@@ -1856,7 +1859,7 @@ function wireFolds(f) {
     ds.forEach(d => { d.open = open; open ? foldOpen.add(d.dataset.fold) : foldOpen.delete(d.dataset.fold); }); sync(b.dataset.all); }; });
 }
 function cheaperHtml() {
-  const list = savingsBySub(), amt = savingsTotal(list), withOpts = list.filter(x => x.opts.length).sort((a, b) => b.best - a.best);
+  const list = savingsBySub(), amt = savingsTotal(list), total = state.subs.reduce((a, s) => a + (monthly(s) || 0), 0), withOpts = list.filter(x => x.opts.length).sort((a, b) => b.best - a.best);
   const card = x => { const mo = monthly(x.sub) || 0;
     return `<details class="card co fold" data-fold="co:${x.sub.id}" ${foldOpen.has("co:" + x.sub.id) ? "open" : ""}>
       <summary class="co-head">${logoHtml(svcOf(x.sub))}<span class="co-nm"><b>${esc(x.sub.name)}</b><span class="small muted">${money(mo)}/mo now</span></span><span class="pill great">Save ${money(x.best)}/mo</span></summary>
@@ -1868,8 +1871,9 @@ function cheaperHtml() {
       <div class="co-scale small muted"><span>$0</span><span>You pay ${money(mo)}</span></div>
       <button class="btn ghost small fold-open" data-id="${x.sub.id}">Open ${esc(x.sub.name)}</button>
     </details>`; };
-  return `<div class="section-head"><h2>Ways to pay less</h2></div>
-    <div class="card sv-sum"><div><div class="small muted">Could save up to</div><div class="big num">${money(amt)}<span class="small muted" style="font-weight:500"> /mo</span></div><div class="small muted">${money(amt * 12)} a year</div></div>
+  return `<div class="section-head" id="ways"><h2>Ways to pay less</h2></div>
+    <div class="card sv-sum"><div><div class="small muted">Could save up to</div><div class="big num">${money(amt)}<span class="small muted" style="font-weight:500"> /mo</span></div><div class="small muted">${money(amt * 12)} a year${total ? `, ${Math.round(amt / total * 100)}% of what you pay` : ""}</div>
+        ${hardList().length ? `<div class="small muted">+ ${money(hardList().reduce((a, s) => a + (monthly(s) || 0), 0))}/mo more if you move your data</div>` : ""}</div>
       <p class="small muted" style="margin:0;max-width:420px">From cheaper options and dropping one of each thing you pay twice. Each subscription is counted once, at its biggest saving.${hardList().length ? ` Not counted: ${esc(hardList().map(s => s.name).join(", "))}, marked hard to switch.` : ""}</p></div>
     <div class="section-head"><h2>Cheaper options</h2>${withOpts.length ? `<span class="small muted">Biggest saving first. Tap one to see the options. ${foldAllBtn("co")}</span>` : ""}</div>
     ${withOpts.length ? `<div class="co-key small muted"><span><i class="k-you"></i>What you pay</span><span><i class="k-dot"></i>Cheaper option</span><span><i class="k-gap"></i>Saving</span></div>
@@ -2904,7 +2908,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 105 · Oct 24", VERSION_NUM = 105;
+const APP_VERSION = "Prototype · Version 106 · Oct 24", VERSION_NUM = 106;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
