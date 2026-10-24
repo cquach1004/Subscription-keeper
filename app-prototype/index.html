@@ -207,6 +207,7 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 .pie-card { margin-bottom: 14px; }
 .trend-card { margin-bottom: 14px; }
 #ways { scroll-margin-top: 16px; }
+.free-tog { display: flex; gap: 8px; align-items: flex-start; margin: -8px 0 18px; color: var(--ink); } .free-tog input { margin-top: 2px; flex: none; }
 .see-how { border: 0; background: none; padding: 0; margin-top: 6px; font: 600 14px var(--f-body); color: var(--accent); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 /* v105 (Cuong): What you use most / least, side by side (stacked on phones). */
 .uml { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; } .uml > .card { margin: 0; gap: 4px; }
@@ -1234,7 +1235,8 @@ function cheaperOptions(s) {
   }
   // Free public options show even for Great-value subscriptions (Cuong, v108); other alternatives only when it isn't Great value.
   if (!isHard(s)) {
-    const alts = alternativesOf(s).filter(a => a.monthly != null && a.monthly < mo && (r.key !== "great" || a.pub));
+    // "Include free options" on Savings (Cuong, v109): off leaves out free services, which may not meet every need.
+    const alts = alternativesOf(s).filter(a => a.monthly != null && a.monthly < mo && (r.key !== "great" || a.pub) && !(state.noFree && a.monthly === 0));
     const free = alts.find(a => a.monthly === 0), paid = alts.filter(a => a.monthly > 0 && a.kind !== "partial").sort((a, b) => a.monthly - b.monthly)[0];
     [free, paid].filter(Boolean).forEach(a => out.push({ kind: a.monthly === 0 ? (a.v.provider_type ? PROVIDER_LABEL[a.v.provider_type] || "Free option" : "Free option") : "Other service",
       name: a.name + (a.pub ? "*" : ""), save: mo - a.monthly, note: [a.v.eligibility ? `Who can use it: ${a.v.eligibility}.` : "", a.annualNote ? "Billed yearly." : "", a.pub ? `* ${PUBLIC_NOTE}` : ""].filter(Boolean).join(" "), unconfirmed: !a.verified, alt: a.id }));
@@ -1876,6 +1878,7 @@ function cheaperHtml() {
     <div class="card sv-sum"><div><div class="small muted">Could save up to</div><div class="big num">${money(amt)}<span class="small muted" style="font-weight:500"> /mo</span></div><div class="small muted">${money(amt * 12)} a year${total ? `, ${Math.round(amt / total * 100)}% of what you pay` : ""}</div>
         ${hardList().length ? `<div class="small muted">+ ${money(hardList().reduce((a, s) => a + (monthly(s) || 0), 0))}/mo more if you move your data</div>` : ""}</div>
       <p class="small muted" style="margin:0;max-width:420px">From cheaper options and dropping one of each thing you pay twice. Each subscription is counted once, at its biggest saving.${hardList().length ? ` Not counted: ${esc(hardList().map(s => s.name).join(", "))}, marked hard to switch.` : ""}</p></div>
+    <label class="free-tog small"><input type="checkbox" id="inc-free" ${state.noFree ? "" : "checked"}><span><b>Include free options</b> (library, public and free services)<span class="muted">. Free ones may not meet every need, so turn this off to leave them out.</span></span></label>
     <div class="section-head"><h2>Cheaper options</h2>${withOpts.length ? `<span class="small muted">Biggest saving first. Tap one to see the options. ${foldAllBtn("co")}</span>` : ""}</div>
     ${withOpts.length ? `<div class="co-key small muted"><span><i class="k-you"></i>What you pay</span><span><i class="k-dot"></i>Cheaper option</span><span><i class="k-gap"></i>Saving</span></div>
       <div class="cards fold-group" data-group="co">${withOpts.slice(0, 6).map(card).join("")}</div>
@@ -1905,6 +1908,7 @@ function overlapsView() {
   f.querySelectorAll(".fold-open").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   wireFolds(f);
   f.querySelectorAll(".co-row[data-alt]").forEach(b => b.addEventListener("click", () => { exploreOpen = b.dataset.alt; view = "explore"; render(); window.scrollTo(0, 0); }));
+  f.getElementById("inc-free")?.addEventListener("change", e => { state.noFree = !e.target.checked; try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (err) {} const y = scrollY; render(); window.scrollTo(0, y); });
   return f;
 }
 
@@ -2913,7 +2917,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 108 · Oct 24", VERSION_NUM = 108;
+const APP_VERSION = "Prototype · Version 109 · Oct 24", VERSION_NUM = 109;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
