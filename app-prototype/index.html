@@ -122,6 +122,11 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 18px; }
 .cat-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; text-align: left; min-width: 0; }
 .cat-item[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.about-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-width: 860px; }
+.about-opt { display: grid; justify-items: center; gap: 8px; padding: 18px 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; color: var(--ink); font: 600 14px var(--f-body); cursor: pointer; text-align: center; }
+.about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.about-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
+@media (max-width: 620px) { .about-grid { grid-template-columns: 1fr 1fr; } }
 .cat-item .logo { width: 30px; height: 30px; font-size: 12px; border-radius: 8px; flex: none; }
 .cat-item span { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 form.fields { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -1352,7 +1357,44 @@ function upcomingHtml() {
 // First visit: each person picks their own subscriptions (Cuong shares the prototype for feedback, 2026-10-19).
 // Nothing is shared between viewers: lists live in this browser only.
 const FRESH = () => ({ subs: [], sampleV: 4, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
+// Welcome, step 1 (Cuong, v125): "Tell us about yourself" with icon choices, then where you live. Step 2 is picking subscriptions.
+// Single and married can't both be on, nor student and senior; kids go with anything. profile.about keeps the picks, and
+// profile.group (the spending average we compare with) follows them: senior, student, family (married or kids), else adult.
+let welcomeStep = 1;
+const ABOUT = [["student", "I am a student", '<path d="M3 9l9-4 9 4-9 4-9-4z"/><path d="M7 11v4c0 1.5 2.2 3 5 3s5-1.5 5-3v-4"/><path d="M21 9v5"/>'],
+  ["single", "I am a single adult", '<circle cx="12" cy="7" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/>'],
+  ["married", "I am married", '<circle cx="9" cy="13" r="5"/><circle cx="15" cy="13" r="5"/><path d="M10 4l2 2 2-2"/>'],
+  ["senior", "I am a senior", '<circle cx="11" cy="5" r="2.5"/><path d="M11 8v6l-3 6"/><path d="M11 14l3 6"/><path d="M8 10l3-1 3 2"/><path d="M17 11v9"/><path d="M17 11c0-1.5 2-1.5 2 0"/>'],
+  ["kids", "I have kids", '<circle cx="8" cy="7" r="3"/><circle cx="17" cy="10" r="2.2"/><path d="M3 20c0-3 2.2-5.5 5-5.5s5 2.5 5 5.5"/><path d="M13.5 20c0-2.3 1.6-4.2 3.5-4.2s3.5 1.9 3.5 4.2"/>']];
+const ABOUT_CLASH = { single: "married", married: "single", student: "senior", senior: "student" };
+const groupFor = a => a.includes("senior") ? "senior" : a.includes("student") ? "student" : a.includes("married") || a.includes("kids") ? "family" : "adult";
+function aboutView() {
+  const p = profile(), country = p.country, about = new Set(p.about || []);
+  const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2><span class="small muted">Track what you pay for, see what you actually use, and find cheaper options. Your list stays in this browser; nobody else sees it.</span></div>
+    <h3 style="margin:8px 0 2px">Tell us about yourself</h3>
+    <p class="small muted" style="margin:0 0 12px">Pick all that apply. It helps us suggest plans that fit, like student, family or senior pricing.</p>
+    <div class="about-grid">${ABOUT.map(([k, label, svg]) => `<button type="button" class="about-opt" data-about="${k}" aria-pressed="${about.has(k)}"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><span>${label}</span></button>`).join("")}</div>
+    <h3 style="margin:22px 0 8px">Where do you live?</h3>
+    <div class="loc-row" style="margin-bottom:18px"><label>Country<select id="w-country">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === country ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+      ${country === "US" ? `<label>State<select id="w-state"><option value="">Choose your state</option>${Object.entries(US_STATES).map(([k, n]) => `<option value="${k}" ${k === p.region ? "selected" : ""}>${n}</option>`).join("")}</select></label>` : ""}</div>
+    <div class="w-bar" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn primary" id="w-next">Next: your subscriptions</button>
+      <button class="btn ghost small" id="w-example">Just looking? Try it with example data</button>
+      ${state.subs.length ? `<button class="btn ghost small" id="w-cancel">Keep my current list</button>` : ""}</div>`);
+  const $ = id => f.getElementById(id) || document.getElementById(id);
+  const keep = () => { const c = $("w-country").value; state.profile = { ...profile(), country: c, region: c === "US" ? ($("w-state")?.value || "") : "", about: [...about], group: groupFor([...about]) }; };
+  f.querySelectorAll("[data-about]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.about;
+    if (about.has(k)) about.delete(k); else { about.add(k); about.delete(ABOUT_CLASH[k]); }
+    document.querySelectorAll("#view [data-about]").forEach(x => x.setAttribute("aria-pressed", about.has(x.dataset.about))); }));
+  $("w-country").addEventListener("change", () => { keep(); save(); render(); });
+  $("w-next").addEventListener("click", () => { keep(); save(); welcomeStep = 2; render(); window.scrollTo(0, 0); });
+  $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
+  $("w-example").addEventListener("click", () => { keep(); const prof = state.profile; state = seed(); state.profile = prof;
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
+  return f;
+}
 function welcomeView() {
+  if (welcomeStep === 1) return aboutView();
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
   // v114 (Cuong): "Popular" holds only the same 12 picks as the Overview card. v115: every service also sits in its category (picks stay in step).
@@ -1362,10 +1404,8 @@ function welcomeView() {
   const groups = [...new Set(more.map(v => v.category))];
   // v115 (Cuong): each category shows its top 6 (svcRank order), then "See all".
   const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2><span class="small muted">Track what you pay for, see what you actually use, and find cheaper options. Your list stays in this browser; nobody else sees it.</span></div>
-    <h3 style="margin:8px 0">1. Where do you live?</h3>
-    <div class="loc-row" style="margin-bottom:18px"><label>Country<select id="w-country">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === country ? "selected" : ""}>${n}</option>`).join("")}</select></label>
-      ${country === "US" ? `<label>State<select id="w-state"><option value="">Choose your state</option>${Object.entries(US_STATES).map(([k, n]) => `<option value="${k}" ${k === p.region ? "selected" : ""}>${n}</option>`).join("")}</select></label>` : ""}</div>
-    <h3 style="margin:8px 0">2. Which subscriptions do you have?</h3>
+    <button class="btn ghost small" id="w-back" style="padding-left:0;margin-bottom:4px">&larr; Back</button>
+    <h3 style="margin:8px 0">Which subscriptions do you have?</h3>
     <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. You can add others, or ones we don't list, later from the Explore tab.</p>
     <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
     <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
@@ -1385,9 +1425,9 @@ function welcomeView() {
   $("w-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase();
     document.querySelectorAll("#view .catalog").forEach((g, gi) => { let n = 0; g.querySelectorAll(".cat-item").forEach(b => { b.hidden = q ? !b.dataset.text.includes(q) : (b.dataset.extra && g.dataset.open !== "1"); n += !b.hidden; });
       if (gi === 0 && q) n = 0; g.hidden = !n; g.previousElementSibling.hidden = !n; const m = g.nextElementSibling; if (m?.classList.contains("w-more")) m.hidden = !!q || !n; }); });
-  const setLoc = () => { const c = $("w-country").value; state.profile = { ...profile(), country: c, region: c === "US" ? ($("w-state")?.value || "") : "" }; };
+  const setLoc = () => {};  // v125: location is set on step 1
+  $("w-back").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
   $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
-  $("w-country").addEventListener("change", () => { setLoc(); save(); render(); });
   $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile;
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) })) };
     if (picks.size) state.startDone = true;  // v118: picked here already, so go straight to Finish setting up
@@ -1441,7 +1481,7 @@ const LEGAL = {
     ["Changes and contact", "We may update these terms as the app develops; the date above shows the latest version. Questions? Use Give feedback or Report a problem in Help."]] },
   privacy: { title: "Privacy", sections: [
     ["The short version", "Your subscription list stays on your device. We don't sell your data, we don't show ads, and we never ask for your bank or card details."],
-    ["What stays on your device", "Your subscriptions, prices, usage, dates, location and settings (such as your first name, style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
+    ["What stays on your device", "Your subscriptions, prices, usage, dates, location, what you told us about yourself (such as student, married or kids) and settings (such as your first name, style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
     ["What you choose to send us", "When you send feedback or report a problem, we receive what you write, plus the app version, the screen you were on, your device type and how many subscriptions you track (not the list itself). If you add an email address to a ticket, we use it only to reply. In the Claude app version, these are linked to your Claude account so only the Subscription Keeper team can read them."],
     ["Sam, the AI assistant", "When you ask Sam a question in the Claude app, your question, your recent chat, your subscription list (names, prices, usage and renewal dates) and related catalog details are sent to Claude, Anthropic's AI, to write the answer, using your own Claude account. On the public website, Sam answers from the catalog on your device and nothing is sent."],
     ["Usage exports", "If you load a ChatGPT or Claude data export to count your usage, the file is read on your device. Only the monthly counts are kept, and the file isn't uploaded."],
@@ -1965,7 +2005,7 @@ function homeView() {
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
-  f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
+  f.getElementById("restart").addEventListener("click", () => { view = "welcome"; welcomeStep = 1; render(); window.scrollTo(0, 0); });
   return f;
 }
 function rowHtml(s) {
@@ -3126,7 +3166,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 124 · Oct 24", VERSION_NUM = 124;
+const APP_VERSION = "Prototype · Version 125 · Oct 24", VERSION_NUM = 125;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
