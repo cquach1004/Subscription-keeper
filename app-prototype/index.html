@@ -567,10 +567,6 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
   .row .sub { display: none; } .row .pill { font-size: 11px; padding: 1px 8px; }
   .row .price .sub { display: block; font-size: 11px; } .row .price .num { font-size: 15px; }
 }
-.save-top { display: grid; gap: 2px; margin-top: 10px; padding: 8px 10px; width: 100%; text-align: left; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: inherit; font: inherit; cursor: pointer; }
-.save-top .st-row { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; font-size: 14px; }
-.save-top .st-row b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.save-top .logo { width: 24px; height: 24px; border-radius: 7px; font-size: 10px; }
 .vb-bar { display: flex; gap: 2px; height: 10px; border-radius: 5px; overflow: hidden; margin: 0 0 12px; }
 .vb-bar i { display: block; min-width: 4px; }
 .vb { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start; }
@@ -617,8 +613,7 @@ details.az[hidden] { display: none; }
 .vb-other > span { flex-basis: 100%; }
 .vb-other .chip { background: var(--surface); color: inherit; cursor: pointer; }
 @media (max-width: 760px) { .vb { grid-template-columns: 1fr; gap: 10px; } }
-@media (max-width: 620px) { .save-top { margin-top: 8px; padding: 6px 8px; } }
-.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; align-items: stretch; }
+@media (max-width: 620px) { .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; align-items: stretch; }
 .charts > .card { margin: 0; }
 .charts > .card:only-child { grid-column: 1 / -1; }
 @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } }
@@ -1593,11 +1588,10 @@ function monthBarsHtml() {
     ${rows.length > 1 ? `<div class="small muted">${Math.abs(diff) < 0.5 ? `Same as last month` : `${diff > 0 ? "Up" : "Down"} ${money(Math.abs(diff))} from ${name(rows[last - 1].m, { month: "long" })}`}</div>` : ""}</section>`;
 }
 function saveHtml(total) {
-  const list = savingsBySub(), amt = savingsTotal(list), top = list[0], pct = total ? Math.round(amt / total * 100) : 0;
+  const list = savingsBySub(), amt = savingsTotal(list), pct = total ? Math.round(amt / total * 100) : 0;
   return `<div class="stat save"><div class="label">Could save / mo</div><div class="value num">${money(amt)}</div>
     ${amt ? `<div class="small muted">${pct}% of what you pay</div>` : `<div class="small muted">Nothing easy to cut right now</div>`}
-    ${hardList().length ? `<div class="small muted" title="${esc(hardList().map(s => s.name).join(", "))}">+ ${money(hardList().reduce((a, s) => a + (monthly(s) || 0), 0))} more if you move your data</div>` : ""}
-    ${top ? `<button class="save-top" data-go="overlaps"><span class="small muted">Top idea</span><span class="st-row">${logoHtml(svcOf(top.sub))}<b>${esc(top.sub.name)}</b></span><span class="small muted"><b class="num" style="color:var(--good)">${money(top.amt)}/mo</b> · ${top.twice >= top.best ? "paying twice" : "cheaper option"}</span></button>` : ""}</div>`;
+    ${hardList().length ? `<div class="small muted" title="${esc(hardList().map(s => s.name).join(", "))}">+ ${money(hardList().reduce((a, s) => a + (monthly(s) || 0), 0))} more if you move your data</div>` : ""}</div>`;
 }
 function valueBoardHtml() {
   const B = { great: ["Great value", "var(--good)"], fair: ["Fair value", "var(--accent)"], costly: ["Costly", "var(--warn)"] };
@@ -1812,7 +1806,6 @@ function homeView() {
     ${PHASE1 ? "" : upcomingHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
-  f.querySelectorAll(".save-top").forEach(b => b.addEventListener("click", () => { view = "overlaps"; render(); window.scrollTo(0, 0); }));
   pieWire(f);
   wireFacts(f);
   wireNudge(f);
@@ -2887,7 +2880,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 102 · Oct 24", VERSION_NUM = 102;
+const APP_VERSION = "Prototype · Version 103 · Oct 24", VERSION_NUM = 103;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
