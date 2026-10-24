@@ -121,3 +121,4 @@ Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,No
 118,2026-10-24,"Overview hides widgets with no data: summary tiles until there's a subscription, Could save until there's a saving, Value mix until something is rated, What you use most/least until usage is entered",Cuong,Overview,Design,Y,Current,Value mix on Shelf/elsewhere unchanged
 119,2026-10-24,"""Could save / mo"" tile renamed ""Where you can save"" and moved below What you use least as its own card",Cuong,Overview,Design,Y,Current,Same total and See how link to Savings
 119,2026-10-24,Value mix moved to the last tile on Overview; the top row now holds only You pay each month,Cuong,Overview,Design,Y,Current,
+120,2026-10-24,"""You pay each month"" split into three cards: You pay each month, You pay each year, and Subscriptions (count)",Cuong,Overview,Design,Y,Current,"Phones: monthly card full width, the other two side by side"
