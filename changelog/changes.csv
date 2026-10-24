@@ -1,0 +1,110 @@
+Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,Notes
+1,2026-10-18,"First clickable prototype: My subscriptions, Add and Overlaps screens with Cuong's 13 services and example usage",Cuong,Whole app,Feature,N (site started at v41; included since),Changed later,"Screens renamed in v67, v73 and v80"
+2–20,2026-10-18,"Log usage per day, week, month or year",Cuong,Subscription details,Feature,N (site started at v41; included since),Replaced in v66,Exact version number not recorded (version label added in v39)
+2–20,2026-10-18,AAA household members (1 to 6) with cost per person,Cuong,Subscription details,Feature,N (site started at v41; included since),Current,Exact version not recorded
+2–20,2026-10-18,"Price check panel: last checked date, sources, stale warnings and your own price; weekly price re-check routine set up",Cuong,Subscription details,Feature,N (site started at v41; included since),Current,Exact version not recorded. Routine runs Mondays 13:53 UTC
+2–20,2026-10-18,Fixed AAA comparing a household total to a single-member price,Cuong,Subscription details,Fix,N (site started at v41; included since),Current,Exact version not recorded
+2–20,2026-10-18,"Location setting (country, state, ZIP, currency); services not offered in your country hidden",Cuong,Location / Profile,Feature,N (site started at v41; included since),Current,Exact version not recorded
+2–20,2026-10-18,"Admin tab: price reports, catalog freshness, offered-here settings",Cuong,Admin,Feature,N (site started at v41; included since),Current,Exact version not recorded. Hidden unless turned on
+2–20,2026-10-18,Real company logos (first 12),Cuong,Whole app,Design,N (site started at v41; included since),Changed later,Expanded in v45 and v86
+2–20,2026-10-18,"Trials, intro prices and discounts with an end date",Cuong,Subscription details,Feature,N (site started at v41; included since),Hidden in v54,Hidden for phase 1
+2–20,2026-10-18,Subscription start date drives renewals and paid-so-far,Cuong,Add / Subscription details,Feature,N (site started at v41; included since),Hidden in v54,Hidden for phase 1
+2–20,2026-10-18,"Explore tab to browse services, compare plans and add",Cuong,Explore,Feature,N (site started at v41; included since),Changed later,"Folded into Add in v67, renamed Explore in v80"
+2–20,2026-10-18,iPad: Started on date no longer overlaps the text beside it,Cuong,Subscription details,Fix,N (site started at v41; included since),Current,Exact version not recorded
+2–20,2026-10-18,Pauses and restarts with optional fees (ChatGPT example),Cuong,Subscription details,Feature,N (site started at v41; included since),Hidden in v54,Hidden for phase 1
+2–20,2026-10-18,Sales tax setting; prices compared before tax,Cuong,Location / Profile,Feature,N (site started at v41; included since),Current,Exact version not recorded
+2–20,2026-10-18,Usage vs cost chart with breakeven point; collapsible sections on the details page,Cuong,Subscription details,Feature,N (site started at v41; included since),Changed later,Chart replaced by monthly bars in v65
+2–20,2026-10-18,Choice of value measure per subscription with a toggle,Cuong,Subscription details,Feature,N (site started at v41; included since),Replaced in v66,One measure per category since v66
+2–20,2026-10-18,12 months of test usage data for every example subscription; charts cover the full year,Cuong,Example data,Data,N (site started at v41; included since),Current,Exact version not recorded
+21,2026-10-18,"Edit usage month by month and flag unusual months (traveling, busy); ChatGPT history from March",Cuong,Subscription details,Feature,N (site started at v41; included since),Current,Version from project notes
+22,2026-10-18,Cloaked valued against the cost of data broker removal only; features you don't use never lower a rating,Cuong,Value rating,Feature,N (site started at v41; included since),Current,
+23,2026-10-18,"Amazon Prime measures what it saves (shipping on small orders, Prime Video)",Cuong,Value rating,Feature,N (site started at v41; included since),Current,
+24,2026-10-18,Prime household members count toward its value,Cuong,Value rating,Feature,N (site started at v41; included since),Current,
+25,2026-10-19,Thursday Night Football added as a Prime feature that matters,Cuong,Value rating,Feature,N (site started at v41; included since),Current,
+26,2026-10-19,Alternatives section on each subscription (up to 5 comparable services),Cuong,Subscription details,Feature,N (site started at v41; included since),Changed later,Researched list in v27
+27 (est.),2026-10-19,"Researched alternatives for all subscriptions: 74 new services, also in Explore",Cuong,Alternatives / Explore,Data,N (site started at v41; included since),Current,Version estimated from publish order
+28 (est.),2026-10-19,"12 new Explore categories with 82 services (education, mobile, internet, fitness, home security and more)",Cuong,Explore,Data,N (site started at v41; included since),Current,Version estimated
+29 (est.),2026-10-19,Add to my list button on every Explore card,Cuong,Explore,Feature,N (site started at v41; included since),Current,Version estimated
+30 (est.),2026-10-19,"Location price pickers, defaulting to where the user lives",Cuong,Explore / Subscription details,Feature,N (site started at v41; included since),Current,Version estimated
+31 (est.),2026-10-19,"Elderly Care and Lawn & Pest Control categories; Title Case category names; free local government alternatives (libraries, rec centers)",Cuong,Explore,Data,N (site started at v41; included since),Current,Version estimated
+32 (est.),2026-10-19,"Tech Repair & Support, Small Business, and Child Care & Tutoring categories (45 services)",Cuong,Explore,Data,N (site started at v41; included since),Current,Version estimated
+33 (est.),2026-10-19,C2 Education under tutoring; new Password Managers category,Cuong,Explore,Data,N (site started at v41; included since),Current,Version estimated
+34 (est.),2026-10-19,"Five price changes from the weekly price check (Apple One, YouTube Premium and others)",Cuong (approved),Price catalog,Data,N (site started at v41; included since),Current,Version estimated. Report: value-tracker/price-checks/2026-10-19.md
+35,2026-10-19,"26 Mid-Atlantic regional providers, shown only in the states they serve",Cuong (approved),Explore,Data,N (site started at v41; included since),Current,Daily regional scan set up
+36,2026-10-19,"Regional providers dropdown on Explore (my state, any region or state)",Cuong,Explore,Feature,N (site started at v41; included since),Current,
+37,2026-10-19,CNBC Pro: Pro articles feature and measure,Cuong,Value rating,Feature,N (site started at v41; included since),Current,
+38,2026-10-19,CNBC catalog corrected: Pro yearly plan; Investing Club is separate,Cuong,Price catalog,Data,N (site started at v41; included since),Current,
+39,2026-10-19,Version number shown in the app,Cuong,Header / Profile,Feature,N (site started at v41; included since),Changed later,Moved to the profile menu in v48
+40,2026-10-19,Welcome screen for testers and Give feedback button,Cuong,Onboarding,Feature,N (site started at v41; included since),Current,
+41,2026-10-19,Real usage pulled from ChatGPT and Claude data exports,Cuong,Subscription details,Feature,Y,Current,Public site launched with this version on 2026-10-20
+42,2026-10-20,Renewal defaults to one billing cycle after the add date; friendlier two-step Add form,Cuong,Add,Feature,Y,Current,Also fixed a timezone bug
+43,2026-10-20,No ratings or advice until the user enters usage,Cuong,Value rating,Feature,Y,Current,
+44,2026-10-20,19 New England regional providers,Cuong (approved),Explore,Data,Y,Current,
+45,2026-10-20,111 more real logos (123 total),Cuong,Whole app,Design,Y,Current,
+46,2026-10-20,"New look inspired by the Cloaked app, light blue",Cuong,Whole app,Design,Y,Changed later,Changed in v47 to v50
+47,2026-10-20,Brighter sky blue; dark mode added,Cuong,Whole app,Design,Y,Changed later,
+48,2026-10-21,"Navy gradient; greeting uses first name; profile menu behind an avatar (version, dark mode, feedback, location)",Cuong,Whole app / Profile,Design,Y,Current,
+49,2026-10-21,"Light grey background, darker text, gentler fade",Cuong,Whole app,Design,Y,Current,
+50,2026-10-21,"Style picker with four styles (Navy, Crisp, Paper, Midnight)",Cuong,Profile,Design,Y,Current,
+51,2026-10-21,"Help page, Sam AI chat and support tickets",Cuong,Help,Feature,Y,Changed later,Sam turned off for phase 1 in v62
+52,2026-10-21,"Terms and Privacy page (placeholder, needs legal review)",Cuong,Profile / Help,Feature,Y,Current,
+53,2026-10-21,21 Southeast regional providers,Cuong (approved),Explore,Data,Y,Current,
+54,2026-10-22,"Phase 1 simplification: start date, pauses, trials and discounts hidden; Overlaps shown as bars; spending pie on Home",Cuong (tester feedback),Home / Overlaps / Subscription details,Design,Y,Current,
+55,2026-10-22,You vs average scorecard (admin-adjustable) and What's trending card on Home,Cuong,Home,Feature,Y,Changed later,"Both moved to the Shelf tab (v102, v105)"
+56,2026-10-22,Tighter Home with less text; student and senior comparison groups,Cuong (tester feedback),Home,Design,Y,Current,
+57,2026-10-22,Could save tile shows top idea and %; Value this month grouped Great / Fair / Costly; protection plans not rated,Cuong,Home,Feature,Y,Changed later,Top idea removed in v103; ratings changed in v93
+58,2026-10-22,Greeting on one line,Cuong,Home,Design,Y,Current,Version from project notes
+59,2026-10-22,3-month trend in You pay each month; Overlaps header renamed Things you pay twice or more,Cuong,Home / Overlaps,Feature,Y,Changed later,Trend replaced in v60
+60,2026-10-22,Standalone Monthly spending bar chart (up to 12 months),Cuong,Home,Feature,Y,Changed later,Moved to Usage in v87
+61,2026-10-22,"Amounts on top of bars; past months navy, current month orange",Cuong,Home,Design,Y,Current,
+62,2026-10-22,Simpler Help page (FAQ and contact support); Sam chat off for phase 1,Cuong,Help,Design,Y,Current,
+63,2026-10-22,Watch: ways to save card with two YouTube videos,Cuong,Home,Feature,Y,Removed in v101,
+64,2026-10-22,17 Deep South regional providers,Cuong (approved),Explore,Data,Y,Current,
+65,2026-10-22,Usage vs cost is now monthly value bars against a paid line,Cuong,Subscription details,Feature,Y,Current,
+66,2026-10-23,"One usage measure per category, entered with sliders",Cuong,Usage / Subscription details,Feature,Y,Current,
+67,2026-10-23,"Menu reorganised: Overview, Usage (new page with value rings and sliders), Overlaps, Add (Explore folded in)",Cuong,Navigation / Usage,Feature,Y,Changed later,Tabs renamed in v73 and v80
+68,2026-10-23,AAA measured by services used this month (checkboxes),Cuong,Usage,Feature,Y,Current,
+69,2026-10-23,"Credit cards measured by perks used this month, in dollars",Cuong,Usage,Feature,Y,Current,
+70,2026-10-23,Evernote measured by notes created or retrieved,Cuong,Usage,Feature,Y,Current,
+71,2026-10-23,How hard to switch setting; hard switches left out of easy savings,Cuong,Subscription details / Savings,Feature,Y,Current,
+72,2026-10-23,"Digital Books, Car Insurance and Home & Renters Insurance categories",Cuong,Explore,Data,Y,Current,
+73,2026-10-23,"Overlaps renamed Savings, with ranked ways to pay less",Cuong (tester feedback),Savings,Feature,Y,Changed later,Ranked to-do list dropped in v74
+74,2026-10-23,Savings focused on cheaper options (price-line charts) and things you pay twice,Cuong,Savings,Feature,Y,Current,
+75,2026-10-23,"Amazon Prime, Progressive and 1Password added to the example data",Cuong,Example data,Data,Y,Current,
+76,2026-10-23,Free services count as Great value,Cuong,Value rating,Fix,Y,Current,
+77,2026-10-23,Example data: one subscription per category (30 total),Cuong,Example data,Data,Y,Current,
+78,2026-10-23,Did You Know? carousel on Overview; monthly check-in on Usage,Cuong,Overview / Usage,Feature,Y,Changed later,Did You Know? moved to Shelf in v106
+79,2026-10-23,Tighter Did You Know? card,Cuong,Overview,Design,Y,Current,
+80,2026-10-23,Add tab renamed Explore,Cuong,Navigation,Design,Y,Current,
+81,2026-10-23,Sample label removed from Did You Know?,Cuong,Overview,Design,Y,Current,
+82,2026-10-23,Compare me with dropdown no longer covers its label,Cuong,Profile,Fix,Y,Current,
+83,2026-10-23,Collapsible cards on Savings,Cuong (tester feedback),Savings,Design,Y,Current,
+84,2026-10-23,Profile list no longer cut off; Admin tab switch moved to the main profile page,Cuong,Profile,Fix,Y,Current,
+85,2026-10-23,"Logo re-pull (Audible, Bumble, public service symbols)",Cuong,Whole app,Design,Y,Current,Shipped to the public site together with v86
+86,2026-10-23,Explore sorted A to Z; phone menu bar docked to the bottom,Cuong,Explore / Navigation,Design,Y,Current,
+87,2026-10-23,Collapsible monthly check-in; Monthly spending chart moved to the bottom of Usage,Cuong,Usage,Design,Y,Changed later,Check-in became a link in v88
+88,2026-10-23,Check-in becomes a link by the month heading; Explore category pills wrap; Explore grouped by letter,Cuong,Usage / Explore,Design,Y,Current,
+89,2026-10-23,Explore letter groups start expanded,Cuong,Explore,Design,Y,Current,Cuong changed his mind from collapsed
+90,2026-10-23,Lawn and pest services rated on results and fair price,Cuong,Value rating,Feature,Y,Current,
+91,2026-10-23,Insurance rated on a matching quote plus service ratings,Cuong,Value rating,Feature,Y,Current,
+92,2026-10-23,Unused for 12 months = Costly; 31-day grace for new subscriptions; usage reminder,Cuong,Value rating / Overview,Feature,Y,Current,
+93,2026-10-23,"Every subscription rated on job done, price and service; cheaper or better comparable = Costly",Cuong,Value rating,Feature,Y,Current,Admin doc of rules: https://claude.ai/artifact/AuoR8FkSD7FDj6ipG5w1xn
+94,2026-10-23,Only slider subscriptions listed under This month so far,Cuong,Usage,Design,Y,Current,
+95,2026-10-23,24 Great Lakes regional providers,Cuong (approved),Explore,Data,Y,Current,
+96,2026-10-23,Adobe Creative Cloud added to the catalog (10 plans),Cuong,Price catalog / Explore,Data,Y,Current,
+97,2026-10-23,Adobe Creative Cloud added to the example data,Cuong,Example data,Data,Y,Current,
+98,2026-10-23,Netflix extra member add-ons as plan options,Cuong,Subscription details,Feature,Y,Current,
+99,2026-10-23,Subscription search in the header,Cuong,Header,Feature,Y,Current,
+100,2026-10-23,Full-width search box on phones,Cuong,Header,Design,Y,Current,
+100+,2026-10-23,Savings shows things you pay twice before cheaper options,Co-developer (lquach86-code),Savings,Design,Y,Current,Repo PR #2; went live with v101
+101,2026-10-24,Watch: ways to save videos removed from Overview,Cuong (tester feedback),Overview,Design,Y,Current,Repo PR #3
+102,2026-10-24,Shelf tab for retired widgets (toggle in profile); vs average adult moved there; Value mix donut on Overview,Cuong,Overview / Shelf,Feature,Y,Current,Repo PR #4
+103,2026-10-24,Top idea removed from the Could save tile,Cuong,Overview,Design,Y,Current,Caused a desktop layout bug fixed in v107
+104,2026-10-24,Did You Know? moved below Spending by category,Cuong,Overview,Design,Y,Changed later,Moved to Shelf in v106
+105,2026-10-24,What's trending moved to Shelf; What you use most and least added,Cuong,Overview / Shelf,Feature,Y,Current,
+106,2026-10-24,Could save tile shows the number and a See how link; Did You Know? moved to Shelf,Cuong,Overview / Savings / Shelf,Design,Y,Current,
+107,2026-10-24,Fixed desktop layout broken in v103 (Monthly spending bars missing),Cuong,Usage,Fix,Y,Current,
+108,2026-10-24,"Free library and public options always shown, marked with an asterisk",Cuong,Alternatives / Savings,Feature,Y,Current,
+109,2026-10-24,Include free options checkbox on Savings,Cuong,Savings,Feature,Y,Current,
+110,2026-10-24,Smaller savings list starts expanded,Cuong,Savings,Design,Y,Current,
+111,2026-10-24,Usage ring legends fit on phones (shorter names); no sideways scroll on phones,Cuong,Usage / Whole app,Fix,Y,Current,

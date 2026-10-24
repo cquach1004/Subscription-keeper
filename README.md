@@ -19,6 +19,7 @@ Open it at https://cquach1004.github.io/Subscription-keeper/
 | `app-prototype/regional/` | One JSON file and research report per US region, `approved.txt` (regions approved for the app), `queue.txt` (regions still to research) and `merge_regional.py`. |
 | `app-prototype/standalone/build_standalone.py` | Builds the self-contained copy that becomes the public site. |
 | `app-prototype/site/index.html` | A second copy of the public site, kept identical to `index.html`. |
+| `changelog/` | Change log: `changes.csv` (one row per change, by version), `change-log.xlsx` (built from it by `build_changelog.py`). |
 | `value-tracker/` | The price catalog: `services.json` (source of truth for prices), `build_services.py` (generates it), `value-tracker.html`, and weekly price-check reports in `price-checks/`. See `value-tracker/README.md`. |
 
 ## Rebuilding
@@ -45,3 +46,7 @@ The app source fetches its JSON files, so open the built `index.html` to try it 
 - Work on your own branch and open a pull request; the other person reviews before merging.
 - Merging into `main` updates the public site within a few minutes, so only merge a rebuilt `index.html` once Cuong has approved it going live.
 - Price changes need Cuong's approval before they go into `services.json`.
+
+## Change log
+
+Every new version gets a row per change in `changelog/changes.csv`; then run `python3 changelog/build_changelog.py` to rebuild `changelog/change-log.xlsx`. See `CLAUDE.md`.
