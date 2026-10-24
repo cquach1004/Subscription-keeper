@@ -391,6 +391,8 @@ body::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 600px
   mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,.75) 58%, rgba(0,0,0,.35) 78%, transparent 100%); }
 /* Other screens: a navy band behind the header only, fading out before the page title. */
 body.short-band::before { display: none; }
+/* The band below reaches 100vw past each side; clip it so phones never scroll sideways (v111). */
+html, body { overflow-x: clip; }
 body.short-band header.top { position: relative; margin-bottom: 44px; }
 body.short-band header.top::before { content: ""; position: absolute; left: -100vw; right: -100vw; top: -60px; bottom: -44px; z-index: -1; pointer-events: none; background: var(--band);
   -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 60px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 60px), transparent); }
@@ -587,16 +589,16 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .vb-item:hover { background: var(--accent-soft); }
 .vb-item .logo { width: 30px; height: 30px; border-radius: 8px; font-size: 11px; }
 .vb-nm { display: grid; min-width: 0; } .vb-nm b { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.u-pies { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.u-pies { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; } .u-pie { min-width: 0; }
 .u-pie { gap: 8px; padding: 14px; }
 .u-pie-head { display: flex; align-items: center; gap: 8px; } .u-pie-head .dot { width: 10px; height: 10px; border-radius: 50%; }
-.u-pie-body { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: center; }
+.u-pie-body { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; align-items: center; }
 @media (min-width: 901px) { .u-pie-body { grid-template-columns: 1fr; justify-items: center; } .u-legend { width: 100%; } }
 .u-donut { position: relative; width: 110px; height: 110px; } .u-donut svg { width: 100%; height: 100%; display: block; }
 .u-donut path { stroke: var(--surface); stroke-width: 2; stroke-linejoin: round; }
 .u-donut .pie-mid b { font-size: 20px; } .u-donut .pie-mid span { font-size: 11px; }
 .u-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 13px; min-width: 0; }
-.u-legend li { display: flex; justify-content: space-between; gap: 8px; }
+.u-legend li { display: flex; justify-content: space-between; gap: 8px; min-width: 0; } .u-legend li button { min-width: 0; flex: 0 1 auto; } .u-legend li .num { flex: none; }
 .u-legend button, .u-open { border: 0; background: none; padding: 0; color: var(--ink); font: inherit; text-align: left; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .u-open { font-weight: 600; }
 .u-list { gap: 0; padding-block: 4px; }
@@ -606,7 +608,7 @@ nav.tabs svg { width: 18px; height: 18px; flex: none; }
 .u-row .slide-ends { display: none; }
 .u-nm { display: grid; min-width: 0; }
 .u-how { margin-top: 14px; }
-@media (max-width: 900px) { .u-pies { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .u-pies { grid-template-columns: minmax(0, 1fr); } }
 .a-cats { margin-bottom: 12px; }
 @media (max-width: 560px) { .a-cats { gap: 6px; } .a-cats .chip { font-size: 13px; padding: 4px 10px; } }
 /* A to Z groups on Explore (v88): one fold per letter, all open by default (v89). */
@@ -1675,6 +1677,10 @@ function lastMonthOf(s) {
   return b ? { s, bucket: b, cost: prevRow.spent } : null;
 }
 const BUCKETS = { great: ["Great value", "var(--good)"], fair: ["Fair value", "var(--accent)"], costly: ["Costly", "var(--warn)"] };
+// Shorter names for tight legends (Cuong, v111): drop a trailing "(...)" unless another subscription shares the rest of the name,
+// e.g. "Southwest Rapid Rewards Card (Chase)" becomes "Southwest Rapid Rewards Card" but State Farm (Home) and (Car) stay apart.
+const baseName = n => n.replace(/\s*\([^)]*\)\s*$/, "");
+const shortName = s => { const b = baseName(s.name); return b && !state.subs.some(o => o !== s && baseName(o.name) === b) ? b : s.name; };
 function bucketDonut(k, items, total) {
   const [name, col] = BUCKETS[k], sum = items.reduce((a, x) => a + x.cost, 0), C = 60, R = 57, R0 = 40, pt = (a, r) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`;
   let a0 = -Math.PI / 2;
@@ -1685,7 +1691,7 @@ function bucketDonut(k, items, total) {
     <div class="u-pie-body"><div class="u-donut"><svg viewBox="0 0 120 120" role="img" aria-label="${name}: ${items.length} subscriptions, ${money(sum)}, ${total ? Math.round(sum / total * 100) : 0}% of last month's spending">
       <circle cx="60" cy="60" r="48.5" fill="none" stroke="var(--line)" stroke-width="17"/>${arcs}</svg>
       <div class="pie-mid"><b class="num">${total ? Math.round(sum / total * 100) : 0}%</b><span>${money(sum)}</span></div></div>
-    <ul class="u-legend">${items.map(x => `<li><button data-id="${x.s.id}">${esc(x.s.name)}</button><span class="num">${x.free ? "Free" : money(x.cost)}</span></li>`).join("") || `<li class="muted">None</li>`}</ul></div></section>`;
+    <ul class="u-legend">${items.map(x => `<li><button data-id="${x.s.id}" title="${esc(x.s.name)}">${esc(shortName(x.s))}</button><span class="num">${x.free ? "Free" : money(x.cost)}</span></li>`).join("") || `<li class="muted">None</li>`}</ul></div></section>`;
 }
 function usageView() {
   const last = state.subs.map(lastMonthOf).filter(Boolean), total = last.reduce((a, x) => a + x.cost, 0);
@@ -2921,7 +2927,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 110 · Oct 24", VERSION_NUM = 110;
+const APP_VERSION = "Prototype · Version 111 · Oct 24", VERSION_NUM = 111;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
