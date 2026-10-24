@@ -210,14 +210,13 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 .pie-card { margin-bottom: 14px; }
 .trend-card { margin-bottom: 14px; }
 #ways { scroll-margin-top: 16px; }
-/* v113 (Cuong): Guess my total (new users) and Popular subscriptions with one-tap Add on Overview. */
+/* v113/v116 (Cuong): Let's get started (Yes shows top 6 to tap) and other-category pills on Overview. */
 .gq-list { display: grid; gap: 0; margin: 6px 0 4px; }
 .gq { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
 .gq:first-child { border-top: 0; } .gq .small { display: block; }
 .gq .seg button { min-width: 44px; }
-.gq .seg { flex-wrap: nowrap; } @media (max-width: 620px) { .gq.wide { grid-template-columns: 1fr; gap: 6px; } .gq.wide .seg { justify-self: start; } }
-.gq-out { display: grid; gap: 4px; margin-top: 10px; padding: 12px 14px; border-radius: 14px; background: var(--accent-soft); }
-.gq-out .big { font-size: 30px; }
+.gq .seg { flex-wrap: nowrap; } .gq .pop-grid, .gq .gq-more { grid-column: 1 / -1; } .gq .pop-grid { margin-top: 0; } .gq .gq-more { justify-self: start; padding-left: 0; margin-top: -4px; }
+.pop[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 .pop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 6px; }
 .pop { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); font: inherit; text-align: left; cursor: pointer; min-width: 0; }
 .pop .logo { width: 28px; height: 28px; font-size: 11px; border-radius: 8px; flex: none; }
@@ -1334,9 +1333,7 @@ function welcomeView() {
   const more = offered.slice().sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
   const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
   const groups = [...new Set(more.map(v => v.category))];
-  // v115 (Cuong): each category shows its top 6, then "See all". Top = our popular picks, then national services (known logos first),
-  // then regional ones, then free public options (libraries etc.). Our ordering, not a sales ranking.
-  const rk = v => (POPULAR.includes(v.id) ? 0 : v.provider_type ? 6 : v.service_states || v.region_group ? 4 : 2) + (LOGOS[v.id] ? 0 : 1), wRank = (a, b) => rk(a) - rk(b) || a.name.localeCompare(b.name);
+  // v115 (Cuong): each category shows its top 6 (svcRank order), then "See all".
   const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2><span class="small muted">Track what you pay for, see what you actually use, and find cheaper options. Your list stays in this browser; nobody else sees it.</span></div>
     <h3 style="margin:8px 0">1. Where do you live?</h3>
     <div class="loc-row" style="margin-bottom:18px"><label>Country<select id="w-country">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === country ? "selected" : ""}>${n}</option>`).join("")}</select></label>
@@ -1345,7 +1342,7 @@ function welcomeView() {
     <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. You can add others, or ones we don't list, later from the Explore tab.</p>
     <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
     <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
-    ${groups.map(c => { const list = more.filter(v => v.category === c).sort(wRank);
+    ${groups.map(c => { const list = more.filter(v => v.category === c).sort(svcRank);
       return `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog" data-open="0">${list.map((v, i) => i < 6 ? tile(v) : tile(v).replace('<button ', '<button hidden data-extra="1" ')).join("")}</div>${list.length > 6 ? `<button type="button" class="btn ghost small w-more">See all ${list.length}</button>` : ""}`; }).join("")}
     <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)">
       <button class="btn primary" id="w-go">Start with 0 subscriptions</button>
@@ -1853,8 +1850,9 @@ function homeView() {
     </section>
     ${usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
-    ${state.subs.length ? useMostHtml() : guessHtml()}
-    ${popularHtml()}
+    ${startHtml()}
+    ${state.subs.length ? useMostHtml() : ""}
+    ${moreCatsHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
@@ -1863,8 +1861,12 @@ function homeView() {
   wireNudge(f);
   f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   f.querySelectorAll("[data-gq]").forEach(b => b.addEventListener("click", () => { (state.guess ||= {})[b.dataset.gq] = +b.dataset.n; save(); const y = scrollY; render(); window.scrollTo(0, y); }));
-  f.querySelectorAll("[data-pop]").forEach(b => b.addEventListener("click", () => { const s = newSub(b.dataset.pop, { needsUse: true, start: today(), day: +today().slice(8) });
-    s.measure = measuresOf(s)[0].id; state.subs.push(s); save(); const y = scrollY; render(); window.scrollTo(0, y); }));
+  f.querySelectorAll("[data-pop]").forEach(b => b.addEventListener("click", () => { const id = b.dataset.pop, had = state.subs.find(s => s.svc === id);
+    if (had) { if (!had.needsUse) return; state.subs = state.subs.filter(s => s !== had); }
+    else { const s = newSub(id, { needsUse: true, start: today(), day: +today().slice(8) }); s.measure = measuresOf(s)[0].id; state.subs.push(s); }
+    save(); const y = scrollY; render(); window.scrollTo(0, y); }));
+  f.querySelectorAll("[data-xcat]").forEach(b => b.addEventListener("click", () => { exploreOpen = null; exploreCat = b.dataset.xcat; view = "add"; render(); window.scrollTo(0, 0); }));
+  f.getElementById("start-done")?.addEventListener("click", () => { state.startDone = true; save(); render(); });
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
@@ -1978,37 +1980,38 @@ const TRENDS = [
   { date: "2026-07", kind: "news", svc: "youtube_premium", country: "US", title: "Peacock coming to YouTube Premium in 2027", text: "Peacock is set to be included with YouTube Premium starting next year. Worth knowing if you pay for both.", src: "Yahoo Tech", url: "https://tech.yahoo.com/streaming/articles/streaming-price-hike-tracker-much-150929260.html" },
   { date: "2026-10-22", checked: true, kind: "popular", svc: "netflix", title: "Netflix is still the most popular", text: "About 325 million subscribers worldwide, ahead of Amazon Prime (200 million) and HBO Max (140 million).", src: "FlixPatrol", url: "https://flixpatrol.com/streaming-services/subscribers/" }];
 const TREND_KIND = { up: ["Price up", "poor"], down: ["Price down", "great"], new: ["New plan", "ok"], news: ["News", "ok"], popular: ["Popular", "great"] };
-// Guess my total (Cuong, v113): a few quick questions for someone with an empty list. Each "yes" counts the middle list price
-// of that kind of service in our catalog (default plans with a confirmed price), so it's an estimate, labeled as one.
-const GUESS = [["video", "Video streaming (Netflix, Disney+...)", 4], ["music", "Music streaming", 1], ["shopping", "Shopping membership (Prime, Walmart+...)", 1],
-  ["storage", "Cloud storage (iCloud, Google One...)", 1], ["ai", "AI assistant (ChatGPT, Claude...)", 1], ["gaming", "Gaming (Game Pass, PlayStation Plus...)", 1],
-  ["fitness", "Gym or fitness membership", 1], ["news", "News or magazine", 1], ["food", "Food delivery pass (DashPass, Uber One...)", 1]];
-function typicalPrice(cat) {
-  const a = Object.values(CATALOG).map(v => v.category === cat && planOf(v, v.default_plan)).filter(p => p && p.effective_monthly > 0 && p.verified !== false).map(p => p.effective_monthly).sort((x, y) => x - y);
-  return a.length ? a[Math.floor(a.length / 2)] : null;
-}
-function guessHtml() {
-  const g = state.guess || {}, rows = GUESS.map(([k, label, max]) => ({ k, label, max, n: g[k] || 0, each: typicalPrice(k) })).filter(r => r.each != null);
-  const sum = rows.reduce((a, r) => a + r.n * r.each, 0), answered = Object.keys(g).length > 0, b = benchFor(profile().country, "adult");
-  const seg = r => `<div class="seg" role="group" aria-label="${esc(r.label)}">${(r.max > 1 ? [0, 1, 2, 3, 4] : [0, 1]).map(n => `<button type="button" data-gq="${r.k}" data-n="${n}" aria-pressed="${r.n === n}">${r.max > 1 ? (n === 4 ? "4+" : n) : n ? "Yes" : "No"}</button>`).join("")}</div>`;
-  return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Guess my total</h3>
-    <p class="small muted" style="margin:2px 0 0">Not sure what you spend? Answer a few quick questions for a rough monthly estimate, then add the real ones below.</p>
-    <div class="gq-list">${rows.map(r => `<div class="gq${r.max > 1 ? " wide" : ""}"><span><span>${esc(r.label)}</span><span class="small muted">${r.max > 1 ? "How many? " : ""}About ${money(r.each)}/mo each</span></span>${seg(r)}</div>`).join("")}</div>
-    ${answered ? `<div class="gq-out"><span class="small muted">Your rough estimate</span><span class="big num">${money(sum)}<span class="small muted" style="font-weight:500"> /mo</span></span>
-      <span class="small muted">${money(sum * 12)} a year${b ? `. The average US adult pays ${money(b.amt)} a month (<a href="${esc(b.url)}" target="_blank" rel="noopener" style="color:var(--accent)">source</a>)` : ""}.</span>
-      <span class="small muted">Estimate only: each answer counts the middle list price of that kind of service in our catalog, before tax.</span></div>` : ""}</section>`;
-}
-// Popular subscriptions (Cuong, v113): well-known services, our pick rather than a ranking, each added with one tap.
-// Shown while the list is short; anything already on the list or not offered where the user lives is left out.
+// Let's get started (Cuong, v116; was Guess my total in v113): a Yes/No per common kind of service. Yes shows that category's
+// top 6 right underneath; one tap adds it (tap again to take it back off while no usage is entered). Shown until "I'm done" or 10 subs.
+const START = [["video", "Video streaming"], ["music", "Music streaming"], ["shopping", "Shopping memberships"], ["storage", "Cloud storage"], ["ai", "AI assistants"],
+  ["gaming", "Gaming"], ["fitness", "Gym and fitness"], ["news", "News and magazines"], ["food", "Food delivery"]];
+// "Top" order (v115): our popular picks, then national services (known logos first), then regional, then free public options. Not sales data.
 const POPULAR = ["netflix", "spotify", "amazon_prime", "youtube_premium", "disney_plus", "hulu", "hbo_max", "apple_music", "peacock", "paramount_plus", "icloud", "google_one",
   "chatgpt", "m365", "xbox_game_pass", "playstation_plus", "planet_fitness", "doordash_dashpass", "uber_one", "walmart_plus", "costco", "audible", "duolingo", "nyt"];
-function popularHtml() {
-  if (state.subs.length >= 10) return "";
-  const have = new Set(state.subs.map(s => s.svc)), list = POPULAR.filter(id => CATALOG[id] && !have.has(id) && availability(id, profile().country) !== "no").slice(0, 12);
-  if (!list.length) return "";
-  return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Popular subscriptions</h3>
-    <p class="small muted" style="margin:2px 0 0">Have any of these too? Tap to add it to your list. Find more on the Explore tab.</p>
-    <div class="pop-grid">${list.map(id => { const v = CATALOG[id]; return `<button class="pop" data-pop="${id}" aria-label="Add ${esc(v.name)}" title="${esc(v.name)}">${logoHtml(v)}<b>${esc(baseName(v.name) || v.name)}</b><span class="plus" aria-hidden="true">+</span></button>`; }).join("")}</div></section>`;
+const svcRankKey = v => (POPULAR.includes(v.id) ? 0 : v.provider_type ? 6 : v.service_states || v.region_group ? 4 : 2) + (LOGOS[v.id] ? 0 : 1);
+const svcRank = (a, b) => svcRankKey(a) - svcRankKey(b) || a.name.localeCompare(b.name);
+const topIn = (cat, n = 6) => { const c = profile().country; return Object.values(CATALOG).filter(v => v.category === cat && availability(v.id, c) !== "no").sort(svcRank).slice(0, n); };
+const startShown = () => !state.startDone && state.subs.length < 10;
+function startHtml() {
+  if (!startShown()) return "";
+  const g = state.guess || {}, have = new Set(state.subs.map(s => s.svc)), mineCats = new Set(state.subs.map(s => svcOf(s).category));
+  const row = ([k, label]) => { const on = g[k] != null ? g[k] === 1 : mineCats.has(k), list = on ? topIn(k) : [];
+    return `<div class="gq"><b style="font-weight:500">${esc(label)}</b><div class="seg" role="group" aria-label="${esc(label)}">${[0, 1].map(n => `<button type="button" data-gq="${k}" data-n="${n}" aria-pressed="${on === !!n}">${n ? "Yes" : "No"}</button>`).join("")}</div>
+      ${list.length ? `<div class="pop-grid">${list.map(v => { const mine = have.has(v.id); return `<button class="pop" data-pop="${v.id}" aria-pressed="${mine}" aria-label="${mine ? "On your list" : "Add"}: ${esc(v.name)}" title="${esc(v.name)}">${logoHtml(v)}<b>${esc(baseName(v.name) || v.name)}</b><span class="plus" aria-hidden="true">${mine ? "&#10003;" : "+"}</span></button>`; }).join("")}</div>
+        <button type="button" class="btn ghost small gq-more" data-xcat="${k}">More ${esc(catLabel(k))} in Explore</button>` : ""}</div>`; };
+  return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Let's get started</h3>
+    <p class="small muted" style="margin:2px 0 0">Do you pay for any of these? Tap Yes to see the most popular ones, then tap the ones you have to add them to your list.</p>
+    <div class="gq-list">${START.map(row).join("")}</div>
+    ${state.subs.length ? `<button type="button" class="btn ghost small" id="start-done" style="padding-left:0">I'm done, hide this</button>` : ""}</section>`;
+}
+// Other categories (v116, in place of Popular subscriptions): pills like the Explore tab; each opens Explore on that category.
+function moreCatsHtml() {
+  if (!startShown()) return "";
+  const c = profile().country, skip = new Set(START.map(r => r[0]));
+  const cats = [...new Set(Object.values(CATALOG).filter(v => availability(v.id, c) !== "no").map(v => v.category))].filter(k => !skip.has(k)).sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
+  return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Explore other categories</h3>
+    <p class="small muted" style="margin:2px 0 8px">Pay for something else, like internet, a phone plan or insurance? Pick a category to find it.</p>
+    <div class="chips">${cats.map(k => `<button type="button" class="chip" data-xcat="${k}">${esc(catLabel(k))}</button>`).join("")}</div>
+    <button type="button" class="btn ghost small" data-xcat="all" style="padding-left:0;margin-top:6px;justify-self:start;display:block">See everything in Explore</button></section>`;
 }
 // What you use most / least (Cuong, v105, in place of What's trending). Units differ by service, so each one is ranked by
 // how far its usage goes past what it takes to be worth the price: uses x value per use / monthly cost (2 = twice its price).
@@ -2994,7 +2997,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 115 · Standalone copy · Oct 24", VERSION_NUM = 115;
+const APP_VERSION = "Prototype · Version 116 · Standalone copy · Oct 24", VERSION_NUM = 116;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
