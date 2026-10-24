@@ -623,7 +623,7 @@ details.az[hidden] { display: none; }
 .vb-other > span { flex-basis: 100%; }
 .vb-other .chip { background: var(--surface); color: inherit; cursor: pointer; }
 @media (max-width: 760px) { .vb { grid-template-columns: 1fr; gap: 10px; } }
-@media (max-width: 620px) { .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; align-items: stretch; }
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; align-items: stretch; }
 .charts > .card { margin: 0; }
 .charts > .card:only-child { grid-column: 1 / -1; }
 @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } }
@@ -2911,7 +2911,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 106 · Standalone copy · Oct 24", VERSION_NUM = 106;
+const APP_VERSION = "Prototype · Version 107 · Standalone copy · Oct 24", VERSION_NUM = 107;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
