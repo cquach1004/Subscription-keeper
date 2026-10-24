@@ -223,6 +223,17 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .bench-bars { display: grid; grid-template-columns: auto 1fr; gap: 4px 8px; align-items: center; margin: 8px 0 6px; font-size: 12px; color: var(--muted); }
 .bench-bars i { display: block; height: 6px; border-radius: 3px; min-width: 3px; }
 .bench-grp { font-size: 12px; padding: 2px 6px; border-radius: 8px; max-width: 100%; }
+/* v102 (Cuong): Overview tile with the share of subscriptions rated Great, Fair and Costly. */
+.mix-body { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.mix-donut { position: relative; width: 84px; height: 84px; flex: none; } .mix-donut svg { width: 100%; height: 100%; display: block; }
+.mix-donut .pie-mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; line-height: 1.1; }
+.mix-donut .pie-mid b { font-size: 18px; } .mix-donut .pie-mid span { font-size: 11px; color: var(--muted); }
+.mix-leg { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; min-width: 0; }
+.mix-leg button { display: flex; align-items: center; gap: 6px; border: 0; background: none; padding: 0; font: inherit; color: var(--ink); cursor: pointer; text-align: left; }
+.mix-leg .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; } .mix-leg b { font-variant-numeric: tabular-nums; }
+@media (max-width: 620px) { .mix-body { flex-direction: column; align-items: flex-start; } }
+/* Shelf tab (v102): widgets taken off Overview, kept working so they can come back. */
+.shelf-item { max-width: 380px; margin-bottom: 22px; } .shelf-item .stat { margin-top: 8px; }
 .pie-wrap { display: grid; grid-template-columns: 190px 1fr; gap: 20px; align-items: center; }
 .pie-box { position: relative; width: 190px; height: 190px; }
 .pie-box svg { width: 100%; height: 100%; display: block; overflow: visible; }
@@ -649,6 +660,7 @@ details.az[hidden] { display: none; }
       <button role="tab" id="tab-overlaps" data-view="overlaps" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 17l5-5 4 4 7-7"/><path d="M15 9h5v5"/></svg>Savings</button>
       <button role="tab" id="tab-add" data-view="add" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z" stroke-linejoin="round"/></svg>Explore</button>
       <button role="tab" id="tab-admin" data-view="admin" aria-selected="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 19.5 6v5.5c0 4.4-3.1 7.9-7.5 9-4.4-1.1-7.5-4.6-7.5-9V6z"/></svg>Admin</button>
+      <button role="tab" id="tab-shelf" data-view="shelf" aria-selected="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.5h17v3h-17z"/><path d="M5 10.5v9h14v-9M10 14h4"/></svg>Shelf</button>
     </nav>
   </header>
   <main id="view"></main>
@@ -1251,11 +1263,13 @@ function render() {
   document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === (view === "explore" ? "add" : view)));
   const root = document.getElementById("view"); root.replaceChildren();
   document.getElementById("tab-admin").hidden = !admin.show;
+  document.getElementById("tab-shelf").hidden = !admin.shelf;
+  if (view === "shelf" && !admin.shelf) view = "home";
   drawAvatar(document.getElementById("me-btn"));
   document.body.classList.toggle("short-band", view !== "home");
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
-  root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, welcome: welcomeView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
+  root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
 }
 
 function upcomingHtml() {
@@ -1612,6 +1626,31 @@ function benchHtml(total) {
     <div class="small muted">${esc(profile().country)} avg ${money(b.amt)}${b.est ? "*" : ""} · ${b.url ? `<a href="${esc(b.url)}" target="_blank" rel="noopener" style="color:var(--accent)" title="${esc(b.src)}">Source</a>` : "Our team"}</div>
     <div style="margin-top:6px">${pick}</div></div>`;
 }
+// Value mix (Cuong, v102, in place of "vs average adult"): share of subscriptions, by count, in each value group today.
+// Brand-new and paused ones aren't rated yet, so they're left out.
+function mixHtml() {
+  const n = { great: 0, fair: 0, costly: 0 }; state.subs.forEach(s => { const b = valueBucket(s); if (b) n[b]++; });
+  const rated = n.great + n.fair + n.costly, pct = k => rated ? Math.round(n[k] / rated * 100) : 0;
+  if (!rated) return `<div class="stat"><div class="label">Value mix</div><div class="small muted" style="margin-top:8px">Your subscriptions get rated once they're 31 days old and have usage.</div></div>`;
+  const C = 42, R = 40, R0 = 27, pt = (a, r) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`, ks = Object.keys(n).filter(k => n[k]);
+  let a0 = -Math.PI / 2;
+  const arcs = ks.length === 1 ? `<circle cx="${C}" cy="${C}" r="${(R + R0) / 2}" fill="none" stroke="${BUCKETS[ks[0]][1]}" stroke-width="${R - R0}"/>`
+    : ks.map(k => { const a1 = a0 + n[k] / rated * 2 * Math.PI, big = a1 - a0 > Math.PI ? 1 : 0;
+      const d = `M${pt(a0, R)} A${R} ${R} 0 ${big} 1 ${pt(a1, R)} L${pt(a1, R0)} A${R0} ${R0} 0 ${big} 0 ${pt(a0, R0)}Z`; a0 = a1;
+      return `<path d="${d}" fill="${BUCKETS[k][1]}" stroke="var(--surface)" stroke-width="2"><title>${BUCKETS[k][0]}: ${n[k]} (${pct(k)}%)</title></path>`; }).join("");
+  return `<div class="stat mix"><div class="label">Value mix</div><div class="mix-body">
+    <div class="mix-donut"><svg viewBox="0 0 84 84" role="img" aria-label="${Object.keys(n).map(k => `${BUCKETS[k][0]} ${pct(k)}%`).join(", ")} of ${rated} rated subscriptions">${arcs}</svg>
+      <div class="pie-mid"><b class="num">${rated}</b><span>rated</span></div></div>
+    <ul class="mix-leg">${Object.keys(n).map(k => `<li><button data-mix="${k}" title="See them on Usage"><span class="dot" style="background:${BUCKETS[k][1]}"></span>${BUCKETS[k][0].replace(" value", "")} <b>${pct(k)}%</b></button></li>`).join("")}</ul></div></div>`;
+}
+// Shelf (Cuong, v102): widgets taken off Overview but kept working, so any can be put back. Turned on in the profile menu, like Admin.
+function shelfView() {
+  const total = state.subs.reduce((a, s) => a + monthly(s), 0);
+  const f = el(`<div class="section-head"><h2>Shelf</h2><span class="small muted">Widgets taken off Overview. They still work here, and any of them can go back.</span></div>
+    <section class="shelf-item"><h3 style="margin:0">vs average adult</h3><p class="note" style="margin:2px 0 0">Was on Overview until Oct 24, 2026. The Value mix chart took its place.</p>${benchHtml(total)}</section>`);
+  f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
+  return f;
+}
 // Usage page (Cuong, v67): last month's value in three donuts (Great, Fair, Costly), then a slider per subscription for this month.
 // The slider's setting when a month ends becomes that month's usage (closeMonths).
 const periodKeys = s => { const rows = valueSeries(s)?.rows.slice(1) || [];
@@ -1764,7 +1803,7 @@ function homeView() {
     <section class="summary">
       <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year · ${state.subs.length} subscriptions</div></div>
       ${saveHtml(total)}
-      ${benchHtml(total)}
+      ${mixHtml()}
     </section>
     ${usageNudgeHtml()}
     ${factsHtml()}
@@ -1778,7 +1817,7 @@ function homeView() {
   wireFacts(f);
   wireNudge(f);
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
-  f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
+  f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
   f.getElementById("restart").addEventListener("click", () => { view = "welcome"; render(); window.scrollTo(0, 0); });
@@ -2848,7 +2887,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 101 · Oct 24", VERSION_NUM = 101;
+const APP_VERSION = "Prototype · Version 102 · Oct 24", VERSION_NUM = 102;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -2905,8 +2944,10 @@ function openMe() {
           <span class="nm"><b>${x.name}</b><span>${x.note}</span></span></button>`).join("")}</div></div>
         <div><h3 style="margin:0 0 10px">Staff tools</h3><div class="me-list">
           <label class="me-item" style="display:flex;color:var(--ink);font-size:15px">${IC('<path d="M12 3.5 19.5 6v5.5c0 4.4-3.1 7.9-7.5 9-4.4-1.1-7.5-4.6-7.5-9V6z"/>')}<span class="me-l">Show the Admin tab</span>
-            <input type="checkbox" id="me-admin" class="me-check" ${admin.show ? "checked" : ""}></label></div>
-          <p class="note" style="margin:6px 0 0">In the real app, only signed-in staff see Admin. This switch stands in for that sign-in.</p></div>
+            <input type="checkbox" id="me-admin" class="me-check" ${admin.show ? "checked" : ""}></label>
+          <label class="me-item" style="display:flex;color:var(--ink);font-size:15px">${IC('<path d="M3.5 7.5h17v3h-17z"/><path d="M5 10.5v9h14v-9M10 14h4"/>')}<span class="me-l">Show the Shelf tab</span>
+            <input type="checkbox" id="me-shelf" class="me-check" ${admin.shelf ? "checked" : ""}></label></div>
+          <p class="note" style="margin:6px 0 0">In the real app, only signed-in staff see Admin. This switch stands in for that sign-in. Shelf holds widgets taken off Overview.</p></div>
         <p class="note" style="margin:0">Dark mode Auto follows your phone or computer setting.${stylePref() === "midnight" ? " Midnight is always dark." : ""} ${esc(APP_VERSION)}.</p>
       </aside>`));
     drawAvatar(document.getElementById("me-av"));
@@ -2919,6 +2960,7 @@ function openMe() {
     document.getElementById("me-name").addEventListener("change", () => render());
     root.querySelectorAll(".style-opt").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-style", b.dataset.style); } catch {} applyTheme(themePref()); draw(false); }));
     document.getElementById("me-admin").addEventListener("change", e => { admin.show = e.target.checked; saveAdmin(); render(); });
+    document.getElementById("me-shelf").addEventListener("change", e => { admin.shelf = e.target.checked; saveAdmin(); render(); });
     document.getElementById("me-grp").addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
     root.querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-theme", b.dataset.t); } catch {} applyTheme(b.dataset.t); draw(false); }));
     document.getElementById("me-loc").addEventListener("click", () => { close(); view = "settings"; render(); window.scrollTo(0, 0); });
