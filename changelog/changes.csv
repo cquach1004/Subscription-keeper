@@ -108,3 +108,4 @@ Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,No
 109,2026-10-24,Include free options checkbox on Savings,Cuong,Savings,Feature,Y,Current,
 110,2026-10-24,Smaller savings list starts expanded,Cuong,Savings,Design,Y,Current,
 111,2026-10-24,Usage ring legends fit on phones (shorter names); no sideways scroll on phones,Cuong,Usage / Whole app,Fix,Y,Current,
+112,2026-10-24,"Home-screen icon for iPhone and Android: Add to Home Screen from the public site shows a Subscription Keeper icon, named Sub Keeper, and opens full screen",Cuong,Public site,Feature,Y,Current,"Icon files and manifest in the repo root; source in app-prototype/site-icons"
