@@ -1326,7 +1326,9 @@ const FRESH = () => ({ subs: [], sampleV: 4, unitsV: 1, aaaV: 1, cardV: 1, evV: 
 function welcomeView() {
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
-  const popular = offered.filter(v => !v.isAlt), more = offered.filter(v => v.isAlt).sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
+  // v114 (Cuong): "Popular" holds only the same 12 picks as the Overview card; everything else is grouped by category.
+  const popular = POPULAR.map(id => CATALOG[id]).filter(v => v && availability(v.id, country) !== "no").slice(0, 12), pop = new Set(popular.map(v => v.id));
+  const more = offered.filter(v => !pop.has(v.id)).sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
   const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category)).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
   const groups = [...new Set(more.map(v => v.category))];
   const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2><span class="small muted">Track what you pay for, see what you actually use, and find cheaper options. Your list stays in this browser; nobody else sees it.</span></div>
@@ -2980,7 +2982,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 113 · Standalone copy · Oct 24", VERSION_NUM = 113;
+const APP_VERSION = "Prototype · Version 114 · Standalone copy · Oct 24", VERSION_NUM = 114;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
