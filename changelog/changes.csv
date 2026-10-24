@@ -122,3 +122,4 @@ Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,No
 119,2026-10-24,"""Could save / mo"" tile renamed ""Where you can save"" and moved below What you use least as its own card",Cuong,Overview,Design,Y,Current,Same total and See how link to Savings
 119,2026-10-24,Value mix moved to the last tile on Overview; the top row now holds only You pay each month,Cuong,Overview,Design,Y,Current,
 120,2026-10-24,"""You pay each month"" split into three cards: You pay each month, You pay each year, and Subscriptions (count)",Cuong,Overview,Design,Y,Current,"Phones: monthly card full width, the other two side by side"
+121,2026-10-24,You pay each year and Subscriptions cards get a lighter navy background (a wash of the monthly card's color) with white text so they blend with the header band,Cuong,Overview,Design,Y,Current,Follows the chosen style/theme's lead color
