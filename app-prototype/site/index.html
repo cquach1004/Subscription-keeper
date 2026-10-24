@@ -1235,11 +1235,12 @@ function cheaperOptions(s) {
     const by = CATALOG[s.quote.by]?.name.replace(/ \((Car|Home)\)$/, "") || (r.insure ? "Another insurer" : "Another provider");
     out.push({ kind: r.insure ? "Matching quote" : "Comparable option", name: by, save: r.over, note: r.insure ? `Your quote for the same coverage, ${fmtDate(s.quote.date)}.` : `A comparable option you found, ${fmtDate(s.quote.date)}.`, alt: CATALOG[s.quote.by] ? s.quote.by : undefined });
   }
-  if (!isHard(s) && r.key !== "great") {
-    const alts = alternativesOf(s).filter(a => a.monthly != null && a.monthly < mo);
+  // Free public options show even for Great-value subscriptions (Cuong, v108); other alternatives only when it isn't Great value.
+  if (!isHard(s)) {
+    const alts = alternativesOf(s).filter(a => a.monthly != null && a.monthly < mo && (r.key !== "great" || a.pub));
     const free = alts.find(a => a.monthly === 0), paid = alts.filter(a => a.monthly > 0 && a.kind !== "partial").sort((a, b) => a.monthly - b.monthly)[0];
     [free, paid].filter(Boolean).forEach(a => out.push({ kind: a.monthly === 0 ? (a.v.provider_type ? PROVIDER_LABEL[a.v.provider_type] || "Free option" : "Free option") : "Other service",
-      name: a.name, save: mo - a.monthly, note: [a.v.eligibility ? `Who can use it: ${a.v.eligibility}.` : "", a.annualNote ? "Billed yearly." : ""].filter(Boolean).join(" "), unconfirmed: !a.verified, alt: a.id }));
+      name: a.name + (a.pub ? "*" : ""), save: mo - a.monthly, note: [a.v.eligibility ? `Who can use it: ${a.v.eligibility}.` : "", a.annualNote ? "Billed yearly." : "", a.pub ? `* ${PUBLIC_NOTE}` : ""].filter(Boolean).join(" "), unconfirmed: !a.verified, alt: a.id }));
   }
   return out.filter(o => o.save >= 1).map(o => ({ ...o, price: Math.max(0, mo - o.save) })).sort((a, b) => a.price - b.price);
 }
@@ -2648,7 +2649,9 @@ const APP_TAG_LABELS = { travel_rewards: "Travel rewards", free_shipping: "Free 
 const tagOf = (v, f) => f.overlap_tag || APP_TAGS[v.id]?.[f.id] || null;
 const tagLabel = t => APP_TAG_LABELS[t] || TAGS[t]?.label || t;
 // Researched alternatives (alternatives.json) first, then catalog services that share the main job by tag.
-// Closest matches first (same job), then ones that cover part of it, then free options; cheapest first within each.
+// Free public options (library, county, programs) first, always (Cuong, v108), then closest matches (same job), then ones that
+// cover part of it, then other free options; cheapest first within each. Public ones carry an asterisk: free, but less convenient.
+const PUBLIC_NOTE = "Free, but less convenient: you sign in through your library or program, and access may need renewing.";
 const KIND_ORDER = { direct: 0, partial: 1, free: 2 };
 function alternativesOf(s) {
   const v = svcOf(s); if (!CATALOG[s.svc]) return [];
@@ -2659,9 +2662,10 @@ function alternativesOf(s) {
   return [...researched, ...byTag].map(x => { const hit = x.features.filter(f => want.includes(tagOf(x, f)));
       const pl = x.plans.filter(p => p.effective_monthly != null && (!hit.length || hit.some(f => f.plans === "all" || f.plans.includes(p.id))));
       const dp = x.compare?.[v.id] && planOf(x, x.default_plan), monthly = dp?.effective_monthly ?? (pl.length ? Math.min(...pl.map(p => p.effective_monthly)) : fromPrice(x));
-      return { id: x.id, name: x.name, v: x, plan: dp, monthly, cmp: x.compare?.[v.id], kind: x.kind, verified: dp ? dp.verified !== false : true,
+      const pub = !!x.provider_type && monthly === 0;
+      return { id: x.id, name: x.name, v: x, plan: dp, monthly, pub, inconv: pub ? (x.plans.find(p => p.effective_monthly === 0)?.note || "") : "", cmp: x.compare?.[v.id], kind: x.kind, verified: dp ? dp.verified !== false : true,
         annualNote: !!dp && dp.price_monthly == null && dp.price_annual != null, features: x.features.map(f => ({ name: f.name, tag: tagOf(x, f) })), mine: state.subs.some(m => m.svc === x.id) }; })
-    .sort((a, b) => (KIND_ORDER[a.kind] ?? 0) - (KIND_ORDER[b.kind] ?? 0) || (a.monthly ?? 1e9) - (b.monthly ?? 1e9)).map(a => ({ ...a, main, mineTags }));
+    .sort((a, b) => b.pub - a.pub || (KIND_ORDER[a.kind] ?? 0) - (KIND_ORDER[b.kind] ?? 0) || (a.monthly ?? 1e9) - (b.monthly ?? 1e9)).map(a => ({ ...a, main, mineTags }));
 }
 function altsHtml(s) {
   const alts = alternativesOf(s), v = svcOf(s), feats = featuresFor(v, s.plan), mo = monthly(s);
@@ -2671,7 +2675,7 @@ function altsHtml(s) {
   const card = a => { const tags = new Set(a.features.map(f => f.tag).filter(Boolean)), d = a.monthly == null ? null : a.monthly - mo;
       const has = matters.filter(f => tags.has(tagOf(v, f))), miss = a.cmp ? [] : matters.filter(f => !tags.has(tagOf(v, f)));
       return `<div class="alt">
-        <div class="alt-top">${logoHtml(a.v, "logo")}<div style="min-width:0;flex:1"><b>${esc(a.name)}</b>${a.mine ? ` <span class="pill great">On your list</span>` : ""}${a.kind === "partial" ? ` <span class="tag">Covers part of it</span>` : ""}${a.v.provider_type ? ` <span class="pill great">${esc(PROVIDER_LABEL[a.v.provider_type] || "Public")}</span>` : ""}
+        <div class="alt-top">${logoHtml(a.v, "logo")}<div style="min-width:0;flex:1"><b>${esc(a.name)}${a.pub ? "*" : ""}</b>${a.mine ? ` <span class="pill great">On your list</span>` : ""}${a.kind === "partial" ? ` <span class="tag">Covers part of it</span>` : ""}${a.v.provider_type ? ` <span class="pill great">${esc(PROVIDER_LABEL[a.v.provider_type] || "Public")}</span>` : ""}
           <div class="small muted">${a.monthly == null ? "Price not listed" : a.monthly === 0 ? "Free" : `${a.plan ? esc(a.plan.name) + " · " : "From "}${money(a.monthly)}/mo${a.annualNote ? " billed yearly" : ""}`}${d == null ? "" : ` · <span style="color:${d < 0 ? "var(--good)" : "var(--warn)"};font-weight:600">${d < 0 ? `${money(-d)} less` : d > 0 ? `${money(d)} more` : "same price"}</span> than you pay`}${a.verified ? "" : ` <span class="tag">Price not confirmed</span>`}</div></div></div>
         ${a.cmp ? `<div class="small">${esc(a.cmp.summary || "")}</div>
           ${(a.cmp.better || []).slice(0, 3).map(t => `<div class="small" style="color:var(--good)">✓ ${esc(t)}</div>`).join("")}
@@ -2679,11 +2683,12 @@ function altsHtml(s) {
         : [...new Set([a.main, ...has.map(f => tagOf(v, f))].filter(t => t && tags.has(t)))].map(t => `<div class="small">✓ ${esc(tagLabel(t))}: ${esc(a.features.find(f => f.tag === t).name)}</div>`).join("")}
         ${miss.map(f => `<div class="small" style="color:var(--bad)">✗ No ${esc(f.name.replace(/ \(.*\)$/, ""))}</div>`).join("")}
         ${a.v.eligibility ? `<div class="small muted">Who can use it: ${esc(a.v.eligibility)}</div>` : ""}
+        ${a.pub ? `<div class="small muted">* ${PUBLIC_NOTE}${a.inconv ? ` ${esc(a.inconv.replace(/\.?$/, "."))}` : ""}</div>` : ""}
         <button class="btn ghost small" data-alt="${a.id}" style="justify-self:start;padding-left:0">See plans and sources in Explore</button>
       </div>`; };
   const top = alts.slice(0, 4), rest = alts.slice(4);
   return { meta: `${alts.length} option${alts.length === 1 ? "" : "s"}${cheaper ? `, ${cheaper} cheaper` : ""}`,
-    body: `${isHard(s) ? `<p class="admin-note" style="margin:0">${esc(s.name)} is marked hard to switch, so these would mean moving your data. Check whether one can import from ${esc(s.name)} before you decide.</p>` : ""}<p class="small muted" style="margin:0">Closest matches first, then partial and free options, cheapest first within each. They're rarely exact matches, so check what you'd give up. Prices are US list prices checked ${esc(checkedOn(alts[0].v) || "")}.</p>
+    body: `${isHard(s) ? `<p class="admin-note" style="margin:0">${esc(s.name)} is marked hard to switch, so these would mean moving your data. Check whether one can import from ${esc(s.name)} before you decide.</p>` : ""}<p class="small muted" style="margin:0">${alts.some(a => a.pub) ? "Free library and public options first, then closest matches" : "Closest matches first"}, then partial and free options, cheapest first within each. They're rarely exact matches, so check what you'd give up. Prices are US list prices checked ${esc(checkedOn(alts[0].v) || "")}.</p>
     ${top.map(card).join("")}
     ${rest.length ? `<details class="alt-more"><summary class="small" style="color:var(--accent);cursor:pointer;padding:8px 0">Show ${rest.length} more</summary>${rest.map(card).join("")}</details>` : ""}
     <button class="btn ghost small" data-alt-all style="justify-self:start;padding-left:0">See all alternatives in Explore</button>` };
@@ -2911,7 +2916,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 107 · Standalone copy · Oct 24", VERSION_NUM = 107;
+const APP_VERSION = "Prototype · Version 108 · Standalone copy · Oct 24", VERSION_NUM = 108;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
