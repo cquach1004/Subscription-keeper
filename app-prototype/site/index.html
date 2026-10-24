@@ -1866,6 +1866,7 @@ function homeView() {
     else { const s = newSub(id, { needsUse: true, start: today(), day: +today().slice(8) }); s.measure = measuresOf(s)[0].id; state.subs.push(s); }
     save(); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-xcat]").forEach(b => b.addEventListener("click", () => { exploreOpen = null; exploreCat = b.dataset.xcat; view = "add"; render(); window.scrollTo(0, 0); }));
+  f.querySelectorAll("[data-reg]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.reg; startReg.has(k) ? startReg.delete(k) : startReg.add(k); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.getElementById("start-done")?.addEventListener("click", () => { state.startDone = true; save(); render(); });
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
@@ -1989,17 +1990,21 @@ const POPULAR = ["netflix", "spotify", "amazon_prime", "youtube_premium", "disne
   "chatgpt", "m365", "xbox_game_pass", "playstation_plus", "planet_fitness", "doordash_dashpass", "uber_one", "walmart_plus", "costco", "audible", "duolingo", "nyt"];
 const svcRankKey = v => (POPULAR.includes(v.id) ? 0 : v.provider_type ? 6 : v.service_states || v.region_group ? 4 : 2) + (LOGOS[v.id] ? 0 : 1);
 const svcRank = (a, b) => svcRankKey(a) - svcRankKey(b) || a.name.localeCompare(b.name);
-const topIn = (cat, n = 6) => { const c = profile().country; return Object.values(CATALOG).filter(v => v.category === cat && availability(v.id, c) !== "no").sort(svcRank).slice(0, n); };
+// v117 (Cuong): Yes lists every option in the category offered here; regional ones (only in the user's state) wait behind "See regional providers".
+const isRegional = v => !!(v.service_states || v.region_group);
+const inCat = cat => { const c = profile().country; return Object.values(CATALOG).filter(v => v.category === cat && availability(v.id, c) !== "no" && servesHere(v)).sort(svcRank); };
+const startReg = new Set();
 const startShown = () => !state.startDone && state.subs.length < 10;
 function startHtml() {
   if (!startShown()) return "";
   const g = state.guess || {}, have = new Set(state.subs.map(s => s.svc)), mineCats = new Set(state.subs.map(s => svcOf(s).category));
-  const row = ([k, label]) => { const on = g[k] != null ? g[k] === 1 : mineCats.has(k), list = on ? topIn(k) : [];
+  const tile = v => { const mine = have.has(v.id); return `<button class="pop" data-pop="${v.id}" aria-pressed="${mine}" aria-label="${mine ? "On your list" : "Add"}: ${esc(v.name)}" title="${esc(v.name)}">${logoHtml(v)}<b>${esc(baseName(v.name) || v.name)}</b><span class="plus" aria-hidden="true">${mine ? "&#10003;" : "+"}</span></button>`; };
+  const row = ([k, label]) => { const on = g[k] != null ? g[k] === 1 : mineCats.has(k), all = on ? inCat(k) : [], list = all.filter(v => !isRegional(v)), reg = all.filter(isRegional), open = startReg.has(k);
     return `<div class="gq"><b style="font-weight:500">${esc(label)}</b><div class="seg" role="group" aria-label="${esc(label)}">${[0, 1].map(n => `<button type="button" data-gq="${k}" data-n="${n}" aria-pressed="${on === !!n}">${n ? "Yes" : "No"}</button>`).join("")}</div>
-      ${list.length ? `<div class="pop-grid">${list.map(v => { const mine = have.has(v.id); return `<button class="pop" data-pop="${v.id}" aria-pressed="${mine}" aria-label="${mine ? "On your list" : "Add"}: ${esc(v.name)}" title="${esc(v.name)}">${logoHtml(v)}<b>${esc(baseName(v.name) || v.name)}</b><span class="plus" aria-hidden="true">${mine ? "&#10003;" : "+"}</span></button>`; }).join("")}</div>
-        <button type="button" class="btn ghost small gq-more" data-xcat="${k}">More ${esc(catLabel(k))} in Explore</button>` : ""}</div>`; };
+      ${list.length ? `<div class="pop-grid">${list.map(tile).join("")}</div>` : ""}
+      ${reg.length ? `${open ? `<div class="pop-grid">${reg.map(tile).join("")}</div>` : ""}<button type="button" class="btn ghost small gq-more" data-reg="${k}">${open ? "Hide regional providers" : `See regional providers (${reg.length})`}</button>` : ""}</div>`; };
   return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Let's get started</h3>
-    <p class="small muted" style="margin:2px 0 0">Do you pay for any of these? Tap Yes to see the most popular ones, then tap the ones you have to add them to your list.</p>
+    <p class="small muted" style="margin:2px 0 0">Do you pay for any of these? Tap Yes to see your options, then tap the ones you have to add them to your list.</p>
     <div class="gq-list">${START.map(row).join("")}</div>
     ${state.subs.length ? `<button type="button" class="btn ghost small" id="start-done" style="padding-left:0">I'm done, hide this</button>` : ""}</section>`;
 }
@@ -2997,7 +3002,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 116 · Standalone copy · Oct 24", VERSION_NUM = 116;
+const APP_VERSION = "Prototype · Version 117 · Standalone copy · Oct 24", VERSION_NUM = 117;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
