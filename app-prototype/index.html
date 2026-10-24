@@ -208,6 +208,15 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 .pie-card { margin-bottom: 14px; }
 .trend-card { margin-bottom: 14px; }
 #ways { scroll-margin-top: 16px; }
+.summary.n2 { grid-template-columns: 1.4fr 1fr; } .summary.n1 { grid-template-columns: 1fr; }
+@media (max-width: 620px) { .summary.n2 { grid-template-columns: 1fr; } }
+.setup { display: grid; gap: 10px; margin-bottom: 14px; border: 2px solid var(--accent); }
+.su-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.su-bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; } .su-bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.su-sub { display: flex; align-items: center; gap: 10px; margin-top: 4px; } .su-sub b { font-size: 17px; }
+.su-l { font-weight: 600; font-size: 14px; display: block; } .su-l .small { display: block; margin-top: 2px; }
+.su-price { display: flex; align-items: center; gap: 8px; } .su-price input { width: 120px; }
+.su-btns { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
 /* v113/v116 (Cuong): Let's get started (Yes shows top 6 to tap) and other-category pills on Overview. */
 .gq-list { display: grid; gap: 0; margin: 6px 0 4px; }
 .gq { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
@@ -1359,7 +1368,8 @@ function welcomeView() {
   $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
   $("w-country").addEventListener("change", () => { setLoc(); save(); render(); });
   $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile;
-    state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, start: today(), day: +today().slice(8) })) };
+    state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) })) };
+    if (picks.size) state.startDone = true;  // v118: picked here already, so go straight to Finish setting up
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
@@ -1660,9 +1670,10 @@ function benchHtml(total) {
 }
 // Value mix (Cuong, v102, in place of "vs average adult"): share of subscriptions, by count, in each value group today.
 // Brand-new and paused ones aren't rated yet, so they're left out.
-function mixHtml() {
+function mixHtml(home) {
   const n = { great: 0, fair: 0, costly: 0 }; state.subs.forEach(s => { const b = valueBucket(s); if (b) n[b]++; });
   const rated = n.great + n.fair + n.costly, pct = k => rated ? Math.round(n[k] / rated * 100) : 0;
+  if (!rated && home) return "";  // v118: hidden on Overview until something is rated (Great or Fair can come right after usage is entered)
   if (!rated) return `<div class="stat"><div class="label">Value mix</div><div class="small muted" style="margin-top:8px">Your subscriptions get rated once they're 31 days old and have usage.</div></div>`;
   const C = 42, R = 40, R0 = 27, pt = (a, r) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`, ks = Object.keys(n).filter(k => n[k]);
   let a0 = -Math.PI / 2;
@@ -1838,17 +1849,20 @@ function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
   const hasExamples = state.subs.some(s => s.example);
+  // v118 (Cuong): no empty widgets on Overview. Could save shows once there's a saving, Value mix once something is rated.
+  const saveAmt = savingsTotal(savingsBySub()), mix = mixHtml(true);
   const f = el(`
     <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
-    <section class="summary">
+    ${state.subs.length ? `<section class="summary n${1 + (saveAmt > 0) + !!mix}">
       <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year · ${state.subs.length} subscriptions</div></div>
-      ${saveHtml(total)}
-      ${mixHtml()}
-    </section>
-    ${usageNudgeHtml()}
+      ${saveAmt > 0 ? saveHtml(total) : ""}
+      ${mix}
+    </section>` : ""}
+    ${setupHtml()}
+    ${setupTodo().length ? "" : usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
     ${startHtml()}
-    ${state.subs.length ? useMostHtml() : ""}
+    ${useRanked().length ? useMostHtml() : ""}
     ${moreCatsHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
@@ -1860,11 +1874,12 @@ function homeView() {
   f.querySelectorAll("[data-gq]").forEach(b => b.addEventListener("click", () => { (state.guess ||= {})[b.dataset.gq] = +b.dataset.n; save(); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-pop]").forEach(b => b.addEventListener("click", () => { const id = b.dataset.pop, had = state.subs.find(s => s.svc === id);
     if (had) { if (!had.needsUse) return; state.subs = state.subs.filter(s => s !== had); }
-    else { const s = newSub(id, { needsUse: true, start: today(), day: +today().slice(8) }); s.measure = measuresOf(s)[0].id; state.subs.push(s); }
+    else { const s = newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }); s.measure = measuresOf(s)[0].id; state.subs.push(s); }
     save(); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-xcat]").forEach(b => b.addEventListener("click", () => { exploreOpen = null; exploreCat = b.dataset.xcat; view = "add"; render(); window.scrollTo(0, 0); }));
   f.querySelectorAll("[data-reg]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.reg; startReg.has(k) ? startReg.delete(k) : startReg.add(k); const y = scrollY; render(); window.scrollTo(0, y); }));
-  f.getElementById("start-done")?.addEventListener("click", () => { state.startDone = true; save(); render(); });
+  f.getElementById("start-done")?.addEventListener("click", () => { state.startDone = true; save(); render(); window.scrollTo(0, 0); });
+  wireSetup(f);
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
@@ -1978,6 +1993,36 @@ const TRENDS = [
   { date: "2026-07", kind: "news", svc: "youtube_premium", country: "US", title: "Peacock coming to YouTube Premium in 2027", text: "Peacock is set to be included with YouTube Premium starting next year. Worth knowing if you pay for both.", src: "Yahoo Tech", url: "https://tech.yahoo.com/streaming/articles/streaming-price-hike-tracker-much-150929260.html" },
   { date: "2026-10-22", checked: true, kind: "popular", svc: "netflix", title: "Netflix is still the most popular", text: "About 325 million subscribers worldwide, ahead of Amazon Prime (200 million) and HBO Max (140 million).", src: "FlixPatrol", url: "https://flixpatrol.com/streaming-services/subscribers/" }];
 const TREND_KIND = { up: ["Price up", "poor"], down: ["Price down", "great"], new: ["New plan", "ok"], news: ["News", "ok"], popular: ["Popular", "great"] };
+// Finish setting up (Cuong, v118): after picking, walk the new subscriptions one at a time: confirm the price (list price filled in)
+// and set how much it's used. s.setup is "todo" for ones picked on the welcome screen or Let's get started, "done" or "skip" after.
+// Shown once picking is finished (Let's get started hidden). Skipped ones are picked up later by the "Add your usage" reminder.
+const setupTodo = () => state.subs.filter(s => s.setup === "todo");
+function setupHtml() {
+  const todo = setupTodo(); if (!todo.length || startShown()) return "";
+  const all = state.subs.filter(s => s.setup).length, done = all - todo.length, s = todo[0], m = measureOf(s), v = svcOf(s), t0 = total(s);
+  const use = m.costOnly || m.checks || !m.max ? `<p class="small muted" style="margin:0">${m.checks ? "You'll tick off what you used each month on the Usage tab." : "We don't rate this one on use, so the price is all we need."}</p>`
+    : `<label class="su-l" for="su-use">${esc(m.label)}</label>${slider(m, s.needsUse ? 0 : s.rate || 0, `id="su-use" aria-label="${esc(m.label)}"`)}`;
+  return `<section class="card setup"><div class="su-top"><h3 style="margin:0">Finish setting up</h3><span class="small muted">${done} of ${all} done</span></div>
+    <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${all}" aria-valuenow="${done}"><i style="width:${(done / all * 100).toFixed(1)}%"></i></div>
+    <p class="small muted" style="margin:0">Two quick questions each, so we can show what you spend and what's worth it.</p>
+    <div class="su-sub">${logoHtml(v)}<b>${esc(s.name)}</b></div>
+    <label class="su-l" for="su-price">What do you pay? <span class="small muted" style="font-weight:400">${t0 != null && !s.priceMine ? "List price filled in; change it if yours is different." : t0 == null ? "We don't have a list price for this one." : ""}</span></label>
+    <div class="su-price"><span>$</span><input id="su-price" type="number" inputmode="decimal" min="0" step="0.01" value="${t0 != null ? t0.toFixed(2) : ""}" placeholder="0.00"><span class="small muted">${s.cycle === "year" ? "a year" : "a month"}, with tax</span></div>
+    ${use}
+    <div class="su-btns"><button class="btn primary" id="su-save">${todo.length > 1 ? "Save and next" : "Save"}</button><button class="btn ghost small" id="su-skip">Skip for now</button></div></section>`;
+}
+function wireSetup(f) {
+  const s = setupTodo()[0], go = f.getElementById("su-save"); if (!s || !go) return;
+  const m = measureOf(s), inp = f.getElementById("su-use"); let moved = false;
+  if (inp) inp.oninput = () => { moved = true; inp.nextElementSibling.textContent = slideText(m, +inp.value); };
+  const next = () => { save(); const y = scrollY; render(); window.scrollTo(0, y); };
+  go.onclick = () => { const val = parseFloat(document.getElementById("su-price").value), t0 = total(s);
+    if (!isNaN(val) && (t0 == null || Math.abs(val - t0) > 0.005)) { s.myTotal = Math.max(0, val); s.priceMine = true; }
+    if (inp && (moved || +inp.value > 0)) { const n = +inp.value, { cur } = periodKeys(s); setUse(s, n, m.per);
+      ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(n * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you"; }
+    s.example = false; s.setup = "done"; next(); };
+  f.getElementById("su-skip").onclick = () => { s.setup = "skip"; next(); };
+}
 // Let's get started (Cuong, v116; was Guess my total in v113): a Yes/No per common kind of service. Yes shows that category's
 // top 6 right underneath; one tap adds it (tap again to take it back off while no usage is entered). Shown until "I'm done" or 10 subs.
 const START = [["video", "Video streaming"], ["music", "Music streaming"], ["shopping", "Shopping memberships"], ["storage", "Cloud storage"], ["ai", "AI assistants"],
@@ -2003,7 +2048,7 @@ function startHtml() {
   return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Let's get started</h3>
     <p class="small muted" style="margin:2px 0 0">Do you pay for any of these? Tap Yes to see your options, then tap the ones you have to add them to your list.</p>
     <div class="gq-list">${START.map(row).join("")}</div>
-    ${state.subs.length ? `<button type="button" class="btn ghost small" id="start-done" style="padding-left:0">I'm done, hide this</button>` : ""}</section>`;
+    ${state.subs.length ? `<button type="button" class="btn ${setupTodo().length ? "primary" : "ghost small"}" id="start-done" style="${setupTodo().length ? "margin-top:10px" : "padding-left:0"}">${setupTodo().length ? `Done picking, set up ${setupTodo().length === 1 ? "this one" : `these ${setupTodo().length}`}` : "I'm done, hide this"}</button>` : ""}</section>`;
 }
 // Other categories (v116, in place of Popular subscriptions): pills like the Explore tab; each opens Explore on that category.
 function moreCatsHtml() {
@@ -2999,7 +3044,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 117 · Oct 24", VERSION_NUM = 117;
+const APP_VERSION = "Prototype · Version 118 · Oct 24", VERSION_NUM = 118;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
