@@ -1207,7 +1207,7 @@ function dropList() {
 function savings() { return dropList().reduce((a, s) => a + (monthly(s) || 0), 0); }
 // Savings that would mean moving your data: hard-to-switch ones that are unused or in a same-job overlap.
 function hardList() { return state.subs.filter(s => isHard(s) && ((rate(s).key === "unused" && s.cycle === "month") || activeOverlaps().some(o => o.members.some(m => m.main && m.sub === s)))); }
-// Savings page (Cuong, v74): cheaper options for each subscription, then things you pay twice.
+// Savings page (Cuong, v74): things you pay twice first, then cheaper options for each subscription.
 // Cheaper options: a cheaper plan that keeps your checked features and yearly billing (for every subscription), plus
 // the cheapest free and paid alternatives (not for hard-to-switch ones, and not for ones already rated Great value).
 // Prices are catalog list prices, so these only show where the catalog covers the user's country.
@@ -1857,7 +1857,7 @@ function overlapsView() {
     return { ...o, d, subs: [...subs.values()].sort((a, b) => (monthly(b.sub) || 0) - (monthly(a.sub) || 0)) }; });
   const max = Math.max(1, ...list.flatMap(o => o.subs.map(x => monthly(x.sub) || 0)));
   const drops = new Map(list.filter(o => o.d).map(o => [o.d.id, o.d])), save = [...drops.values()].reduce((a, s) => a + (monthly(s) || 0), 0);
-  const f = el(`${cheaperHtml()}<div class="section-head" style="margin-top:28px"><h2>Things you pay twice or more</h2>${list.length ? `<span class="small muted">${list.length} found. Tap one to see what overlaps. ${foldAllBtn("ov")}</span>` : ""}</div>
+  const f = el(`<div class="section-head"><h2>Things you pay twice or more</h2>${list.length ? `<span class="small muted">${list.length} found. Tap one to see what overlaps. ${foldAllBtn("ov")}</span>` : ""}</div>
     ${list.length ? `<div class="card ov-sum"><div><div class="small muted">Drop one in each overlap and save up to</div><div class="big num">${money(save)}<span class="small muted" style="font-weight:500"> /mo</span></div></div>
       <div class="ov-key"><span><i style="background:var(--c-value)"></i>Keep</span><span><i style="background:var(--c-cost)"></i>Could drop</span></div></div>` : ""}
     <div class="cards fold-group" data-group="ov">${list.map(o => `<details class="card fold" data-fold="ov:${esc(o.tag)}" ${foldOpen.has("ov:" + o.tag) ? "open" : ""}>
@@ -1867,7 +1867,8 @@ function overlapsView() {
             <span class="ov-bar"><i style="width:${(m / max * 100).toFixed(1)}%;background:var(${dr ? "--c-cost" : "--c-value"})"></i></span>
             <span class="amt num">${money(m)}/mo${dr ? `<span class="drop">Could drop</span>` : ""}</span></button>`; }).join("")}</div>
         <details class="ov-why"><summary>Why?</summary><p>${o.subs.map(x => `<b>${esc(x.sub.name)}</b>: ${esc([...new Set(x.feats)].join(", "))}`).join(". ")}.</p>${o.advice ? `<p class="muted">${esc(o.advice)}</p>` : ""}</details>
-      </details>`).join("") || `<p class="muted">No overlaps in your list right now.</p>`}</div>`);
+      </details>`).join("") || `<p class="muted">No overlaps in your list right now.</p>`}</div>
+    <div style="margin-top:28px"></div>${cheaperHtml()}`);
   f.querySelectorAll(".ov-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   f.querySelectorAll(".fold-open").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   wireFolds(f);
