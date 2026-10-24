@@ -327,6 +327,7 @@ details.fold .co-nm b, .ov-t h3 { overflow: hidden; text-overflow: ellipsis; whi
 .co-key .k-you { width: 3px; height: 12px; border-radius: 2px; background: var(--c-cost); }
 .co-key .k-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--good); }
 .co-key .k-gap { width: 16px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--good) 40%, transparent); }
+.co-more[open] .if-closed, .co-more:not([open]) .if-open { display: none; }
 .co-more > summary { cursor: pointer; color: var(--accent); font-weight: 600; padding: 10px 0; }
 .ov-sum { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
 .ov-sum .big { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
@@ -1864,6 +1865,8 @@ function wireFolds(f) {
   f.querySelectorAll("[data-all]").forEach(b => { sync(b.dataset.all); b.onclick = () => { const ds = [...root.querySelectorAll(`[data-group^="${b.dataset.all}"] > details.fold`)], open = !ds.every(d => d.open);
     ds.forEach(d => { d.open = open; open ? foldOpen.add(d.dataset.fold) : foldOpen.delete(d.dataset.fold); }); sync(b.dataset.all); }; });
 }
+// Smaller savings start expanded (Cuong, v110); closing them holds while the page is open.
+let coMoreOpen = true;
 function cheaperHtml() {
   const list = savingsBySub(), amt = savingsTotal(list), total = state.subs.reduce((a, s) => a + (monthly(s) || 0), 0), withOpts = list.filter(x => x.opts.length).sort((a, b) => b.best - a.best);
   const card = x => { const mo = monthly(x.sub) || 0;
@@ -1885,7 +1888,7 @@ function cheaperHtml() {
     <div class="section-head"><h2>Cheaper options</h2>${withOpts.length ? `<span class="small muted">Biggest saving first. Tap one to see the options. ${foldAllBtn("co")}</span>` : ""}</div>
     ${withOpts.length ? `<div class="co-key small muted"><span><i class="k-you"></i>What you pay</span><span><i class="k-dot"></i>Cheaper option</span><span><i class="k-gap"></i>Saving</span></div>
       <div class="cards fold-group" data-group="co">${withOpts.slice(0, 6).map(card).join("")}</div>
-      ${withOpts.length > 6 ? `<details class="co-more"><summary class="small">Show ${withOpts.length - 6} smaller saving${withOpts.length === 7 ? "" : "s"}</summary><div class="cards fold-group" data-group="co2">${withOpts.slice(6).map(card).join("")}</div></details>` : ""}
+      ${withOpts.length > 6 ? `<details class="co-more" ${coMoreOpen ? "open" : ""}><summary class="small"><span class="if-closed">Show</span><span class="if-open">Hide</span> ${withOpts.length - 6} smaller saving${withOpts.length === 7 ? "" : "s"}</summary><div class="cards fold-group" data-group="co2">${withOpts.slice(6).map(card).join("")}</div></details>` : ""}
       <p class="small muted">Prices are list prices. Other services are rarely exact matches, so open one to see what you'd give up.</p>`
       : `<p class="muted">${state.subs.length ? "No cheaper options for your subscriptions right now." : "Add your subscriptions to see cheaper options."}</p>`}`;
 }
@@ -1911,6 +1914,7 @@ function overlapsView() {
   f.querySelectorAll(".fold-open").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   wireFolds(f);
   f.querySelectorAll(".co-row[data-alt]").forEach(b => b.addEventListener("click", () => { exploreOpen = b.dataset.alt; view = "explore"; render(); window.scrollTo(0, 0); }));
+  f.querySelector(".co-more")?.addEventListener("toggle", e => { coMoreOpen = e.target.open; });
   f.getElementById("inc-free")?.addEventListener("change", e => { state.noFree = !e.target.checked; try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (err) {} const y = scrollY; render(); window.scrollTo(0, y); });
   return f;
 }
@@ -2920,7 +2924,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 109 · Standalone copy · Oct 24", VERSION_NUM = 109;
+const APP_VERSION = "Prototype · Version 110 · Standalone copy · Oct 24", VERSION_NUM = 110;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
