@@ -1803,8 +1803,8 @@ function homeView() {
       ${mixHtml()}
     </section>
     ${usageNudgeHtml()}
-    ${factsHtml()}
     <div class="charts">${pieHtml()}</div>
+    ${factsHtml()}
     ${trendHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
@@ -2883,7 +2883,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 103 · Standalone copy · Oct 24", VERSION_NUM = 103;
+const APP_VERSION = "Prototype · Version 104 · Standalone copy · Oct 24", VERSION_NUM = 104;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
