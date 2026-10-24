@@ -70,10 +70,14 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .save-card .value { font-size: 34px; font-weight: 300; color: var(--good); margin-top: 4px; } .save-card .value .small { font-weight: 500; }
 .save-card .see-how { justify-self: start; display: block; }
 .save-card { display: grid; gap: 10px; } .sv-tiers { display: grid; gap: 8px; max-width: 640px; }
-.sv-tier { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.sv-tier { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr) auto 14px; gap: 10px; align-items: center; width: 100%; border: 0; background: none; padding: 4px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; border-radius: 8px; }
+.sv-tier:disabled { cursor: default; } .sv-tier:not(:disabled):hover .sv-track { outline: 2px solid var(--line); outline-offset: 2px; } .sv-chev { color: var(--muted); font-size: 12px; }
+.sv-items { display: grid; gap: 2px; margin: 0 0 6px; padding: 4px 0 4px 10px; border-left: 3px solid var(--line); }
+.sv-item { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; border: 0; background: none; padding: 6px 4px; font: inherit; color: inherit; text-align: left; cursor: pointer; border-radius: 8px; }
+.sv-item:hover { background: var(--accent-soft); } .sv-item .logo { width: 28px; height: 28px; font-size: 11px; border-radius: 8px; } .sv-item b, .sv-item .small { display: block; overflow: hidden; text-overflow: ellipsis; }
 .sv-tier.none { opacity: .55; } .sv-tier b { min-width: 64px; text-align: right; }
 .sv-track { height: 10px; border-radius: 99px; background: var(--line); overflow: hidden; } .sv-track i { display: block; height: 100%; border-radius: 99px; min-width: 0; }
-@media (max-width: 620px) { .sv-tier { grid-template-columns: minmax(0, 1fr) auto; row-gap: 4px; } .sv-tier .sv-track { grid-column: 1 / -1; grid-row: 2; } }
+@media (max-width: 620px) { .sv-tier { grid-template-columns: minmax(0, 1fr) auto 14px; row-gap: 4px; } .sv-tier .sv-track { grid-column: 1 / -1; grid-row: 2; } }
 .mix-last { margin-top: 0; } .mix-last .label { font-size: 17px; font-weight: 600; color: var(--ink); }
 
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 6px 0 10px; flex-wrap: wrap; }
@@ -1655,18 +1659,28 @@ function monthBarsHtml() {
 // saving: dropping it as a duplicate, switching to a free option, or a cheaper plan, yearly billing or another paid service.
 function saveTiers(list = savingsBySub()) {
   const t = { free: { label: "Free options", amt: 0, n: 0, c: "var(--pie-3)" }, lower: { label: "Lower tiers and alternatives", amt: 0, n: 0, c: "var(--pie-1)" }, dup: { label: "Remove duplicates", amt: 0, n: 0, c: "var(--pie-2)" } };
+  Object.values(t).forEach(r => r.items = []);
+  const ovs = activeOverlaps();
   list.forEach(x => { const best = x.opts.reduce((a, o) => o.save > (a?.save ?? -1) ? o : a, null);
-    const k = x.twice >= x.best ? "dup" : best && best.price < 0.005 ? "free" : "lower"; t[k].amt += x.amt; t[k].n++; });
+    const k = x.twice >= x.best ? "dup" : best && best.price < 0.005 ? "free" : "lower"; t[k].amt += x.amt; t[k].n++;
+    let how;
+    if (k === "dup") { const o = ovs.find(o => droppable(o) === x.sub), others = o ? [...new Set(o.members.filter(m => m.sub !== x.sub).map(m => m.sub.name))] : [];
+      how = o ? `${o.label} also comes with ${others.join(" and ")}` : "You pay for this twice"; }
+    else how = `${best.kind}: ${best.name}${best.price > 0.005 ? `, ${money(best.price)}/mo` : ""}`;
+    t[k].items.push({ s: x.sub, amt: x.amt, how, unconfirmed: k !== "dup" && best?.unconfirmed }); });
   return t;
 }
+let svTierOpen = null;  // v123: which savings bar is opened on Overview
 function saveHtml(amt) {
   const t = saveTiers(), max = Math.max(...Object.values(t).map(r => r.amt), 0.01);
   return `<section class="card save-card" style="margin-bottom:14px"><h3 style="margin:0">Where you can potentially save</h3>
     <div class="value num">${money(amt)}<span class="small muted"> a month</span></div>
-    <div class="sv-tiers" role="img" aria-label="${Object.values(t).map(r => `${r.label} ${money(r.amt)} a month`).join(", ")}">${Object.values(t).map(r => `<div class="sv-tier${r.amt ? "" : " none"}" title="${r.n} subscription${r.n === 1 ? "" : "s"}">
-      <span class="small">${r.label}</span><span class="sv-track"><i style="width:${(r.amt / max * 100).toFixed(1)}%;background:${r.c}"></i></span><b class="num small">${money(r.amt)}</b></div>`).join("")}</div>
+    <div class="sv-tiers">${Object.entries(t).map(([k, r]) => { const open = svTierOpen === k && r.n;
+      return `<button type="button" class="sv-tier${r.amt ? "" : " none"}" data-tier="${k}" aria-expanded="${!!open}" ${r.n ? "" : "disabled"} aria-label="${r.label}: ${money(r.amt)} a month from ${r.n} subscription${r.n === 1 ? "" : "s"}. ${open ? "Hide" : "Show"} details">
+        <span class="small">${r.label}${r.n ? ` <span class="muted">(${r.n})</span>` : ""}</span><span class="sv-track"><i style="width:${(r.amt / max * 100).toFixed(1)}%;background:${r.c}"></i></span><b class="num small">${money(r.amt)}</b><span class="sv-chev" aria-hidden="true">${r.n ? (open ? "&#9652;" : "&#9662;") : ""}</span></button>
+      ${open ? `<div class="sv-items">${r.items.map(x => `<button type="button" class="sv-item" data-svid="${x.s.id}">${logoHtml(svcOf(x.s))}<span style="min-width:0"><b>${esc(x.s.name)}</b><span class="small muted">${esc(x.how)}${x.unconfirmed ? " (price unconfirmed)" : ""}</span></span><b class="num small" style="color:var(--good)">${money(x.amt)}/mo</b></button>`).join("")}${r.items.some(x => x.how.includes("*")) ? `<p class="small muted" style="margin:4px 4px 0">* ${esc(PUBLIC_NOTE)}</p>` : ""}</div>` : ""}`; }).join("")}</div>
     ${state.noFree ? `<p class="small muted" style="margin:0">Free options are turned off on Savings.</p>` : ""}
-    <button class="see-how" data-go="savings">See how</button></section>`;
+    <button class="see-how" data-go="savings">See more</button></section>`;
 }
 function valueBoardHtml() {
   const B = { great: ["Great value", "var(--good)"], fair: ["Fair value", "var(--accent)"], costly: ["Costly", "var(--warn)"] };
@@ -1909,6 +1923,8 @@ function homeView() {
   f.querySelectorAll("[data-reg]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.reg; startReg.has(k) ? startReg.delete(k) : startReg.add(k); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.getElementById("start-done")?.addEventListener("click", () => { state.startDone = true; save(); render(); window.scrollTo(0, 0); });
   wireSetup(f);
+  f.querySelectorAll("[data-tier]").forEach(b => b.addEventListener("click", () => { svTierOpen = svTierOpen === b.dataset.tier ? null : b.dataset.tier; const y = scrollY; render(); window.scrollTo(0, y); }));
+  f.querySelectorAll("[data-svid]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.svid)));
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
   f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
@@ -3073,7 +3089,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 122 · Standalone copy · Oct 24", VERSION_NUM = 122;
+const APP_VERSION = "Prototype · Version 123 · Standalone copy · Oct 24", VERSION_NUM = 123;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
