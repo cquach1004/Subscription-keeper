@@ -67,6 +67,9 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .stat.lead { background: var(--accent); border-color: var(--accent); color: var(--surface); }
 .stat.lead .label { color: inherit; opacity: .8; }
 .stat.save .value { color: var(--good); }
+.save-card .value { font-size: 34px; font-weight: 300; color: var(--good); margin-top: 4px; } .save-card .value .small { font-weight: 500; }
+.save-card .see-how { justify-self: start; display: block; }
+.mix-last { margin-top: 0; } .mix-last .label { font-size: 17px; font-weight: 600; color: var(--ink); }
 
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 6px 0 10px; flex-wrap: wrap; }
 .list { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
@@ -1638,11 +1641,12 @@ function monthBarsHtml() {
 </div>
     ${rows.length > 1 ? `<div class="small muted">${Math.abs(diff) < 0.5 ? `Same as last month` : `${diff > 0 ? "Up" : "Down"} ${money(Math.abs(diff))} from ${name(rows[last - 1].m, { month: "long" })}`}</div>` : ""}</section>`;
 }
-// Could save tile (v106, Cuong): just the number and a "See how" link to the details on Savings.
-function saveHtml(total) {
-  const amt = savingsTotal(savingsBySub());
-  return `<div class="stat save"><div class="label">Could save / mo</div><div class="value num">${money(amt)}</div>
-    <button class="see-how" data-go="savings">See how</button></div>`;
+// Where you can save (v106 "Could save" tile; v119, Cuong: renamed and moved below What you use least as its own card).
+// Just the monthly number and a "See how" link to the details on Savings.
+function saveHtml(amt) {
+  return `<section class="card save-card" style="margin-bottom:14px"><h3 style="margin:0">Where you can save</h3>
+    <div class="value num">${money(amt)}<span class="small muted"> a month</span></div>
+    <button class="see-how" data-go="savings">See how</button></section>`;
 }
 function valueBoardHtml() {
   const B = { great: ["Great value", "var(--good)"], fair: ["Fair value", "var(--accent)"], costly: ["Costly", "var(--warn)"] };
@@ -1852,22 +1856,22 @@ function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
   const hasExamples = state.subs.some(s => s.example);
-  // v118 (Cuong): no empty widgets on Overview. Could save shows once there's a saving, Value mix once something is rated.
+  // v119 (Cuong): Value mix moved to the last tile on Overview. v118: no empty widgets on Overview. Where you can save shows once there's a saving, Value mix once something is rated.
   const saveAmt = savingsTotal(savingsBySub()), mix = mixHtml(true);
   const f = el(`
     <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
-    ${state.subs.length ? `<section class="summary n${1 + (saveAmt > 0) + !!mix}">
+    ${state.subs.length ? `<section class="summary n1">
       <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div><div class="small">${money(total * 12)} a year · ${state.subs.length} subscriptions</div></div>
-      ${saveAmt > 0 ? saveHtml(total) : ""}
-      ${mix}
     </section>` : ""}
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
     ${startHtml()}
     ${useRanked().length ? useMostHtml() : ""}
+    ${saveAmt > 0 ? saveHtml(saveAmt) : ""}
     ${moreCatsHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
+    ${mix ? `<section class="summary n1 mix-last">${mix}</section>` : ""}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
@@ -3047,7 +3051,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 118 · Standalone copy · Oct 24", VERSION_NUM = 118;
+const APP_VERSION = "Prototype · Version 119 · Standalone copy · Oct 24", VERSION_NUM = 119;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
