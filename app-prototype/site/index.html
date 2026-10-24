@@ -69,6 +69,7 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .stat.save .value { color: var(--good); }
 .save-card .value { font-size: 34px; font-weight: 300; color: var(--good); margin-top: 4px; } .save-card .value .small { font-weight: 500; }
 .save-card .see-how { justify-self: start; display: block; }
+.plk { display: grid; gap: 8px; } .plk .value { font-size: 34px; font-weight: 300; } .plk .value .small { font-weight: 500; } .plk-share { display: grid; gap: 6px; max-width: 640px; margin-top: 6px; }
 .rn-card { display: grid; gap: 2px; }
 .rn-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto 14px; gap: 10px; align-items: center; border: 0; border-top: 1px solid var(--line); background: none; padding: 10px 2px; font: inherit; color: inherit; text-align: left; cursor: pointer; }
 .rn-row:first-of-type { border-top: 0; } .rn-row b, .rn-row .small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .rn-row:hover b { color: var(--accent); }
@@ -1374,6 +1375,46 @@ const ABOUT = [["student", "I am a student/adult", '<path d="M3 9l9-4 9 4-9 4-9-
   ["kids", "I have kids", '<circle cx="8" cy="7" r="3"/><circle cx="17" cy="10" r="2.2"/><path d="M3 20c0-3 2.2-5.5 5-5.5s5 2.5 5 5.5"/><path d="M13.5 20c0-2.3 1.6-4.2 3.5-4.2s3.5 1.9 3.5 4.2"/>']];
 const AGES = [["u25", "Under 25"], ["25", "25 to 34"], ["35", "35 to 44"], ["45", "45 to 54"], ["55", "55 and over"]];
 const groupFor = (a, age) => age === "55" ? "senior" : a.includes("student") ? "student" : a.includes("married") || a.includes("kids") ? "family" : "adult";
+// People like you (Cuong, v128): for someone who skips adding subscriptions, Overview shows the usual set of subscriptions for
+// their age group and household, priced at list prices. Share of people with each kind of service is from Omni Calculator's survey
+// of 500 US adults with a paid subscription (Apr 16, 2026); a kind is "usual" when at least PLK_MIN% of that generation has it.
+// Our choices (labeled as ours in Admin): which generation each age range maps to, which service stands for each kind, and which
+// plan a household gets (student plan for students, family or duo for married or kids). Admin can change all of them (admin.plk).
+const PLK_SRC = { name: "Omni Calculator survey of 500 US adults, Apr 2026", url: "https://www.omnicalculator.com/reports/average-subscription-cost-per-month" };
+const PLK_GENS = { genz: "Gen Z (18-29)", millennial: "Millennials (30-45)", genx: "Gen X (46-61)", boomer: "Baby boomers (62+)", all: "All adults" };
+const PLK_SHARE = { genz: { video: 90, music: 74, gaming: 37 }, millennial: { video: 87, music: 63, gaming: 35 }, genx: { video: 90, shopping: 59, music: 54 },
+  boomer: { shopping: 60, video: 87, news: 23 }, all: { video: 89, shopping: 56, music: 56, storage: 37, gaming: 25 } };
+const PLK_TYPES = { video: "Streaming TV", music: "Music", shopping: "Shopping and delivery", storage: "Cloud storage", gaming: "Gaming", news: "News or magazines" };
+const PLK_DEF = { gen: { "": "all", u25: "genz", 25: "millennial", 35: "millennial", 45: "genx", 55: "boomer" },
+  svc: { video: "netflix", music: "spotify", shopping: "amazon_prime", storage: "icloud", gaming: "xbox_game_pass", news: "nyt" }, min: 50 };
+const plkCfg = () => { const a = admin.plk || {}; return { gen: { ...PLK_DEF.gen, ...a.gen }, svc: { ...PLK_DEF.svc, ...a.svc }, min: a.min ?? PLK_DEF.min }; };
+// Plan for a household: a student plan for students; married or kids get a family plan (married alone: duo first); else the usual plan.
+function plkPlan(v, about) {
+  const find = re => v.plans.find(p => re.test(p.name) && p.effective_monthly != null);
+  const pick = (about.includes("student") && find(/student/i)) || (about.includes("married") && !about.includes("kids") && find(/\bduo\b/i))
+    || ((about.includes("married") || about.includes("kids")) && find(/family/i));
+  return pick || planOf(v, v.default_plan);
+}
+function plkFor(age, about) {
+  const c = plkCfg(), gen = c.gen[age || ""] || "all", share = PLK_SHARE[gen];
+  const items = Object.entries(share).filter(([, pct]) => pct >= c.min).sort((a, b) => b[1] - a[1])
+    .map(([type, pct]) => { const v = CATALOG[c.svc[type]]; return v && { type, pct, v, plan: plkPlan(v, about) }; }).filter(Boolean);
+  return { gen, share, items, total: items.reduce((a, x) => a + (x.plan?.effective_monthly || 0), 0) };
+}
+function plkHtml() {
+  if (!state.plkShow || !startShown()) return "";  // set by "Skip, I'll add them later"; goes with Let's get started
+  const have = new Set(state.subs.map(s => s.svc));
+  const p = profile(), about = p.about || [], age = p.age || "", r = plkFor(age, about), us = p.country === catalogCountry(), b = benchFor(p.country, "adult");
+  const who = [age ? AGES.find(a => a[0] === age)?.[1] : "", ...about.map(k => ({ student: "Student", married: "Married", kids: "Kids" })[k]), p.shares ? "Open to sharing" : ""].filter(Boolean);
+  return `<section class="card plk" style="margin-bottom:14px"><h3 style="margin:0">What people like you pay</h3>
+    <div class="chips" style="margin:6px 0 2px">${who.length ? who.map(w => `<span class="pill ok">${esc(w)}</span>`).join("") : `<span class="small muted">You haven't told us about yourself.</span>`}<button type="button" class="btn ghost small" id="plk-edit" style="padding:0 4px">${who.length ? "Change" : "Tell us"}</button></div>
+    ${us && r.items.length ? `<div class="value num">${money(r.total)}<span class="small muted"> a month</span></div>
+      <p class="small muted" style="margin:0">Estimate: the ${r.items.length} kinds of subscription most ${esc(PLK_GENS[r.gen].replace(/ \(.*/, ""))} have, at today's list prices before tax.${b ? ` Counting everything, the average US adult pays ${money(b.amt)} a month (<a href="${esc(b.url)}" target="_blank" rel="noopener" style="color:var(--accent)">source</a>).` : ""}</p>` : ""}
+    ${r.items.length ? `<div class="pop-grid" style="margin-top:4px">${r.items.map(x => `<button class="pop plk-pick" data-plk="${x.v.id}" data-plan="${x.plan.id}" aria-pressed="${have.has(x.v.id)}" aria-label="${have.has(x.v.id) ? "On your list" : "Add"}: ${esc(x.v.name)}, ${esc(x.plan.name)}" title="${esc(x.v.name)}">${logoHtml(x.v)}<span style="min-width:0;flex:1"><b style="display:block">${esc(baseName(x.v.name) || x.v.name)}</b><span class="small muted" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.plan.name)}${us ? ` · ${money(x.plan.effective_monthly)}/mo` : ""}</span></span><span class="plus" aria-hidden="true">${have.has(x.v.id) ? "&#10003;" : "+"}</span></button>`).join("")}</div>
+      <p class="small muted" style="margin:0">Have one of these? Tap to add it (tap again to take it off).</p>` : ""}
+    <div class="plk-share"><b class="small">What ${esc(PLK_GENS[r.gen].replace(/ \(.*/, ""))} pay for</b>${Object.entries(r.share).sort((a, b) => b[1] - a[1]).map(([k, pct]) => `<div class="sv-tier" style="cursor:default"><span class="small">${PLK_TYPES[k]}</span><span class="sv-track"><i style="width:${pct}%;background:var(--pie-1)"></i></span><b class="num small">${pct}%</b><span></span></div>`).join("")}
+      <p class="small muted" style="margin:2px 0 0">Share of people with a paid subscription who have each kind. <a href="${PLK_SRC.url}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(PLK_SRC.name)}</a>${us ? "" : ". A US survey; prices aren't shown outside the US yet"}.</p></div></section>`;
+}
 function aboutView() {
   const p = profile(), country = p.country, about = new Set((p.about || []).filter(k => ABOUT.some(a => a[0] === k)));
   let age = p.age || "";
@@ -1425,6 +1466,7 @@ function welcomeView() {
       return `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog" data-open="0">${list.map((v, i) => i < 6 ? tile(v) : tile(v).replace('<button ', '<button hidden data-extra="1" ')).join("")}</div>${list.length > 6 ? `<button type="button" class="btn ghost small w-more">See all ${list.length}</button>` : ""}`; }).join("")}
     <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)">
       <button class="btn primary" id="w-go">Start with 0 subscriptions</button>
+      <button class="btn ghost small" id="w-later">Skip, I'll add them later</button>
       <button class="btn ghost small" id="w-example">Just looking? Try it with example data</button>
       <span class="small muted" style="flex-basis:100%">By continuing you agree to our <button type="button" class="btn ghost small" data-legal="terms" style="padding:0">Terms of Use</button> and <button type="button" class="btn ghost small" data-legal="privacy" style="padding:0">Privacy</button> (prototype drafts).</span>${state.subs.length ? `<button class="btn ghost small" id="w-cancel">Keep my current list</button>` : ""}</div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
@@ -1444,6 +1486,7 @@ function welcomeView() {
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) })) };
     if (picks.size) state.startDone = true;  // v118: picked here already, so go straight to Finish setting up
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
+  $("w-later").addEventListener("click", () => { const prof = state.profile; state = { ...FRESH(), profile: prof, plkShow: true }; save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
@@ -1985,6 +2028,7 @@ function homeView() {
       <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div></div>
       <div class="stat tint"><div class="label">Subscriptions</div><div class="value num">${state.subs.length}</div></div>
     </section>` : ""}
+    ${plkHtml()}
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
@@ -2009,6 +2053,12 @@ function homeView() {
   f.querySelectorAll("[data-reg]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.reg; startReg.has(k) ? startReg.delete(k) : startReg.add(k); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.getElementById("start-done")?.addEventListener("click", () => { state.startDone = true; save(); render(); window.scrollTo(0, 0); });
   wireSetup(f);
+  f.getElementById("plk-edit")?.addEventListener("click", () => { view = "welcome"; welcomeStep = 1; render(); window.scrollTo(0, 0); });
+  f.querySelectorAll("[data-plk]").forEach(b => b.addEventListener("click", () => { const v = CATALOG[b.dataset.plk], plan = planOf(v, b.dataset.plan), had = state.subs.find(s => s.svc === v.id);
+    if (had) { if (!had.needsUse) return; state.subs = state.subs.filter(s => s !== had); }
+    else { const s = newSub(v.id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }); s.plan = plan.id; s.cycle = defaultCycle(plan); s.price = priceFor(plan, s.cycle);
+      s.measure = measuresOf(s)[0].id; state.subs.push(s); }
+    save(); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-rn]").forEach(b => b.addEventListener("click", () => { renewOpen = renewOpen === b.dataset.rn ? null : b.dataset.rn; const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-rnid]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.rnid)));
   f.getElementById("rn-all")?.addEventListener("click", () => { renewAll = !renewAll; const y = scrollY; render(); window.scrollTo(0, y); });
@@ -2603,6 +2653,24 @@ function settingsView() {
 
 // Admin: the catalog team's view. Reports come from users whose price differs from the list or fills a gap.
 let adminCountry = "US";
+// Admin view of People like you (v128): the rules, then every combination of age range and household with what it produces.
+function plkAdminHtml() {
+  const c = plkCfg(), yes = "&#10003;", ages = [["", "Not given"], ...AGES];
+  const combos = ages.flatMap(([age, al]) => [[], ["student"], ["married"], ["kids"], ["student", "married"], ["student", "kids"], ["married", "kids"], ["student", "married", "kids"]].map(about => ({ age, al, about })));
+  const svcOpts = type => Object.values(CATALOG).filter(v => v.category === CATALOG[PLK_DEF.svc[type]]?.category).sort((a, b) => a.name.localeCompare(b.name));
+  return `<div class="tbl-wrap" style="margin-bottom:12px"><table class="tbl"><thead><tr><th>Age range</th><th>Survey group used <span class="muted">(our choice)</span></th></tr></thead><tbody>
+      ${ages.map(([k, l]) => `<tr><td>${l}</td><td><select data-plk-gen="${k}">${Object.entries(PLK_GENS).map(([g, gl]) => `<option value="${g}" ${c.gen[k] === g ? "selected" : ""}>${gl}</option>`).join("")}</select></td></tr>`).join("")}</tbody></table></div>
+    <div class="tbl-wrap" style="margin-bottom:12px"><table class="tbl"><thead><tr><th>Kind</th>${Object.keys(PLK_SHARE).map(g => `<th>${PLK_GENS[g]}</th>`).join("")}<th>Service shown <span class="muted">(our choice)</span></th></tr></thead><tbody>
+      ${Object.entries(PLK_TYPES).map(([type, tl]) => `<tr><td>${tl}</td>${Object.keys(PLK_SHARE).map(g => `<td class="num">${PLK_SHARE[g][type] != null ? PLK_SHARE[g][type] + "%" : `<span class="muted">not reported</span>`}</td>`).join("")}
+        <td><select data-plk-svc="${type}">${svcOpts(type).map(v => `<option value="${v.id}" ${c.svc[type] === v.id ? "selected" : ""}>${esc(v.name)}</option>`).join("")}</select></td></tr>`).join("")}</tbody></table></div>
+    <p class="note" style="margin:0 0 8px">Shares: <a href="${PLK_SRC.url}" target="_blank" rel="noopener">${esc(PLK_SRC.name)}</a> (people with at least one paid subscription; the survey reports only some kinds per generation). A kind counts as usual at
+      <input type="number" id="plk-min" min="0" max="100" step="1" value="${c.min}" style="width:64px">% or more. Plans: student plan for students, duo for married without kids, family for married or kids, when the service has one.
+      ${admin.plk ? `<button class="btn ghost small" id="plk-reset">Back to defaults</button>` : ""}</p>
+    <div class="tbl-wrap" style="margin-bottom:22px;max-height:420px;overflow:auto"><table class="tbl"><thead><tr><th>Age range</th><th>Student</th><th>Married</th><th>Kids</th><th>Survey group</th><th>Usual set (plan, list price)</th><th>Estimate / mo</th></tr></thead><tbody>
+      ${combos.map(({ age, al, about }) => { const r = plkFor(age, about);
+        return `<tr><td>${al}</td><td>${about.includes("student") ? yes : ""}</td><td>${about.includes("married") ? yes : ""}</td><td>${about.includes("kids") ? yes : ""}</td><td>${esc(PLK_GENS[r.gen])}</td>
+          <td class="small" style="white-space:normal;min-width:260px">${r.items.map(x => `${esc(x.v.name)} ${esc(x.plan.name)} ${money(x.plan.effective_monthly)}`).join("; ") || "None"}</td><td class="num">${money(r.total)}</td></tr>`; }).join("")}</tbody></table></div>`;
+}
 function adminView() {
   const p = profile();
   const reports = state.subs.filter(s => s.priceMine && CATALOG[s.svc] && !admin.handled.includes(`${s.id}:${s.myTotal}:${p.region}`))
@@ -2625,6 +2693,8 @@ function adminView() {
         return `<tr><td>${esc(countryName(c))}</td><td>${gn}</td><td><input type="number" min="0" step="0.01" data-bench="${c}:${g}" value="${b ? (+b.amt).toFixed(2) : ""}" placeholder="Not set" style="width:110px"> <span class="small muted">${esc(COUNTRIES[c]?.[1] || "")}</span></td>
           <td class="small" style="white-space:normal;min-width:200px">${b ? esc(b.src) : "No survey found"}</td><td>${b?.admin ? `<button class="btn ghost small" data-bench-reset="${c}:${g}">Use survey</button>` : ""}</td></tr>`; })).join("")}
     </tbody></table></div>
+    <div class="section-head"><h3>People like you</h3><span class="small muted">What Overview shows someone who skips adding subscriptions. Survey shares are sourced; the rest are our choices and can change here.</span></div>
+    ${plkAdminHtml()}
     <div class="section-head"><h3>Catalog</h3>
       <label style="display:flex;flex-direction:row;align-items:center;gap:8px">Availability in<select id="a-country" style="width:auto">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === adminCountry ? "selected" : ""}>${n}</option>`).join("")}</select></label></div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Service</th><th>Prices checked</th><th>Status</th><th>Varies by state</th><th>State prices on file</th><th>Offered here?</th><th>Pricing page</th></tr></thead><tbody>
@@ -2650,6 +2720,10 @@ function adminView() {
   f.querySelectorAll("[data-bench]").forEach(i => i.addEventListener("change", () => { const [c, g] = i.dataset.bench.split(":"), n = parseFloat(i.value);
     admin.bench ||= {}; admin.bench[c] ||= {}; if (isNaN(n) || n < 0) delete admin.bench[c][g]; else admin.bench[c][g] = n; saveAdmin(); setTimeout(render); }));
   f.querySelectorAll("[data-bench-reset]").forEach(b => b.addEventListener("click", () => { const [c, g] = b.dataset.benchReset.split(":"); delete admin.bench?.[c]?.[g]; saveAdmin(); render(); }));
+  f.querySelectorAll("[data-plk-gen]").forEach(s => s.addEventListener("change", () => { ((admin.plk ||= {}).gen ||= {})[s.dataset.plkGen] = s.value; saveAdmin(); render(); }));
+  f.querySelectorAll("[data-plk-svc]").forEach(s => s.addEventListener("change", () => { ((admin.plk ||= {}).svc ||= {})[s.dataset.plkSvc] = s.value; saveAdmin(); render(); }));
+  f.getElementById("plk-min")?.addEventListener("change", e => { const n = parseFloat(e.target.value); (admin.plk ||= {}).min = isNaN(n) ? undefined : Math.max(0, Math.min(100, n)); saveAdmin(); render(); });
+  f.getElementById("plk-reset")?.addEventListener("click", () => { delete admin.plk; saveAdmin(); render(); });
   f.querySelectorAll("[data-avail]").forEach(sel => sel.addEventListener("change", () => {
     (admin.availability[sel.dataset.avail] ||= {})[adminCountry] = sel.value; saveAdmin(); }));
   return f;
@@ -3178,7 +3252,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 127 · Standalone copy · Oct 24", VERSION_NUM = 127;
+const APP_VERSION = "Prototype · Version 128 · Standalone copy · Oct 24", VERSION_NUM = 128;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
