@@ -139,6 +139,13 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .intro-src { margin: 0; }
 .intro-pill svg { width: 32px; height: 32px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .intro-next { min-width: 200px; margin-top: 6px; }
+/* v171 (Cuong): the intro page shows only a big green title, no search, View as or profile buttons, and larger text. */
+body.intro-mode .top-btns { display: none; }
+body.intro-mode .brand { width: 100%; text-align: center; }
+body.intro-mode .brand h1 { font-size: clamp(30px, 10.4vw, 64px); line-height: 1.1; color: #4ade80; letter-spacing: -.01em; white-space: nowrap; }
+body.intro-mode .intro-h { font-size: 38px; } body.intro-mode .intro-p { font-size: 21px; }
+body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { font-size: 19px; padding: 14px 28px; min-width: 240px; }
+@media (max-width: 520px) { body.intro-mode .intro-h { font-size: 31px; } body.intro-mode .intro-p { font-size: 20px; } body.intro-mode .intro-src { font-size: 15px; } }
 @media (max-width: 520px) { .intro-h { font-size: 25px; } .intro-p { font-size: 16px; } .intro-pillars { gap: 8px; } .intro-pill { padding: 12px 6px; gap: 4px; } .intro-pill b { font-size: 13px; } .intro-pill .small { font-size: 11.5px; line-height: 1.35; } .intro-pill svg { width: 26px; height: 26px; } }
 #persona-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 6px 6px 6px 14px; border-radius: 14px; background: var(--accent-soft); border: 2px solid var(--accent); font-size: 14px; }
 .pp-txt { display: grid; gap: 2px; padding-right: 54px; } .pp-pic { flex: none; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: var(--accent); color: #fff; }
@@ -1553,6 +1560,7 @@ function render() {
   if (view === "shelf" && !admin.shelf) view = "home";
   drawAvatar(document.getElementById("me-btn"));
   document.body.classList.toggle("short-band", view !== "home");
+  document.body.classList.toggle("intro-mode", view === "welcome" && welcomeStep === 0);  // v171: big title, no header buttons
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
   root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
@@ -3851,7 +3859,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 170 · Standalone copy · Oct 25", VERSION_NUM = 170;
+const APP_VERSION = "Prototype · Version 171 · Standalone copy · Oct 25", VERSION_NUM = 171;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
