@@ -1858,13 +1858,11 @@ function mixHtml(home) {
 function shelfView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const f = el(`<div class="section-head"><h2>Shelf</h2><span class="small muted">Widgets taken off Overview. They still work here, and any of them can go back.</span></div>
-    <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">Did You Know? was on Overview until Oct 24, 2026.</p>${factsHtml()}</section>
     <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">What's trending was on Overview until Oct 24, 2026. What you use most and least took its place.</p>${trendHtml()}</section>
     <section class="shelf-item"><h3 style="margin:0">Value mix</h3><p class="note" style="margin:2px 0 8px">Was on Overview until Oct 24, 2026. Upcoming renewals took its place.</p><div class="summary n1" style="margin:0">${mixHtml()}</div></section>
     <section class="shelf-item"><h3 style="margin:0">vs average adult</h3><p class="note" style="margin:2px 0 0">Was on Overview until Oct 24, 2026. The Value mix chart took its place.</p>${benchHtml(total)}</section>`);
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
-  wireFacts(f);
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
   return f;
 }
@@ -2038,9 +2036,11 @@ function homeView() {
     ${moreCatsHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     ${renewHtml()}
+    ${factsHtml()}
     <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
+  wireFacts(f);
   f.querySelector(".see-how")?.addEventListener("click", () => { view = "overlaps"; render(); document.getElementById("ways")?.scrollIntoView(); });
   wireNudge(f);
   f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
@@ -3252,7 +3252,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 128 · Standalone copy · Oct 24", VERSION_NUM = 128;
+const APP_VERSION = "Prototype · Version 129 · Standalone copy · Oct 25", VERSION_NUM = 129;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
