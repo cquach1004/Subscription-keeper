@@ -1465,7 +1465,7 @@ const INTRO_PILLARS = [
 ];
 function introView() {
   const f = el(`<section class="intro">
-    <h2 class="intro-h">AI, market research and you: smarter spending on subscriptions</h2>
+    <h2 class="intro-h">Smarter Spending on Subscriptions</h2>
     <p class="intro-p">Paying for subscriptions you barely use? The average American spends about $1,080 a year on them, with over $200 going to ones they rarely or never use. We use AI, market research and your own usage data to present the options that give you the most for your money.</p>
     <p class="small muted" style="margin:-8px 0 0">Source: <a href="https://thedesk.net/2025/05/cnet-subscription-survey-2025/" target="_blank" rel="noopener" style="color:inherit">CNET survey with YouGov, May 2025</a> (about $90 a month, $17 of it unused).</p>
     <div class="intro-pillars">${INTRO_PILLARS.map(([t, d, svg]) => `<div class="intro-pill"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><b>${t}</b><span class="small muted">${d}</span></div>`).join("")}</div>
@@ -3411,7 +3411,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 139 · Oct 25", VERSION_NUM = 139;
+const APP_VERSION = "Prototype · Version 140 · Oct 25", VERSION_NUM = 140;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
