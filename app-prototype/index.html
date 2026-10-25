@@ -122,6 +122,10 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 /* Add form */
 .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 18px; }
 .cat-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; text-align: left; min-width: 0; }
+.own-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.own-item { display: inline-flex; align-items: center; gap: 8px; padding: 6px 6px 6px 8px; border: 1px solid var(--accent); box-shadow: 0 0 0 1px var(--accent); background: var(--surface); border-radius: 12px; }
+.own-item .logo { width: 26px; height: 26px; font-size: 11px; border-radius: 7px; flex: none; }
+.own-item button { border: 0; background: none; font-size: 18px; line-height: 1; padding: 2px 6px; color: var(--muted); cursor: pointer; }
 .cat-item[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 /* v152 (Cuong): Back links sit above the page heading, small and quiet. */
 .back-link { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 2px 0; margin: 0 0 4px; font: inherit; font-size: 13px; color: var(--muted); cursor: pointer; }
@@ -1613,7 +1617,7 @@ function introView() {
 function welcomeView() {
   if (welcomeStep === 0) return introView();
   if (welcomeStep === 1) return aboutView();
-  const p = profile(), picks = new Set(), country = p.country;
+  const p = profile(), picks = new Set(), own = [], country = p.country;  // own: names of services we don't list (v153)
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
   // v114 (Cuong): "Popular" holds only the same 12 picks as the Overview card. v115: every service also sits in its category (picks stay in step).
   const popular = POPULAR.map(id => CATALOG[id]).filter(v => v && availability(v.id, country) !== "no").slice(0, 12);
@@ -1623,11 +1627,16 @@ function welcomeView() {
   // v115 (Cuong): each category shows its top 6 (svcRank order), then "See all".
   const f = el(`<button type="button" class="back-link" id="w-back">&larr; Back</button><div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
     <h3 style="margin:8px 0">Which subscriptions do you have?</h3>
-    <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. You can add others, or ones we don't list, later from the Explore tab.</p>
+    <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. Don't see one? Add it yourself under "Don't see yours?" at the end of the list.</p>
     <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
     <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
     ${groups.map(c => { const list = more.filter(v => v.category === c).sort(svcRank);
       return `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog" data-open="0">${list.map((v, i) => i < 6 ? tile(v) : tile(v).replace('<button ', '<button hidden data-extra="1" ')).join("")}</div>${list.length > 6 ? `<button type="button" class="btn ghost small w-more">See all ${list.length}</button>` : ""}`; }).join("")}
+    <p class="small muted" id="w-nores" hidden style="margin:4px 0 12px"></p>
+    <section class="w-own"><h4 class="w-h" style="margin:14px 0 4px">Don't see yours?</h4>
+      <p class="small muted" style="margin:0 0 8px">Add it yourself. You'll enter what you pay when you finish setting up.</p>
+      <div style="display:flex;gap:8px"><input id="w-own" placeholder="Name, e.g. Hometown Gym" aria-label="Name of a service we don't list" style="flex:1;min-width:0"><button type="button" class="btn" id="w-own-add">Add</button></div>
+      <div class="own-list" id="w-own-list"></div></section>
     <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)">
       <button class="btn primary" id="w-go">Start with 0 subscriptions</button>
       <button class="btn ghost small" id="w-later">Skip, I'll add them later</button>
@@ -1635,20 +1644,34 @@ function welcomeView() {
       <span class="small muted" style="flex-basis:100%">By continuing you agree to our <button type="button" class="btn ghost small" data-legal="terms" style="padding:0">Terms of Use</button> and <button type="button" class="btn ghost small" data-legal="privacy" style="padding:0">Privacy</button> (prototype drafts).</span>${state.subs.length ? `<button class="btn ghost small" id="w-cancel">Keep my current list</button>` : ""}</div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
   f.querySelectorAll("[data-legal]").forEach(b => b.addEventListener("click", () => { lastView = "welcome"; openLegal(b.dataset.legal); }));
-  const count = () => { $("w-go").textContent = `Start with ${picks.size} subscription${picks.size === 1 ? "" : "s"}`; };
+  const count = () => { const n = picks.size + own.length; $("w-go").textContent = `Start with ${n} subscription${n === 1 ? "" : "s"}`; };
+  const drawOwn = () => { $("w-own-list").innerHTML = own.map((n, i) => `<span class="own-item">${logoHtml({ color: "#6b7785", mark: n.slice(0, 2) })}<span>${esc(n)}</span><button type="button" data-own-x="${i}" aria-label="Remove ${esc(n)}">&times;</button></span>`).join("");
+    $("w-own-list").querySelectorAll("[data-own-x]").forEach(b => b.addEventListener("click", () => { own.splice(+b.dataset.ownX, 1); drawOwn(); count(); })); };
+  const addOwn = name => { name = name.trim().replace(/\s+/g, " "); if (!name) return;
+    if (!own.some(n => n.toLowerCase() === name.toLowerCase())) own.push(name.slice(0, 60));
+    $("w-own").value = ""; drawOwn(); count(); };
+  $("w-own-add").addEventListener("click", () => addOwn($("w-own").value));
+  $("w-own").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); addOwn(e.target.value); } });
   f.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => { const id = b.dataset.svc; picks.has(id) ? picks.delete(id) : picks.add(id);
     document.querySelectorAll(`#view .cat-item[data-svc="${id}"]`).forEach(x => x.setAttribute("aria-pressed", picks.has(id))); count(); }));
   f.querySelectorAll(".w-more").forEach(m => m.addEventListener("click", () => { const g = m.previousElementSibling, open = g.dataset.open !== "1";
     g.dataset.open = open ? "1" : "0"; g.querySelectorAll("[data-extra]").forEach(b => b.hidden = !open); m.textContent = open ? "Show fewer" : `See all ${g.children.length}`; }));
   $("w-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase();
     document.querySelectorAll("#view .catalog").forEach((g, gi) => { let n = 0; g.querySelectorAll(".cat-item").forEach(b => { b.hidden = q ? !b.dataset.text.includes(q) : (b.dataset.extra && g.dataset.open !== "1"); n += !b.hidden; });
-      if (gi === 0 && q) n = 0; g.hidden = !n; g.previousElementSibling.hidden = !n; const m = g.nextElementSibling; if (m?.classList.contains("w-more")) m.hidden = !!q || !n; }); });
+      if (gi === 0 && q) n = 0; g.hidden = !n; g.previousElementSibling.hidden = !n; const m = g.nextElementSibling; if (m?.classList.contains("w-more")) m.hidden = !!q || !n; });
+    // Nothing matches: offer to add it as their own (v153, Cuong: e.g. an insurer we don't list).
+    const none = q && ![...document.querySelectorAll("#view .catalog .cat-item")].some(b => !b.hidden), nr = $("w-nores"), raw = e.target.value.trim();
+    nr.hidden = !none;
+    if (none) { nr.innerHTML = `No match for "${esc(raw)}". <button type="button" class="btn ghost small" id="w-nores-add" style="padding:0">Add "${esc(raw)}" as your own</button>`;
+      $("w-nores-add").addEventListener("click", () => { addOwn(raw); e.target.value = ""; e.target.dispatchEvent(new Event("input")); }); } });
   const setLoc = () => {};  // v125: location is set on step 1
   $("w-back").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
   $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
   $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile;
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) })) };
-    if (picks.size) state.startDone = true;  // v118: picked here already, so go straight to Finish setting up
+    own.forEach((name, i) => state.subs.push({ id: `custom-${Date.now()}-${i}`, svc: "custom", name, plan: null, used: [], cycle: "month", price: null, uses: 0, rate: 0, per: "month",
+      needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }));
+    if (picks.size || own.length) state.startDone = true;  // v118: picked here already, so go straight to Finish setting up
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-later").addEventListener("click", () => { const prof = state.profile; state = { ...FRESH(), profile: prof, plkShow: true }; save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
@@ -3566,7 +3589,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 152 · Oct 25", VERSION_NUM = 152;
+const APP_VERSION = "Prototype · Version 153 · Oct 25", VERSION_NUM = 153;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.

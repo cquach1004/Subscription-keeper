@@ -1,6 +1,6 @@
 {
  "generated_at": "2026-10-19",
- "note": "New Explore categories researched 2026-10-19. verified=false means the price came from a news or review site. Added 2026-10-23: books (Digital Books) and car_insurance / home_insurance (no list prices). Added 2026-10-23: Adobe Creative Cloud (productivity), prices from Adobe's US plans page.",
+ "note": "New Explore categories researched 2026-10-19. verified=false means the price came from a news or review site. Added 2026-10-23: books (Digital Books) and car_insurance / home_insurance (no list prices). Added 2026-10-23: Adobe Creative Cloud (productivity), prices from Adobe's US plans page. Added 2026-10-25: Erie Insurance car and home (regional, service_states).",
  "services": [
   {
    "id": "duolingo",
@@ -13943,6 +13943,160 @@
    "checked_at": "2026-10-23",
    "color": "#FA0F00",
    "mark": "Ad"
+  },
+  {
+   "id": "erie_auto",
+   "name": "Erie Insurance (Car)",
+   "category": "car_insurance",
+   "official_url": "https://www.erieinsurance.com/",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "DC",
+    "IL",
+    "IN",
+    "KY",
+    "MD",
+    "NY",
+    "NC",
+    "OH",
+    "PA",
+    "TN",
+    "VA",
+    "WV",
+    "WI"
+   ],
+   "service_area_note": "Sold in 12 states and DC (Policygenius, Mar 2023; LendingTree). Erie's own state page didn't load, so confirm the list.",
+   "plans": [
+    {
+     "id": "auto",
+     "name": "Auto policy",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false
+    }
+   ],
+   "default_plan": "auto",
+   "features": [
+    {
+     "id": "coverage",
+     "name": "Liability, collision and comprehensive options",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": null,
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "checked_at": "2026-10-25",
+   "price_note": "Premiums depend on you (driving record, home, coverage), so there is no list price. Enter what you pay.",
+   "tips": [
+    "Get two or three quotes about a month before you renew; prices change at every renewal.",
+    "Ask about bundling home and auto with one insurer."
+   ],
+   "sources": [
+    {
+     "label": "Erie Insurance website",
+     "url": "https://www.erieinsurance.com/"
+    },
+    {
+     "label": "Policygenius Erie review (states, Mar 2023)",
+     "url": "https://www.policygenius.com/auto-insurance/reviews/erie/"
+    },
+    {
+     "label": "LendingTree Erie review (states)",
+     "url": "https://www.lendingtree.com/insurance/erie-insurance-review"
+    }
+   ],
+   "color": "#00447c",
+   "mark": "Er"
+  },
+  {
+   "id": "erie_home",
+   "name": "Erie Insurance (Home)",
+   "category": "home_insurance",
+   "official_url": "https://www.erieinsurance.com/",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "DC",
+    "IL",
+    "IN",
+    "KY",
+    "MD",
+    "NY",
+    "NC",
+    "OH",
+    "PA",
+    "TN",
+    "VA",
+    "WV",
+    "WI"
+   ],
+   "service_area_note": "Sold in 12 states and DC (Policygenius, Mar 2023; LendingTree). Erie's own state page didn't load, so confirm the list.",
+   "plans": [
+    {
+     "id": "homeowners",
+     "name": "Homeowners policy",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false
+    },
+    {
+     "id": "renters",
+     "name": "Renters policy",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false
+    },
+    {
+     "id": "condo",
+     "name": "Condo policy",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false
+    }
+   ],
+   "default_plan": "homeowners",
+   "features": [
+    {
+     "id": "coverage",
+     "name": "Dwelling, belongings and liability coverage",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": null,
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "checked_at": "2026-10-25",
+   "price_note": "Premiums depend on your home and coverage, so there is no list price. Enter what you pay.",
+   "tips": [
+    "Get two or three quotes about a month before you renew; prices change at every renewal.",
+    "Ask about bundling home and auto with one insurer."
+   ],
+   "sources": [
+    {
+     "label": "Erie Insurance website",
+     "url": "https://www.erieinsurance.com/"
+    },
+    {
+     "label": "Policygenius Erie review (states, Mar 2023)",
+     "url": "https://www.policygenius.com/auto-insurance/reviews/erie/"
+    },
+    {
+     "label": "LendingTree Erie review (states)",
+     "url": "https://www.lendingtree.com/insurance/erie-insurance-review"
+    }
+   ],
+   "color": "#00447c",
+   "mark": "Er"
   }
  ]
 }
