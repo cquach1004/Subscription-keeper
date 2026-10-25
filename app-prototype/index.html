@@ -123,6 +123,9 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 18px; }
 .cat-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; text-align: left; min-width: 0; }
 .cat-item[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+/* v152 (Cuong): Back links sit above the page heading, small and quiet. */
+.back-link { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 2px 0; margin: 0 0 4px; font: inherit; font-size: 13px; color: var(--muted); cursor: pointer; }
+.back-link:hover, .back-link:focus-visible { color: var(--ink); text-decoration: underline; }
 .intro { display: grid; gap: 18px; max-width: 620px; margin: 0 auto; padding: 16px 0; text-align: center; justify-items: center; align-content: center; }
 .intro-h { font-size: 30px; line-height: 1.2; margin: 0; } .intro-p { margin: 0; font-size: 17px; line-height: 1.5; color: var(--ink); }
 .intro-pillars { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; }
@@ -1540,8 +1543,7 @@ function aboutView() {
   // v149 (Cuong): name under "Tell us about yourself", email after "Where do you live?". Optional; kept in this browser only.
   let saved = ""; try { saved = localStorage.getItem("sk-name") || ""; } catch {}
   const [sf, ...sl] = saved.trim().split(/\s+/), first = saved ? sf : p.first || "", last = saved ? sl.join(" ") : p.last || "";
-  const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
-    <button class="btn ghost small" id="w-intro" style="padding-left:0;margin-bottom:4px">&larr; Back</button>
+  const f = el(`<button type="button" class="back-link" id="w-intro">&larr; Back</button><div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
     <h3 style="margin:8px 0 2px">Tell us about yourself</h3>
     <div class="loc-row" style="margin:10px 0 16px"><label>First name<input id="w-first" autocomplete="given-name" value="${esc(first)}"></label>
       <label>Last name<input id="w-last" autocomplete="family-name" value="${esc(last)}"></label></div>
@@ -1619,8 +1621,7 @@ function welcomeView() {
   const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
   const groups = [...new Set(more.map(v => v.category))];
   // v115 (Cuong): each category shows its top 6 (svcRank order), then "See all".
-  const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
-    <button class="btn ghost small" id="w-back" style="padding-left:0;margin-bottom:4px">&larr; Back</button>
+  const f = el(`<button type="button" class="back-link" id="w-back">&larr; Back</button><div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
     <h3 style="margin:8px 0">Which subscriptions do you have?</h3>
     <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. You can add others, or ones we don't list, later from the Explore tab.</p>
     <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
@@ -1657,10 +1658,10 @@ function welcomeView() {
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
 let fbSent = false;
 function feedbackView() {
-  const f = el(`<div class="section-head"><h2>Give feedback</h2><span class="small muted">What's confusing, what's missing, what would make you use this? Only the people building Subscription Keeper read this.</span></div>
+  const f = el(`<button type="button" class="back-link" id="fb-back">&larr; Back to the app</button><div class="section-head"><h2>Give feedback</h2><span class="small muted">What's confusing, what's missing, what would make you use this? Only the people building Subscription Keeper read this.</span></div>
     <form id="fb-form" class="fields"><label class="full">Your feedback<textarea id="fb-text" rows="6" required maxlength="4000" style="width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)"></textarea></label>
       <div class="full" style="display:flex;gap:10px;align-items:center;justify-content:flex-end"><span class="small muted" id="fb-msg" role="status">${fbSent ? "Thanks, your feedback was sent." : ""}</span><button class="btn primary" type="submit" id="fb-send">Send feedback</button></div></form>
-    <p><button class="btn ghost small" id="fb-back">Back to the app</button></p><div id="fb-owner"></div>`);
+    <div id="fb-owner"></div>`);
   f.getElementById("fb-back").addEventListener("click", () => { view = lastView; render(); });
   const msg = t => { const m = document.getElementById("fb-msg"); if (m) m.textContent = t; };
   f.getElementById("fb-form").addEventListener("submit", async e => { e.preventDefault(); const text = document.getElementById("fb-text").value.trim(); if (!text) return;
@@ -1685,7 +1686,7 @@ function feedbackView() {
 let lastView = "home";
 // Terms of Use and Privacy (Cuong, 2026-10-21): placeholder text for the prototype. The real app needs legal review.
 let legalTab = "terms";
-const LEGAL_DATE = "October 21, 2026";
+const LEGAL_DATE = "October 25, 2026";
 const LEGAL = {
   terms: { title: "Terms of Use", sections: [
     ["About this prototype", "Subscription Keeper is an early prototype shared for testing and feedback. Features, prices and these terms may change or be removed at any time, and the service may be unavailable without notice."],
@@ -1699,7 +1700,7 @@ const LEGAL = {
     ["Changes and contact", "We may update these terms as the app develops; the date above shows the latest version. Questions? Use Give feedback or Report a problem in Help."]] },
   privacy: { title: "Privacy", sections: [
     ["The short version", "Your subscription list stays on your device. We don't sell your data, we don't show ads, and we never ask for your bank or card details."],
-    ["What stays on your device", "Your subscriptions, prices, usage, dates, location, what you told us about yourself (such as your age range, student, married, kids or sharing plans) and settings (such as your first name, style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
+    ["What stays on your device", "Your subscriptions, prices, usage, dates, location, what you told us about yourself (such as your age range, student, married, kids or sharing plans) your name and email if you give them, and settings (such as style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
     ["What you choose to send us", "When you send feedback or report a problem, we receive what you write, plus the app version, the screen you were on, your device type and how many subscriptions you track (not the list itself). If you add an email address to a ticket, we use it only to reply. In the Claude app version, these are linked to your Claude account so only the Subscription Keeper team can read them."],
     ["Sam, the AI assistant", "When you ask Sam a question in the Claude app, your question, your recent chat, your subscription list (names, prices, usage and renewal dates) and related catalog details are sent to Claude, Anthropic's AI, to write the answer, using your own Claude account. On the public website, Sam answers from the catalog on your device and nothing is sent."],
     ["Usage exports", "If you load a ChatGPT, Claude, Netflix or Spotify file to count your usage, the file is read on your device. Only the monthly counts are kept, and the file isn't uploaded."],
@@ -1710,11 +1711,10 @@ const LEGAL = {
     ["Changes and contact", "We'll update this page as the app develops; the date above shows the latest version. Questions? Use Give feedback or Report a problem in Help."]] } };
 function legalView() {
   const L = LEGAL[legalTab];
-  const f = el(`<div class="section-head"><h2>Terms and privacy</h2><span class="small muted">Last updated ${LEGAL_DATE}</span></div>
+  const f = el(`<button type="button" class="back-link" id="legal-back">&larr; Back to the app</button><div class="section-head"><h2>Terms and privacy</h2><span class="small muted">Last updated ${LEGAL_DATE}</span></div>
     <div class="admin-note" role="note" style="margin-bottom:14px"><b>Draft for the prototype.</b> This text is a placeholder and hasn't had legal review. The final terms and privacy policy will replace it before launch.</div>
     <div class="seg" role="tablist" aria-label="Terms or privacy" style="margin-bottom:14px">${Object.entries(LEGAL).map(([k, x]) => `<button type="button" role="tab" data-lt="${k}" aria-pressed="${k === legalTab}" aria-selected="${k === legalTab}">${x.title}</button>`).join("")}</div>
-    <article class="card legal">${L.sections.filter(([h]) => !(PHASE1 && h.startsWith("Sam"))).map(([h, t]) => `<section><h3>${esc(h)}</h3><p>${esc(t)}</p></section>`).join("")}</article>
-    <p><button class="btn ghost small" id="legal-back">Back to the app</button></p>`);
+    <article class="card legal">${L.sections.filter(([h]) => !(PHASE1 && h.startsWith("Sam"))).map(([h, t]) => `<section><h3>${esc(h)}</h3><p>${esc(t)}</p></section>`).join("")}</article>`);
   f.querySelectorAll("[data-lt]").forEach(b => b.addEventListener("click", () => { legalTab = b.dataset.lt; render(); window.scrollTo(0, 0); }));
   f.getElementById("legal-back").addEventListener("click", () => { view = lastView; render(); });
   return f;
@@ -2629,7 +2629,7 @@ function exploreDetail(v) {
     .sort((a, b) => alts.includes(b.id) - alts.includes(a.id));
   const ov = mine ? [] : overlapsWith(v);
   const cell = (n, unit) => n == null ? `<span class="muted">—</span>` : `<span class="num">${fmt(n)}</span><span class="muted">/${unit}</span>`;
-  const f = el(`<button class="btn ghost" id="x-back">← Back to Explore</button>
+  const f = el(`<button type="button" class="back-link" id="x-back">&larr; Back to Explore</button>
     <div class="sheet-head" style="margin:8px 0 16px">${logoHtml(v)}<div><h2>${esc(v.name)}</h2><div class="small muted">${esc(catLabel(v.category))} · prices ${fr.label.toLowerCase()} (checked ${esc(checkedOn(v))})${v.official_url ? ` · <a href="${esc(v.official_url)}" target="_blank" rel="noopener" style="color:var(--accent)">Official pricing page</a>` : ""}</div></div></div>
     ${mine ? `<p class="tip" style="margin:0 0 16px"><b>On your list</b> on the ${esc(planOf(v, mine.plan).name)} plan. <button class="btn ghost small" id="x-mine">Open it</button></p>` : ""}
     ${ov.length ? `<p class="admin-note" style="margin:0 0 16px">You already pay for this kind of service: ${esc(ov.join(", "))}. Check the Savings tab before adding another.</p>` : ""}
@@ -3566,7 +3566,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 151 · Oct 25", VERSION_NUM = 151;
+const APP_VERSION = "Prototype · Version 152 · Oct 25", VERSION_NUM = 152;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
