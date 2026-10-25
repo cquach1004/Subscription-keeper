@@ -1701,11 +1701,13 @@ function introView() {
   requestAnimationFrame(fitIntro);
   return f;
 }
+const WELCOME_SKIP = new Set(["energy"]);
 function welcomeView() {
   if (welcomeStep === 0) return introView();
   if (welcomeStep === 1) return aboutView();
   const p = profile(), picks = new Set(), own = [], country = p.country;  // own: names of services we don't list (v153)
-  const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
+  // v157 (Cuong): electricity and gas aren't subscriptions people pick here; they're in Explore only.
+  const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no" && !WELCOME_SKIP.has(v.category));
   // v114 (Cuong): "Popular" holds only the same 12 picks as the Overview card. v115: every service also sits in its category (picks stay in step).
   const popular = POPULAR.map(id => CATALOG[id]).filter(v => v && availability(v.id, country) !== "no").slice(0, 12);
   const more = offered.slice().sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
@@ -3762,7 +3764,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 156 · Standalone copy · Oct 25", VERSION_NUM = 156;
+const APP_VERSION = "Prototype · Version 157 · Standalone copy · Oct 25", VERSION_NUM = 157;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
