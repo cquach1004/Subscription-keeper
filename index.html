@@ -1431,6 +1431,7 @@ function aboutView() {
   const p = profile(), country = p.country, about = new Set((p.about || []).filter(k => ABOUT.some(a => a[0] === k)));
   let age = p.age || "";
   const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
+    <button class="btn ghost small" id="w-intro" style="padding-left:0;margin-bottom:4px">&larr; Back</button>
     <h3 style="margin:8px 0 2px">Tell us about yourself</h3>
     <p class="small muted" style="margin:0 0 12px">Pick all that apply. It helps us suggest plans that fit, like student, family or senior pricing.</p>
     <div class="about-grid about-3">${ABOUT.map(([k, label, svg]) => `<button type="button" class="about-opt" data-about="${k}" aria-pressed="${about.has(k)}"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><span>${label}</span></button>`).join("")}</div>
@@ -1453,6 +1454,7 @@ function aboutView() {
     document.querySelectorAll("#view [data-age]").forEach(x => { x.setAttribute("aria-pressed", x.dataset.age === age); x.setAttribute("aria-checked", x.dataset.age === age); }); }));
   $("w-country").addEventListener("change", () => { keep(); save(); render(); });
   $("w-next").addEventListener("click", () => { keep(); save(); welcomeStep = 2; render(); window.scrollTo(0, 0); });
+  $("w-intro").addEventListener("click", () => { keep(); save(); welcomeStep = 0; render(); window.scrollTo(0, 0); });
   $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
   $("w-example").addEventListener("click", () => { keep(); const prof = state.profile; state = seed(); state.profile = prof;
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
@@ -3412,7 +3414,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 138 · Standalone copy · Oct 25", VERSION_NUM = 138;
+const APP_VERSION = "Prototype · Version 139 · Standalone copy · Oct 25", VERSION_NUM = 139;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
