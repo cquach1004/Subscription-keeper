@@ -2092,7 +2092,7 @@ function homeView() {
     ${PHASE1 ? "" : upcomingHtml()}
     ${renewHtml()}
     ${factsHtml()}
-    <p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start over with my own list</button> <button class="btn ghost small" id="reset">Reset to example data</button> <button class="btn ghost small" id="gen-hist">Make test usage for the past year</button></p>`);
+    <p class="note" style="margin:6px 0 0;display:flex;flex-wrap:wrap;gap:8px"><button class="btn ghost small" id="restart">Start from the beginning</button> <button class="btn ghost small" id="reset">Reset to example data</button></p>`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
   wireFacts(f);
@@ -2120,9 +2120,8 @@ function homeView() {
   f.querySelectorAll("[data-tier]").forEach(b => b.addEventListener("click", () => { svTierOpen = svTierOpen === b.dataset.tier ? null : b.dataset.tier; const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-svid]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.svid)));
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
-  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); });
-  f.getElementById("gen-hist").addEventListener("click", () => { genAll(); save(); render(); });
-  f.getElementById("restart").addEventListener("click", () => { view = "welcome"; welcomeStep = 1; render(); window.scrollTo(0, 0); });
+  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); window.scrollTo(0, 0); });
+  f.getElementById("restart").addEventListener("click", () => { view = "welcome"; welcomeStep = 0; render(); window.scrollTo(0, 0); });
   return f;
 }
 function rowHtml(s) {
@@ -3410,7 +3409,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 134 · Oct 25", VERSION_NUM = 134;
+const APP_VERSION = "Prototype · Version 135 · Oct 25", VERSION_NUM = 135;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
