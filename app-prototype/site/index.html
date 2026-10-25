@@ -132,6 +132,9 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .intro-pill svg { width: 32px; height: 32px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .intro-next { min-width: 200px; margin-top: 6px; }
 @media (max-width: 520px) { .intro-h { font-size: 25px; } .intro-p { font-size: 16px; } .intro-pillars { gap: 8px; } .intro-pill { padding: 12px 6px; gap: 4px; } .intro-pill b { font-size: 13px; } .intro-pill .small { font-size: 11.5px; line-height: 1.35; } .intro-pill svg { width: 26px; height: 26px; } }
+#persona-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 6px 6px 6px 14px; border-radius: 14px; background: var(--accent-soft); border: 2px solid var(--accent); font-size: 14px; }
+#persona-btn.on { box-shadow: 0 0 0 2px #fff; } .pp-list { display: grid; gap: 8px; } .pp-opt { display: grid; gap: 2px; text-align: left; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; position: relative; }
+.pp-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); } .pp-on { position: absolute; top: 12px; right: 14px; font-size: 12px; font-weight: 700; color: var(--accent); }
 .about-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-width: 860px; }
 .about-opt { display: grid; justify-items: center; gap: 8px; padding: 18px 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; color: var(--ink); font: 600 14px var(--f-body); cursor: pointer; text-align: center; }
 .about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -728,7 +731,7 @@ details.az[hidden] { display: none; }
 <div class="wrap">
   <header class="top">
     <div class="brand"><h1>Subscription Keeper</h1></div>
-    <div class="top-btns"><div class="top-search" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><input id="tq" type="search" placeholder="Search subscriptions" aria-label="Search subscriptions" autocomplete="off" aria-controls="tq-res" aria-expanded="false"><div class="tq-res" id="tq-res" hidden></div></div><button class="avatar help-btn" id="help-btn" aria-label="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6.5h14v9.5H11l-4.5 3.5V16H5z"/><path d="M9.2 9.6a2.8 2.8 0 1 1 3.6 2.7c-.5.2-.8.6-.8 1.1"/><circle cx="12" cy="14.6" r=".4" fill="currentColor"/></svg></button><button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button></div>
+    <div class="top-btns"><div class="top-search" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><input id="tq" type="search" placeholder="Search subscriptions" aria-label="Search subscriptions" autocomplete="off" aria-controls="tq-res" aria-expanded="false"><div class="tq-res" id="tq-res" hidden></div></div><button class="avatar help-btn" id="persona-btn" aria-haspopup="dialog" aria-label="View as an example household" title="View as"></button><button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button></div>
     <nav class="tabs" role="tablist" aria-label="Screens">
       <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg>Overview</button>
       <button role="tab" id="tab-usage" data-view="usage" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3.5 16.5a8.5 8.5 0 1 1 17 0"/><path d="M12 16.5l4.2-5.2"/></svg>Usage</button>
@@ -858,8 +861,77 @@ function seedSub([id, uses, used, day]) {
       ...(SAMPLE_PRICE[id] ? { cycle: "month", priceMine: true, myTotal: SAMPLE_PRICE[id] } : {}), ...(SAMPLE_QUOTE[id] ? { quote: sampleQuote(id) } : {}) });
     setUse(sub, uses, measureOf(sub).per); return sub; }
 }
-function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { return null; } }
-function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+function load() { try { return JSON.parse(localStorage.getItem(storeKey())); } catch (e) { return null; } }
+function save() { try { localStorage.setItem(storeKey(), JSON.stringify(state)); } catch (e) {} }
+// Personas (Cuong, v145): switch the whole app to an example household to show how it plays out for different people.
+// "Me" is your own list. Each example keeps its own saved copy in this browser (sk-proto-v2-<id>), so changes made while
+// viewing as someone stay with that example until it's reset. Rows: [service, usage, features, billing day, plan, months ago, your price].
+// Lists and amounts are our made-up examples; prices without a catalog list price (insurance, phone, internet) are made up too.
+const PERSONAS = {
+  me: { label: "Me", desc: "Your own list" },
+  student: { label: "Student, under 25", name: "Jordan", desc: "Single student on a tight budget",
+    profile: { about: ["student"], age: "u25", shares: true },
+    subs: [["spotify", 14, ["ad_free", "offline"], 3, "student", 20], ["netflix", 5, [], 9, "ads", 14], ["youtube_premium", 6, [], 21, "individual", 8],
+      ["chatgpt", 8, [], 12, "plus", 6], ["xbox_game_pass", 9, [], 17, null, 11], ["discord_nitro", 12, [], 5, null, 10], ["chegg_study", 2, [], 2, null, 3],
+      ["planet_fitness", 6, [], 15, null, 13], ["doordash_dashpass", 5, [], 25, null, 7], ["mint_mobile", 0, [], 1, null, 18, 15], ["icloud", 38, [], 8, "50gb", 30], ["duolingo", 3, [], 19, null, 9]] },
+  family: { label: "Married couple, 40s, with kids", name: "Sam & Alex", desc: "Two parents and two kids",
+    profile: { about: ["married", "kids"], age: "45", shares: true },
+    subs: [["netflix", 12, ["ad_free", "hd"], 4, "standard", 70], ["disney_plus", 9, [], 11, "trio_ads", 26], ["spotify", 22, ["ad_free", "offline"], 14, "family", 48],
+      ["amazon_prime", 9, ["shipping", "video"], 6, "monthly", 90], ["costco", 3, ["bulk"], 20, null, 60], ["m365", 14, ["apps", "onedrive"], 27, "family", 36],
+      ["icloud", 1100, [], 2, "2tb", 40], ["xbox_game_pass", 7, [], 23, null, 15], ["ixl", 2, [], 8, null, 12], ["doordash_dashpass", 6, [], 16, null, 14],
+      ["state_farm_auto", 0, ["coverage"], 10, null, 72, 212], ["state_farm_home", 0, ["coverage"], 10, null, 72, 168], ["verizon_wireless", 0, [], 22, null, 84, 185],
+      ["xfinity_internet", 0, [], 18, null, 50, 85], ["ring_home", 0, [], 3, null, 30], ["chewy_plus", 2, [], 12, null, 9]] },
+  seniors: { label: "Senior couple, 60s, no kids", name: "Pat & Lee", desc: "Retired couple, no kids at home",
+    profile: { about: ["married"], age: "55", shares: false },
+    subs: [["aarp", 1, [], 1, null, 120], ["aaa", 0, [], 10, null, 300, null, { members: 2 }], ["netflix", 10, ["hd"], 7, "standard", 96], ["amazon_prime", 5, ["shipping", "video"], 15, "monthly", 110],
+      ["nyt", 12, [], 20, null, 60], ["kindle_unlimited", 3, [], 26, null, 24], ["audible", 1, [], 4, null, 40], ["tmobile_wireless", 0, [], 12, null, 54, 70],
+      ["xfinity_internet", 0, [], 18, null, 100, 70], ["icloud", 140, [], 9, "200gb", 70], ["geico_auto", 0, ["coverage"], 28, null, 96, 118],
+      ["silversneakers", 8, [], 1, null, 30], ["medical_guardian", 30, [], 5, null, 14]] },
+};
+const PERSONA_KEY = "sk-persona";
+let persona = (() => { try { const p = localStorage.getItem(PERSONA_KEY); return PERSONAS[p] ? p : "me"; } catch { return "me"; } })();
+const storeKey = () => persona === "me" ? STORE_KEY : `${STORE_KEY}-${persona}`;
+function personaState(id) {
+  const P = PERSONAS[id], subs = [];
+  P.subs.forEach(([svc, uses, used, day, plan, ago, mine, extra]) => { const v = CATALOG[svc]; if (!v) return;
+    const pl = plan && planOf(v, plan) ? plan : v.default_plan || planOf(v).id, ids = featuresFor(v, pl).map(f => f.id), cycle = defaultCycle(planOf(v, pl));
+    const s = newSub(svc, { plan: pl, cycle, price: priceFor(planOf(v, pl), cycle), used: used.filter(f => ids.includes(f)), day, start: pastStart(ago, day), example: true,
+      ...(mine ? { cycle: "month", priceMine: true, myTotal: mine } : {}), ...(extra || {}) });
+    s.measure = measuresOf(s)[0].id; setUse(s, uses, measureOf(s).per); (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; subs.push(s); });
+  return { ...FRESH(), subs, histV: 0, cgPauseV: 1, startDone: true, profile: { country: "US", region: "MD", postal: "", ...P.profile, group: groupFor(P.profile.about, P.profile.age) } };
+}
+function switchPersona(id) {
+  if (!PERSONAS[id] || id === persona) return;
+  save(); try { localStorage.setItem(PERSONA_KEY, id); } catch {}
+  location.reload();
+}
+function resetPersona() { try { localStorage.removeItem(storeKey()); } catch {} location.reload(); }
+const PERSONA_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19.5c.8-3.3 3.1-5 6-5s5.2 1.7 6 5"/><circle cx="16.5" cy="9" r="2.6"/><path d="M16.5 14.4c2.3 0 4 1.4 4.6 4.1"/></svg>';
+function personaBar(root) {
+  document.getElementById("persona-btn")?.classList.toggle("on", persona !== "me");
+  const P = PERSONAS[persona]; if (persona === "me" || view === "welcome") return;
+  const bar = document.createElement("div"); bar.id = "persona-bar"; root.prepend(bar);
+  bar.innerHTML = `<span>Viewing as <b>${esc(P.name)}</b> <span class="muted">(example)</span></span><button class="btn small" id="pb-switch">Switch</button>`; bar.title = P.label;
+  bar.querySelector("#pb-switch").onclick = openPersonas;
+}
+function openPersonas() {
+  const root = document.getElementById("sheet-root");
+  root.replaceChildren(el(`<div class="scrim" id="scrim"></div>
+    <aside class="sheet me-sheet enter" role="dialog" aria-modal="true" aria-labelledby="pp-title">
+      <div class="me-head"><span class="avatar">${PERSONA_ICON}</span><div style="flex:1;min-width:0"><h2 id="pp-title">View as</h2><div class="small muted">See the app through different households' eyes</div></div>
+        <button class="btn" id="pp-close">Close</button></div>
+      <div class="pp-list">${Object.entries(PERSONAS).map(([k, p]) => `<button class="pp-opt" data-persona="${k}" aria-pressed="${k === persona}">
+        <b>${esc(k === "me" ? "Me" : `${p.name}`)}</b><span class="small muted">${esc(k === "me" ? "Your own list" : `${p.label}. ${p.desc}`)}</span>${k === persona ? '<span class="pp-on">Viewing</span>' : ""}</button>`).join("")}</div>
+      ${persona !== "me" ? `<button class="btn ghost small" id="pp-reset" style="justify-self:start">Reset ${esc(PERSONAS[persona].name)}'s example</button>` : ""}
+      <p class="note" style="margin:0">Each example household has its own made-up list with a year of usage. Changes you make while viewing as someone stay with that example in this browser. Your own list isn't touched.</p>
+    </aside>`));
+  const close = () => { root.replaceChildren(); document.getElementById("persona-btn").focus(); };
+  document.getElementById("scrim").onclick = close; document.getElementById("pp-close").onclick = close;
+  root.querySelectorAll("[data-persona]").forEach(b => b.onclick = () => b.dataset.persona === persona ? close() : switchPersona(b.dataset.persona));
+  document.getElementById("pp-reset")?.addEventListener("click", resetPersona);
+  root.querySelector(".sheet").addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+}
+
 
 // Household plans: extra members add a per-member fee on top of the plan price (AAA Hoosier: $25 per extra cardholder at renewal).
 // Prime: Amazon Family (formerly Household) shares Prime with one other adult and up to 4 teens at no cost (aboutamazon.com).
@@ -1350,6 +1422,7 @@ function render() {
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
   root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
+  personaBar(root);
 }
 
 function upcomingHtml() {
@@ -2097,7 +2170,7 @@ function homeView() {
     ${PHASE1 ? "" : upcomingHtml()}
     ${renewHtml()}
     ${factsHtml()}
-    <p class="note" style="margin:6px 0 0;display:flex;flex-wrap:wrap;gap:8px"><button class="btn ghost small" id="restart">Start from the beginning</button> <button class="btn ghost small" id="reset">Reset to example data</button></p>`);
+    ${persona === "me" ? `<p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start from the beginning</button></p>` : ""}`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   pieWire(f);
   wireFacts(f);
@@ -2125,8 +2198,7 @@ function homeView() {
   f.querySelectorAll("[data-tier]").forEach(b => b.addEventListener("click", () => { svTierOpen = svTierOpen === b.dataset.tier ? null : b.dataset.tier; const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-svid]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.svid)));
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
-  f.getElementById("reset").addEventListener("click", () => { state = seed(); state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); render(); window.scrollTo(0, 0); });
-  f.getElementById("restart").addEventListener("click", () => { view = "welcome"; welcomeStep = 0; render(); window.scrollTo(0, 0); });
+  f.getElementById("restart")?.addEventListener("click", () => { view = "welcome"; welcomeStep = 0; render(); window.scrollTo(0, 0); });
   return f;
 }
 function rowHtml(s) {
@@ -3414,7 +3486,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 144 · Standalone copy · Oct 25", VERSION_NUM = 144;
+const APP_VERSION = "Prototype · Version 145 · Standalone copy · Oct 25", VERSION_NUM = 145;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -3434,7 +3506,7 @@ const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
 let accountName = "";
-function firstName() { let n = ""; try { n = localStorage.getItem("sk-name") || ""; } catch {} return (n || accountName).trim().split(/\s+/)[0] || ""; }
+function firstName() { if (persona !== "me") return PERSONAS[persona].name.split(" ")[0]; let n = ""; try { n = localStorage.getItem("sk-name") || ""; } catch {} return (n || accountName).trim().split(/\s+/)[0] || ""; }
 (async () => { try { if (typeof claude === "undefined") return; const user = await claude.use("user"); const me = user && await user.me();
   if (me?.name) { accountName = me.name; if (state) render(); } } catch {} })();
 const PERSON_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg>';
@@ -3541,14 +3613,15 @@ document.getElementById("me-btn").addEventListener("click", openMe);
     if (e.key === "ArrowDown") { e.preventDefault(); rows[Math.min(rows.length - 1, i + 1)]?.focus(); } else if (e.key === "ArrowUp") { e.preventDefault(); (i > 0 ? rows[i - 1] : inp).focus(); } else if (e.key === "Escape") { close(); inp.focus(); } });
   document.addEventListener("pointerdown", e => { if (!e.target.closest(".top-search")) close(); });
 })();
-document.getElementById("help-btn").addEventListener("click", () => { if (!["help", "feedback"].includes(view)) lastView = view; view = "help"; render(); window.scrollTo(0, 0); });
+document.getElementById("persona-btn").innerHTML = PERSONA_ICON;
+document.getElementById("persona-btn").addEventListener("click", openPersonas);
 document.getElementById("view").innerHTML = `<p class="muted">Loading service prices…</p>`;
 fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
   .then(d => Promise.all(["alternatives.json", "explore-extra.json", "location-prices.json", "regional.json"].map(f => fetch(f).then(r => r.ok ? r.json() : {}).catch(() => ({})))).then(xs => [d, xs])).then(([d, xs]) => {
   buildCatalog(d); xs.slice(0, 2).forEach(buildAlts); LOC_PRICES = xs[2]?.services || {}; buildAlts(xs[3] || {});
   const saved = load();
   // New visitors start on the welcome screen and pick their own subscriptions; returning visitors keep their list.
-  state = saved?.subs ? saved : FRESH(); if (!saved?.subs) { view = "welcome"; welcomeStep = 0; }
+  state = saved?.subs ? saved : persona !== "me" ? personaState(persona) : FRESH(); if (!state.subs.length && persona === "me" && !saved?.subs) { view = "welcome"; welcomeStep = 0; }
   // Services added from Explore live in alternatives.json / explore-extra.json. If those files fail to load, keep the
   // subscription as a custom one and restore the link next time, rather than discarding the user's list.
   state.subs.forEach(s => { if (s.svcOrig && CATALOG[s.svcOrig]) { s.svc = s.svcOrig; delete s.svcOrig; }
