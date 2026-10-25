@@ -1665,8 +1665,8 @@ function aboutView() {
     <h3 style="margin:22px 0 8px">4. Your email address</h3>
     <label class="w-email" style="display:block;margin-bottom:6px"><input id="w-email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" value="${esc(p.email || "")}" aria-label="Email address"></label>
     <p class="small muted" id="w-email-msg" style="margin:0 0 18px">In this prototype it's saved only in this browser.</p>
-    <div class="w-bar" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <button class="btn primary" id="w-next">Next: your subscriptions</button>
+    <div class="w-bar" style="display:flex;flex-direction:column;gap:10px;align-items:center">
+      <button class="btn primary intro-next" id="w-next">Next</button>
       <button class="btn ghost small" id="w-example">Just looking? Try it with example data</button>
       ${state.subs.length ? `<button class="btn ghost small" id="w-cancel">Keep my current list</button>` : ""}</div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
@@ -3859,7 +3859,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 173 · Oct 25", VERSION_NUM = 173;
+const APP_VERSION = "Prototype · Version 174 · Oct 25", VERSION_NUM = 174;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
