@@ -2349,13 +2349,14 @@ function cmpData() {
     allAmt: amt + billAmt, avgAll: b ? b.amt + hhAvg : null, avgAllN: bn ? bn.n + bills.length : null };
 }
 // v166 (Cuong): name the group on the tile, with an asterisk pointing to the note at the bottom of Overview.
-const cmpWho = () => BENCH_GROUPS[benchGroup()]?.replace("Average ", "").replace(/^./, c => c.toUpperCase()) || "";
+// v167 (Cuong): students show as "Student/Adult".
+const cmpWho = () => benchGroup() === "student" ? "Student/Adult" : BENCH_GROUPS[benchGroup()]?.replace("Average ", "").replace(/^./, c => c.toUpperCase()) || "";
 function cmpLine(you, avg, fmt, all) {
   if (avg == null) return "";
   // v160 (Cuong): no subscriptions-only figure in the tiles, to keep them clean. v161: you and the average both include household services.
   const ex = "";
   const pct = avg ? Math.round((you - avg) / avg * 100) : 0, k = pct > 0 ? "more" : pct < 0 ? "less" : "";
-  return `<div class="cmp">${ex}<span>${esc(cmpWho())} avg<a href="#cmp-note" class="cmp-star" aria-label="How we compare">*</a> ${fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
+  return `<div class="cmp">${ex}<span>${esc(cmpWho())} avg<a href="#cmp-note" class="cmp-star" aria-label="How we compare">*</a> ${avg >= 1000 ? fmt(Math.round(avg)).replace(/\.00(?=\D*$)/, "") : fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
 }
 function cmpNote(d) {
   if (!d.b && !d.bn) return "";
@@ -3849,7 +3850,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 166 · Standalone copy · Oct 25", VERSION_NUM = 166;
+const APP_VERSION = "Prototype · Version 167 · Standalone copy · Oct 25", VERSION_NUM = 167;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
