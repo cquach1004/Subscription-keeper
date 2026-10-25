@@ -125,7 +125,7 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 18px; }
 .cat-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; text-align: left; min-width: 0; }
 .cat-item[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-.intro { display: grid; gap: 18px; max-width: 620px; margin: 24px auto 0; text-align: center; justify-items: center; }
+.intro { display: grid; gap: 18px; max-width: 620px; margin: 0 auto; padding: 16px 0; text-align: center; justify-items: center; align-content: center; }
 .intro-h { font-size: 30px; line-height: 1.2; margin: 0; } .intro-p { margin: 0; font-size: 17px; line-height: 1.5; color: var(--ink); }
 .intro-pillars { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; }
 .intro-pill { display: grid; justify-items: center; text-align: center; gap: 6px; padding: 16px 10px; border-radius: 16px; background: var(--surface); }
@@ -1591,6 +1591,14 @@ const INTRO_PILLARS = [
   ["Market research", "Prices and plans for hundreds of services", '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],
   ["Personalization", "Tips that fit you and how you use them", '<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>'],
 ];
+function fitIntro() {
+  const el = document.querySelector(".intro"); if (!el) return;
+  el.style.minHeight = Math.max(0, innerHeight - (el.getBoundingClientRect().top + scrollY)) + "px";
+  // Take off whatever still sits below it (page padding), so the intro fits the screen without scrolling when it can.
+  const over = document.documentElement.scrollHeight - innerHeight;
+  if (over > 0) el.style.minHeight = Math.max(0, parseFloat(el.style.minHeight) - over) + "px";
+}
+addEventListener("resize", fitIntro);
 function introView() {
   const f = el(`<section class="intro">
     <h2 class="intro-h">Smarter Spending on Subscriptions</h2>
@@ -1599,6 +1607,8 @@ function introView() {
     <div class="intro-pillars">${INTRO_PILLARS.map(([t, d, svg]) => `<div class="intro-pill"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><b>${t}</b><span class="small muted">${d}</span></div>`).join("")}</div>
     <button class="btn primary intro-next" id="i-next">Next</button></section>`);
   f.getElementById("i-next").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
+  // v151 (Cuong): middle-align the content in the space below the header.
+  requestAnimationFrame(fitIntro);
   return f;
 }
 function welcomeView() {
@@ -3559,7 +3569,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 150 · Standalone copy · Oct 25", VERSION_NUM = 150;
+const APP_VERSION = "Prototype · Version 151 · Standalone copy · Oct 25", VERSION_NUM = 151;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
