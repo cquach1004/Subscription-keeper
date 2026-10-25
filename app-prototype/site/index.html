@@ -2320,26 +2320,44 @@ function wireNudge(f) {
 }
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
 // v148 (Cuong): each Overview number compared with the average person in the profile's group.
+// Household service averages per US household, a month (v161, Cuong: compare subscriptions and household services together).
+// Counted once per category you have. Categories without a reliable average (live TV, gas, lawn, security...) count at what you pay.
+const HH_AVG = { US: {
+  mobile: { amt: 1359 / 12, src: "BLS Consumer Expenditure Survey 2024, cellular phone service", url: "https://fred.stlouisfed.org/series/CXU270102LB0101M" },
+  car_insurance: { amt: 1993 / 12, src: "BLS Consumer Expenditure Survey 2024, vehicle insurance", url: "https://fred.stlouisfed.org/series/CXU500110LB0101M" },
+  electricity: { amt: 1833 / 12, src: "BLS Consumer Expenditure Survey 2024, electricity", url: "https://fred.stlouisfed.org/series/CXUELECTRICLB0101M" },
+  internet: { amt: 69.33, src: "USTelecom 2026 Broadband Pricing Index (most popular plans, 2025), via NerdWallet", url: "https://www.nerdwallet.com/finance/learn/how-much-is-internet-per-month" },
+  home_insurance: { amt: 1569 / 12, renters: 171 / 12, src: "NAIC via Triple-I, 2022 premiums (HO-3 homeowners $1,569, renters $171 a year)", url: "https://www.iii.org/fact-statistic/facts-statistics-homeowners-and-renters-insurance" },
+} };
+const hhAvgKey = s => s.svc === "electricity" ? "electricity" : svcOf(s).category;
 function cmpData() {
   const g = benchGroup(), c = profile().country, b = benchFor(c, g), bn = benchNFor(c, g);
-  const mine = state.subs.filter(s => !isHousehold(s)), bills = state.subs.filter(isHousehold);
-  return { g, b, bn, amt: mine.reduce((a, s) => a + monthly(s), 0), n: mine.length, billAmt: bills.reduce((a, s) => a + monthly(s), 0), billN: bills.length };
+  const mine = state.subs.filter(s => !isHousehold(s)), bills = state.subs.filter(isHousehold), avgs = HH_AVG[c] || {};
+  // The average household's services: one published average per category you have; your own price where there's none.
+  const seen = new Set(), used = [];
+  let hhAvg = 0;
+  bills.forEach(s => { const k = hhAvgKey(s), a = avgs[k];
+    if (!a) { hhAvg += monthly(s); return; }
+    if (seen.has(k)) return; seen.add(k); used.push(a);
+    hhAvg += k === "home_insurance" && /rent/i.test(s.plan || "") ? a.renters : a.amt; });
+  const amt = mine.reduce((a, s) => a + monthly(s), 0), billAmt = bills.reduce((a, s) => a + monthly(s), 0);
+  return { g, b, bn, amt, n: mine.length, billAmt, billN: bills.length, used,
+    allAmt: amt + billAmt, avgAll: b ? b.amt + hhAvg : null, avgAllN: bn ? bn.n + bills.length : null };
 }
 function cmpLine(you, avg, fmt, all) {
   if (avg == null) return "";
-  // v160 (Cuong): no subscriptions-only figure in the tiles, to keep them clean; the split bar below shows it. "Subs avg" says the
-  // comparison covers subscriptions only when the big number also includes household services.
+  // v160 (Cuong): no subscriptions-only figure in the tiles, to keep them clean. v161: you and the average both include household services.
   const ex = "";
   const pct = avg ? Math.round((you - avg) / avg * 100) : 0, k = pct > 0 ? "more" : pct < 0 ? "less" : "";
-  return `<div class="cmp">${ex}<span>${all !== you ? "Subs avg" : "Avg"} ${fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
+  return `<div class="cmp">${ex}<span>Avg ${fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
 }
 function cmpNote(d) {
   if (!d.b && !d.bn) return "";
   const who = BENCH_GROUPS[d.g].replace("Average ", ""), est = [d.b, d.bn].some(x => x?.est);
   const pick = `<select id="cmp-grp" class="bench-grp" aria-label="Compare me with">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<option value="${k}" ${k === d.g ? "selected" : ""}>${n.replace("Average ", "")}</option>`).join("")}</select>`;
-  const srcs = [d.b, d.bn].filter(x => x?.url).filter((x, i, a) => a.findIndex(y => y.url === x.url) === i);
+  const srcs = [d.b, d.bn, ...d.used].filter(x => x?.url).filter((x, i, a) => a.findIndex(y => y.url === x.url) === i);
   const src = srcs.map((x, i) => `<a href="${esc(x.url)}" target="_blank" rel="noopener" title="${esc(x.src)}">Source${srcs.length > 1 ? ` ${i + 1}` : ""}</a>`).join(" &middot; ");
-  return `<p class="note cmp-note">Compared with the average ${pick} in ${esc(countryName(profile().country))}${est ? " (estimates)" : ""}.${d.billN ? ` Averages cover subscriptions only, so your household services are left out.` : ""} ${src}</p>`;
+  return `<p class="note cmp-note">Compared with the average ${pick} in ${esc(countryName(profile().country))}${est ? " (estimates)" : ""}.${d.billN ? d.used.length ? ` Household services use published US household averages where there is one (${d.used.length === 1 ? "one category" : `${d.used.length} categories`}); the rest count at what you pay.` : " Household services count at what you pay, since we have no averages for them here." : ""} ${src}</p>`;
 }
 // v154 (Cuong): what goes to subscriptions vs household services, as one bar under the top numbers.
 function splitHtml(d, total) {
@@ -2382,9 +2400,9 @@ function homeView() {
   const f = el(`
     <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
     ${state.subs.length ? `<section class="summary">
-      <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div>${cmpLine(cd.amt, cd.b?.amt, money, total)}</div>
-      <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div>${cmpLine(cd.amt * 12, cd.b && cd.b.amt * 12, money, total * 12)}</div>
-      <div class="stat tint"><div class="label">${cd.billN ? "Subscriptions & services" : "Subscriptions"}</div><div class="value num">${state.subs.length}</div>${cmpLine(cd.n, cd.bn?.n, x => x, state.subs.length)}</div>
+      <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div>${cmpLine(cd.allAmt, cd.avgAll, money, total)}</div>
+      <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div>${cmpLine(cd.allAmt * 12, cd.avgAll && cd.avgAll * 12, money, total * 12)}</div>
+      <div class="stat tint"><div class="label">${cd.billN ? "Subscriptions & services" : "Subscriptions"}</div><div class="value num">${state.subs.length}</div>${cmpLine(state.subs.length, cd.avgAllN, x => x, state.subs.length)}</div>
     </section>${splitHtml(cd, total)}` : ""}
     ${plkHtml()}
     ${setupHtml()}
@@ -3769,7 +3787,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 160 · Standalone copy · Oct 25", VERSION_NUM = 160;
+const APP_VERSION = "Prototype · Version 161 · Standalone copy · Oct 25", VERSION_NUM = 161;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
