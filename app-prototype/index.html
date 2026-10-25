@@ -1427,7 +1427,7 @@ function plkHtml() {
 function aboutView() {
   const p = profile(), country = p.country, about = new Set((p.about || []).filter(k => ABOUT.some(a => a[0] === k)));
   let age = p.age || "";
-  const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2><span class="small muted">Track what you pay for, see what you actually use, and find cheaper options. Your list stays in this browser; nobody else sees it.</span></div>
+  const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
     <h3 style="margin:8px 0 2px">Tell us about yourself</h3>
     <p class="small muted" style="margin:0 0 12px">Pick all that apply. It helps us suggest plans that fit, like student, family or senior pricing.</p>
     <div class="about-grid about-3">${ABOUT.map(([k, label, svg]) => `<button type="button" class="about-opt" data-about="${k}" aria-pressed="${about.has(k)}"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><span>${label}</span></button>`).join("")}</div>
@@ -1482,7 +1482,7 @@ function welcomeView() {
   const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
   const groups = [...new Set(more.map(v => v.category))];
   // v115 (Cuong): each category shows its top 6 (svcRank order), then "See all".
-  const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2><span class="small muted">Track what you pay for, see what you actually use, and find cheaper options. Your list stays in this browser; nobody else sees it.</span></div>
+  const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
     <button class="btn ghost small" id="w-back" style="padding-left:0;margin-bottom:4px">&larr; Back</button>
     <h3 style="margin:8px 0">Which subscriptions do you have?</h3>
     <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. You can add others, or ones we don't list, later from the Explore tab.</p>
@@ -3409,7 +3409,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 137 · Oct 25", VERSION_NUM = 137;
+const APP_VERSION = "Prototype · Version 138 · Oct 25", VERSION_NUM = 138;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
