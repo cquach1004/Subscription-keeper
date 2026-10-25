@@ -709,7 +709,10 @@ details.az[hidden] { display: none; }
 @media (max-width: 620px) { .vbars { height: 140px; gap: 1px; } .vlab { font-size: 9px; letter-spacing: -.04em; } }
 /* Phone tab bar is solid so page text never shows through it (v86). */
 @media (max-width: 620px) { :root nav.tabs, :root[data-style] nav.tabs { background: var(--surface); } }
-.sync { display: grid; gap: 8px; } .sync summary { cursor: pointer; display: grid; gap: 2px; } .sync:not([open]) summary ~ * { display: none; }
+.sync { display: grid; gap: 8px; border: 2px solid var(--accent); background: var(--accent-soft); } .sync[open] .sync-how { display: none; } .sync-tag { justify-self: start; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+.u-promo { border: 2px solid var(--accent); background: var(--accent-soft); display: grid; gap: 8px; margin: 0 0 12px; } .u-promo .chips { display: flex; flex-wrap: wrap; gap: 6px; } .u-promo .chip { background: var(--surface); color: inherit; cursor: pointer; }
+.u-sync { font-size: 12px; color: var(--accent); font-weight: 600; background: none; border: 0; padding: 0; cursor: pointer; justify-self: start; text-align: left; }
+.unr { display: grid; gap: 10px; margin-top: 14px; } .unr h3 { margin: 0; font-size: 15px; } .unr-g { display: grid; gap: 4px; } .unr-g .vb-other { margin-top: 2px; } .sync summary { cursor: pointer; display: grid; gap: 2px; } .sync:not([open]) summary ~ * { display: none; }
 .sync-steps { margin: 0; padding-left: 20px; display: grid; gap: 2px; }
 </style>
 
@@ -1895,6 +1898,33 @@ function bucketDonut(k, items, total) {
       <div class="pie-mid"><b class="num">${total ? Math.round(sum / total * 100) : 0}%</b><span>${money(sum)}</span></div></div>
     <ul class="u-legend">${items.map(x => `<li><button data-id="${x.s.id}" title="${esc(x.s.name)}">${esc(shortName(x.s))}</button><span class="num">${x.free ? "Free" : money(x.cost)}</span></li>`).join("") || `<li class="muted">None</li>`}</ul></div></section>`;
 }
+// Why a subscription isn't in last month's rings (Cuong, v131: people didn't know what "Not rated for last month" meant).
+function whyUnrated(s) {
+  const m = measureOf(s), { prevRow } = periodKeys(s);
+  if (m.costOnly) return "plan"; if (!prevRow || (m.insure || m.results) && rate(s).early) return "new";
+  if (prevRow.paused) return "paused"; if (needsPrice(s)) return "price"; if (s.needsUse) return "use"; return "new";
+}
+const UNRATED = {
+  use: ["Tell us how much you use it", "We need your usage to rate these. Tap one to add it.", true],
+  price: ["Add what you pay", "We need your price to rate these. Tap one to add it.", true],
+  new: ["Too new to rate", "These get a rating once they've had a full month.", false],
+  paused: ["Paused", "These were paused for the month, so there was nothing to rate.", false],
+  plan: ["Not rated on use", "Protection plans and essentials are judged as plans, not by how often you use them.", false],
+};
+function unratedHtml(list, monthName) {
+  const g = {}; list.forEach(s => (g[whyUnrated(s)] ||= []).push(s));
+  return `<div class="unr"><h3>Not in the ${esc(monthName)} rings</h3>${Object.keys(UNRATED).filter(k => g[k]).map(k => `<div class="unr-g"><b class="small">${UNRATED[k][0]}</b><span class="small muted">${UNRATED[k][1]}</span>
+    <div class="vb-other">${g[k].map(s => `<button class="chip" data-id="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div></div>`).join("")}</div>`;
+}
+// Real usage promo on Usage (Cuong, v131): the feature that sets the app apart, so it's offered where people slide their usage.
+function syncPromoHtml() {
+  const can = state.subs.filter(s => SYNC[s.svc] && !s.syncInfo);
+  if (!can.length) return "";
+  return `<div class="card u-promo"><span class="sync-tag">Real usage</span><b>Stop guessing: use your real history</b>
+    <span class="small">${esc(Object.values(SYNC).map(c => c.name).join(", ").replace(/, ([^,]*)$/, " and $1"))} let you download your own history. Choose the file here and we fill in your usage month by month, so your ratings and savings tips are based on what you really did. The file is read on your device and only monthly totals are kept.</span>
+    <div class="chips">${can.map(s => `<button class="chip" data-sync="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div></div>`;
+}
+function openSync(id) { openSheet(id); const d = document.querySelector("#sheet-root details.sync"); if (d) { d.open = true; d.scrollIntoView({ block: "start" }); } }
 function usageView() {
   const last = state.subs.map(lastMonthOf).filter(Boolean), total = last.reduce((a, x) => a + x.cost, 0);
   const by = k => last.filter(x => x.bucket === k).sort((a, b) => b.cost - a.cost);
@@ -1903,21 +1933,23 @@ function usageView() {
   const live = state.subs.filter(s => { const m = measureOf(s); return !m.costOnly && !m.checks; }).sort((a, b) => (monthly(b) || 0) - (monthly(a) || 0));
   const prevName = new Date(addMonths(-1) + "T12:00:00").toLocaleDateString(undefined, { month: "long" }), curName = new Date().toLocaleDateString(undefined, { month: "long" });
   const row = s => { const m = measureOf(s), { cur } = periodKeys(s), h = s.hist?.[m.id]?.[cur], n = s.needsUse ? 0 : h != null ? Math.round(h / PER[m.per].f * 10) / 10 : s.rate, r = rate(s);
-    return `<div class="u-row" data-sub="${s.id}">${logoHtml(svcOf(s))}<div class="u-nm"><button class="u-open" data-id="${s.id}">${esc(s.name)}</button><span class="small muted">${esc(m.label)}</span></div>
+    return `<div class="u-row" data-sub="${s.id}">${logoHtml(svcOf(s))}<div class="u-nm"><button class="u-open" data-id="${s.id}">${esc(s.name)}</button><span class="small muted">${esc(m.label)}</span>${SYNC[s.svc] ? `<button class="u-sync" data-sync="${s.id}">${s.syncInfo ? `From your ${esc(SYNC[s.svc].file)}, ${esc(fmtDate(s.syncInfo.at))}` : "Use my real usage"}</button>` : ""}</div>
       <span class="pill ${r.key}">${esc(r.label)}</span>${m.checks ? checksHtml(s, m, cur) : slider(m, n, `data-u="${s.id}" aria-label="${esc(m.label)}, ${esc(s.name)}"`)}</div>`; };
   const f = el(`<div class="section-head"><h2>Usage</h2><span class="small muted">How last month went, and what you're using this month.</span></div>
     <h3 style="margin:4px 0 10px">${esc(prevName)}: what your money bought</h3>
     ${last.length ? `<div class="u-pies">${Object.keys(BUCKETS).map(k => bucketDonut(k, by(k), total)).join("")}</div>
       <p class="note" style="margin:8px 0 0">Each ring is that group's share of the ${money(total)} you paid last month for rated subscriptions.${last.some(x => x.free) ? " Free services count as Great value but add nothing to the rings." : ""}</p>`
       : `<p class="muted">Nothing to show for last month yet. Once a month ends with your usage set, it shows here.</p>`}
-    ${unrated.length ? `<div class="vb-other"><span class="small muted">Not rated for last month (protection plans, paused, new, or missing usage or price):</span>${unrated.map(s => `<button class="chip" data-id="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div>` : ""}
+    ${unrated.length ? unratedHtml(unrated, prevName) : ""}
     <div class="section-head u-cur" style="margin-top:26px"><h2 style="font-size:20px">${esc(curName)} so far</h2>${state.subs.length ? checkinLink() : ""}</div>
     ${state.subs.length && checkinOpen ? checkinHtml() : ""}
-    <p class="small muted" style="margin:-4px 0 10px">Slide to match how you're using each one. Whatever a slider shows when the month ends is saved as that month's usage.</p>
+    <p class="small muted" style="margin:-4px 0 10px">Slide to match how you're using each one, or skip the guessing and use your real history where the service allows it. Whatever a slider shows when the month ends is saved as that month's usage.</p>
+    ${syncPromoHtml()}
     ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Explore tab.</p>`}
     <details class="note home-how u-how" style="margin-top:12px"><summary>How we rate value</summary>Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>
     <div class="charts u-month" style="margin-top:22px">${monthBarsHtml()}</div>`);
   f.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  f.querySelectorAll("[data-sync]").forEach(b => b.addEventListener("click", () => openSync(b.dataset.sync)));
   wireCheckin(f);
   wireChecks(f, (s, box) => { const r = rate(s), pill = box.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; });
   f.querySelectorAll("[data-u]").forEach(inp => { const s = state.subs.find(x => x.id === inp.dataset.u), m = measureOf(s);
@@ -2945,14 +2977,14 @@ const SYNC = {
     link: ["Open Spotify privacy settings", "https://www.spotify.com/account/privacy/"],
     steps: ["At spotify.com, open your profile icon, then Account, then Privacy settings.", "Under Download your data, tick Extended streaming history and request it. Confirm from Spotify's email.",
       "Spotify emails you when it's ready, usually in a few days and at most 30. Choose the .zip here."],
-    extra: "Your file covers only your own Spotify account. If others share your plan, their listening isn't in it, so add theirs on the month rows above. The Account data download works too, but it only covers the last year." },
+    extra: "Your file covers only your own Spotify account. If others share your plan, their listening isn't in it, so add theirs under Usage by month. The Account data download works too, but it only covers the last year." },
 };
 function syncHtml(s) {
   const c = SYNC[s.svc]; if (!c) return "";
   const info = s.syncInfo, asked = s.syncAsked;
   const found = info ? (info.text || `${info.prompts != null ? `${fmtN(info.prompts)} prompts on ` : ""}${info.days} active days from ${fmtDate(info.first)} to ${fmtDate(info.last)}, ${info.convs} conversations`) : "";
-  return `<details class="card sync"${s.syncAsked ? " open" : ""}><summary><b>${info ? `Your real ${esc(c.name)} usage` : `Get your real ${esc(c.name)} usage`}</b>
-    <span class="small muted">${info ? `From your ${esc(c.file)}, pulled ${esc(fmtDate(info.at))}${info.estimated ? " (hours estimated)" : ""}` : s.syncAsked ? `Requested ${esc(fmtDate(s.syncAsked))}` : "Use your own history instead of an estimate"}</span><span class="small" style="color:var(--accent);font-weight:600">${info ? "Update it" : "Show me how"}</span></summary>
+  return `<details class="card sync"${s.syncAsked ? " open" : ""}><summary><span class="sync-tag">Real usage</span><b>${info ? `Your real ${esc(c.name)} usage` : `Get your real ${esc(c.name)} usage`}</b>
+    <span class="small muted">${info ? `From your ${esc(c.file)}, pulled ${esc(fmtDate(info.at))}${info.estimated ? " (hours estimated)" : ""}` : s.syncAsked ? `Requested ${esc(fmtDate(s.syncAsked))}` : "Use your own history instead of an estimate"}</span><span class="small sync-how" style="color:var(--accent);font-weight:600">${info ? "Update it" : "Show me how"}</span></summary>
     <p class="small muted" style="margin:0">Instead of estimating, use your own ${esc(c.name)} ${esc(c.file)} to fill in ${esc(c.what)} month by month. The file is read in this browser only. Only the monthly totals are kept, not what you ${s.svc === "netflix" ? "watched" : s.svc === "spotify" ? "played" : "wrote"}.</p>
     <ol class="small sync-steps">${c.steps.map(t => `<li>${esc(t)}</li>`).join("")}</ol>
     ${c.extra ? `<p class="small muted" style="margin:0">${esc(c.extra)}</p>` : ""}
@@ -2961,7 +2993,7 @@ function syncHtml(s) {
     <div class="row-btns" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
       ${c.link ? `<a class="btn small ghost" href="${c.link[1]}" target="_blank" rel="noopener">${esc(c.link[0])}</a>` : ""}
       ${c.wait && !asked ? `<button class="btn small ghost" id="sync-asked">I've requested it</button>` : ""}
-      <label class="btn small" style="cursor:pointer">${info ? "Pull again from a newer file" : "Choose file"}<input type="file" id="sync-file" accept="${c.accept}" ${c.multi ? "multiple" : ""} hidden></label></div>
+      <label class="btn primary small" style="cursor:pointer">${info ? "Pull again from a newer file" : "Choose file"}<input type="file" id="sync-file" accept="${c.accept}" ${c.multi ? "multiple" : ""} hidden></label></div>
     <span class="small muted" id="sync-msg" role="status"></span></details>`;
 }
 const loadZip = () => window.JSZip ? Promise.resolve(window.JSZip) : new Promise((ok, no) => { const sc = document.createElement("script");
@@ -3354,7 +3386,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 130 · Oct 25", VERSION_NUM = 130;
+const APP_VERSION = "Prototype · Version 131 · Oct 25", VERSION_NUM = 131;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
