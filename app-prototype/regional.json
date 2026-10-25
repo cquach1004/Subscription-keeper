@@ -7643,6 +7643,1653 @@
    "region_group": "great-lakes",
    "color": "#0f766e",
    "mark": "CC"
+  },
+  {
+   "id": "jbg_organic_csa",
+   "name": "Johnson's Backyard Garden CSA",
+   "category": "food",
+   "alternative_to": [
+    "hellofresh",
+    "boston_organics"
+   ],
+   "kind": "direct",
+   "service_states": [
+    "TX"
+   ],
+   "service_area_note": "Organic farm box delivery and pickup in Austin, Dallas, Houston, San Antonio, Waco and nearby Texas cities",
+   "official_url": "https://www.jbgorganic.com/",
+   "plans": [
+    {
+     "id": "individual",
+     "name": "Individual box (weekly, pickup)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": 95.33,
+     "verified": true,
+     "note": "$22 per box at a pickup site; +$5 for home delivery. Effective monthly assumes weekly boxes; every-other-week halves it."
+    },
+    {
+     "id": "small",
+     "name": "Small box (weekly, pickup)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": 119.17,
+     "verified": true,
+     "note": "$27.50 per box; +$5 home delivery."
+    },
+    {
+     "id": "medium",
+     "name": "Medium box (weekly, pickup)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": 151.67,
+     "verified": true,
+     "note": "$35 per box; +$5 home delivery."
+    },
+    {
+     "id": "large",
+     "name": "Large box (weekly, pickup)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": 177.67,
+     "verified": true,
+     "note": "$41 per box; +$5 home delivery."
+    }
+   ],
+   "default_plan": "medium",
+   "features": [
+    {
+     "id": "organic_produce",
+     "name": "Local organic produce box",
+     "plans": "all",
+     "overlap_tag": "produce_box"
+    },
+    {
+     "id": "biweekly",
+     "name": "Weekly or every-other-week delivery",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "home_delivery",
+     "name": "Home delivery for +$5 per box",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Texans who want a local organic produce box instead of a national meal kit.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Sign-up page said new CSA sign-ups were closed (waitlist) when checked; email farm@jbgorganic.com."
+   ],
+   "sources": [
+    {
+     "label": "JBG: What is CSA (prices)",
+     "url": "https://www.jbgorganic.com/csa"
+    },
+    {
+     "label": "JBG sign-up page",
+     "url": "https://www.jbgorganic.com/signup"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#2563eb",
+   "mark": "JB"
+  },
+  {
+   "id": "sparklight",
+   "name": "Sparklight (Cable One) Internet",
+   "category": "internet",
+   "alternative_to": [
+    "spectrum_internet"
+   ],
+   "kind": "direct",
+   "service_states": [
+    "AL",
+    "AZ",
+    "AR",
+    "GA",
+    "ID",
+    "IL",
+    "IN",
+    "IA",
+    "KS",
+    "LA",
+    "MN",
+    "MS",
+    "MO",
+    "NE",
+    "NM",
+    "ND",
+    "OK",
+    "OR",
+    "SC",
+    "TN",
+    "TX"
+   ],
+   "service_area_note": "Cable/fiber internet in smaller cities, e.g. Sherman TX, Ardmore and Ada OK, southwest Arkansas",
+   "official_url": "https://www.sparklight.com/internet",
+   "plans": [
+    {
+     "id": "1_gig",
+     "name": "1 Gig",
+     "price_monthly": 50,
+     "price_annual": null,
+     "effective_monthly": 50,
+     "verified": true,
+     "note": "Promo $50/mo for 24 months with AutoPay + paperless (new customers, offer ends 1/3/27); regular $60-$105/mo. Modem/eero lease $0-$14.99/mo extra."
+    },
+    {
+     "id": "600",
+     "name": "600 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Plan listed; price not posted on plans page."
+    },
+    {
+     "id": "300",
+     "name": "300 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Plan listed; price not posted on plans page."
+    },
+    {
+     "id": "lift",
+     "name": "Lift Internet (200 Mbps, low-income)",
+     "price_monthly": 29.95,
+     "price_annual": null,
+     "effective_monthly": 29.95,
+     "verified": true,
+     "note": "For households qualifying through federal assistance programs; equipment included."
+    }
+   ],
+   "default_plan": "1_gig",
+   "features": [
+    {
+     "id": "price_lock",
+     "name": "2-year price lock on 1 Gig",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "unlimited_mobile",
+     "name": "Free Unlimited Mobile line for 1 year",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Small-town Oklahoma, Texas, Arkansas and Louisiana households where Sparklight is the cable provider.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Price after the 24-month promo can nearly double; set a reminder."
+   ],
+   "sources": [
+    {
+     "label": "Sparklight internet plans",
+     "url": "https://www.sparklight.com/internet"
+    },
+    {
+     "label": "Sparklight service states",
+     "url": "https://www.sparklight.com/local"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#4d7c0f",
+   "mark": "SO"
+  },
+  {
+   "id": "kinetic_internet",
+   "name": "Kinetic by Windstream",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AL",
+    "AR",
+    "FL",
+    "GA",
+    "IA",
+    "KY",
+    "MN",
+    "MS",
+    "MO",
+    "NE",
+    "NM",
+    "NY",
+    "NC",
+    "OH",
+    "OK",
+    "PA",
+    "SC",
+    "TX"
+   ],
+   "service_area_note": "Fiber and DSL internet, mostly rural and small-town areas in 18 states",
+   "official_url": "https://www.gokinetic.com/",
+   "plans": [
+    {
+     "id": "fiber_entry",
+     "name": "Fiber Internet (starting price)",
+     "price_monthly": 19.99,
+     "price_annual": null,
+     "effective_monthly": 19.99,
+     "verified": true,
+     "note": "'Starts at $19.99/mo with AutoPay in select markets' ($5/mo AutoPay credit). Speeds 300 Mbps-2 Gig; per-speed prices only shown by address."
+    },
+    {
+     "id": "fiber_2gig",
+     "name": "Fiber 2 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not posted without an address; 2-year price guarantee per offer conditions."
+    },
+    {
+     "id": "dsl",
+     "name": "DSL Internet",
+     "price_monthly": 44.99,
+     "price_annual": null,
+     "effective_monthly": 44.99,
+     "verified": true,
+     "note": "Promo price for 1 year with AutoPay; rates change afterward."
+    }
+   ],
+   "default_plan": "fiber_entry",
+   "features": [
+    {
+     "id": "no_contract",
+     "name": "No annual contract or data caps",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "price_guarantee",
+     "name": "1-3 year price guarantee depending on tier",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rural Arkansas, Oklahoma and Texas homes in Windstream's old phone territory.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Paper bills add $4/mo; enroll in AutoPay separately to get the $5 credit."
+   ],
+   "sources": [
+    {
+     "label": "Kinetic home page",
+     "url": "https://www.gokinetic.com/"
+    },
+    {
+     "label": "Kinetic states",
+     "url": "https://www.gokinetic.com/locations"
+    },
+    {
+     "label": "Kinetic offer conditions",
+     "url": "https://www.gokinetic.com/residential/offer-conditions"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#b45309",
+   "mark": "Kb"
+  },
+  {
+   "id": "ezee_fiber",
+   "name": "Ezee Fiber",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TX",
+    "NM",
+    "WA",
+    "IL",
+    "OR",
+    "MI"
+   ],
+   "service_area_note": "Fiber internet mainly in Greater Houston, plus Albuquerque and a few other markets",
+   "official_url": "https://www.ezeefiber.com/",
+   "plans": [
+    {
+     "id": "1_gig",
+     "name": "1 Gig + Wi-Fi 7",
+     "price_monthly": 69,
+     "price_annual": null,
+     "effective_monthly": 69,
+     "verified": true,
+     "note": "Symmetrical; eero Pro 7 router included; no term contract."
+    },
+    {
+     "id": "3_gig",
+     "name": "3 Gig + Wi-Fi 7",
+     "price_monthly": 89,
+     "price_annual": null,
+     "effective_monthly": 89,
+     "verified": true,
+     "note": "Symmetrical; router and extender included."
+    },
+    {
+     "id": "5_gig",
+     "name": "5 Gig + Wi-Fi 7",
+     "price_monthly": 99,
+     "price_annual": null,
+     "effective_monthly": 99,
+     "verified": true,
+     "note": "Symmetrical."
+    },
+    {
+     "id": "8_gig",
+     "name": "8 Gig + Wi-Fi 7",
+     "price_monthly": 119,
+     "price_annual": null,
+     "effective_monthly": 119,
+     "verified": true,
+     "note": "Symmetrical; eero Max 7."
+    }
+   ],
+   "default_plan": "1_gig",
+   "features": [
+    {
+     "id": "free_install",
+     "name": "Free professional installation",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "wifi7",
+     "name": "Wi-Fi 7 router included",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Houston-area homes wanting symmetrical multi-gig fiber.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Ezee Fiber plans",
+     "url": "https://www.ezeefiber.com/"
+    },
+    {
+     "label": "Ezee Fiber service areas",
+     "url": "https://ezeefiber.com/service-areas/"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#7c3aed",
+   "mark": "EF"
+  },
+  {
+   "id": "lft_fiber",
+   "name": "LFT Fiber (formerly LUS Fiber)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "LA"
+   ],
+   "service_area_note": "City-owned fiber internet in Lafayette and the Acadiana region of Louisiana",
+   "official_url": "https://www.lftfiber.com/",
+   "plans": [
+    {
+     "id": "250",
+     "name": "250 Mbps",
+     "price_monthly": 55,
+     "price_annual": null,
+     "effective_monthly": 55,
+     "verified": true,
+     "note": "Not a promo price; Wi-Fi equipment $15/mo optional."
+    },
+    {
+     "id": "500",
+     "name": "500 Mbps",
+     "price_monthly": 65,
+     "price_annual": null,
+     "effective_monthly": 65,
+     "verified": true,
+     "note": "Symmetrical."
+    },
+    {
+     "id": "1_gig",
+     "name": "1 Gbps",
+     "price_monthly": 85,
+     "price_annual": null,
+     "effective_monthly": 85,
+     "verified": true,
+     "note": "Symmetrical."
+    },
+    {
+     "id": "2_gig",
+     "name": "2 Gbps",
+     "price_monthly": 120,
+     "price_annual": null,
+     "effective_monthly": 120,
+     "verified": true,
+     "note": "Wi-Fi 7 included; listed on homepage only."
+    },
+    {
+     "id": "6_gig",
+     "name": "6 Gbps",
+     "price_monthly": 170,
+     "price_annual": null,
+     "effective_monthly": 170,
+     "verified": true,
+     "note": "Wi-Fi 7 included; listed on homepage only."
+    }
+   ],
+   "default_plan": "500",
+   "features": [
+    {
+     "id": "no_contract",
+     "name": "No contract, no data caps",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "fixed_price",
+     "name": "Non-promotional pricing",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Lafayette-area households wanting fiber without promo price jumps.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "LFT Fiber home page",
+     "url": "https://www.lftfiber.com/"
+    },
+    {
+     "label": "LFT Fiber internet",
+     "url": "https://www.lftfiber.com/internet"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#9d174d",
+   "mark": "LF"
+  },
+  {
+   "id": "conway_corp",
+   "name": "Conway Corporation Internet",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AR"
+   ],
+   "service_area_note": "City-owned utility internet in Conway, Arkansas",
+   "official_url": "https://conwaycorp.com/residential-internet/",
+   "plans": [
+    {
+     "id": "300",
+     "name": "Broadband 300",
+     "price_monthly": 60,
+     "price_annual": null,
+     "effective_monthly": 60,
+     "verified": true,
+     "note": "Not introductory; no contract."
+    },
+    {
+     "id": "500",
+     "name": "Broadband 500",
+     "price_monthly": 75,
+     "price_annual": null,
+     "effective_monthly": 75,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "1_gig",
+     "name": "1 Gig",
+     "price_monthly": 90,
+     "price_annual": null,
+     "effective_monthly": 90,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "2_gig",
+     "name": "2 Gig",
+     "price_monthly": 135,
+     "price_annual": null,
+     "effective_monthly": 135,
+     "verified": true,
+     "note": "Includes Managed WiFi."
+    },
+    {
+     "id": "5_gig",
+     "name": "5 Gig",
+     "price_monthly": 165,
+     "price_annual": null,
+     "effective_monthly": 165,
+     "verified": true,
+     "note": "Fiber locations only; includes Managed WiFi."
+    }
+   ],
+   "default_plan": "1_gig",
+   "features": [
+    {
+     "id": "unlimited_data",
+     "name": "Unlimited data",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "managed_wifi",
+     "name": "Managed WiFi (Plume) $10/mo or included on 2-5 Gig",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Conway, AR residents wanting stable, non-promo pricing.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "One-time $90 install and $200 deposit for internet-only accounts."
+   ],
+   "sources": [
+    {
+     "label": "Conway Corp residential internet",
+     "url": "https://conwaycorp.com/residential-internet/"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#4d7c0f",
+   "mark": "CC"
+  },
+  {
+   "id": "ritter_communications",
+   "name": "Ritter Communications",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AR",
+    "MO",
+    "TN"
+   ],
+   "service_area_note": "Fiber-rich internet in northeast and central Arkansas plus parts of Missouri and Tennessee",
+   "official_url": "https://www.rittercommunications.com/",
+   "plans": [
+    {
+     "id": "350",
+     "name": "350 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not posted; 2-year price lock; $49.95 install."
+    },
+    {
+     "id": "750",
+     "name": "750 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not posted; 2-year price lock."
+    },
+    {
+     "id": "1_gig",
+     "name": "1 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not posted; 2-year price lock."
+    },
+    {
+     "id": "2_gig",
+     "name": "2 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not posted; all-inclusive pricing, free install."
+    }
+   ],
+   "default_plan": "1_gig",
+   "features": [
+    {
+     "id": "price_lock",
+     "name": "2-year price lock",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "smart_wifi",
+     "name": "Plume Smart WiFi included",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Northeast Arkansas households outside big-cable areas.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Ritter Communications home page",
+     "url": "https://www.rittercommunications.com/"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#0f766e",
+   "mark": "RC"
+  },
+  {
+   "id": "arkansas_democrat_gazette",
+   "name": "Arkansas Democrat-Gazette",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AR"
+   ],
+   "service_area_note": "Statewide Arkansas newspaper (also Northwest Arkansas edition)",
+   "official_url": "https://subscribe.arkansasonline.com/subscription/arkansas-democrat-gazette",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Unlimited Digital Access",
+     "price_monthly": 34,
+     "price_annual": null,
+     "effective_monthly": 34,
+     "verified": true,
+     "note": "Web, app and daily replica edition."
+    },
+    {
+     "id": "digital_ipad",
+     "name": "Digital Access + iPad",
+     "price_monthly": 39,
+     "price_annual": null,
+     "effective_monthly": 39,
+     "verified": true,
+     "note": "iPad included while subscription stays active."
+    },
+    {
+     "id": "digital_ipad_sunday",
+     "name": "Digital + iPad + Sunday delivery",
+     "price_monthly": 39,
+     "price_annual": null,
+     "effective_monthly": 39,
+     "verified": true,
+     "note": "Marked 'Most Popular'."
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "ipad",
+     "name": "Free iPad with subscription",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "replica",
+     "name": "Daily digital replica edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Arkansans who want statewide news; the iPad plan costs only $5 more.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "ADG subscription page",
+     "url": "https://subscribe.arkansasonline.com/subscription/arkansas-democrat-gazette"
+    },
+    {
+     "label": "NWA Democrat-Gazette subscribe",
+     "url": "https://www.nwaonline.com/subscribe/"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#9d174d",
+   "mark": "AD"
+  },
+  {
+   "id": "dallas_morning_news",
+   "name": "The Dallas Morning News",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TX"
+   ],
+   "service_area_note": "Dallas-Fort Worth daily newspaper",
+   "official_url": "https://www.dallasnews.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital access",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Official price page blocks automated checks. A 2024 report cited ~$391/yr for digital-only; not confirmed for 2026."
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "app",
+     "name": "News app and e-edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "DFW readers wanting local coverage.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "D Magazine on DMN pricing (2024)",
+     "url": "https://www.dmagazine.com/micropost/is-the-morning-news-worth-391-per-year/"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#9d174d",
+   "mark": "DM"
+  },
+  {
+   "id": "houston_chronicle",
+   "name": "Houston Chronicle",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TX"
+   ],
+   "service_area_note": "Houston-area daily newspaper (Hearst)",
+   "official_url": "https://www.houstonchronicle.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not retrievable (subscribe page blocks automated access); check the site for current intro offer."
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "app",
+     "name": "News app and e-edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Houston readers wanting local coverage.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Houston Chronicle app listing",
+     "url": "https://apps.apple.com/app/id453564805"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#0f766e",
+   "mark": "HC"
+  },
+  {
+   "id": "the_advocate_nola",
+   "name": "The Advocate / The Times-Picayune",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "LA"
+   ],
+   "service_area_note": "Louisiana daily newspapers for Baton Rouge, New Orleans (NOLA.com), Lafayette and Acadiana",
+   "official_url": "https://www.theadvocate.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Intro offer shown as 'Now just $1' (March 2026); regular renewal price not posted publicly."
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "e_edition",
+     "name": "E-edition access",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Louisianans following Baton Rouge and New Orleans news.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "The Advocate: how to subscribe (2026)",
+     "url": "https://www.theadvocate.com/baton_rouge/news/how-to-subscribe-or-register-your-subscription-for-digital-access-to-theadvocate-com/article_bebe17e8-4ffc-11e9-957c-97d1e3395375.html"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#0f766e",
+   "mark": "AT"
+  },
+  {
+   "id": "the_oklahoman",
+   "name": "The Oklahoman",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "OK"
+   ],
+   "service_area_note": "Oklahoma City daily newspaper (USA TODAY Network)",
+   "official_url": "https://www.oklahoman.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Official offer page blocks automated access. A 2023 app paywall showed $24.99/mo or $69.99/yr; not confirmed for 2026."
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "app",
+     "name": "News app and e-edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Oklahoma City-area readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Adapty paywall capture (2023)",
+     "url": "https://adapty.io/paywall-library/the-oklahoman-news/"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#0f766e",
+   "mark": "Ok"
+  },
+  {
+   "id": "tulsa_world",
+   "name": "Tulsa World",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "OK"
+   ],
+   "service_area_note": "Tulsa-area daily newspaper",
+   "official_url": "https://tulsaworld.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "No current official price found; 2023 app listings showed conflicting $22.99-$42.99/mo figures."
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "app",
+     "name": "News app and e-edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Tulsa-area readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Adapty paywall capture (2023)",
+     "url": "https://adapty.io/paywall-library/tulsa-world/"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#2563eb",
+   "mark": "TW"
+  },
+  {
+   "id": "fitness_connection",
+   "name": "Fitness Connection",
+   "category": "fitness",
+   "alternative_to": [
+    "planet_fitness",
+    "la_fitness"
+   ],
+   "kind": "direct",
+   "service_states": [
+    "TX",
+    "NC",
+    "NV",
+    "GA"
+   ],
+   "service_area_note": "About 46 big-box gyms in Texas (Austin, DFW, Houston, San Antonio), plus Charlotte/Raleigh, Las Vegas and Atlanta",
+   "official_url": "https://fitnessconnection.com/",
+   "plans": [
+    {
+     "id": "standard",
+     "name": "Standard membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Third-party 2025 report: about $15.99-$29.99/mo plus ~$59 annual fee; dues rose in July and Nov 2025. Official site does not post prices."
+    },
+    {
+     "id": "fc_plus",
+     "name": "FC Plus",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Premium tier with all-club access; price not posted."
+    }
+   ],
+   "default_plan": "standard",
+   "features": [
+    {
+     "id": "free_trial",
+     "name": "5-day free trial",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "courts",
+     "name": "Basketball/pickleball courts at many clubs",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Texans wanting a low-cost big-box gym with courts and pools.",
+   "free_trial_days": 5,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Fitness Connection free trial",
+     "url": "https://fitnessconnection.com/free-trial"
+    },
+    {
+     "label": "Athletech News (July 2026)",
+     "url": "https://athletechnews.com/fitness-connection-pours-10m-into-club-upgrades-across-texas/"
+    },
+    {
+     "label": "WellFit Insider cost review (2025)",
+     "url": "https://wellfitinsider.com/fitness-club-guides/fitness-connection-membership-cost-review/"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#7c3aed",
+   "mark": "FC"
+  },
+  {
+   "id": "24_hour_fitness",
+   "name": "24 Hour Fitness",
+   "category": "fitness",
+   "alternative_to": [
+    "la_fitness"
+   ],
+   "kind": "direct",
+   "service_states": [
+    "CA",
+    "TX",
+    "CO",
+    "HI",
+    "NV",
+    "OR",
+    "WA",
+    "NY",
+    "NJ"
+   ],
+   "service_area_note": "235+ gyms in 9 states, including Dallas, Houston, Austin and San Antonio",
+   "official_url": "https://www.24hourfitness.com/",
+   "plans": [
+    {
+     "id": "silver",
+     "name": "Silver (one club)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "NerdWallet (Oct 2025): $19.99-$29.99/mo month-to-month; select locations."
+    },
+    {
+     "id": "gold",
+     "name": "Gold (regional)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "NerdWallet (Oct 2025): $24.99-$51.99/mo month-to-month."
+    },
+    {
+     "id": "platinum",
+     "name": "Platinum (national)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "NerdWallet (Oct 2025): $39.99-$69.99/mo month-to-month."
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "annual_fee",
+     "name": "$69.99 annual fee on all memberships (official site)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "free_pass",
+     "name": "Free 5-day pass",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Texas gym-goers who travel to California or the West.",
+   "free_trial_days": 5,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "24 Hour Fitness membership options",
+     "url": "https://www.24hourfitness.com/membership/membership-options/"
+    },
+    {
+     "label": "NerdWallet cost guide",
+     "url": "https://www.nerdwallet.com/finance/learn/24-hour-fitness-membership-cost"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#0f766e",
+   "mark": "2H"
+  },
+  {
+   "id": "ymca_dallas",
+   "name": "YMCA of Metropolitan Dallas",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TX"
+   ],
+   "service_area_note": "YMCA branches across Dallas-area communities",
+   "official_url": "https://www.ymcadallas.org/",
+   "plans": [
+    {
+     "id": "adult",
+     "name": "Adult (30-61)",
+     "price_monthly": 42,
+     "price_annual": null,
+     "effective_monthly": 42,
+     "verified": true,
+     "note": "$30 joiner fee. Rates from the Cross Timbers branch page; other branches may differ."
+    },
+    {
+     "id": "young_adult",
+     "name": "Young Adult (18-29)",
+     "price_monthly": 29,
+     "price_annual": null,
+     "effective_monthly": 29,
+     "verified": true,
+     "note": "$20 joiner fee."
+    },
+    {
+     "id": "family",
+     "name": "2 Adults + Children",
+     "price_monthly": 69,
+     "price_annual": null,
+     "effective_monthly": 69,
+     "verified": true,
+     "note": "$40 joiner fee."
+    },
+    {
+     "id": "senior",
+     "name": "Senior (62+)",
+     "price_monthly": 34,
+     "price_annual": null,
+     "effective_monthly": 34,
+     "verified": true,
+     "note": "$20 joiner fee."
+    }
+   ],
+   "default_plan": "adult",
+   "features": [
+    {
+     "id": "financial_aid",
+     "name": "Financial assistance available",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Dallas families wanting pools, classes and childcare programs.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "YMCA Dallas membership types",
+     "url": "https://www.ymcadallas.org/node/1900"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#be123c",
+   "mark": "Yo"
+  },
+  {
+   "id": "ymca_houston",
+   "name": "YMCA of Greater Houston",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TX"
+   ],
+   "service_area_note": "YMCA centers across the Houston region",
+   "official_url": "https://ymcahouston.org/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Month-to-month facility membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not posted; no join fee; cancel with 10 days' notice."
+    },
+    {
+     "id": "annual",
+     "name": "Annual facility membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not posted; lower fixed rate with 12-month commitment; fall promo 15% off."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "money_back",
+     "name": "30-day money-back guarantee",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "day_pass",
+     "name": "Free day pass",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Houston families wanting pools, classes and youth programs.",
+   "free_trial_days": 1,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "YMCA Houston membership campaign",
+     "url": "https://ymcahouston.org/fall-membership-campaign"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#7c3aed",
+   "mark": "Yo"
+  },
+  {
+   "id": "ymca_okc",
+   "name": "YMCA of Greater Oklahoma City",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "OK"
+   ],
+   "service_area_note": "YMCA branches in the Oklahoma City metro",
+   "official_url": "https://ymcaokc.org/",
+   "plans": [
+    {
+     "id": "adult",
+     "name": "Adult (26+)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Standard dues not posted; $70 join fee."
+    },
+    {
+     "id": "senior",
+     "name": "Senior (65+)",
+     "price_monthly": 43,
+     "price_annual": null,
+     "effective_monthly": 43,
+     "verified": true,
+     "note": "$50 join fee."
+    },
+    {
+     "id": "household",
+     "name": "Household",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Standard dues not posted; $105 join fee; 65+ household $68/mo."
+    }
+   ],
+   "default_plan": "adult",
+   "features": [
+    {
+     "id": "ymca360",
+     "name": "YMCA360 digital option",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "OKC families wanting a community gym and pool.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "YMCA OKC membership options",
+     "url": "https://ymcaokc.org/membership-options/"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#0f766e",
+   "mark": "Yo"
+  },
+  {
+   "id": "ochsner_fitness",
+   "name": "Ochsner Fitness Center",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "LA"
+   ],
+   "service_area_note": "Medically based gyms in Harahan, Metairie and downtown New Orleans",
+   "official_url": "https://digital.ochsner.org/ofc-membership",
+   "plans": [
+    {
+     "id": "membership",
+     "name": "Membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Prices not posted; call 504-733-1600."
+    }
+   ],
+   "default_plan": "membership",
+   "features": [
+    {
+     "id": "24_7",
+     "name": "24/7 access at Heritage Plaza Metairie",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "New Orleans-area members wanting a hospital-affiliated gym.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Ochsner Fitness membership",
+     "url": "https://digital.ochsner.org/ofc-membership"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#0f766e",
+   "mark": "OF"
+  },
+  {
+   "id": "abc_home_commercial",
+   "name": "ABC Home & Commercial Services",
+   "category": "lawn_pest",
+   "alternative_to": [
+    "terminix",
+    "orkin",
+    "trugreen"
+   ],
+   "kind": "direct",
+   "service_states": [
+    "TX",
+    "FL"
+   ],
+   "service_area_note": "Pest control and lawn care from Austin to Houston, DFW, San Antonio, RGV and other Texas metros; also Orlando",
+   "official_url": "https://www.abchomeandcommercial.com",
+   "plans": [
+    {
+     "id": "pest_recurring",
+     "name": "Recurring pest control",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Prices not posted; quote by home size."
+    }
+   ],
+   "default_plan": "pest_recurring",
+   "features": [
+    {
+     "id": "lawn",
+     "name": "Lawn care programs",
+     "plans": "all",
+     "overlap_tag": "lawn_care"
+    },
+    {
+     "id": "pest",
+     "name": "Recurring pest control",
+     "plans": "all",
+     "overlap_tag": "pest_control"
+    }
+   ],
+   "best_for": "Texas homeowners wanting pest and lawn from one local company.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "ABC official site",
+     "url": "https://www.abchomeandcommercial.com"
+    },
+    {
+     "label": "This Old House review (2026)",
+     "url": "https://www.thisoldhouse.com/pest-control/abc-home-commercial-services-review"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#334155",
+   "mark": "AH"
+  },
+  {
+   "id": "bulwark_exterminating",
+   "name": "Bulwark Exterminating",
+   "category": "lawn_pest",
+   "alternative_to": [
+    "terminix",
+    "orkin",
+    "aptive"
+   ],
+   "kind": "direct",
+   "service_states": [
+    "WA",
+    "NV",
+    "UT",
+    "AZ",
+    "NM",
+    "TX",
+    "OK",
+    "IN",
+    "MO",
+    "KS",
+    "KY",
+    "GA",
+    "NC",
+    "SC",
+    "TN"
+   ],
+   "service_area_note": "Pest control in Austin, Houston, San Antonio, Corpus Christi, OKC, Tulsa and other Sun Belt metros",
+   "official_url": "https://www.bulwarkpestcontrol.com/",
+   "plans": [
+    {
+     "id": "quarterly",
+     "name": "Quarterly plan",
+     "price_monthly": null,
+     "price_annual": 750,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "This Old House estimate for a 2,000 sq ft home (~$750/yr); official site shows only a $99 initial service."
+    },
+    {
+     "id": "every_other_month",
+     "name": "Every Other Month plan",
+     "price_monthly": null,
+     "price_annual": 600,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "This Old House estimate (~$600/yr)."
+    }
+   ],
+   "default_plan": "quarterly",
+   "features": [
+    {
+     "id": "pest",
+     "name": "Recurring pest control",
+     "plans": "all",
+     "overlap_tag": "pest_control"
+    }
+   ],
+   "best_for": "Texas and Oklahoma homeowners wanting recurring pest service.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Bulwark official site",
+     "url": "https://www.bulwarkpestcontrol.com/"
+    },
+    {
+     "label": "This Old House review (2026)",
+     "url": "https://www.thisoldhouse.com/pest-control/bulwark-exterminating-review"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#7c3aed",
+   "mark": "BE"
+  },
+  {
+   "id": "whitewater_express",
+   "name": "WhiteWater Express Car Wash",
+   "category": "auto",
+   "alternative_to": [
+    "club_car_wash",
+    "crew_carwash_unlimited"
+   ],
+   "kind": "direct",
+   "service_states": [
+    "TX",
+    "LA",
+    "OK",
+    "OH",
+    "MI",
+    "KY",
+    "SC",
+    "GA"
+   ],
+   "service_area_note": "Express car washes around Houston, DFW, Austin, Baton Rouge, Lafayette and Tulsa, plus OH/MI/SC/GA",
+   "official_url": "https://www.whitewatercw.com",
+   "plans": [
+    {
+     "id": "unlimited",
+     "name": "Unlimited Speed Club",
+     "price_monthly": 22.99,
+     "price_annual": null,
+     "effective_monthly": 22.99,
+     "verified": true,
+     "note": "'Starts at $22.99/mo'; prices vary by market; one vehicle; cancel 5 days before billing."
+    }
+   ],
+   "default_plan": "unlimited",
+   "features": [
+    {
+     "id": "free_vacuums",
+     "name": "Free vacuums, towels and air guns",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "member_lane",
+     "name": "Members-only express lane",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Drivers in Houston, DFW or Baton Rouge who wash more than once a month.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "First month is often the price of one wash for new members."
+   ],
+   "sources": [
+    {
+     "label": "WhiteWater Unlimited Speed Club",
+     "url": "https://www.whitewatercw.com/unlimited-speed-club"
+    },
+    {
+     "label": "WhiteWater locations",
+     "url": "https://www.whitewatercw.com"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#0f766e",
+   "mark": "WE"
+  },
+  {
+   "id": "quick_quack",
+   "name": "Quick Quack Car Wash",
+   "category": "auto",
+   "alternative_to": [
+    "club_car_wash"
+   ],
+   "kind": "direct",
+   "service_states": [
+    "CA",
+    "TX",
+    "AZ",
+    "CO",
+    "UT"
+   ],
+   "service_area_note": "Express car washes across Texas (Austin, DFW, Houston, San Antonio) and four western states",
+   "official_url": "https://www.quickquack.com/",
+   "plans": [
+    {
+     "id": "unlimited",
+     "name": "Unlimited membership",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Plan prices load only via JavaScript and could not be read; no long-term commitment, cancel anytime."
+    }
+   ],
+   "default_plan": "unlimited",
+   "features": [
+    {
+     "id": "free_vacuums",
+     "name": "Free vacuums at most locations",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "member_lane",
+     "name": "Member quick lane",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Texas drivers near a Quick Quack who wash often.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Quick Quack home page",
+     "url": "https://www.quickquack.com/"
+    },
+    {
+     "label": "Quick Quack plans",
+     "url": "https://www.quickquack.com/plans"
+    }
+   ],
+   "checked_at": "2026-10-25",
+   "region_group": "south-central",
+   "color": "#334155",
+   "mark": "QQ"
   }
  ]
 }
