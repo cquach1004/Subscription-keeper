@@ -1044,6 +1044,50 @@ function benchNFor(country, group) {
 // Child Care & Tutoring stays with subscriptions: most of it is tutoring and learning apps.
 const HOUSEHOLD_CATS = new Set(["car_insurance", "home_insurance", "internet", "mobile", "lawn_pest", "home", "home_security", "tech_support", "elder_care"]);
 const isHousehold = s => HOUSEHOLD_CATS.has(svcOf(s).category);
+// Phone and internet checks (Cuong, v155): is the plan more than you need, and does a cheaper plan or provider cover it?
+// High-speed data per line in GB (Infinity = unlimited), from the plan notes in the catalog; other plans are read from their names.
+const MOBILE_GB = { att_wireless: { value_2: 5, extra_2: 100, premium_2: Infinity }, google_fi: { unlimited_essentials: 30, unlimited_standard: 50, unlimited_premium: 100 },
+  verizon_wireless: { unlimited_welcome: Infinity, unlimited_ultimate: Infinity }, mint_mobile: { "6gb": 6, "23gb": 23, unlimited: Infinity },
+  cricket_wireless: { sensible_10gb: 10, select_unlimited: Infinity, supreme_unlimited: Infinity }, us_mobile: { light: 2, unlimited_starter: Infinity, unlimited_premium: Infinity },
+  tmobile_wireless: { essentials_saver: Infinity, experience_more: Infinity, experience_beyond: Infinity }, visible: { visible: Infinity, visible_plus: Infinity, visible_plus_pro: Infinity } };
+const planGB = (v, p) => { if (!p) return null; const k = MOBILE_GB[v.id]?.[p.id]; if (k !== undefined) return k;
+  const m = p.name.match(/(\d+)\s*GB/i); return m ? +m[1] : /unlimited/i.test(p.name) ? Infinity : null; };
+// Download speed in Mbps, read from the plan name ("500 Mbps", "1 Gig", "Internet 300"); null when the name doesn't say.
+const planMbps = p => { if (!p) return null; const n = p.name;
+  let m = n.match(/(\d+(?:\.\d+)?)\s*(?:gig|gigs|gbps)\b/i); if (m) return +m[1] * 1000;
+  m = n.match(/(\d+)\s*(?:mbps|mb)\b/i) || n.match(/(?:internet|fiber|smartband|eplus|essential)\s+(\d{2,4})\b/i); return m ? +m[1] : null; };
+// Speed needed: FCC rough guidelines (HD streaming 5-8 Mbps, 4K 25, HD video calls 6, online gaming 4), per person, doubled
+// for several devices at once and Wi-Fi losses, at least 50 Mbps. The doubling and the per-person sums are our estimate.
+const NET_USES = [["k4", "4K streaming"], ["calls", "Video calls for work or school"], ["gaming", "Online gaming"]];
+const needMbps = n => { const k = Math.max(1, n.people || 1), u = new Set(n.uses || []);
+  const raw = k * 8 + (u.has("k4") ? 25 * Math.min(k, 2) : 0) + (u.has("calls") ? 6 * k : 0) + (u.has("gaming") ? 4 * k : 0);
+  return Math.max(50, Math.ceil(raw * 2 / 25) * 25); };
+const NET_RIVALS = new Set(["starlink_residential"]);  // available almost anywhere; other internet providers count only where their listed states include yours
+const kindOf = s => ({ mobile: "mobile", internet: "internet" })[svcOf(s).category];
+function needCheck(s) {
+  const kind = kindOf(s), v = svcOf(s), plan = planOf(v, s.plan), n = s.need; if (!kind) return null;
+  const mo = monthly(s) || 0, region = profile().region, out = { kind, need: n, same: null, rival: null };
+  if (!n) return out;
+  const avail = x => x.id !== v.id && x.id !== "lifeline" && !x.provider_type && availability(x.id, profile().country) !== "no";
+  if (kind === "mobile") {
+    const lines = Math.max(1, n.lines || 1), per = mo / lines, want = (n.gb || 0) * 1.25;
+    out.mine = planGB(v, plan); out.lines = lines; out.per = per;
+    const fits = (x, p) => p.effective_monthly != null && !SPECIAL_PLAN.test(p.name) && (planGB(x, p) ?? -1) >= want;
+    const best = xs => xs.flatMap(x => x.plans.filter(p => fits(x, p)).map(p => ({ v: x, p, save: (per - p.effective_monthly) * lines }))).sort((a, b) => b.save - a.save)[0];
+    out.same = plan ? best([v]) : null;
+    out.rival = best(Object.values(CATALOG).filter(x => x.category === "mobile" && avail(x)));
+    out.more = out.mine != null && out.mine !== Infinity ? out.mine > want * 3 && n.gb < 10 : out.mine === Infinity && n.gb <= 10;
+  } else {
+    const want = needMbps(n); out.want = want; out.mine = planMbps(plan) ?? n.mbps ?? null;
+    const fits = p => p.effective_monthly != null && (planMbps(p) ?? -1) >= want;
+    const best = xs => xs.flatMap(x => x.plans.filter(fits).map(p => ({ v: x, p, save: mo - p.effective_monthly }))).sort((a, b) => b.save - a.save)[0];
+    out.same = plan ? best([v]) : null;
+    out.rival = best(Object.values(CATALOG).filter(x => x.category === "internet" && avail(x) && (NET_RIVALS.has(x.id) || (region && x.service_states?.includes(region)))));
+    out.more = out.mine != null && out.mine >= want * 2.5;
+  }
+  ["same", "rival"].forEach(k => { if (out[k] && out[k].save < 5) out[k] = null; });
+  return out;
+}
 // Seniors without a survey: Bango (2,500 US subscribers, Dec 2022) found boomers pay for 3 subscriptions vs 5 for younger adults, so 3/5 of the adult average.
 function benchFor(country, group) {
   const a = admin.bench?.[country]?.[group];
@@ -1421,7 +1465,12 @@ const SPECIAL_PLAN = /student|teacher|educat|military|veteran|senior|nonprofit|m
 function cheaperOptions(s) {
   const r = rate(s), mo = monthly(s) || 0, v = svcOf(s), plan = planOf(v, s.plan), out = [];
   if (r.paused || r.needs || r.waiting || mo <= 0 || profile().country !== catalogCountry()) return out;
-  if (plan && plan.effective_monthly != null) {
+  const nc = needCheck(s);
+  if (nc) {  // phone and internet (v155): only plans and providers that cover what you said you use
+    if (nc.same) out.push({ kind: "Cheaper plan", name: `${nc.same.p.name} plan`, save: Math.min(mo, nc.same.save), note: nc.kind === "mobile" ? `Enough for about ${fmtN(nc.need.gb)} GB a month per line.` : `${fmtN(planMbps(nc.same.p))} Mbps covers the ${fmtN(nc.want)} Mbps your home needs.`, unconfirmed: nc.same.p.verified === false });
+    if (nc.rival) out.push({ kind: "Other provider", name: `${nc.rival.v.name}, ${nc.rival.p.name}`, save: Math.min(mo, nc.rival.save), note: nc.kind === "mobile" ? `Enough data for you; check coverage where you live.${nc.lines > 1 ? ` Priced for one line, times ${nc.lines}.` : ""}` : `Fast enough for your home; check it's offered at your address.`, unconfirmed: nc.rival.p.verified === false, alt: nc.rival.v.id });
+  }
+  if (!nc && plan && plan.effective_monthly != null) {
     const cheaper = v.plans.filter(p => p.effective_monthly != null && p.effective_monthly < plan.effective_monthly && !SPECIAL_PLAN.test(p.name) && s.used.every(id => featuresFor(v, p.id).some(f => f.id === id)))
       .sort((a, b) => a.effective_monthly - b.effective_monthly)[0];
     if (cheaper) out.push({ kind: "Cheaper plan", name: `${cheaper.name} plan`, save: Math.min(mo, plan.effective_monthly - cheaper.effective_monthly),
@@ -1436,9 +1485,10 @@ function cheaperOptions(s) {
   }
   // Free public options show even for Great-value subscriptions (Cuong, v108); other alternatives only when it isn't Great value.
   if (!isHard(s)) {
+    // Phone and internet (v155): paid alternatives come from needCheck above, so only free public options are added here.
     // "Include free options" on Savings (Cuong, v109): off leaves out free services, which may not meet every need.
     const alts = alternativesOf(s).filter(a => a.monthly != null && a.monthly < mo && (r.key !== "great" || a.pub) && !(state.noFree && a.monthly === 0));
-    const free = alts.find(a => a.monthly === 0), paid = alts.filter(a => a.monthly > 0 && a.kind !== "partial").sort((a, b) => a.monthly - b.monthly)[0];
+    const free = alts.find(a => a.monthly === 0), paid = nc ? null : alts.filter(a => a.monthly > 0 && a.kind !== "partial").sort((a, b) => a.monthly - b.monthly)[0];
     [free, paid].filter(Boolean).forEach(a => out.push({ kind: a.monthly === 0 ? (a.v.provider_type ? PROVIDER_LABEL[a.v.provider_type] || "Free option" : "Free option") : "Other service",
       name: a.name + (a.pub ? "*" : ""), save: mo - a.monthly, note: [a.v.eligibility ? `Who can use it: ${a.v.eligibility}.` : "", a.annualNote ? "Billed yearly." : "", a.pub ? `* ${PUBLIC_NOTE}` : ""].filter(Boolean).join(" "), unconfirmed: !a.verified, alt: a.id }));
   }
@@ -2271,6 +2321,27 @@ function splitHtml(d, total) {
     <div class="hh-leg"><span><i style="background:var(--pie-1)"></i>Subscriptions <b class="num">${money(d.amt)}</b>/mo &middot; ${d.n}</span>
       <span><i style="background:var(--pie-4)"></i>Household Services <b class="num">${money(d.billAmt)}</b>/mo &middot; ${d.billN}</span></div></div>`;
 }
+// Household Services checkup (Cuong, v155): one line per household service with the next thing worth doing.
+function hhCheck(s) {
+  // Free public options (library hotspots, Lifeline) stay on Savings, but aren't a fair headline for a whole home's phone or internet.
+  const c = needCheck(s), opts = cheaperOptions(s).filter(o => !(c && o.price === 0)), best = opts.slice().sort((a, b) => b.save - a.save)[0], r = renewsOn(s), d = r ? daysUntil(r) : null;
+  const ins = !!measureOf(s).insure;
+  if (introActive(s) && daysUntil(s.intro.ends) <= 60) return { key: "poor", tag: "Promo ending", text: `${s.intro.kind === "trial" ? "Free trial" : "Promo price"} ends ${fmtDate(s.intro.ends)}, then ${money(monthlyOf(s, regularTotal(s)))}/mo. Compare before then.` };
+  if (d != null && d <= 45) return { key: "poor", tag: "Renews soon", text: `Renews ${fmtDate(r)}. ${ins ? "Get two or three quotes for the same coverage now." : "A good time to compare plans."}` };
+  if (best) return { key: "ok", tag: `Save ${money(best.save)}/mo`, text: `${best.kind}: ${best.name}.` };
+  if (c && !s.need) return { key: "unused", tag: "Check your plan", text: c.kind === "mobile" ? "Tell us how much data you use to see if a cheaper plan fits." : "Tell us who's at home to see if you're paying for more speed than you need." };
+  if (ins && !s.quote) return { key: "unused", tag: "Compare quotes", text: r ? `Renews ${fmtDate(r)}. Shop quotes a month before.` : "Add your best quote for the same coverage, and your renewal date for a reminder." };
+  if (c && c.more) return { key: "ok", tag: "More than you need", text: "Your plan is well above what you use, but we didn't find a cheaper fit." };
+  return { key: "great", tag: "Looks fine", text: r ? `Renews ${fmtDate(r)}.` : "Nothing to do right now." };
+}
+function hhHtml() {
+  const list = state.subs.filter(isHousehold); if (!list.length) return "";
+  const rows = list.map(s => ({ s, c: hhCheck(s) })), order = { poor: 0, ok: 1, unused: 2, great: 3 };
+  rows.sort((a, b) => order[a.c.key] - order[b.c.key] || monthly(b.s) - monthly(a.s));
+  return `<section class="card hh-card"><div class="section-head" style="margin:0"><h3 style="margin:0">Household Services checkup</h3><span class="small muted">${money(list.reduce((a, s) => a + monthly(s), 0))}/mo</span></div>
+    <p class="small muted" style="margin:0 0 4px">Phone, internet, insurance and other services for your home. Prices change at renewal, so these are worth checking every year.</p>
+    ${rows.map(({ s, c }) => `<button class="uml-row hh-row" data-id="${s.id}">${logoHtml(svcOf(s))}<span style="min-width:0"><b>${esc(s.name)}</b><span class="small muted">${esc(c.text)}</span></span><span class="pill ${c.key}">${esc(c.tag)}</span></button>`).join("")}</section>`;
+}
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
@@ -2288,6 +2359,7 @@ function homeView() {
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
+    ${hhHtml()}
     ${startHtml()}
     ${useRanked().length ? useMostHtml() : ""}
     ${saveAmt > 0 ? saveHtml(saveAmt) : ""}
@@ -3436,7 +3508,38 @@ function insureHtml(s) {
       <div class="q-row"><select id="q-by" aria-label="Comparable option"><option value="">${ins ? "Insurer…" : "Provider…"}</option>${rivals.map(x => `<option value="${x.id}" ${q.by === x.id ? "selected" : ""}>${esc(x.name.replace(/ \((Car|Home)\)$/, ""))}${ins ? "" : from(x)}</option>`).join("")}<option value="other" ${q.by === "other" ? "selected" : ""}>${ins ? "Another insurer" : "Another provider"}</option></select>
         <input id="q-price" type="number" min="0" step="0.01" placeholder="Price" aria-label="Quoted price" value="${q.price ?? ""}">
         <select id="q-per" aria-label="Quote period">${Object.entries(QUOTE_PER).map(([k, [l]]) => `<option value="${k}" ${(q.per || "month") === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>
+      <label class="small" style="max-width:260px">${ins ? "Policy renews" : "Contract or promo renews"} <span class="muted">(optional, for a reminder)</span><input id="q-renew" type="date" value="${s.renews || ""}"></label>
       ${s.quote ? `<span class="note">${ins ? "Quoted" : "Checked"} ${fmtDate(q.date)}${q.by && q.by !== "other" && serviceBand(q.by, kind) ? `. ${esc(CATALOG[q.by].name.replace(/ \((Car|Home)\)$/, ""))}'s service rating: ${BAND_LABEL[serviceBand(q.by, kind)].toLowerCase()}` : ""}. <button class="btn ghost small" id="q-clear">Clear</button></span>` : ""}</div>`;
+}
+function needHtml(s) {
+  const kind = kindOf(s); if (!kind) return "";
+  const n = s.need || {}, c = needCheck(s), plan = planOf(svcOf(s), s.plan);
+  const res = !s.need ? `<p class="small muted" style="margin:0">Tell us what you use and we'll check whether a cheaper plan or provider covers it.</p>`
+    : kind === "mobile" ? `<p class="small" style="margin:0">${c.mine == null ? `We don't know how much data ${esc(plan?.name || "your plan")} includes.` : `Your plan: ${c.mine === Infinity ? "unlimited" : fmtN(c.mine) + " GB"} a line. You use about ${fmtN(n.gb)} GB.`} ${c.more ? "<b>You may be paying for more data than you use.</b>" : ""}</p>`
+    : `<p class="small" style="margin:0">Your home needs about <b>${fmtN(c.want)} Mbps</b>.${c.mine != null ? ` Your plan: ${fmtN(c.mine)} Mbps.` : ""} ${c.more ? "<b>You may be paying for more speed than you need.</b>" : c.mine != null && c.mine < c.want ? "Your plan may be slower than you need." : ""}</p>`;
+  return `<div class="need" style="display:grid;gap:8px"><b style="font-size:14px">${kind === "mobile" ? "What you use" : "What your home needs"}</b>
+    ${kind === "mobile" ? `<div class="q-row"><label class="small">Data per line a month (GB)<input id="nd-gb" type="number" min="0" step="1" inputmode="numeric" value="${n.gb ?? ""}" placeholder="e.g. 8"></label>
+      <label class="small">Lines<input id="nd-lines" type="number" min="1" max="12" step="1" value="${n.lines || s.members || 1}"></label></div>
+      <span class="note">Find it on your phone: Settings, then Cellular (iPhone) or Network, then Data usage (Android).</span>`
+    : `<div class="q-row"><label class="small">People at home<input id="nd-people" type="number" min="1" max="12" step="1" value="${n.people || ""}" placeholder="e.g. 3"></label>
+      ${planMbps(plan) == null ? `<label class="small">Your speed (Mbps)<input id="nd-mbps" type="number" min="1" step="1" value="${n.mbps ?? ""}" placeholder="e.g. 300"></label>` : ""}</div>
+      <div class="chips">${NET_USES.map(([k, l]) => `<label class="chip"><input type="checkbox" data-nd-use="${k}" ${(n.uses || []).includes(k) ? "checked" : ""}> ${l}</label>`).join("")}</div>
+      <span class="note">Based on the FCC's rough guide (HD streaming 5-8 Mbps, 4K 25, HD video calls 6, gaming 4) for each person, doubled for several devices at once. The doubling is our estimate.</span>`}
+    ${res}</div>`;
+}
+function wireNeed(root, s, redraw) {
+  const $ = id => root.querySelector("#" + id), num = id => { const x = $(id); return x && x.value !== "" ? Math.max(0, +x.value) : undefined; };
+  const upd = () => { const kind = kindOf(s);
+    const n = kind === "mobile" ? { gb: num("nd-gb"), lines: num("nd-lines") || 1 } : { people: num("nd-people"), mbps: num("nd-mbps"), uses: [...root.querySelectorAll("[data-nd-use]:checked")].map(x => x.dataset.ndUse) };
+    if (kind === "mobile" ? n.gb == null : !n.people) { if (s.need) { delete s.need; save(); redraw(); } return; }
+    s.need = n; save(); redraw(); };
+  root.querySelectorAll("#nd-gb, #nd-lines, #nd-people, #nd-mbps, [data-nd-use]").forEach(x => x.addEventListener("change", upd));
+  root.querySelector("#q-renew")?.addEventListener("change", e => { if (e.target.value) s.renews = e.target.value; else delete s.renews; save(); redraw(); });
+}
+// When a household service next renews: the policy date you entered (moved on a year at a time), else the next yearly bill.
+function renewsOn(s) {
+  if (s.renews) { let d = s.renews; while (d < today()) d = addMonths(12, new Date(d + "T12:00:00")); return d; }
+  return s.cycle === "year" ? nextRenewal(s) : null;
 }
 function wireInsure(root, s, redraw) {
   root.querySelectorAll("[data-svcx]").forEach(b => b.onclick = () => { s.service = s.service === b.dataset.svcx ? undefined : b.dataset.svcx; if (!s.service) delete s.service; save(); redraw(); });
@@ -3473,7 +3576,7 @@ function openSheet(id) {
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
         ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
         ${m.insure ? insureHtml(s) : `
-        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${insureHtml(s)}</div>` : ""}`
+        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${needHtml(s)}${insureHtml(s)}</div>` : ""}`
         : m.costOnly ? `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
           ${slider(m, s.rate, 'id="s-rate"')}
           ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}`}
@@ -3559,6 +3662,7 @@ function openSheet(id) {
     if (sr) { sr.oninput = () => sr.nextElementSibling.textContent = slideText(m, +sr.value); sr.onchange = () => use(+sr.value, m.per); }
     wireChecks(root, () => setTimeout(draw));
     wireInsure(root, s, () => setTimeout(draw));
+    wireNeed(root, s, () => setTimeout(draw));
     root.querySelectorAll("[data-switch]").forEach(b => b.onclick = () => { if (b.dataset.switch) s.switch = b.dataset.switch; else delete s.switch; save(); setTimeout(draw); });
     root.querySelectorAll("[data-alt]").forEach(b => b.onclick = () => { exploreOpen = b.dataset.alt; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
     root.querySelector("[data-alt-all]")?.addEventListener("click", () => { exploreOpen = null; exploreCat = "mine-alts"; view = "add"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
@@ -3622,7 +3726,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 154 · Standalone copy · Oct 25", VERSION_NUM = 154;
+const APP_VERSION = "Prototype · Version 155 · Standalone copy · Oct 25", VERSION_NUM = 155;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
