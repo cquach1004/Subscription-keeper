@@ -149,3 +149,4 @@ Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,No
 140,2026-10-25,"Intro page headline changed to ""Smarter Spending on Subscriptions""",Cuong,Intro (new visitors),Design,Y,Current,"Was ""AI, market research and you: smarter spending on subscriptions"""
 141,2026-10-25,"Intro text: last sentence now reads ""We use AI, market research, and information you provide us to present the options that give you the most for your money.""",Cuong,Intro (new visitors),Design,Y,Changed later,"Was ""...and your own usage data...""; reworded in v142"
 142,2026-10-25,"Intro text: ""information you provide us"" changed to ""information you share""",Cuong,Intro (new visitors),Design,Y,Current,
+143,2026-10-25,"Welcome page: text under Tell us about yourself now reads ""Pick all that apply. It helps us suggest plans that fit you.""",Cuong,Welcome screen,Design,Y,Current,"Was ""...plans that fit, like student, family or senior pricing."""

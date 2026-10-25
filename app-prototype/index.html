@@ -1430,7 +1430,7 @@ function aboutView() {
   const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
     <button class="btn ghost small" id="w-intro" style="padding-left:0;margin-bottom:4px">&larr; Back</button>
     <h3 style="margin:8px 0 2px">Tell us about yourself</h3>
-    <p class="small muted" style="margin:0 0 12px">Pick all that apply. It helps us suggest plans that fit, like student, family or senior pricing.</p>
+    <p class="small muted" style="margin:0 0 12px">Pick all that apply. It helps us suggest plans that fit you.</p>
     <div class="about-grid about-3">${ABOUT.map(([k, label, svg]) => `<button type="button" class="about-opt" data-about="${k}" aria-pressed="${about.has(k)}"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><span>${label}</span></button>`).join("")}</div>
     <h3 style="margin:22px 0 8px">My age group</h3>
     <div class="seg age-seg" role="radiogroup" aria-label="Age">${AGES.map(([k, l]) => `<button type="button" role="radio" data-age="${k}" aria-checked="${age === k}" aria-pressed="${age === k}">${l}</button>`).join("")}</div>
@@ -3411,7 +3411,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 142 · Oct 25", VERSION_NUM = 142;
+const APP_VERSION = "Prototype · Version 143 · Oct 25", VERSION_NUM = 143;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
