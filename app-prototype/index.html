@@ -295,6 +295,9 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .stat.bench .value.more { color: var(--bad); } .stat.bench .value.less { color: var(--good); }
 .bench-bars { display: grid; grid-template-columns: auto 1fr; gap: 4px 8px; align-items: center; margin: 8px 0 6px; font-size: 12px; color: var(--muted); }
 .bench-bars i { display: block; height: 6px; border-radius: 3px; min-width: 3px; }
+.cmp { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; margin-top: 6px; font-size: 12px; color: inherit; opacity: .9; }
+.cmp b { font-weight: 600; } .cmp-ex { flex-basis: 100%; }
+.cmp-note { margin: -10px 0 18px; } .cmp-note a { color: var(--accent); } .cmp-note select.bench-grp { display: inline-block; width: auto; font-size: 12px; padding: 1px 4px; margin: 0 2px; }
 .bench-grp { font-size: 12px; padding: 2px 6px; border-radius: 8px; max-width: 100%; }
 /* v102 (Cuong): Overview tile with the share of subscriptions rated Great, Fair and Costly. */
 .mix-body { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
@@ -1003,8 +1006,24 @@ const BENCH = {
   GB: { adult: { amt: 65.5, src: "Aqua survey, 2,000 UK adults, June-July 2025", url: "https://www.aquacard.co.uk/building-better-credit/subscription-spending-in-2025" } },
   AU: { adult: { amt: 136, src: "ING survey, 2,045 Australian adults, March 2026 (average per subscriber)", url: "https://newsroom.ing.com.au/?p=3230" },
     senior: { amt: 82, src: "ING survey, March 2026: Baby Boomers' average", url: "https://newsroom.ing.com.au/?p=3230" } } };
+// v148: students use the Gen Z (ages 18-29) figure, worked out from the survey's spending ranges (midpoint of each range, $250 for $200 or more).
+BENCH.US.student = { amt: 82, est: true, src: "Estimate: ages 18-29 in the Omni Calculator survey of 500 US adults, Apr 2026 (worked out from its spending ranges; no student survey found)", url: "https://www.omnicalculator.com/reports/average-subscription-cost-per-month" };
+// v148 (Cuong): how many subscriptions the average person has, for the Overview comparison.
+const BENCH_N = { US: {
+  adult: { n: 5, est: true, src: "Estimate: Omni Calculator survey of 500 US adults, Apr 2026 (worked out from its ranges: 41% have 4-6, 31% have 2-3, 17% have 7-10)", url: "https://www.omnicalculator.com/reports/average-subscription-cost-per-month" },
+  senior: { n: 3, src: "Bango survey of 2,500 US subscribers, Dec 2022: boomers keep 3 subscriptions", url: "https://bango.com/subscription-squeeze-two-thirds-of-americans-cant-pay-any-more-for-subscription-services/" } } };
+function benchNFor(country, group) {
+  const a = admin.benchN?.[country]?.[group];
+  if (a != null) return { n: a, src: "Set by our team", admin: true };
+  const b = BENCH_N[country]; if (!b) return null;
+  if (b[group]) return b[group];
+  if (group === "family" && b.adult) return { n: b.adult.n * 2, est: true, src: "Estimate: twice the adult average", url: b.adult.url };
+  if (b.adult) return { ...b.adult, src: b.adult.src + "; all adults, as no figure for this group was found" };
+  return null;
+}
+// Surveys count streaming, apps, shopping and memberships, not household bills, so those stay out of the comparison.
+const BILL_CATS = new Set(["car_insurance", "home_insurance", "internet", "mobile", "lawn_pest", "home", "home_security", "tech_support", "child_care", "elder_care", "small_business"]);
 // Seniors without a survey: Bango (2,500 US subscribers, Dec 2022) found boomers pay for 3 subscriptions vs 5 for younger adults, so 3/5 of the adult average.
-// No survey of student spending was found; that group stays empty until an admin sets it.
 function benchFor(country, group) {
   const a = admin.bench?.[country]?.[group];
   if (a != null) return { amt: a, src: "Set by our team", admin: true };
@@ -2161,19 +2180,39 @@ function wireNudge(f) {
   f.getElementById("nudge-later")?.addEventListener("click", () => { state.nudgeLater = iso(new Date(Date.now() + 7 * 864e5)); save(); render(); });
 }
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
+// v148 (Cuong): each Overview number compared with the average person in the profile's group.
+function cmpData() {
+  const g = benchGroup(), c = profile().country, b = benchFor(c, g), bn = benchNFor(c, g);
+  const mine = state.subs.filter(s => !BILL_CATS.has(svcOf(s).category)), bills = state.subs.filter(s => BILL_CATS.has(svcOf(s).category));
+  return { g, b, bn, amt: mine.reduce((a, s) => a + monthly(s), 0), n: mine.length, billAmt: bills.reduce((a, s) => a + monthly(s), 0), billN: bills.length };
+}
+function cmpLine(you, avg, fmt, all) {
+  if (avg == null) return "";
+  const ex = all !== you ? `<span class="cmp-ex">${fmt(you)} without bills</span>` : "";
+  const pct = avg ? Math.round((you - avg) / avg * 100) : 0, k = pct > 0 ? "more" : pct < 0 ? "less" : "";
+  return `<div class="cmp">${ex}<span>Avg ${fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
+}
+function cmpNote(d) {
+  if (!d.b && !d.bn) return "";
+  const who = BENCH_GROUPS[d.g].replace("Average ", ""), est = [d.b, d.bn].some(x => x?.est);
+  const pick = `<select id="cmp-grp" class="bench-grp" aria-label="Compare me with">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<option value="${k}" ${k === d.g ? "selected" : ""}>${n.replace("Average ", "")}</option>`).join("")}</select>`;
+  const srcs = [d.b, d.bn].filter(x => x?.url).filter((x, i, a) => a.findIndex(y => y.url === x.url) === i);
+  const src = srcs.map((x, i) => `<a href="${esc(x.url)}" target="_blank" rel="noopener" title="${esc(x.src)}">Source${srcs.length > 1 ? ` ${i + 1}` : ""}</a>`).join(" &middot; ");
+  return `<p class="note cmp-note">Compared with the average ${pick} in ${esc(countryName(profile().country))}${est ? " (estimates)" : ""}.${d.billN ? ` Averages don't include insurance, phone, internet or home services, so your ${d.billN} of those (${money(d.billAmt)} a month) are left out.` : ""} ${src}</p>`;
+}
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
   const hasExamples = state.subs.some(s => s.example);
   // v124 (Cuong): Value mix moved to Shelf; Upcoming renewals is the last card. v118: no empty widgets on Overview. Where you can save shows once there's a saving, Value mix once something is rated.
-  const saveAmt = savingsTotal(savingsBySub());
+  const saveAmt = savingsTotal(savingsBySub()), cd = cmpData();
   const f = el(`
     <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
     ${state.subs.length ? `<section class="summary">
-      <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div></div>
-      <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div></div>
-      <div class="stat tint"><div class="label">Subscriptions</div><div class="value num">${state.subs.length}</div></div>
-    </section>` : ""}
+      <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div>${cmpLine(cd.amt, cd.b?.amt, money, total)}</div>
+      <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div>${cmpLine(cd.amt * 12, cd.b && cd.b.amt * 12, money, total * 12)}</div>
+      <div class="stat tint"><div class="label">Subscriptions</div><div class="value num">${state.subs.length}</div>${cmpLine(cd.n, cd.bn?.n, x => x, state.subs.length)}</div>
+    </section>${cmpNote(cd)}` : ""}
     ${plkHtml()}
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
@@ -2187,6 +2226,7 @@ function homeView() {
     ${factsHtml()}
     ${persona === "me" ? `<p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start from the beginning</button></p>` : ""}`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
+  f.getElementById("cmp-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   pieWire(f);
   wireFacts(f);
   f.querySelector(".see-how")?.addEventListener("click", () => { view = "overlaps"; render(); document.getElementById("ways")?.scrollIntoView(); });
@@ -3501,7 +3541,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 147 · Oct 25", VERSION_NUM = 147;
+const APP_VERSION = "Prototype · Version 148 · Oct 25", VERSION_NUM = 148;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
