@@ -2435,7 +2435,7 @@ function pieHtml() {
     <div class="pie-wrap"><div class="pie-box"><svg viewBox="0 0 190 190" role="img" aria-label="Monthly spending by category">${paths}</svg>
       <div class="pie-mid"><b class="num">${money(tot)}</b><span>a month</span></div><div class="ctip" role="status"></div></div>
       <ul class="pie-legend">${rows.map((r, i) => `<li data-i="${i}"><span class="sw" style="background:var(--pie-${r.other ? "other" : i + 1})"></span>
-        <span>${esc(r.label)} <span class="n">${r.subs.length}</span></span><b class="num">${money(r.amt)}</b><span class="pct num">${pct(r)}%</span></li>`).join("")}</ul></div></section>`;
+        <span>${esc(r.label)} <span class="n">(${r.subs.length})</span></span><b class="num">${money(r.amt)}</b><span class="pct num">${pct(r)}%</span></li>`).join("")}</ul></div></section>`;
 }
 function pieWire(f) {
   const box = f.querySelector(".pie-box"); if (!box) return;
@@ -3504,7 +3504,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 146 · Standalone copy · Oct 25", VERSION_NUM = 146;
+const APP_VERSION = "Prototype · Version 147 · Standalone copy · Oct 25", VERSION_NUM = 147;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
