@@ -256,6 +256,8 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 .pie-card { margin-bottom: 14px; }
 .trend-card { margin-bottom: 14px; }
 .hh-card { margin-bottom: 14px; }
+.nego { display: grid; gap: 10px; } .nego-script { margin: 6px 0 8px; padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 8px; font-size: 14px; line-height: 1.45; }
+
 #ways { scroll-margin-top: 16px; }
 .summary.n2 { grid-template-columns: 1.4fr 1fr; } .summary.n1 { grid-template-columns: 1fr; }
 @media (max-width: 620px) { .summary.n2 { grid-template-columns: 1fr; } }
@@ -2370,8 +2372,10 @@ function hhCheck(s) {
   // Free public options (library hotspots, Lifeline) stay on Savings, but aren't a fair headline for a whole home's phone or internet.
   const c = needCheck(s), opts = cheaperOptions(s).filter(o => !(c && o.price === 0)), best = opts.slice().sort((a, b) => b.save - a.save)[0], r = renewsOn(s), d = r ? daysUntil(r) : null;
   const ins = !!measureOf(s).insure;
+  const up = negoKind(s) && risingOf(s);  // v164: price going up, so suggest asking for a lower rate first
+  if (up && !(introActive(s) && daysUntil(s.intro.ends) <= 60) && !(d != null && d <= 45)) return { key: "poor", tag: "Price going up", text: `${up} Ask for a lower rate; tap for a script.` };
   if (introActive(s) && daysUntil(s.intro.ends) <= 60) return { key: "poor", tag: "Promo ending", text: `${s.intro.kind === "trial" ? "Free trial" : "Promo price"} ends ${fmtDate(s.intro.ends)}, then ${money(monthlyOf(s, regularTotal(s)))}/mo. Compare before then.` };
-  if (d != null && d <= 45) return { key: "poor", tag: "Renews soon", text: `Renews ${fmtDate(r)}. ${ins ? "Get two or three quotes for the same coverage now." : "A good time to compare plans."}` };
+  if (d != null && d <= 45) return { key: "poor", tag: "Renews soon", text: `Renews ${fmtDate(r)}. ${ins ? "Get two or three quotes for the same coverage now, and ask your insurer for every discount." : negoKind(s) ? "A good time to compare plans or ask for a lower rate." : "A good time to compare plans."}` };
   if (best) return { key: "ok", tag: `Save ${money(best.save)}/mo`, text: `${best.kind}: ${best.name}.` };
   const ec = energyChoice(s);
   if (ec) return { key: "unused", tag: "Compare suppliers", text: `You can choose your ${energyFuel(s) === "e" ? "electricity" : "gas"} supplier in ${regionName()}. Compare offers on ${ec[0]}.` };
@@ -3174,7 +3178,7 @@ function verdictText(s, r) {
 }
 
 // Detail-sheet sections remember whether each one is open, per viewer. The chart and usage start open.
-const SEC_DEFAULT = { value: true, usage: true };
+const SEC_DEFAULT = { value: true, usage: true, nego: true };
 let secOpen = {}; try { secOpen = JSON.parse(localStorage.getItem("sk-sections-v1")) || {}; } catch (e) {}
 const isOpen = id => secOpen[id] ?? !!SEC_DEFAULT[id];
 const saveSec = () => { try { localStorage.setItem("sk-sections-v1", JSON.stringify(secOpen)); } catch (e) {} };
@@ -3594,6 +3598,55 @@ function wireNeed(root, s, redraw) {
   root.querySelectorAll("#nd-gb, #nd-lines, #nd-people, #nd-mbps, [data-nd-use]").forEach(x => x.addEventListener("change", upd));
   root.querySelector("#q-renew")?.addEventListener("change", e => { if (e.target.value) s.renews = e.target.value; else delete s.renews; save(); redraw(); });
 }
+// Asking for a lower rate (v164, Cuong): services that usually negotiate, and a script shown when the price is going up.
+// Telecom: Consumer Reports' 2018 survey of 176,000 members found 70% with bundles tried to negotiate and 80% of them got
+// something (new promo rate, lower bill, extras). Insurance: base rates are filed with the state, so the ask is discounts,
+// a re-check of what's on the policy, and matching a quote for the same coverage (MoneyGeek). Newspapers, home security and
+// lawn and pest companies often offer a loyalty or "save" rate; we have no survey for those.
+const NEGO_CABLE = new Set(["xfinity_tv", "spectrum_tv", "directv_stream"]);
+const negoKind = s => { const c = svcOf(s).category;
+  if (c === "internet" || c === "mobile" || NEGO_CABLE.has(s.svc)) return "telecom";
+  if (c === "car_insurance" || c === "home_insurance") return "insurance";
+  if (c === "home_security" || c === "lawn_pest") return "home";
+  if (c === "news") return "news";
+  return null; };
+const NEGO_SRC = {
+  telecom: ["Consumer Reports, 2018 telecom survey: 80% of members who tried to negotiate got a better deal", "https://www.consumerreports.org/tv-service/it-pays-to-haggle-over-your-cable-tv-bill"],
+  insurance: ["MoneyGeek: what you can and can't negotiate on car insurance", "https://moneygeek.com/insurance/auto/negotiate-car-insurance"] };
+const NEGO_STEPS = {
+  telecom: ["Have your account number and latest bill ready.", "Ask for the loyalty or retention team (saying you're thinking of canceling usually gets you there). Only say you'll cancel if you're ready to.", "Name a real competitor price at your address.", "Ask for the exact new monthly price, how long it lasts, and whether it needs a contract. Get it confirmed by email or chat.", "If they say no, thank them and try again another day; a different agent may have different offers."],
+  insurance: ["Have your policy number, renewal notice and a quote for the same coverage ready.", "Ask them to check every discount: bundling, safe driver, paperless, autopay, paying in full, and usage-based or low-mileage programs.", "Ask them to confirm the drivers, cars, mileage and address on the policy; errors raise prices.", "Ask whether a higher deductible would save enough to be worth it. Don't cut coverage you need just to save.", "If they won't come close to your quote, switching at renewal is usually simple."],
+  home: ["Have your account and latest invoice ready.", "Ask if they have a loyalty rate, or a lower price for a longer agreement or paying yearly.", "Mention a lower price from another company for the same service.", "Get the new price and how long it lasts in writing."],
+  news: ["Many newspapers offer a lower rate when you start to cancel online, by chat or by phone.", "Ask for the rate new subscribers get, or a cheaper plan such as digital-only or weekend delivery.", "Note when the new rate ends so you can ask again."] };
+// Why the price is going up, or null. A price you raised yourself (s.rose) counts for 120 days.
+function risingOf(s) {
+  const v = svcOf(s), r = renewsOn(s), d = r ? daysUntil(r) : null;
+  if (s.rose && dayDiff(s.rose.on, today()) <= 120 && s.rose.to > s.rose.from) return `Your price went up from ${money(s.rose.from)} to ${money(s.rose.to)}.`;
+  if (introActive(s) && daysUntil(s.intro.ends) <= 60) return `Your ${s.intro.kind === "trial" ? "free trial" : "promo price"} ends ${fmtDate(s.intro.ends)}, then it's ${money(monthlyOf(s, regularTotal(s)))} a month.`;
+  if (d != null && d <= 45 && negoKind(s) === "insurance") return `Your policy renews ${fmtDate(r)}, when prices often go up.`;
+  const ch = (v.recent_changes || []).find(x => /increase|raise|hike|went up|goes up/i.test(x.summary || "") && x.date && dayDiff(String(x.date).slice(0, 10), today()) <= 365);
+  if (ch) return `${v.name} raised prices (${ch.date}).`;
+  return null;
+}
+function negoScript(s) {
+  const k = negoKind(s), v = svcOf(s), name = v.name.replace(/ \((Car|Home)\)$/, ""), price = money(monthly(s)), since = s.start ? ` since ${s.start.slice(0, 4)}` : "";
+  const nc = kindOf(s) ? needCheck(s) : null, opt = cheaperOptions(s).find(o => o.kind !== "Same plan" && o.price > 0);
+  const rival = nc?.rival ? `${nc.rival.v.name} offers ${nc.rival.p.name} for ${money(nc.rival.p.effective_monthly * (nc.lines || 1))} a month` : opt ? `${opt.name.replace(/\*$/, "")} costs about ${money(opt.price)} a month` : "";
+  const q = s.quote && quoteMonthly(s.quote), qBy = s.quote && (CATALOG[s.quote.by]?.name.replace(/ \((Car|Home)\)$/, "") || "another insurer");
+  if (k === "insurance") return `Hi, my ${svcOf(s).category === "car_insurance" ? "car" : "home"} policy renews soon at ${price} a month. Before I renew, I'd like to make sure I have every discount I qualify for and the best price for the same coverage. Could you check bundling, safe driver, paperless, autopay and paying in full, and confirm the drivers, vehicles and mileage on my policy? ${q ? `I have a quote from ${qBy} for ${money(q)} a month with the same coverage. Can you match it or come closer?` : "I'm getting quotes for the same coverage, and I'd rather stay if the price is right."}`;
+  if (k === "news") return `Hi, I've subscribed to ${name}${since} and my rate went up to ${price} a month. I'd like to keep reading, but that's more than I want to pay. Is there a lower rate you can offer to keep me as a subscriber?`;
+  if (k === "home") return `Hi, I've used ${name}${since}, and my price is now ${price} a month. ${rival ? `${rival} for the same service. ` : "Other companies near me charge less for the same service. "}I'd like to stay with you. Can you match that, or offer a loyalty rate or a lower price for paying yearly?`;
+  return `Hi, I've been a ${name} customer${since}. My bill is now ${price} a month, and I'm reviewing my options before deciding whether to stay. ${rival ? `${rival} where I live. ` : "I've seen lower prices from other providers in my area. "}I'd like to keep the same ${svcOf(s).category === "mobile" ? "lines and data" : svcOf(s).category === "internet" ? "speed" : "channels"}. What can you do to lower my price, such as a new promotional rate or a loyalty discount?`;
+}
+function negoHtml(s) {
+  const k = negoKind(s), why = k && risingOf(s); if (!why) return "";
+  const src = NEGO_SRC[k];
+  return `<div class="nego"><p class="small" style="margin:0"><b>${esc(why)}</b> ${k === "insurance" ? "Call before it renews: insurers can't haggle on their filed rates, but they can apply discounts, fix errors and match quotes." : "Companies often lower the price to keep you, without changing your service."}</p>
+    <ol class="small" style="margin:0;padding-left:20px;display:grid;gap:4px">${NEGO_STEPS[k].map(x => `<li>${esc(x)}</li>`).join("")}</ol>
+    <div><b style="font-size:14px">What to say</b><p class="nego-script" id="nego-text">${esc(negoScript(s))}</p>
+      <button class="btn small" id="nego-copy">Copy</button> <span class="small muted" id="nego-msg"></span></div>
+    ${src ? `<p class="note" style="margin:0">Source: <a href="${esc(src[1])}" target="_blank" rel="noopener">${esc(src[0])}</a>.</p>` : ""}</div>`;
+}
 // When a household service next renews: the policy date you entered (moved on a year at a time), else the next yearly bill.
 function renewsOn(s) {
   if (s.renews) { let d = s.renews; while (d < today()) d = addMonths(12, new Date(d + "T12:00:00")); return d; }
@@ -3631,6 +3684,7 @@ function openSheet(id) {
         </div>
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
         ${syncHtml(s)}
+        ${negoHtml(s) ? sec("nego", "Ask for a lower rate", `<span class="pill poor">Price going up</span>`, negoHtml(s)) : ""}
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
         ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
         ${m.insure ? insureHtml(s) : `
@@ -3766,7 +3820,11 @@ function openSheet(id) {
     if (sw) sw.onclick = () => { s.cycle = "year"; s.price = priceFor(planOf(v, s.plan), "year"); s.priceMine = false; save(); draw(); };
     const tx = root.querySelector("#s-tax"); if (tx) tx.onchange = () => { s.noTax = !tx.checked; save(); setTimeout(draw); };
     const mine = root.querySelector("#s-mine");
-    if (mine) mine.onchange = e => { const val = parseFloat(e.target.value); if (isNaN(val)) { s.priceMine = false; } else { s.myTotal = Math.max(0, val); s.priceMine = true; } s.example = false; save(); setTimeout(draw); };
+    if (mine) mine.onchange = e => { const val = parseFloat(e.target.value), was = monthly(s);
+      if (isNaN(val)) { s.priceMine = false; } else { s.myTotal = Math.max(0, val); s.priceMine = true; }
+      const now = monthly(s); if (negoKind(s) && was > 0 && now - was >= 1) s.rose = { from: was, to: now, on: today() }; else if (now < was) delete s.rose;  // v164
+      s.example = false; save(); setTimeout(draw); };
+    root.querySelector("#nego-copy")?.addEventListener("click", () => navigator.clipboard?.writeText(root.querySelector("#nego-text").textContent).then(() => { root.querySelector("#nego-msg").textContent = "Copied"; }, () => {}));
     const lp = root.querySelector("#s-list");
     if (lp) lp.onclick = () => { s.priceMine = false; save(); draw(); };
     const ps = root.querySelector("#s-plan");
@@ -3784,7 +3842,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 163 · Oct 25", VERSION_NUM = 163;
+const APP_VERSION = "Prototype · Version 164 · Oct 25", VERSION_NUM = 164;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
