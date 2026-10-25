@@ -3410,7 +3410,21 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 133 · Oct 25", VERSION_NUM = 133;
+const APP_VERSION = "Prototype · Version 134 · Oct 25", VERSION_NUM = 134;
+// Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
+// whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
+// Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
+function checkForUpdate() {
+  if (!/github\.io$/.test(location.hostname)) return;
+  fetch(location.pathname + "?check=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(t => {
+    const n = +(t.match(/VERSION_NUM = (\d+)/) || [])[1];
+    if (!(n > VERSION_NUM)) return;
+    try { if (sessionStorage.getItem("sk-upd") === String(n)) return; sessionStorage.setItem("sk-upd", String(n)); } catch {}
+    location.replace(location.pathname + "?v=" + n);
+  }).catch(() => {});
+}
+checkForUpdate();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) checkForUpdate(); });
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
