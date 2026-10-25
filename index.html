@@ -149,11 +149,11 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .about-opt { display: grid; justify-items: center; gap: 8px; padding: 18px 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; color: var(--ink); font: 600 14px var(--f-body); cursor: pointer; text-align: center; }
 .about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .about-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
-.about-grid.about-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 620px; }
+.about-grid.about-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 420px; }
 .age-seg button { padding: 8px 14px; font-size: 14px; } .age-seg { max-width: 100%; }
 .share-box { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; max-width: 620px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); cursor: pointer; }
 .share-box input { margin-top: 3px; width: 18px; height: 18px; flex: none; } .share-box b { display: block; font-weight: 600; } .share-box .small { display: block; margin-top: 2px; }
-@media (max-width: 620px) { .about-grid { grid-template-columns: 1fr 1fr; } .about-grid.about-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } .about-opt { padding: 14px 6px 12px; font-size: 13px; } }
+@media (max-width: 620px) { .about-grid { grid-template-columns: 1fr 1fr; } .about-grid.about-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .about-opt { padding: 14px 6px 12px; font-size: 13px; } }
 .cat-item .logo { width: 30px; height: 30px; font-size: 12px; border-radius: 8px; flex: none; }
 .cat-item span { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 form.fields { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -893,8 +893,8 @@ function save() { try { localStorage.setItem(storeKey(), JSON.stringify(state));
 // Lists and amounts are our made-up examples; prices without a catalog list price (insurance, phone, internet) are made up too.
 const PERSONAS = {
   me: { label: "Me", desc: "Your own list" },
-  student: { label: "Student, under 25", name: "Jordan Rivera", short: "Jordan", desc: "Single student on a tight budget",
-    profile: { about: ["student"], age: "u25", shares: true },
+  student: { label: "Young adult, under 25", name: "Jordan Rivera", short: "Jordan", desc: "Single, early 20s, on a tight budget",
+    profile: { about: [], age: "u25", shares: true },
     subs: [["spotify", 14, ["ad_free", "offline"], 3, "student", 20], ["netflix", 5, [], 9, "ads", 14], ["youtube_premium", 6, [], 21, "individual", 8],
       ["chatgpt", 8, [], 12, "plus", 6], ["xbox_game_pass", 9, [], 17, null, 11], ["discord_nitro", 12, [], 5, null, 10], ["chegg_study", 2, [], 2, null, 3],
       ["planet_fitness", 6, [], 15, null, 13], ["doordash_dashpass", 5, [], 25, null, 7], ["mint_mobile", 0, [], 1, null, 18, 15], ["icloud", 38, [], 8, "50gb", 30], ["duolingo", 3, [], 19, null, 9]] },
@@ -1023,14 +1023,13 @@ let admin = (() => { try { return JSON.parse(localStorage.getItem(ADMIN_KEY)); }
 const saveAdmin = () => { try { localStorage.setItem(ADMIN_KEY, JSON.stringify(admin)); } catch (e) {} };
 // "You vs average" score card (Cuong, 2026-10-22). Monthly subscription spend from public surveys, in each country's currency.
 // No survey of family spending was found, so family figures are estimates (twice the adult average) until an admin sets them.
-const BENCH_GROUPS = { adult: "Average adult", family: "Average family", student: "Average student", senior: "Average senior" };
+// v168 (Cuong): no student group; students compare as adults, and their age range shapes suggestions.
+const BENCH_GROUPS = { adult: "Average adult", family: "Average family", senior: "Average senior" };
 const BENCH = {
   US: { adult: { amt: 90, src: "CNET survey with YouGov, 2,440 US adults, May 2025", url: "https://thedesk.net/2025/05/cnet-subscription-survey-2025/" } },
   GB: { adult: { amt: 65.5, src: "Aqua survey, 2,000 UK adults, June-July 2025", url: "https://www.aquacard.co.uk/building-better-credit/subscription-spending-in-2025" } },
   AU: { adult: { amt: 136, src: "ING survey, 2,045 Australian adults, March 2026 (average per subscriber)", url: "https://newsroom.ing.com.au/?p=3230" },
     senior: { amt: 82, src: "ING survey, March 2026: Baby Boomers' average", url: "https://newsroom.ing.com.au/?p=3230" } } };
-// v148: students use the Gen Z (ages 18-29) figure, worked out from the survey's spending ranges (midpoint of each range, $250 for $200 or more).
-BENCH.US.student = { amt: 82, est: true, src: "Estimate: ages 18-29 in the Omni Calculator survey of 500 US adults, Apr 2026 (worked out from its spending ranges; no student survey found)", url: "https://www.omnicalculator.com/reports/average-subscription-cost-per-month" };
 // v148 (Cuong): how many subscriptions the average person has, for the Overview comparison.
 const BENCH_N = { US: {
   adult: { n: 5, est: true, src: "Estimate: Omni Calculator survey of 500 US adults, Apr 2026 (worked out from its ranges: 41% have 4-6, 31% have 2-3, 17% have 7-10)", url: "https://www.omnicalculator.com/reports/average-subscription-cost-per-month" },
@@ -1586,19 +1585,19 @@ function upcomingHtml() {
 const FRESH = () => ({ subs: [], sampleV: 4, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
 // Welcome, step 1 (Cuong, v125): "Tell us about yourself" with icon choices, then where you live. Step 2 is picking subscriptions.
 // v126 (Cuong): single adult and senior became an age range (profile.age, one choice), and a "share plans" box (profile.shares).
-// profile.about keeps the icon picks; profile.group (the spending average we compare with) follows: 55+ senior, student,
-// family (married or kids), else adult.
+// profile.about keeps the icon picks; profile.group (the spending average we compare with) follows: 55+ senior,
+// family (married or kids), else adult. v168 (Cuong): the student option was removed; age range covers it.
 let welcomeStep = 1;
-const ABOUT = [["student", "I am a student/adult", '<path d="M3 9l9-4 9 4-9 4-9-4z"/><path d="M7 11v4c0 1.5 2.2 3 5 3s5-1.5 5-3v-4"/><path d="M21 9v5"/>'],
+const ABOUT = [
   ["married", "I am married", '<circle cx="9" cy="13" r="5"/><circle cx="15" cy="13" r="5"/><path d="M10 4l2 2 2-2"/>'],
   ["kids", "I have kids", '<circle cx="8" cy="7" r="3"/><circle cx="17" cy="10" r="2.2"/><path d="M3 20c0-3 2.2-5.5 5-5.5s5 2.5 5 5.5"/><path d="M13.5 20c0-2.3 1.6-4.2 3.5-4.2s3.5 1.9 3.5 4.2"/>']];
 const AGES = [["u25", "Under 25"], ["25", "25 to 34"], ["35", "35 to 44"], ["45", "45 to 54"], ["55", "55 and over"]];
-const groupFor = (a, age) => age === "55" ? "senior" : a.includes("student") ? "student" : a.includes("married") || a.includes("kids") ? "family" : "adult";
+const groupFor = (a, age) => age === "55" ? "senior" : a.includes("married") || a.includes("kids") ? "family" : "adult";
 // People like you (Cuong, v128): for someone who skips adding subscriptions, Overview shows the usual set of subscriptions for
 // their age group and household, priced at list prices. Share of people with each kind of service is from Omni Calculator's survey
 // of 500 US adults with a paid subscription (Apr 16, 2026); a kind is "usual" when at least PLK_MIN% of that generation has it.
 // Our choices (labeled as ours in Admin): which generation each age range maps to, which service stands for each kind, and which
-// plan a household gets (student plan for students, family or duo for married or kids). Admin can change all of them (admin.plk).
+// plan a household gets (family or duo for married or kids). Admin can change all of them (admin.plk).
 const PLK_SRC = { name: "Omni Calculator survey of 500 US adults, Apr 2026", url: "https://www.omnicalculator.com/reports/average-subscription-cost-per-month" };
 const PLK_GENS = { genz: "Gen Z (18-29)", millennial: "Millennials (30-45)", genx: "Gen X (46-61)", boomer: "Baby boomers (62+)", all: "All adults" };
 const PLK_SHARE = { genz: { video: 90, music: 74, gaming: 37 }, millennial: { video: 87, music: 63, gaming: 35 }, genx: { video: 90, shopping: 59, music: 54 },
@@ -1607,10 +1606,10 @@ const PLK_TYPES = { video: "Streaming TV", music: "Music", shopping: "Shopping a
 const PLK_DEF = { gen: { "": "all", u25: "genz", 25: "millennial", 35: "millennial", 45: "genx", 55: "boomer" },
   svc: { video: "netflix", music: "spotify", shopping: "amazon_prime", storage: "icloud", gaming: "xbox_game_pass", news: "nyt" }, min: 50 };
 const plkCfg = () => { const a = admin.plk || {}; return { gen: { ...PLK_DEF.gen, ...a.gen }, svc: { ...PLK_DEF.svc, ...a.svc }, min: a.min ?? PLK_DEF.min }; };
-// Plan for a household: a student plan for students; married or kids get a family plan (married alone: duo first); else the usual plan.
+// Plan for a household: married or kids get a family plan (married alone: duo first); else the usual plan.
 function plkPlan(v, about) {
   const find = re => v.plans.find(p => re.test(p.name) && p.effective_monthly != null);
-  const pick = (about.includes("student") && find(/student/i)) || (about.includes("married") && !about.includes("kids") && find(/\bduo\b/i))
+  const pick = (about.includes("married") && !about.includes("kids") && find(/\bduo\b/i))
     || ((about.includes("married") || about.includes("kids")) && find(/family/i));
   return pick || planOf(v, v.default_plan);
 }
@@ -1624,7 +1623,7 @@ function plkHtml() {
   if (!state.plkShow || !startShown()) return "";  // set by "Skip, I'll add them later"; goes with Let's get started
   const have = new Set(state.subs.map(s => s.svc));
   const p = profile(), about = p.about || [], age = p.age || "", r = plkFor(age, about), us = p.country === catalogCountry(), b = benchFor(p.country, "adult");
-  const who = [age ? AGES.find(a => a[0] === age)?.[1] : "", ...about.map(k => ({ student: "Student", married: "Married", kids: "Kids" })[k]), p.shares ? "Open to sharing" : ""].filter(Boolean);
+  const who = [age ? AGES.find(a => a[0] === age)?.[1] : "", ...about.map(k => ({ married: "Married", kids: "Kids" })[k]).filter(Boolean), p.shares ? "Open to sharing" : ""].filter(Boolean);
   return `<section class="card plk" style="margin-bottom:14px"><h3 style="margin:0">What people like you pay</h3>
     <div class="chips" style="margin:6px 0 2px">${who.length ? who.map(w => `<span class="pill ok">${esc(w)}</span>`).join("") : `<span class="small muted">You haven't told us about yourself.</span>`}<button type="button" class="btn ghost small" id="plk-edit" style="padding:0 4px">${who.length ? "Change" : "Tell us"}</button></div>
     ${us && r.items.length ? `<div class="value num">${money(r.total)}<span class="small muted"> a month</span></div>
@@ -1818,7 +1817,7 @@ const LEGAL = {
     ["Changes and contact", "We may update these terms as the app develops; the date above shows the latest version. Questions? Use Give feedback or Report a problem in Help."]] },
   privacy: { title: "Privacy", sections: [
     ["The short version", "Your subscription list stays on your device. We don't sell your data, we don't show ads, and we never ask for your bank or card details."],
-    ["What stays on your device", "Your subscriptions, prices, usage, dates, location, what you told us about yourself (such as your age range, student, married, kids or sharing plans) your name and email if you give them, and settings (such as style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
+    ["What stays on your device", "Your subscriptions, prices, usage, dates, location, what you told us about yourself (such as your age range, married, kids or sharing plans) your name and email if you give them, and settings (such as style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
     ["What you choose to send us", "When you send feedback or report a problem, we receive what you write, plus the app version, the screen you were on, your device type and how many subscriptions you track (not the list itself). If you add an email address to a ticket, we use it only to reply. In the Claude app version, these are linked to your Claude account so only the Subscription Keeper team can read them."],
     ["Sam, the AI assistant", "When you ask Sam a question in the Claude app, your question, your recent chat, your subscription list (names, prices, usage and renewal dates) and related catalog details are sent to Claude, Anthropic's AI, to write the answer, using your own Claude account. On the public website, Sam answers from the catalog on your device and nothing is sent."],
     ["Usage exports", "If you load a ChatGPT, Claude, Netflix or Spotify file to count your usage, the file is read on your device. Only the monthly counts are kept, and the file isn't uploaded."],
@@ -2349,8 +2348,7 @@ function cmpData() {
     allAmt: amt + billAmt, avgAll: b ? b.amt + hhAvg : null, avgAllN: bn ? bn.n + bills.length : null };
 }
 // v166 (Cuong): name the group on the tile, with an asterisk pointing to the note at the bottom of Overview.
-// v167 (Cuong): students show as "Student/Adult".
-const cmpWho = () => benchGroup() === "student" ? "Student/Adult" : BENCH_GROUPS[benchGroup()]?.replace("Average ", "").replace(/^./, c => c.toUpperCase()) || "";
+const cmpWho = () => BENCH_GROUPS[benchGroup()]?.replace("Average ", "").replace(/^./, c => c.toUpperCase()) || "";
 function cmpLine(you, avg, fmt, all) {
   if (avg == null) return "";
   // v160 (Cuong): no subscriptions-only figure in the tiles, to keep them clean. v161: you and the average both include household services.
@@ -3055,7 +3053,7 @@ let adminCountry = "US";
 // Admin view of People like you (v128): the rules, then every combination of age range and household with what it produces.
 function plkAdminHtml() {
   const c = plkCfg(), yes = "&#10003;", ages = [["", "Not given"], ...AGES];
-  const combos = ages.flatMap(([age, al]) => [[], ["student"], ["married"], ["kids"], ["student", "married"], ["student", "kids"], ["married", "kids"], ["student", "married", "kids"]].map(about => ({ age, al, about })));
+  const combos = ages.flatMap(([age, al]) => [[], ["married"], ["kids"], ["married", "kids"]].map(about => ({ age, al, about })));
   const svcOpts = type => Object.values(CATALOG).filter(v => v.category === CATALOG[PLK_DEF.svc[type]]?.category).sort((a, b) => a.name.localeCompare(b.name));
   return `<div class="tbl-wrap" style="margin-bottom:12px"><table class="tbl"><thead><tr><th>Age range</th><th>Survey group used <span class="muted">(our choice)</span></th></tr></thead><tbody>
       ${ages.map(([k, l]) => `<tr><td>${l}</td><td><select data-plk-gen="${k}">${Object.entries(PLK_GENS).map(([g, gl]) => `<option value="${g}" ${c.gen[k] === g ? "selected" : ""}>${gl}</option>`).join("")}</select></td></tr>`).join("")}</tbody></table></div>
@@ -3063,11 +3061,11 @@ function plkAdminHtml() {
       ${Object.entries(PLK_TYPES).map(([type, tl]) => `<tr><td>${tl}</td>${Object.keys(PLK_SHARE).map(g => `<td class="num">${PLK_SHARE[g][type] != null ? PLK_SHARE[g][type] + "%" : `<span class="muted">not reported</span>`}</td>`).join("")}
         <td><select data-plk-svc="${type}">${svcOpts(type).map(v => `<option value="${v.id}" ${c.svc[type] === v.id ? "selected" : ""}>${esc(v.name)}</option>`).join("")}</select></td></tr>`).join("")}</tbody></table></div>
     <p class="note" style="margin:0 0 8px">Shares: <a href="${PLK_SRC.url}" target="_blank" rel="noopener">${esc(PLK_SRC.name)}</a> (people with at least one paid subscription; the survey reports only some kinds per generation). A kind counts as usual at
-      <input type="number" id="plk-min" min="0" max="100" step="1" value="${c.min}" style="width:64px">% or more. Plans: student plan for students, duo for married without kids, family for married or kids, when the service has one.
+      <input type="number" id="plk-min" min="0" max="100" step="1" value="${c.min}" style="width:64px">% or more. Plans: duo for married without kids, family for married or kids, when the service has one.
       ${admin.plk ? `<button class="btn ghost small" id="plk-reset">Back to defaults</button>` : ""}</p>
-    <div class="tbl-wrap" style="margin-bottom:22px;max-height:420px;overflow:auto"><table class="tbl"><thead><tr><th>Age range</th><th>Student</th><th>Married</th><th>Kids</th><th>Survey group</th><th>Usual set (plan, list price)</th><th>Estimate / mo</th></tr></thead><tbody>
+    <div class="tbl-wrap" style="margin-bottom:22px;max-height:420px;overflow:auto"><table class="tbl"><thead><tr><th>Age range</th><th>Married</th><th>Kids</th><th>Survey group</th><th>Usual set (plan, list price)</th><th>Estimate / mo</th></tr></thead><tbody>
       ${combos.map(({ age, al, about }) => { const r = plkFor(age, about);
-        return `<tr><td>${al}</td><td>${about.includes("student") ? yes : ""}</td><td>${about.includes("married") ? yes : ""}</td><td>${about.includes("kids") ? yes : ""}</td><td>${esc(PLK_GENS[r.gen])}</td>
+        return `<tr><td>${al}</td><td>${about.includes("married") ? yes : ""}</td><td>${about.includes("kids") ? yes : ""}</td><td>${esc(PLK_GENS[r.gen])}</td>
           <td class="small" style="white-space:normal;min-width:260px">${r.items.map(x => `${esc(x.v.name)} ${esc(x.plan.name)} ${money(x.plan.effective_monthly)}`).join("; ") || "None"}</td><td class="num">${money(r.total)}</td></tr>`; }).join("")}</tbody></table></div>`;
 }
 function adminView() {
@@ -3850,7 +3848,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 167 · Standalone copy · Oct 25", VERSION_NUM = 167;
+const APP_VERSION = "Prototype · Version 168 · Standalone copy · Oct 25", VERSION_NUM = 168;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4002,6 +4000,9 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
     if (s.priceMine && s.myTotal == null) { s.myTotal = s.price; if (CATALOG[s.svc]) s.price = priceFor(planOf(CATALOG[s.svc], s.plan), s.cycle); }
   });
   state.cgPauseV = 1;
+  // v168 (Cuong): no student option; earlier picks fall back to the age range, and the comparison group to adult.
+  if (state.profile?.about?.includes("student")) state.profile.about = state.profile.about.filter(k => k !== "student");
+  if (state.profile?.group === "student") state.profile.group = groupFor(state.profile.about || [], state.profile.age);
   // v165 (Cuong): saved example households pick up the price rise and renewal that show "Ask for a lower rate".
   if (persona !== "me" && !state.negoV) { personaState(persona).subs.forEach(ps => { const s = state.subs.find(x => x.svc === ps.svc && x.example);
       if (s && ps.rose) s.rose = ps.rose; if (s && ps.renews && !s.renews) s.renews = ps.renews; }); state.negoV = 1; }
