@@ -900,13 +900,13 @@ const PERSONAS = {
     subs: [["netflix", 12, ["ad_free", "hd"], 4, "standard", 70], ["disney_plus", 9, [], 11, "trio_ads", 26], ["spotify", 22, ["ad_free", "offline"], 14, "family", 48],
       ["amazon_prime", 9, ["shipping", "video"], 6, "monthly", 90], ["costco", 3, ["bulk"], 20, null, 60], ["m365", 14, ["apps", "onedrive"], 27, "family", 36],
       ["icloud", 1100, [], 2, "2tb", 40], ["xbox_game_pass", 7, [], 23, null, 15], ["ixl", 2, [], 8, null, 12], ["doordash_dashpass", 6, [], 16, null, 14],
-      ["state_farm_auto", 0, ["coverage"], 10, null, 72, 212], ["state_farm_home", 0, ["coverage"], 10, null, 72, 168], ["verizon_wireless", 0, [], 22, null, 84, 185],
+      ["state_farm_auto", 0, ["coverage"], 10, null, 72, 212], ["state_farm_home", 0, ["coverage"], 10, null, 72, 168], ["verizon_wireless", 0, [], 22, null, 84, 185, { rose: { from: 165, to: 185, on: isoIn(-20) } }],
       ["xfinity_internet", 0, [], 18, null, 50, 85], ["ring_home", 0, [], 3, null, 30], ["chewy_plus", 2, [], 12, null, 9]] },
   seniors: { label: "Senior couple, 60s, no kids", name: "Pat & Lee Morgan", short: "Pat & Lee", desc: "Retired couple, no kids at home",
     profile: { about: ["married"], age: "55", shares: false },
     subs: [["aarp", 1, [], 1, null, 120], ["aaa", 0, [], 10, null, 300, null, { members: 2 }], ["netflix", 10, ["hd"], 7, "standard", 96], ["amazon_prime", 5, ["shipping", "video"], 15, "monthly", 110],
       ["nyt", 12, [], 20, null, 60], ["kindle_unlimited", 3, [], 26, null, 24], ["audible", 1, [], 4, null, 40], ["tmobile_wireless", 0, [], 12, null, 54, 70],
-      ["xfinity_internet", 0, [], 18, null, 100, 70], ["icloud", 140, [], 9, "200gb", 70], ["geico_auto", 0, ["coverage"], 28, null, 96, 118],
+      ["xfinity_internet", 0, [], 18, null, 100, 70], ["icloud", 140, [], 9, "200gb", 70], ["geico_auto", 0, ["coverage"], 28, null, 96, 118, { renews: isoIn(30) }],
       ["silversneakers", 8, [], 1, null, 30], ["medical_guardian", 30, [], 5, null, 14]] },
 };
 // Persona pictures (v146): simple drawn portraits, not photos of real people.
@@ -927,6 +927,8 @@ const PERSONA_PICS = {
 const PERSONA_KEY = "sk-persona";
 let persona = (() => { try { const p = localStorage.getItem(PERSONA_KEY); return PERSONAS[p] ? p : "me"; } catch { return "me"; } })();
 const storeKey = () => persona === "me" ? STORE_KEY : `${STORE_KEY}-${persona}`;
+// Example dates relative to today (v165): days from now, as YYYY-MM-DD.
+function isoIn(days) { return new Date(Date.now() + days * 864e5).toISOString().slice(0, 10); }
 function personaState(id) {
   const P = PERSONAS[id], subs = [];
   P.subs.forEach(([svc, uses, used, day, plan, ago, mine, extra]) => { const v = CATALOG[svc]; if (!v) return;
@@ -3842,7 +3844,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 164 · Oct 25", VERSION_NUM = 164;
+const APP_VERSION = "Prototype · Version 165 · Oct 25", VERSION_NUM = 165;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -3994,6 +3996,9 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
     if (s.priceMine && s.myTotal == null) { s.myTotal = s.price; if (CATALOG[s.svc]) s.price = priceFor(planOf(CATALOG[s.svc], s.plan), s.cycle); }
   });
   state.cgPauseV = 1;
+  // v165 (Cuong): saved example households pick up the price rise and renewal that show "Ask for a lower rate".
+  if (persona !== "me" && !state.negoV) { personaState(persona).subs.forEach(ps => { const s = state.subs.find(x => x.svc === ps.svc && x.example);
+      if (s && ps.rose) s.rose = ps.rose; if (s && ps.renews && !s.renews) s.renews = ps.renews; }); state.negoV = 1; }
   // One-time test history for the prototype; subscriptions added later start without history.
   if (state.histV !== 2) { genAll(); state.histV = 2; }
   state.chatgptFixed = true;
