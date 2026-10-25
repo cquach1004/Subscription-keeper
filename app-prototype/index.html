@@ -304,6 +304,13 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .bench-bars i { display: block; height: 6px; border-radius: 3px; min-width: 3px; }
 .cmp { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; margin-top: 6px; font-size: 12px; color: inherit; opacity: .9; }
 .cmp b { font-weight: 600; } .cmp-ex { flex-basis: 100%; }
+.pie-legend li.pie-grp > b:first-child { grid-column: 1 / 3; } .pie-legend li.pie-grp > b:last-child { grid-column: 3; text-align: right; }
+.pie-legend li.pie-grp { padding: 8px 6px 2px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); cursor: default; }
+.pie-legend li.pie-grp:first-child { padding-top: 0; } .pie-legend li.pie-grp b { font-weight: 600; }
+.hh-split { margin: -10px 0 14px; } .hh-bar { display: flex; gap: 2px; height: 8px; border-radius: 4px; overflow: hidden; } .hh-bar i { display: block; min-width: 3px; }
+.hh-leg { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 14px; margin-top: 6px; font-size: 13px; color: var(--ink); }
+.hh-leg span { display: inline-flex; align-items: center; gap: 6px; } .hh-leg i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.hh-split + .cmp-note { margin-top: 0; }
 .cmp-note { margin: -10px 0 18px; } .cmp-note a { color: var(--accent); } .cmp-note select.bench-grp { display: inline-block; width: auto; font-size: 12px; padding: 1px 4px; margin: 0 2px; }
 .bench-grp { font-size: 12px; padding: 2px 6px; border-radius: 8px; max-width: 100%; }
 /* v102 (Cuong): Overview tile with the share of subscriptions rated Great, Fair and Costly. */
@@ -1028,8 +1035,12 @@ function benchNFor(country, group) {
   if (b.adult) return { ...b.adult, src: b.adult.src + "; all adults, as no figure for this group was found" };
   return null;
 }
-// Surveys count streaming, apps, shopping and memberships, not household bills, so those stay out of the comparison.
-const BILL_CATS = new Set(["car_insurance", "home_insurance", "internet", "mobile", "lawn_pest", "home", "home_security", "tech_support", "child_care", "elder_care", "small_business"]);
+// Household Services (Cuong, v154): recurring services for the home and family that people shop around for (phone, internet,
+// insurance, home security, lawn and pest...). Shown as their own group on Overview. Surveys of subscription spending don't
+// count them, so they stay out of the "vs average" comparison.
+// Child Care & Tutoring stays with subscriptions: most of it is tutoring and learning apps.
+const HOUSEHOLD_CATS = new Set(["car_insurance", "home_insurance", "internet", "mobile", "lawn_pest", "home", "home_security", "tech_support", "elder_care"]);
+const isHousehold = s => HOUSEHOLD_CATS.has(svcOf(s).category);
 // Seniors without a survey: Bango (2,500 US subscribers, Dec 2022) found boomers pay for 3 subscriptions vs 5 for younger adults, so 3/5 of the adult average.
 function benchFor(country, group) {
   const a = admin.bench?.[country]?.[group];
@@ -2231,12 +2242,12 @@ function greeting() { const h = new Date().getHours(); return h < 12 ? "Good mor
 // v148 (Cuong): each Overview number compared with the average person in the profile's group.
 function cmpData() {
   const g = benchGroup(), c = profile().country, b = benchFor(c, g), bn = benchNFor(c, g);
-  const mine = state.subs.filter(s => !BILL_CATS.has(svcOf(s).category)), bills = state.subs.filter(s => BILL_CATS.has(svcOf(s).category));
+  const mine = state.subs.filter(s => !isHousehold(s)), bills = state.subs.filter(isHousehold);
   return { g, b, bn, amt: mine.reduce((a, s) => a + monthly(s), 0), n: mine.length, billAmt: bills.reduce((a, s) => a + monthly(s), 0), billN: bills.length };
 }
 function cmpLine(you, avg, fmt, all) {
   if (avg == null) return "";
-  const ex = all !== you ? `<span class="cmp-ex">${fmt(you)} without bills</span>` : "";
+  const ex = all !== you ? `<span class="cmp-ex">${fmt(you)} in subscriptions</span>` : "";
   const pct = avg ? Math.round((you - avg) / avg * 100) : 0, k = pct > 0 ? "more" : pct < 0 ? "less" : "";
   return `<div class="cmp">${ex}<span>Avg ${fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
 }
@@ -2246,7 +2257,16 @@ function cmpNote(d) {
   const pick = `<select id="cmp-grp" class="bench-grp" aria-label="Compare me with">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<option value="${k}" ${k === d.g ? "selected" : ""}>${n.replace("Average ", "")}</option>`).join("")}</select>`;
   const srcs = [d.b, d.bn].filter(x => x?.url).filter((x, i, a) => a.findIndex(y => y.url === x.url) === i);
   const src = srcs.map((x, i) => `<a href="${esc(x.url)}" target="_blank" rel="noopener" title="${esc(x.src)}">Source${srcs.length > 1 ? ` ${i + 1}` : ""}</a>`).join(" &middot; ");
-  return `<p class="note cmp-note">Compared with the average ${pick} in ${esc(countryName(profile().country))}${est ? " (estimates)" : ""}.${d.billN ? ` Averages don't include insurance, phone, internet or home services, so your ${d.billN} of those (${money(d.billAmt)} a month) are left out.` : ""} ${src}</p>`;
+  return `<p class="note cmp-note">Compared with the average ${pick} in ${esc(countryName(profile().country))}${est ? " (estimates)" : ""}.${d.billN ? ` Averages cover subscriptions only, so your household services are left out.` : ""} ${src}</p>`;
+}
+// v154 (Cuong): what goes to subscriptions vs household services, as one bar under the top numbers.
+function splitHtml(d, total) {
+  if (!d.billN || !d.n || !total) return "";
+  const pS = d.amt / total * 100;
+  return `<div class="hh-split" role="img" aria-label="Subscriptions ${money(d.amt)} a month, household services ${money(d.billAmt)} a month">
+    <div class="hh-bar"><i style="width:${pS.toFixed(1)}%;background:var(--pie-1)"></i><i style="width:${(100 - pS).toFixed(1)}%;background:var(--pie-4)"></i></div>
+    <div class="hh-leg"><span><i style="background:var(--pie-1)"></i>Subscriptions <b class="num">${money(d.amt)}</b>/mo &middot; ${d.n}</span>
+      <span><i style="background:var(--pie-4)"></i>Household Services <b class="num">${money(d.billAmt)}</b>/mo &middot; ${d.billN}</span></div></div>`;
 }
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
@@ -2259,8 +2279,8 @@ function homeView() {
     ${state.subs.length ? `<section class="summary">
       <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div>${cmpLine(cd.amt, cd.b?.amt, money, total)}</div>
       <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div>${cmpLine(cd.amt * 12, cd.b && cd.b.amt * 12, money, total * 12)}</div>
-      <div class="stat tint"><div class="label">Subscriptions</div><div class="value num">${state.subs.length}</div>${cmpLine(cd.n, cd.bn?.n, x => x, state.subs.length)}</div>
-    </section>${cmpNote(cd)}` : ""}
+      <div class="stat tint"><div class="label">${cd.billN ? "Subscriptions & services" : "Subscriptions"}</div><div class="value num">${state.subs.length}</div>${cmpLine(cd.n, cd.bn?.n, x => x, state.subs.length)}</div>
+    </section>${splitHtml(cd, total)}${cmpNote(cd)}` : ""}
     ${plkHtml()}
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
@@ -2390,14 +2410,23 @@ function overlapsView() {
 }
 
 // Home donut: monthly spend by category, biggest first. Beyond 8 slices the smallest fold into "Everything else".
+// v154: subscriptions first, then household services (hh), each sorted by spend. The palette has 8 colors, so each group
+// gets colored rows in proportion to its spend (3 to 5 for household services) and folds the rest into its own gray "Other".
 function spendByCat() {
   const m = {};
   state.subs.forEach(s => { const amt = monthly(s) || 0; if (amt <= 0) return; const c = svcOf(s).category || "other";
-    (m[c] ||= { label: catLabel(c), amt: 0, subs: [] }); m[c].amt += amt; m[c].subs.push(s.name); });
-  const rows = Object.values(m).sort((a, b) => b.amt - a.amt);
-  if (rows.length <= 8) return rows;
-  const rest = rows.slice(7);
-  return [...rows.slice(0, 7), { label: "Everything else", amt: rest.reduce((a, r) => a + r.amt, 0), subs: rest.flatMap(r => r.subs), other: true }];
+    (m[c] ||= { label: catLabel(c), amt: 0, subs: [], hh: isHousehold(s) }); m[c].amt += amt; m[c].subs.push(s.name); });
+  const all = Object.values(m).sort((a, b) => b.amt - a.amt), S = all.filter(r => !r.hh), H = all.filter(r => r.hh);
+  const fold = (rows, n, label, hh) => rows.length <= n ? rows : rows.length === n + 1 ? [...rows.slice(0, n), { ...rows[n], other: true }] : [...rows.slice(0, n), { label, amt: rows.slice(n).reduce((a, r) => a + r.amt, 0), subs: rows.slice(n).flatMap(r => r.subs), other: true, hh }];
+  let out;
+  if (S.length + H.length <= 8) out = [...S, ...H];
+  else if (!H.length || !S.length) out = fold(all, 7, H.length ? "Other household services" : "Everything else", !!H.length);
+  else { const tot = all.reduce((a, r) => a + r.amt, 0), hAmt = H.reduce((a, r) => a + r.amt, 0);
+    let cH = Math.min(5, Math.max(3, Math.round(8 * hAmt / tot))), cS = 8 - cH;
+    if (H.length <= cH) cS = 8 - H.length; else if (S.length <= cS) cH = 8 - S.length;
+    out = [...fold(S, cS, "Other subscriptions", false), ...fold(H, cH, "Other household services", true)]; }
+  let k = 0; out.forEach(r => r.col = r.other ? "other" : ++k);
+  return out;
 }
 // "What's trending": recent price changes and news, researched from the web (2026-10-22). Each item names its source.
 // Items with a country show only to people there. The weekly price check should refresh this list.
@@ -2514,17 +2543,18 @@ function pieHtml() {
   let a0 = -Math.PI / 2;
   const paths = rows.map((r, i) => { const a1 = a0 + r.amt / tot * 2 * Math.PI, big = a1 - a0 > Math.PI ? 1 : 0;
     const d = `M${pt(a0, R)} A${R} ${R} 0 ${big} 1 ${pt(a1, R)} L${pt(a1, R0)} A${R0} ${R0} 0 ${big} 0 ${pt(a0, R0)}Z`; a0 = a1;
-    return `<path d="${d}" data-i="${i}" fill="var(--pie-${r.other ? "other" : i + 1})"/>`; }).join("");
+    return `<path d="${d}" data-i="${i}" fill="var(--pie-${r.col})"/>`; }).join("");
   const pct = r => Math.round(r.amt / tot * 100) || "<1";
+  const grouped = rows.some(r => r.hh) && rows.some(r => !r.hh), sub = hh => rows.filter(r => !!r.hh === hh).reduce((a, r) => a + r.amt, 0);
   return `<section class="card pie-card"><h3 style="margin:0">Spending by category</h3>
     <div class="pie-wrap"><div class="pie-box"><svg viewBox="0 0 190 190" role="img" aria-label="Monthly spending by category">${paths}</svg>
       <div class="pie-mid"><b class="num">${money(tot)}</b><span>a month</span></div><div class="ctip" role="status"></div></div>
-      <ul class="pie-legend">${rows.map((r, i) => `<li data-i="${i}"><span class="sw" style="background:var(--pie-${r.other ? "other" : i + 1})"></span>
+      <ul class="pie-legend">${rows.map((r, i) => `${grouped && (i === 0 || r.hh !== rows[i - 1].hh) ? `<li class="pie-grp"><b>${r.hh ? "Household Services" : "Subscriptions"}</b><b class="num">${money(sub(r.hh))}</b></li>` : ""}<li data-i="${i}"><span class="sw" style="background:var(--pie-${r.col})"></span>
         <span>${esc(r.label)} <span class="n">(${r.subs.length})</span></span><b class="num">${money(r.amt)}</b><span class="pct num">${pct(r)}%</span></li>`).join("")}</ul></div></section>`;
 }
 function pieWire(f) {
   const box = f.querySelector(".pie-box"); if (!box) return;
-  const rows = pieRows, tip = box.querySelector(".ctip"), lis = f.querySelectorAll(".pie-legend li");
+  const rows = pieRows, tip = box.querySelector(".ctip"), lis = f.querySelectorAll(".pie-legend li[data-i]");
   const on = (i, e) => { box.classList.toggle("hl", i != null);
     box.querySelectorAll("path").forEach(p => p.classList.toggle("on", +p.dataset.i === i)); lis.forEach(l => l.classList.toggle("on", +l.dataset.i === i));
     if (i == null || !e) { tip.style.display = "none"; return; }
@@ -3589,7 +3619,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 153 · Oct 25", VERSION_NUM = 153;
+const APP_VERSION = "Prototype · Version 154 · Oct 25", VERSION_NUM = 154;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
