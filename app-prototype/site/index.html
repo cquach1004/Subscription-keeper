@@ -2327,9 +2327,11 @@ function cmpData() {
 }
 function cmpLine(you, avg, fmt, all) {
   if (avg == null) return "";
-  const ex = all !== you ? `<span class="cmp-ex">${fmt(you)} in subscriptions</span>` : "";
+  // v160 (Cuong): no subscriptions-only figure in the tiles, to keep them clean; the split bar below shows it. "Subs avg" says the
+  // comparison covers subscriptions only when the big number also includes household services.
+  const ex = "";
   const pct = avg ? Math.round((you - avg) / avg * 100) : 0, k = pct > 0 ? "more" : pct < 0 ? "less" : "";
-  return `<div class="cmp">${ex}<span>Avg ${fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
+  return `<div class="cmp">${ex}<span>${all !== you ? "Subs avg" : "Avg"} ${fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
 }
 function cmpNote(d) {
   if (!d.b && !d.bn) return "";
@@ -3767,7 +3769,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 159 · Standalone copy · Oct 25", VERSION_NUM = 159;
+const APP_VERSION = "Prototype · Version 160 · Standalone copy · Oct 25", VERSION_NUM = 160;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
