@@ -123,6 +123,13 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 18px; }
 .cat-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; text-align: left; min-width: 0; }
 .cat-item[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.intro { display: grid; gap: 18px; max-width: 620px; margin: 24px auto 0; text-align: center; justify-items: center; }
+.intro-h { font-size: 30px; line-height: 1.2; margin: 0; } .intro-p { margin: 0; font-size: 17px; line-height: 1.5; color: var(--ink); }
+.intro-pillars { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; }
+.intro-pill { display: grid; justify-items: center; gap: 6px; padding: 16px 10px; border-radius: 16px; background: var(--surface); }
+.intro-pill svg { width: 32px; height: 32px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.intro-next { min-width: 200px; margin-top: 6px; }
+@media (max-width: 520px) { .intro-h { font-size: 25px; } .intro-pillars { grid-template-columns: 1fr; } .intro-pill { grid-template-columns: 32px 1fr; justify-items: start; text-align: left; column-gap: 12px; } .intro-pill svg { grid-row: span 2; } }
 .about-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-width: 860px; }
 .about-opt { display: grid; justify-items: center; gap: 8px; padding: 18px 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; color: var(--ink); font: 600 14px var(--f-body); cursor: pointer; text-align: center; }
 .about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -1448,7 +1455,23 @@ function aboutView() {
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
+// Intro page (Cuong, v132): what the app is, before the welcome questions. Shown only to new visitors (welcomeStep 0).
+const INTRO_PILLARS = [
+  ["AI", "An assistant that answers your questions", '<path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>'],
+  ["Market research", "Prices and plans for hundreds of services", '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],
+  ["Personalization", "Built around you and how you use them", '<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>'],
+];
+function introView() {
+  const f = el(`<section class="intro">
+    <h2 class="intro-h">AI, market research and you: smarter spending on subscriptions</h2>
+    <p class="intro-p">Subscription Keeper tracks what you pay for and how much you actually use it. It compares your plans with researched prices and alternatives, tailored to what you tell us about yourself, and an AI assistant answers your questions along the way. You see where you're getting good value and where you could pay less.</p>
+    <div class="intro-pillars">${INTRO_PILLARS.map(([t, d, svg]) => `<div class="intro-pill"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><b>${t}</b><span class="small muted">${d}</span></div>`).join("")}</div>
+    <button class="btn primary intro-next" id="i-next">Next</button></section>`);
+  f.getElementById("i-next").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
+  return f;
+}
 function welcomeView() {
+  if (welcomeStep === 0) return introView();
   if (welcomeStep === 1) return aboutView();
   const p = profile(), picks = new Set(), country = p.country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no");
@@ -3386,7 +3409,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 131 · Oct 25", VERSION_NUM = 131;
+const APP_VERSION = "Prototype · Version 132 · Oct 25", VERSION_NUM = 132;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
@@ -3506,7 +3529,7 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   buildCatalog(d); xs.slice(0, 2).forEach(buildAlts); LOC_PRICES = xs[2]?.services || {}; buildAlts(xs[3] || {});
   const saved = load();
   // New visitors start on the welcome screen and pick their own subscriptions; returning visitors keep their list.
-  state = saved?.subs ? saved : FRESH(); if (!saved?.subs) view = "welcome";
+  state = saved?.subs ? saved : FRESH(); if (!saved?.subs) { view = "welcome"; welcomeStep = 0; }
   // Services added from Explore live in alternatives.json / explore-extra.json. If those files fail to load, keep the
   // subscription as a custom one and restore the link next time, rather than discarding the user's list.
   state.subs.forEach(s => { if (s.svcOrig && CATALOG[s.svcOrig]) { s.svc = s.svcOrig; delete s.svcOrig; }
