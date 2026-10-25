@@ -205,7 +205,7 @@ input[type=date] { -webkit-appearance: none; appearance: none; min-width: 0; max
 .x-add { justify-self: start; margin-top: 4px; }
 .loc-row { display: flex; flex-wrap: wrap; gap: 10px; }
 .loc-row label { display: grid; gap: 4px; flex: 1 1 160px; min-width: 0; }
-.loc-row select, .loc-row input { width: 100%; }
+.loc-row select, .loc-row input { width: 100%; } .w-email input { width: 100%; max-width: 420px; }
 .x-top { display: flex; align-items: center; gap: 10px; }
 .x-price .num { font-size: 18px; }
 .tabs .short { display: none; }
@@ -1537,9 +1537,14 @@ function plkHtml() {
 function aboutView() {
   const p = profile(), country = p.country, about = new Set((p.about || []).filter(k => ABOUT.some(a => a[0] === k)));
   let age = p.age || "";
+  // v149 (Cuong): name under "Tell us about yourself", email after "Where do you live?". Optional; kept in this browser only.
+  let saved = ""; try { saved = localStorage.getItem("sk-name") || ""; } catch {}
+  const [sf, ...sl] = saved.trim().split(/\s+/), first = saved ? sf : p.first || "", last = saved ? sl.join(" ") : p.last || "";
   const f = el(`<div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
     <button class="btn ghost small" id="w-intro" style="padding-left:0;margin-bottom:4px">&larr; Back</button>
     <h3 style="margin:8px 0 2px">Tell us about yourself</h3>
+    <div class="loc-row" style="margin:10px 0 16px"><label>First name<input id="w-first" autocomplete="given-name" value="${esc(first)}"></label>
+      <label>Last name<input id="w-last" autocomplete="family-name" value="${esc(last)}"></label></div>
     <p class="small muted" style="margin:0 0 12px">Pick all that apply. It helps us suggest plans that fit you.</p>
     <div class="about-grid about-3">${ABOUT.map(([k, label, svg]) => `<button type="button" class="about-opt" data-about="${k}" aria-pressed="${about.has(k)}"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><span>${label}</span></button>`).join("")}</div>
     <h3 style="margin:22px 0 8px">My age group</h3>
@@ -1548,19 +1553,28 @@ function aboutView() {
     <h3 style="margin:22px 0 8px">Where do you live?</h3>
     <div class="loc-row" style="margin-bottom:18px"><label>Country<select id="w-country">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === country ? "selected" : ""}>${n}</option>`).join("")}</select></label>
       ${country === "US" ? `<label>State<select id="w-state"><option value="">Choose your state</option>${Object.entries(US_STATES).map(([k, n]) => `<option value="${k}" ${k === p.region ? "selected" : ""}>${n}</option>`).join("")}</select></label>` : ""}</div>
+    <h3 style="margin:22px 0 8px">Your email address</h3>
+    <label class="w-email" style="display:block;margin-bottom:6px"><input id="w-email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" value="${esc(p.email || "")}" aria-label="Email address"></label>
+    <p class="small muted" id="w-email-msg" style="margin:0 0 18px">In this prototype it's saved only in this browser.</p>
     <div class="w-bar" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn primary" id="w-next">Next: your subscriptions</button>
       <button class="btn ghost small" id="w-example">Just looking? Try it with example data</button>
       ${state.subs.length ? `<button class="btn ghost small" id="w-cancel">Keep my current list</button>` : ""}</div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
-  const keep = () => { const c = $("w-country").value; state.profile = { ...profile(), country: c, region: c === "US" ? ($("w-state")?.value || "") : "", about: [...about], age, group: groupFor([...about], age), shares: $("w-share").checked }; };
+  const keep = () => { const c = $("w-country").value, first = $("w-first").value.trim(), last = $("w-last").value.trim();
+    state.profile = { ...profile(), first, last, email: $("w-email").value.trim(), country: c, region: c === "US" ? ($("w-state")?.value || "") : "", about: [...about], age, group: groupFor([...about], age), shares: $("w-share").checked };
+    if (first || last) try { localStorage.setItem("sk-name", [first, last].filter(Boolean).join(" ")); } catch {} };
+  const emailOk = () => { const i = $("w-email"), ok = !i.value.trim() || i.checkValidity(); i.setAttribute("aria-invalid", !ok);
+    $("w-email-msg").textContent = ok ? "In this prototype it's saved only in this browser." : "That doesn't look like an email address. Check it, or leave it blank for now.";
+    $("w-email-msg").style.color = ok ? "" : "var(--bad)"; return ok; };
+  $("w-email").addEventListener("blur", emailOk);
   f.querySelectorAll("[data-about]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.about;
     about.has(k) ? about.delete(k) : about.add(k);
     document.querySelectorAll("#view [data-about]").forEach(x => x.setAttribute("aria-pressed", about.has(x.dataset.about))); }));
   f.querySelectorAll("[data-age]").forEach(b => b.addEventListener("click", () => { age = age === b.dataset.age ? "" : b.dataset.age;
     document.querySelectorAll("#view [data-age]").forEach(x => { x.setAttribute("aria-pressed", x.dataset.age === age); x.setAttribute("aria-checked", x.dataset.age === age); }); }));
   $("w-country").addEventListener("change", () => { keep(); save(); render(); });
-  $("w-next").addEventListener("click", () => { keep(); save(); welcomeStep = 2; render(); window.scrollTo(0, 0); });
+  $("w-next").addEventListener("click", () => { if (!emailOk()) { $("w-email").focus(); return; } keep(); save(); welcomeStep = 2; render(); window.scrollTo(0, 0); });
   $("w-intro").addEventListener("click", () => { keep(); save(); welcomeStep = 0; render(); window.scrollTo(0, 0); });
   $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
   $("w-example").addEventListener("click", () => { keep(); const prof = state.profile; state = seed(); state.profile = prof;
@@ -3541,7 +3555,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 148 · Oct 25", VERSION_NUM = 148;
+const APP_VERSION = "Prototype · Version 149 · Oct 25", VERSION_NUM = 149;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
