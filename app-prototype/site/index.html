@@ -854,7 +854,7 @@ function seedSub([id, uses, used, day]) {
     const sub = newSub(id, { used: used.filter(f => ids.includes(f)), day, start, example: true, ...(id === "aaa" ? { members: 6 } : {}),
       ...(id === "wsj" ? { intro: { kind: "intro", price: 4, ends: stepDate(start, "month", 12) } } : {}),
       // Cuong's ChatGPT: started Mar 15, 2026 at $21.20/mo (with tax), paused in September, restarted this month.
-      ...(id === "chatgpt" ? { start: "2026-03-15", priceMine: true, myTotal: 21.2, pauses: [{ from: "2026-09-15", to: "2026-10-15", fee: 0, restartFee: 0 }] } : {}),
+      ...(id === "chatgpt" ? { start: "2026-03-15", priceMine: true, myTotal: 21.2 } : {}),  // v144 (Cuong): no sample pause, it confused testers
       ...(SAMPLE_PRICE[id] ? { cycle: "month", priceMine: true, myTotal: SAMPLE_PRICE[id] } : {}), ...(SAMPLE_QUOTE[id] ? { quote: sampleQuote(id) } : {}) });
     setUse(sub, uses, measureOf(sub).per); return sub; }
 }
@@ -3414,7 +3414,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 143 · Standalone copy · Oct 25", VERSION_NUM = 143;
+const APP_VERSION = "Prototype · Version 144 · Standalone copy · Oct 25", VERSION_NUM = 144;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -3557,11 +3557,14 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
     if (!s.per) setUse(s, s.uses, "month");
     if (!s.measure) { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }
     if (!s.start) s.start = pastStart(s.cycle === "year" ? 6 : 1, s.day || 1);
-    // Cuong's ChatGPT (started Mar 15, 2026; paused Sep 15 to Oct 15). Older saves got a placeholder start date.
-    if (s.svc === "chatgpt" && s.start > "2026-03-15" && !state.chatgptFixed) { s.start = "2026-03-15"; if (!s.pauses?.length) s.pauses = [{ from: "2026-09-15", to: "2026-10-15", fee: 0, restartFee: 0 }]; }
+    // Cuong's ChatGPT (started Mar 15, 2026). Older saves got a placeholder start date.
+    if (s.svc === "chatgpt" && s.start > "2026-03-15" && !state.chatgptFixed) s.start = "2026-03-15";
+    // v144: take the old sample pause off example ChatGPT subscriptions once.
+    if (s.svc === "chatgpt" && !state.cgPauseV && (s.example || s.histTest) && s.pauses?.length === 1 && s.pauses[0].from === "2026-09-15" && s.pauses[0].to === "2026-10-15") { delete s.pauses; genHistory(s); }
     // Older saves stored the user's figure in s.price; it was meant as the whole household's price.
     if (s.priceMine && s.myTotal == null) { s.myTotal = s.price; if (CATALOG[s.svc]) s.price = priceFor(planOf(CATALOG[s.svc], s.plan), s.cycle); }
   });
+  state.cgPauseV = 1;
   // One-time test history for the prototype; subscriptions added later start without history.
   if (state.histV !== 2) { genAll(); state.histV = 2; }
   state.chatgptFixed = true;
