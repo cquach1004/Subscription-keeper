@@ -1460,15 +1460,15 @@ function aboutView() {
 }
 // Intro page (Cuong, v132): what the app is, before the welcome questions. Shown only to new visitors (welcomeStep 0).
 const INTRO_PILLARS = [
-  ["AI", "An assistant that answers your questions", '<path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>'],
+  ["AI", "Presents the options that fit you best", '<path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>'],
   ["Market research", "Prices and plans for hundreds of services", '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],
   ["Personalization", "Tips that fit you and how you use them", '<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>'],
 ];
 function introView() {
   const f = el(`<section class="intro">
     <h2 class="intro-h">AI, market research and you: smarter spending on subscriptions</h2>
-    <p class="intro-p">The average American spends about $90 a month on subscriptions, yet nearly $1 in every $5 goes to ones they rarely or never use. Subscription Keeper uses researched prices, an AI assistant and what you tell us to show where you get real value and where you can pay less.</p>
-    <p class="small muted" style="margin:-8px 0 0">Source: <a href="https://thedesk.net/2025/05/cnet-subscription-survey-2025/" target="_blank" rel="noopener" style="color:inherit">CNET survey with YouGov, May 2025</a> ($17 of $90 a month unused).</p>
+    <p class="intro-p">The average American spends about $1,080 a year on subscriptions, yet over $200 of it goes to ones they rarely or never use. Subscription Keeper uses AI, researched prices and what you tell us to present the options that fit you, so you see where you get real value and where you can pay less.</p>
+    <p class="small muted" style="margin:-8px 0 0">Source: <a href="https://thedesk.net/2025/05/cnet-subscription-survey-2025/" target="_blank" rel="noopener" style="color:inherit">CNET survey with YouGov, May 2025</a> (about $90 a month, $17 of it unused).</p>
     <div class="intro-pillars">${INTRO_PILLARS.map(([t, d, svg]) => `<div class="intro-pill"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><b>${t}</b><span class="small muted">${d}</span></div>`).join("")}</div>
     <button class="btn primary intro-next" id="i-next">Next</button></section>`);
   f.getElementById("i-next").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
@@ -3412,7 +3412,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 135 · Standalone copy · Oct 25", VERSION_NUM = 135;
+const APP_VERSION = "Prototype · Version 136 · Standalone copy · Oct 25", VERSION_NUM = 136;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
