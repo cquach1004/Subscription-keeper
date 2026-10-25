@@ -1039,7 +1039,29 @@ function benchNFor(country, group) {
 // insurance, home security, lawn and pest...). Shown as their own group on Overview. Surveys of subscription spending don't
 // count them, so they stay out of the "vs average" comparison.
 // Child Care & Tutoring stays with subscriptions: most of it is tutoring and learning apps.
-const HOUSEHOLD_CATS = new Set(["car_insurance", "home_insurance", "internet", "mobile", "lawn_pest", "home", "home_security", "tech_support", "elder_care"]);
+const HOUSEHOLD_CATS = new Set(["car_insurance", "home_insurance", "internet", "mobile", "live_tv", "energy", "lawn_pest", "home", "home_security", "tech_support", "elder_care"]);
+// Electricity and gas supplier choice for homes (v156), from each state's official site, checked 2026-10-25. Elsewhere the utility sets the price.
+// [site name, url, compares offers (true) or lists suppliers (false)]. Texas and Georgia: choice covers most, not all, of the state.
+const ENERGY_CHOICE = {
+  TX: { e: ["Power to Choose", "https://www.powertochoose.org/", true] },
+  PA: { e: ["PAPowerSwitch", "https://www.papowerswitch.com/", true], g: ["PAGasSwitch", "https://www.pagasswitch.com/", true] },
+  OH: { e: ["Energy Choice Ohio", "https://energychoice.ohio.gov/ApplesToApples.aspx", true], g: ["Energy Choice Ohio", "https://energychoice.ohio.gov/ApplesToApples.aspx", true] },
+  IL: { e: ["Plug In Illinois", "https://www.pluginillinois.org/", true], g: ["Plug In Illinois", "https://www.pluginillinois.org/", true] },
+  MD: { e: ["Maryland PSC Electric Choice", "https://www.psc.state.md.us/electricchoice/compare-offers", true], g: ["MD Gas Choice", "https://www.mdgaschoice.com/", true] },
+  NY: { e: ["New York Power to Choose", "https://www.newyorkpowertochoose.com/", true], g: ["New York Power to Choose", "https://www.newyorkpowertochoose.com/", true] },
+  NJ: { e: ["NJ Power Switch", "https://www.nj.gov/njpowerswitch/suppliers", false], g: ["NJ Power Switch", "https://www.nj.gov/njpowerswitch/suppliers", false] },
+  MA: { e: ["Energy Switch Massachusetts", "https://energyswitchma.gov/", true] },
+  CT: { e: ["EnergizeCT Rate Board", "https://energizect.com/rate-board/choosing-a-supplier", true] },
+  NH: { e: ["NH Department of Energy", "https://energy.nh.gov/engyapps/ceps/shop.aspx", true] },
+  DC: { e: ["DC Power Connect", "https://dcpowerconnect.com/", true], g: ["DC Power Connect", "https://dcpowerconnect.com/", false] },
+  DE: { e: ["Delaware PSC", "https://depsc.delaware.gov/", false] },
+  RI: { e: ["Rhode Island PUC", "https://ripuc.ri.gov/", false] },
+  ME: { e: ["Maine Public Advocate", "https://www.maine.gov/meopa/", false] },
+  MI: { g: ["Compare MI Gas", "https://gaschoice.apps.lara.state.mi.us/", true] },
+  GA: { g: ["Georgia PSC gas marketers", "https://psc.ga.gov/about-the-psc/consumer-corner/natural-gas/general-information/selecting-a-natural-gas-marketer/", true] },
+};
+const energyFuel = s => ({ electricity: "e", natural_gas: "g" })[s.svc] || null;
+const energyChoice = s => { const f = energyFuel(s), p = profile(); return f && p.country === "US" ? ENERGY_CHOICE[p.region]?.[f] || null : null; };
 const isHousehold = s => HOUSEHOLD_CATS.has(svcOf(s).category);
 // Phone and internet checks (Cuong, v155): is the plan more than you need, and does a cheaper plan or provider cover it?
 // High-speed data per line in GB (Infinity = unlimited), from the plan notes in the catalog; other plans are read from their names.
@@ -1196,6 +1218,7 @@ const COST_ONLY = { id: "uses", costOnly: true, per: "month", one: "use", short:
 const USAGE_BY_CAT = {
   music: U("hours", "Listening hours a week", "listening hour", "listening hours", "week", 100, { per1: "hour", worth: 0.5, note: "Count everyone on the account together." }),
   video: U("hours", "Hours watched a week", "hour watched", "hours watched", "week", 100, { per1: "hour", worth: 1.5, note: "Count everyone on the account together." }),
+  live_tv: U("hours", "Hours watched a week", "hour watched", "hours watched", "week", 100, { per1: "hour", worth: 1.5, note: "Count everyone at home together." }),
   ai: U("prompts", "Prompts a day", "prompt", "prompts", "day", 100, { worth: 0.1, note: "A prompt is one message you send." }),
   news: U("uses", "Articles read a week", "article", "articles", "week", 100, { worth: 2 }),
   productivity: DAYS, bundle: DAYS, finance: DAYS, small_business: DAYS, dating: DAYS, default: DAYS,
@@ -1211,7 +1234,7 @@ const USAGE_BY_CAT = {
   books: U("uses", "Books read or listened to this month", "book", "books", "month", 30, { worth: 6 }),
   // Protection plans and essentials are judged as plans, not by how often they're used. Insurance premiums are personal, so users enter theirs.
   car_insurance: { ...COST_ONLY, insure: "car" }, home_insurance: { ...COST_ONLY, insure: "home" },
-  privacy: COST_ONLY, home_security: COST_ONLY, home: COST_ONLY, tech_support: COST_ONLY, lawn_pest: COST_ONLY, internet: COST_ONLY, mobile: COST_ONLY, pets: COST_ONLY, beauty: COST_ONLY, passwords: COST_ONLY,
+  privacy: COST_ONLY, home_security: COST_ONLY, home: COST_ONLY, tech_support: COST_ONLY, lawn_pest: COST_ONLY, internet: COST_ONLY, mobile: COST_ONLY, energy: COST_ONLY, pets: COST_ONLY, beauty: COST_ONLY, passwords: COST_ONLY,
 };
 // Lawn and pest control are judged on results (Cuong, v90): no pests or weeds at a fair market price is what you paid for.
 // Each month you tick anything that went wrong; nothing ticked means no problems. A problem that isn't fixed, or callbacks
@@ -2326,6 +2349,8 @@ function hhCheck(s) {
   if (introActive(s) && daysUntil(s.intro.ends) <= 60) return { key: "poor", tag: "Promo ending", text: `${s.intro.kind === "trial" ? "Free trial" : "Promo price"} ends ${fmtDate(s.intro.ends)}, then ${money(monthlyOf(s, regularTotal(s)))}/mo. Compare before then.` };
   if (d != null && d <= 45) return { key: "poor", tag: "Renews soon", text: `Renews ${fmtDate(r)}. ${ins ? "Get two or three quotes for the same coverage now." : "A good time to compare plans."}` };
   if (best) return { key: "ok", tag: `Save ${money(best.save)}/mo`, text: `${best.kind}: ${best.name}.` };
+  const ec = energyChoice(s);
+  if (ec) return { key: "unused", tag: "Compare suppliers", text: `You can choose your ${energyFuel(s) === "e" ? "electricity" : "gas"} supplier in ${regionName()}. Compare offers on ${ec[0]}.` };
   if (c && !s.need) return { key: "unused", tag: "Check your plan", text: c.kind === "mobile" ? "Tell us how much data you use to see if a cheaper plan fits." : "Tell us who's at home to see if you're paying for more speed than you need." };
   if (ins && !s.quote) return { key: "unused", tag: "Compare quotes", text: r ? `Renews ${fmtDate(r)}. Shop quotes a month before.` : "Add your best quote for the same coverage, and your renewal date for a reminder." };
   if (c && c.more) return { key: "ok", tag: "More than you need", text: "Your plan is well above what you use, but we didn't find a cheaper fit." };
@@ -2643,7 +2668,8 @@ const CATEGORY_LABEL = { ai: "AI Assistants", video: "Video", music: "Music", ne
   education: "Education & Learning", mobile: "Mobile Plans", internet: "Home Internet", fitness: "Fitness & Gym", home_security: "Home Security", food: "Food Delivery & Meal Kits",
   gaming: "Gaming", home: "Home Maintenance", beauty: "Beauty & Personal Care", pets: "Pet Care", dating: "Dating", finance: "Financial Tools",
   elder_care: "Elderly Care", lawn_pest: "Lawn & Pest Control", tech_support: "Tech Repair & Support", small_business: "Small Business", child_care: "Child Care & Tutoring", passwords: "Password Managers",
-  books: "Digital Books", car_insurance: "Car Insurance", home_insurance: "Home & Renters Insurance" };
+  books: "Digital Books", car_insurance: "Car Insurance", home_insurance: "Home & Renters Insurance",
+  live_tv: "Live TV & Cable", energy: "Electricity & Gas" };
 const catLabel = c => CATEGORY_LABEL[c] || c.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join(" ");
 let exploreCat = "all", exploreOpen = null, pendingPick = null, exploreRegion = null;
 // US regions for the Explore region dropdown; matches the regional research batches.
@@ -3428,7 +3454,7 @@ const PUBLIC_NOTE = "Free, but less convenient: you sign in through your library
 const KIND_ORDER = { direct: 0, partial: 1, free: 2 };
 function alternativesOf(s) {
   const v = svcOf(s); if (!CATALOG[s.svc]) return [];
-  const main = tagOf(v, v.features[0]), want = [main, ...featuresFor(v, s.plan).filter(f => s.used.includes(f.id)).map(f => tagOf(v, f))].filter(Boolean), mineTags = new Set(featuresFor(v, s.plan).map(f => tagOf(v, f)).filter(Boolean));
+  const main = v.features[0] ? tagOf(v, v.features[0]) : null, want = [main, ...featuresFor(v, s.plan).filter(f => s.used.includes(f.id)).map(f => tagOf(v, f))].filter(Boolean), mineTags = new Set(featuresFor(v, s.plan).map(f => tagOf(v, f)).filter(Boolean));
   const ok = x => x.id !== v.id && availability(x.id, profile().country) !== "no" && !state.subs.some(m => m.svc === x.id && m.id === s.id);
   const researched = Object.values(CATALOG).filter(x => ok(x) && altTo(x).includes(v.id));
   const byTag = researched.length ? [] : Object.values(CATALOG).filter(x => ok(x) && (want.length ? x.features.some(f => want.includes(tagOf(x, f))) : x.category === v.category));
@@ -3508,6 +3534,16 @@ function insureHtml(s) {
       <label class="small" style="max-width:260px">${ins ? "Policy renews" : "Contract or promo renews"} <span class="muted">(optional, for a reminder)</span><input id="q-renew" type="date" value="${s.renews || ""}"></label>
       ${s.quote ? `<span class="note">${ins ? "Quoted" : "Checked"} ${fmtDate(q.date)}${q.by && q.by !== "other" && serviceBand(q.by, kind) ? `. ${esc(CATALOG[q.by].name.replace(/ \((Car|Home)\)$/, ""))}'s service rating: ${BAND_LABEL[serviceBand(q.by, kind)].toLowerCase()}` : ""}. <button class="btn ghost small" id="q-clear">Clear</button></span>` : ""}</div>`;
 }
+// v156 (Cuong): electricity and gas are cost-only. Where the state lets homes pick a supplier, link its official comparison site.
+function energyHtml(s) {
+  const c = energyChoice(s), fuel = energyFuel(s) === "e" ? "electricity" : "gas", where = regionName() || "your area";
+  const tips = `Ask your utility about budget billing, time-of-use rates and free home energy checkups.`;
+  return `<div class="need" style="display:grid;gap:6px"><b style="font-size:14px">Ways to pay less</b>
+    ${c ? `<p class="small" style="margin:0">In ${esc(where)} you can buy your ${fuel} from another supplier; your utility still delivers it and handles outages. ${c[2] ? "Compare offers" : "See the licensed suppliers"} on <a href="${esc(c[1])}" target="_blank" rel="noopener">${esc(c[0])}</a>, the state's official site, against the utility's "price to compare" on your bill.</p>
+      <p class="note" style="margin:0">Watch for low intro rates that switch to a variable rate, and for cancellation fees. A fixed rate for 12 months or more is the safer pick.</p>`
+    : `<p class="small" style="margin:0">${profile().country === "US" && profile().region ? `In ${esc(where)} your utility sets the ${fuel} price for homes, so there isn't a supplier to switch to.` : `Check whether you can choose your ${fuel} supplier where you live.`}</p>`}
+    <p class="note" style="margin:0">${tips}</p></div>`;
+}
 function needHtml(s) {
   const kind = kindOf(s); if (!kind) return "";
   const n = s.need || {}, c = needCheck(s), plan = planOf(svcOf(s), s.plan);
@@ -3574,7 +3610,7 @@ function openSheet(id) {
         ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
         ${m.insure ? insureHtml(s) : `
         ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${needHtml(s)}${insureHtml(s)}</div>` : ""}`
-        : m.costOnly ? `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
+        : m.costOnly ? energyFuel(s) ? energyHtml(s) : `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
           ${slider(m, s.rate, 'id="s-rate"')}
           ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}`}
         ${m.fixed ? `<label>Compare with<select id="s-alt">${(ALTERNATIVES[m.job] || []).map((a, i) => `<option value="${i}" ${(s.alt || 0) === i && !m.own ? "selected" : ""}>${esc(a.name)} · ${money(a.monthly)}/mo</option>`).join("")}${m.own ? `<option selected>Your own price · ${money(m.worth)}/mo</option>` : ""}</select></label>
@@ -3723,7 +3759,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 155 · Oct 25", VERSION_NUM = 155;
+const APP_VERSION = "Prototype · Version 156 · Oct 25", VERSION_NUM = 156;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.

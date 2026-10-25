@@ -14097,6 +14097,723 @@
    ],
    "color": "#00447c",
    "mark": "Er"
+  },
+  {
+   "id": "youtube_tv",
+   "name": "YouTube TV",
+   "category": "live_tv",
+   "official_url": "https://tv.youtube.com/",
+   "alternative_to": [
+    "hulu_live_tv",
+    "directv_stream",
+    "fubo",
+    "sling_tv",
+    "xfinity_tv",
+    "spectrum_tv"
+   ],
+   "kind": "direct",
+   "plans": [
+    {
+     "id": "base",
+     "name": "Base Plan",
+     "price_monthly": 82.99,
+     "price_annual": null,
+     "effective_monthly": 82.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Price since Dec 2024, per Streaming Price Tracker; official page didn't load here."
+    },
+    {
+     "id": "sports",
+     "name": "Sports plan",
+     "price_monthly": 64.99,
+     "price_annual": null,
+     "effective_monthly": 64.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Genre plan, March 2026 snapshot on Streaming Price Tracker."
+    },
+    {
+     "id": "entertainment",
+     "name": "Entertainment plan",
+     "price_monthly": 54.99,
+     "price_annual": null,
+     "effective_monthly": 54.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Genre plan, March 2026 snapshot on Streaming Price Tracker."
+    }
+   ],
+   "default_plan": "base",
+   "features": [
+    {
+     "id": "locals",
+     "name": "Local ABC, CBS, FOX and NBC (in most areas)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dvr",
+     "name": "Cloud DVR",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "sports",
+     "name": "ESPN and other sports channels",
+     "plans": [
+      "base",
+      "sports"
+     ],
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Households that want a cable-style lineup with locals, without a cable box.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "checked_at": "2026-10-25",
+   "tips": [
+    "Genre plans (Sports, Entertainment, News, Family) cost less if you only watch some channels.",
+    "Unlimited DVR is included on every plan."
+   ],
+   "sources": [
+    {
+     "label": "Streaming Price Tracker, YouTube TV (verified Oct 2026)",
+     "url": "https://streamingpricetracker.com/youtubetv/"
+    }
+   ],
+   "mark": "YT",
+   "color": "#ff0000"
+  },
+  {
+   "id": "hulu_live_tv",
+   "name": "Hulu + Live TV",
+   "category": "live_tv",
+   "official_url": "https://www.hulu.com/live-tv",
+   "alternative_to": [
+    "youtube_tv",
+    "directv_stream",
+    "fubo",
+    "sling_tv",
+    "xfinity_tv",
+    "spectrum_tv"
+   ],
+   "kind": "direct",
+   "plans": [
+    {
+     "id": "with_ads",
+     "name": "Hulu + Live TV (With Ads)",
+     "price_monthly": 99.99,
+     "price_annual": null,
+     "effective_monthly": 99.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Price change Sept 2026, per Streaming Price Tracker. Includes Disney+ and ESPN+ (ESPN Select)."
+    },
+    {
+     "id": "no_ads",
+     "name": "Hulu + Live TV (No Ads)",
+     "price_monthly": 109.99,
+     "price_annual": null,
+     "effective_monthly": 109.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Price change Sept 23, 2026, per Streaming Price Tracker. On-demand Hulu without ads."
+    }
+   ],
+   "default_plan": "with_ads",
+   "features": [
+    {
+     "id": "locals",
+     "name": "Local ABC, CBS, FOX and NBC (in most areas)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dvr",
+     "name": "Cloud DVR",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "sports",
+     "name": "ESPN and other sports channels",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "bundle",
+     "name": "Disney+ and ESPN+ included",
+     "plans": "all",
+     "overlap_tag": "video_streaming"
+    }
+   ],
+   "best_for": "People who'd otherwise pay for Hulu, Disney+ and ESPN+ separately.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "checked_at": "2026-10-25",
+   "tips": [
+    "If you already pay for Disney+ or Hulu on their own, cancel them; they're included.",
+    "The Live TV only option skips the bundle; check its price at sign-up."
+   ],
+   "sources": [
+    {
+     "label": "Streaming Price Tracker, Hulu + Live TV (verified Oct 2026)",
+     "url": "https://streamingpricetracker.com/hululivetv/"
+    }
+   ],
+   "mark": "H+",
+   "color": "#1ce783"
+  },
+  {
+   "id": "directv_stream",
+   "name": "DIRECTV (streaming)",
+   "category": "live_tv",
+   "official_url": "https://www.directv.com/stream/",
+   "alternative_to": [
+    "youtube_tv",
+    "hulu_live_tv",
+    "fubo",
+    "sling_tv",
+    "xfinity_tv",
+    "spectrum_tv"
+   ],
+   "kind": "direct",
+   "plans": [
+    {
+     "id": "entertainment",
+     "name": "Entertainment",
+     "price_monthly": 94.99,
+     "price_annual": null,
+     "effective_monthly": 94.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "cabletv.com, updated Oct 4, 2026."
+    },
+    {
+     "id": "choice",
+     "name": "Choice",
+     "price_monthly": 99.99,
+     "price_annual": null,
+     "effective_monthly": 99.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Price for 24 months, per cabletv.com (Oct 4, 2026). Adds regional sports networks."
+    },
+    {
+     "id": "ultimate",
+     "name": "Ultimate",
+     "price_monthly": 129.99,
+     "price_annual": null,
+     "effective_monthly": 129.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Price for 24 months, per cabletv.com (Oct 4, 2026)."
+    },
+    {
+     "id": "premier",
+     "name": "Premier",
+     "price_monthly": 174.99,
+     "price_annual": null,
+     "effective_monthly": 174.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Price for 24 months, per cabletv.com (Oct 4, 2026). Includes premium movie channels."
+    }
+   ],
+   "default_plan": "choice",
+   "features": [
+    {
+     "id": "locals",
+     "name": "Local ABC, CBS, FOX and NBC (in most areas)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dvr",
+     "name": "Cloud DVR",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "sports",
+     "name": "ESPN and other sports channels",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "rsn",
+     "name": "Regional sports networks",
+     "plans": [
+      "choice",
+      "ultimate",
+      "premier"
+     ],
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Fans of local pro teams on regional sports networks.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "checked_at": "2026-10-25",
+   "tips": [
+    "cabletv.com lists a $15 monthly Advanced Service Fee and a regional sports fee of up to $19.99 on Choice and up; check your checkout total.",
+    "Prices after 24 months go up; set a reminder."
+   ],
+   "sources": [
+    {
+     "label": "cabletv.com DIRECTV streaming prices (updated Oct 4, 2026)",
+     "url": "https://www.cabletv.com/directv/stream"
+    }
+   ],
+   "mark": "DTV",
+   "color": "#00a6d6",
+   "price_note": "Fees aren't included in the plan prices; they can add $15 to $35 a month."
+  },
+  {
+   "id": "fubo",
+   "name": "Fubo",
+   "category": "live_tv",
+   "official_url": "https://www.fubo.tv/",
+   "alternative_to": [
+    "youtube_tv",
+    "hulu_live_tv",
+    "directv_stream",
+    "sling_tv",
+    "xfinity_tv",
+    "spectrum_tv"
+   ],
+   "kind": "direct",
+   "plans": [
+    {
+     "id": "sports_news",
+     "name": "Sports + News",
+     "price_monthly": 64.99,
+     "price_annual": null,
+     "effective_monthly": 64.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Raised June 2026, per Streaming Price Tracker."
+    },
+    {
+     "id": "pro",
+     "name": "Pro",
+     "price_monthly": 88.99,
+     "price_annual": null,
+     "effective_monthly": 88.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Raised June 15, 2026, per Streaming Price Tracker."
+    },
+    {
+     "id": "elite",
+     "name": "Elite",
+     "price_monthly": 98.99,
+     "price_annual": null,
+     "effective_monthly": 98.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Raised June 2026, per Streaming Price Tracker."
+    }
+   ],
+   "default_plan": "pro",
+   "features": [
+    {
+     "id": "locals",
+     "name": "Local ABC, CBS, FOX and NBC (in most areas)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dvr",
+     "name": "Cloud DVR",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "sports",
+     "name": "ESPN and other sports channels",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Sports fans, especially soccer and regional sports.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "checked_at": "2026-10-25",
+   "tips": [
+    "A regional sports fee of $3.99 to $16.99 a month is added in many areas."
+   ],
+   "sources": [
+    {
+     "label": "Streaming Price Tracker, Fubo (verified Oct 2026)",
+     "url": "https://streamingpricetracker.com/fubo/"
+    }
+   ],
+   "mark": "fu",
+   "color": "#fa4616",
+   "price_note": "Plan prices exclude the regional sports fee ($3.99 to $16.99 a month by area)."
+  },
+  {
+   "id": "sling_tv",
+   "name": "Sling TV",
+   "category": "live_tv",
+   "official_url": "https://www.sling.com/",
+   "alternative_to": [
+    "youtube_tv",
+    "hulu_live_tv",
+    "directv_stream",
+    "fubo",
+    "xfinity_tv",
+    "spectrum_tv"
+   ],
+   "kind": "partial",
+   "plans": [
+    {
+     "id": "orange",
+     "name": "Sling Orange",
+     "price_monthly": 45.99,
+     "price_annual": null,
+     "effective_monthly": 45.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Since Dec 2024, per Streaming Price Tracker. Includes ESPN; no local channels."
+    },
+    {
+     "id": "blue",
+     "name": "Sling Blue",
+     "price_monthly": 45.99,
+     "price_annual": null,
+     "effective_monthly": 45.99,
+     "verified": false,
+     "intro_offer": null,
+     "note": "Since Dec 2024, per Streaming Price Tracker. $49.99 to $54.99 in areas where it carries local ABC, NBC or FOX."
+    }
+   ],
+   "default_plan": "orange",
+   "features": [
+    {
+     "id": "dvr",
+     "name": "Cloud DVR",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "sports",
+     "name": "ESPN (Orange)",
+     "plans": [
+      "orange"
+     ],
+     "overlap_tag": null
+    },
+    {
+     "id": "locals",
+     "name": "Some local channels (Blue, some areas)",
+     "plans": [
+      "blue"
+     ],
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "A lower-cost cable replacement if you don't need every local channel.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US only",
+   "checked_at": "2026-10-25",
+   "tips": [
+    "Pair it with a TV antenna for free local channels.",
+    "Sling often discounts the first month."
+   ],
+   "sources": [
+    {
+     "label": "Streaming Price Tracker, Sling TV (verified Oct 2026)",
+     "url": "https://streamingpricetracker.com/sling/"
+    }
+   ],
+   "mark": "S",
+   "color": "#0f6ffd"
+  },
+  {
+   "id": "philo",
+   "name": "Philo",
+   "category": "live_tv",
+   "official_url": "https://www.philo.com/",
+   "alternative_to": [
+    "youtube_tv",
+    "hulu_live_tv",
+    "directv_stream",
+    "sling_tv",
+    "xfinity_tv",
+    "spectrum_tv"
+   ],
+   "kind": "partial",
+   "plans": [
+    {
+     "id": "essential",
+     "name": "Essential",
+     "price_monthly": 25,
+     "price_annual": null,
+     "effective_monthly": 25,
+     "verified": true,
+     "intro_offer": null,
+     "note": "Official Philo page, Oct 2026."
+    },
+    {
+     "id": "bundle_plus",
+     "name": "Bundle+",
+     "price_monthly": 33,
+     "price_annual": null,
+     "effective_monthly": 33,
+     "verified": true,
+     "intro_offer": null,
+     "note": "Official Philo page, Oct 2026. Adds HBO Max Basic with Ads, AMC+ and discovery+."
+    }
+   ],
+   "default_plan": "essential",
+   "features": [
+    {
+     "id": "dvr",
+     "name": "Cloud DVR",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "ent",
+     "name": "Entertainment and lifestyle channels",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Entertainment and reality TV without sports or news.",
+   "free_trial_days": 7,
+   "varies_by_region": false,
+   "regions": "US only",
+   "checked_at": "2026-10-25",
+   "tips": [
+    "No sports, news or local channels; pair with an antenna for locals."
+   ],
+   "sources": [
+    {
+     "label": "Philo official site (Oct 2026)",
+     "url": "https://www.philo.com/"
+    }
+   ],
+   "mark": "Ph",
+   "color": "#6c3cd9"
+  },
+  {
+   "id": "xfinity_tv",
+   "name": "Xfinity TV (cable)",
+   "category": "live_tv",
+   "official_url": "https://www.xfinity.com/learn/digital-cable-tv",
+   "alternative_to": [
+    "youtube_tv",
+    "hulu_live_tv",
+    "directv_stream",
+    "fubo",
+    "sling_tv",
+    "spectrum_tv"
+   ],
+   "kind": "direct",
+   "plans": [
+    {
+     "id": "tv",
+     "name": "TV package",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false
+    }
+   ],
+   "default_plan": "tv",
+   "features": [
+    {
+     "id": "locals",
+     "name": "Local ABC, CBS, FOX and NBC (in most areas)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dvr",
+     "name": "Cloud DVR",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "sports",
+     "name": "ESPN and other sports channels",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": null,
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "checked_at": "2026-10-25",
+   "tips": [
+    "Ask for the Broadcast TV and Regional Sports fees; they're added on top of the package price.",
+    "Compare with a streaming live TV service at your renewal."
+   ],
+   "sources": [
+    {
+     "label": "Xfinity TV",
+     "url": "https://www.xfinity.com/learn/digital-cable-tv"
+    }
+   ],
+   "mark": "XT",
+   "color": "#7b2ff7",
+   "price_note": "Priced by address, with extra fees for equipment, broadcast TV and regional sports. Enter what you pay."
+  },
+  {
+   "id": "spectrum_tv",
+   "name": "Spectrum TV (cable)",
+   "category": "live_tv",
+   "official_url": "https://www.spectrum.com/cable-tv",
+   "alternative_to": [
+    "youtube_tv",
+    "hulu_live_tv",
+    "directv_stream",
+    "fubo",
+    "sling_tv",
+    "xfinity_tv"
+   ],
+   "kind": "direct",
+   "plans": [
+    {
+     "id": "tv",
+     "name": "TV package",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false
+    }
+   ],
+   "default_plan": "tv",
+   "features": [
+    {
+     "id": "locals",
+     "name": "Local ABC, CBS, FOX and NBC (in most areas)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dvr",
+     "name": "Cloud DVR",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "sports",
+     "name": "ESPN and other sports channels",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": null,
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "checked_at": "2026-10-25",
+   "tips": [
+    "Spectrum adds a Broadcast TV fee to every TV package; ask for the full monthly total.",
+    "Compare with a streaming live TV service at your renewal."
+   ],
+   "sources": [
+    {
+     "label": "Spectrum TV",
+     "url": "https://www.spectrum.com/cable-tv"
+    }
+   ],
+   "mark": "ST",
+   "color": "#0071ce",
+   "price_note": "Priced by address, with extra fees for equipment and broadcast TV. Enter what you pay."
+  },
+  {
+   "id": "electricity",
+   "name": "Electricity",
+   "category": "energy",
+   "official_url": null,
+   "alternative_to": [],
+   "kind": "direct",
+   "plans": [
+    {
+     "id": "bill",
+     "name": "Monthly bill",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false
+    }
+   ],
+   "default_plan": "bill",
+   "features": [
+    {
+     "id": "supply",
+     "name": "Energy for your home",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": null,
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "Anywhere",
+   "checked_at": "2026-10-25",
+   "price_note": "Your electricity bill depends on what you use and your area's rates, so there's no list price. Enter a typical month.",
+   "tips": [
+    "Ask your utility about budget billing to even out seasonal bills.",
+    "Utilities and states often run free or low-cost home energy checkups and rebates.",
+    "In some states you can buy your supply from another company; we'll show your state's official comparison site."
+   ],
+   "sources": [],
+   "mark": "El",
+   "color": "#f59e0b"
+  },
+  {
+   "id": "natural_gas",
+   "name": "Natural Gas",
+   "category": "energy",
+   "official_url": null,
+   "alternative_to": [],
+   "kind": "direct",
+   "plans": [
+    {
+     "id": "bill",
+     "name": "Monthly bill",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false
+    }
+   ],
+   "default_plan": "bill",
+   "features": [
+    {
+     "id": "supply",
+     "name": "Energy for your home",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": null,
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "Anywhere",
+   "checked_at": "2026-10-25",
+   "price_note": "Your natural gas bill depends on what you use and your area's rates, so there's no list price. Enter a typical month.",
+   "tips": [
+    "Ask your utility about budget billing to even out seasonal bills.",
+    "Utilities and states often run free or low-cost home energy checkups and rebates.",
+    "In some states you can buy your supply from another company; we'll show your state's official comparison site."
+   ],
+   "sources": [],
+   "mark": "Gas",
+   "color": "#2563eb"
   }
  ]
 }
