@@ -255,6 +255,7 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 :root[data-mode="dark"] { --pie-1: #3987e5; --pie-2: #d95926; --pie-3: #199e70; --pie-4: #c98500; --pie-5: #d55181; --pie-6: #008300; --pie-7: #9085e9; --pie-8: #e66767; --pie-other: #6f7480; }
 .pie-card { margin-bottom: 14px; }
 .trend-card { margin-bottom: 14px; }
+.hh-card { margin-bottom: 14px; }
 #ways { scroll-margin-top: 16px; }
 .summary.n2 { grid-template-columns: 1.4fr 1fr; } .summary.n1 { grid-template-columns: 1fr; }
 @media (max-width: 620px) { .summary.n2 { grid-template-columns: 1fr; } }
@@ -545,6 +546,7 @@ input, select { border-radius: 12px; border-color: var(--line); }
 
 nav.tabs { background: var(--glass); border-color: transparent; border-radius: 99px; box-shadow: var(--card-shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
 nav.tabs button { border-radius: 99px; display: inline-flex; align-items: center; gap: 7px; }
+nav.tabs button[hidden] { display: none; }  /* v159: Admin and Shelf stay hidden unless turned on in the profile menu */
 nav.tabs button { color: rgba(255,255,255,.82); }
 nav.tabs button[aria-selected="true"] { background: #fff; color: #13296b; }
 nav.tabs svg { width: 18px; height: 18px; flex: none; }
@@ -3762,7 +3764,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 158 · Oct 25", VERSION_NUM = 158;
+const APP_VERSION = "Prototype · Version 159 · Oct 25", VERSION_NUM = 159;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.

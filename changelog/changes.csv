@@ -175,3 +175,5 @@ Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,No
 156,2026-10-25,"Household Services checkup shows ""Compare suppliers"" for electricity or gas where your state allows supplier choice",Cuong,Overview,Feature,Y,Current,
 157,2026-10-25,"Electricity & Gas no longer shows on the welcome screen; find it in Explore. Live TV & Cable stays under Household Services, as Cuong confirmed",Cuong,Welcome,Design,Y,Current,
 158,2026-10-25,"Overview: the ""Compared with the average ..."" note (group picker, estimates, household services left out, sources) moved from under the top numbers to the bottom of the page",Cuong,Overview,Design,Y,Current,
+159,2026-10-25,"Overview: space added below the Household Services checkup card, so it no longer touches What you use most",Cuong,Overview,Design,Y,Current,
+159,2026-10-25,Admin and Shelf tabs now stay hidden when they are unchecked in the profile menu,Cuong,Menu,Fix,Y,Current,A tab style was overriding the hidden setting
