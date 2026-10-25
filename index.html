@@ -711,6 +711,8 @@ details.az[hidden] { display: none; }
 @media (max-width: 620px) { .vbars { height: 140px; gap: 1px; } .vlab { font-size: 9px; letter-spacing: -.04em; } }
 /* Phone tab bar is solid so page text never shows through it (v86). */
 @media (max-width: 620px) { :root nav.tabs, :root[data-style] nav.tabs { background: var(--surface); } }
+.sync { display: grid; gap: 8px; } .sync summary { cursor: pointer; display: grid; gap: 2px; } .sync:not([open]) summary ~ * { display: none; }
+.sync-steps { margin: 0; padding-left: 20px; display: grid; gap: 2px; }
 </style>
 
 <div class="wrap">
@@ -1539,7 +1541,7 @@ const LEGAL = {
     ["What stays on your device", "Your subscriptions, prices, usage, dates, location, what you told us about yourself (such as your age range, student, married, kids or sharing plans) and settings (such as your first name, style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
     ["What you choose to send us", "When you send feedback or report a problem, we receive what you write, plus the app version, the screen you were on, your device type and how many subscriptions you track (not the list itself). If you add an email address to a ticket, we use it only to reply. In the Claude app version, these are linked to your Claude account so only the Subscription Keeper team can read them."],
     ["Sam, the AI assistant", "When you ask Sam a question in the Claude app, your question, your recent chat, your subscription list (names, prices, usage and renewal dates) and related catalog details are sent to Claude, Anthropic's AI, to write the answer, using your own Claude account. On the public website, Sam answers from the catalog on your device and nothing is sent."],
-    ["Usage exports", "If you load a ChatGPT or Claude data export to count your usage, the file is read on your device. Only the monthly counts are kept, and the file isn't uploaded."],
+    ["Usage exports", "If you load a ChatGPT, Claude, Netflix or Spotify file to count your usage, the file is read on your device. Only the monthly counts are kept, and the file isn't uploaded."],
     ["Location", "We use the country and state you choose to show the right services and prices. We don't track your device's location."],
     ["Cookies and tracking", "The prototype doesn't use advertising or analytics trackers. It uses browser storage only to remember your list and settings."],
     ["Your choices", "You can edit or delete anything in your list at any time, or remove everything by clearing this site's data in your browser. To ask us to delete feedback or tickets you've sent, use Report a problem."],
@@ -2908,7 +2910,7 @@ function valueChart(s) {
       return `<div class="vbars" style="--n:${mon.length}" role="img" aria-label="${mon.map(x => `${monthName(x.r.from)}: ${x.r.paused ? "paused" : vs.worth ? `value ${money(x.val)}, paid ${money(x.cost)}` : `paid ${money(x.cost)}`}`).join("; ")}">${mon.map(x => { const v = vs.worth ? x.val : x.cost, ok = !vs.worth || x.val >= x.cost;
         return `<div class="vbar${x.partial ? " part" : ""}"><div class="vplot">${x.r.paused ? `<span class="vlab" style="bottom:2px">Paused</span>` : `<i style="height:${pct(v)}%;background:${!vs.worth ? "var(--accent)" : ok ? "var(--good)" : "var(--c-cost)"}"></i><span class="vlab num" style="bottom:calc(${pct(v)}% + 2px)">${moneyShort(v)}</span>`}${vs.worth && !x.r.paused ? `<b class="vcost" style="bottom:${pct(x.cost)}%"></b>` : ""}</div><span class="vx">${monthName(x.r.from).slice(0, 3)}${x.partial ? "*" : ""}</span></div>`; }).join("")}</div>
       ${mon.at(-1)?.partial ? `<p class="note" style="margin:0">* This month so far.</p>` : ""}`; })()}
-    <p class="note" style="margin:0">${m.bundle ? `Value is a ${money(m.worth)} shipping fee on each order under $35${m.counted.length ? `, plus ${m.counted.map(p => p.months ? partText(p) : `${money(p.monthly)} a month for ${p.name}`).join(" and ")} because ${m.counted.length > 1 ? "they matter" : "it matters"} to you${m.included.length ? ` (${m.included.map(p => p.name).join(" and ")} comes with Prime Video, so it isn't counted twice)` : ""}` : ""}. Orders of $35 or more ship free without Prime, so they aren't counted.${(s.members || 1) > 1 ? ` Orders include everyone in your household (${s.members} people), and Prime Video counts once for the household.` : " If family members share your Prime, count their orders too and add them under Plan and price."} Check other features under Features that matter to me to count them. ` : m.fixed ? `Value is what you'd pay for ${esc(m.jobName)} on its own, for each month you were subscribed. Removals don't change it; they show the service is working. You can change the comparison under How you use it. ` : vs.worth ? `Each ${m.per1} counts as worth ${money(vs.worth)}${m.own ? ", the value you set" : m.id === "people" ? `, what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own` : m.bench ? `, the cost per ${esc(m.per1)} where we'd call ${esc(v.name)} costly` : ", our estimate"}. You can change this under How you use it. ` : ""}${m.costOnly ? "" : s.hist?.[m.id] ? `Monthly ${esc(m.short)} come from ${Object.values(s.histSrc?.[m.id] || {}).includes("sync") ? `your ${esc(SYNC[s.svc]?.name || "")} data export (pulled ${esc(fmtDate(s.syncInfo?.at))})` : `your history${s.histTest ? " (test data for this prototype)" : ""}`}; months without an entry use your current rate.` : `This uses ${m.amount ? "today's number" : "your current rate"}, ${esc(useText(s))}, for every month you weren't paused${s.example ? ", and that usage is an example" : ""}.`}${s.cycle === "year" ? " Yearly charges are spread evenly across the months." : ""}</p>
+    <p class="note" style="margin:0">${m.bundle ? `Value is a ${money(m.worth)} shipping fee on each order under $35${m.counted.length ? `, plus ${m.counted.map(p => p.months ? partText(p) : `${money(p.monthly)} a month for ${p.name}`).join(" and ")} because ${m.counted.length > 1 ? "they matter" : "it matters"} to you${m.included.length ? ` (${m.included.map(p => p.name).join(" and ")} comes with Prime Video, so it isn't counted twice)` : ""}` : ""}. Orders of $35 or more ship free without Prime, so they aren't counted.${(s.members || 1) > 1 ? ` Orders include everyone in your household (${s.members} people), and Prime Video counts once for the household.` : " If family members share your Prime, count their orders too and add them under Plan and price."} Check other features under Features that matter to me to count them. ` : m.fixed ? `Value is what you'd pay for ${esc(m.jobName)} on its own, for each month you were subscribed. Removals don't change it; they show the service is working. You can change the comparison under How you use it. ` : vs.worth ? `Each ${m.per1} counts as worth ${money(vs.worth)}${m.own ? ", the value you set" : m.id === "people" ? `, what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own` : m.bench ? `, the cost per ${esc(m.per1)} where we'd call ${esc(v.name)} costly` : ", our estimate"}. You can change this under How you use it. ` : ""}${m.costOnly ? "" : s.hist?.[m.id] ? `Monthly ${esc(m.short)} come from ${Object.values(s.histSrc?.[m.id] || {}).includes("sync") ? `your ${esc(SYNC[s.svc]?.name || "")} ${esc(SYNC[s.svc]?.file || "data export")} (pulled ${esc(fmtDate(s.syncInfo?.at))}${s.syncInfo?.estimated ? "; hours are estimated from the titles watched" : ""})` : `your history${s.histTest ? " (test data for this prototype)" : ""}`}; months without an entry use your current rate.` : `This uses ${m.amount ? "today's number" : "your current rate"}, ${esc(useText(s))}, for every month you weren't paused${s.example ? ", and that usage is an example" : ""}.`}${s.cycle === "year" ? " Yearly charges are spread evenly across the months." : ""}</p>
     <details class="nums"><summary>See the numbers</summary><div class="tbl-wrap"><table class="tbl"><tr><th>Month</th><th>${esc(m.short[0].toUpperCase() + m.short.slice(1))} that month</th><th>Paid</th>${vs.worth ? "<th>Value</th>" : ""}<th>Total paid</th>${vs.worth ? "<th>Total value</th>" : ""}</tr>
       ${vs.rows.slice(1).map(r => `<tr><td>${monthName(r.from)}${r.paused ? " (paused)" : r.intro ? " (intro)" : ""}</td><td class="num">${fmtN(Math.round(r.uses * 10) / 10)}</td><td class="num">${money(r.spent)}</td>${vs.worth ? `<td class="num">${money(r.uses * vs.worth)}</td>` : ""}<td class="num">${money(r.cost)}</td>${vs.worth ? `<td class="num">${money(r.value)}</td>` : ""}</tr>`).join("")}</table></div></details>`;
   return { meta, body, seg };
@@ -2917,62 +2919,163 @@ function monthlyHtml(s) {
   const vs = valueSeries(s), m = measureOf(s);
   if (!vs || vs.rows.length < 2) return { meta: "", body: `<p class="small muted" style="margin:0">${PHASE1 ? "Your months show up here after your first month." : "Add a start date and price to see your months."}</p>` };
   const rows = vs.rows.slice(1).reverse(), mine = rows.filter(r => r.src === "you").length, fl = rows.filter(r => r.flag).length;
-  const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} export` : r.src === "kept" ? "Saved at month end" : m.results ? "No problems" : m.checks ? "Nothing ticked" : "Your usual rate";
+  const src = r => r.paused ? "Paused" : r.src === "you" ? "You entered" : r.src === "test" ? "Test data" : r.src === "sync" ? `From your ${SYNC[s.svc]?.name || "service"} ${SYNC[s.svc]?.file || "export"}${s.syncInfo?.estimated ? " (estimated)" : ""}` : r.src === "kept" ? "Saved at month end" : m.results ? "No problems" : m.checks ? "Nothing ticked" : "Your usual rate";
   return { meta: [mine ? `${mine} edited` : "", fl ? `${fl} flagged` : ""].filter(Boolean).join(", ") || "Not edited",
     body: `<p class="small muted" style="margin:0">${m.results ? "Tick anything that went wrong in each month. A month with nothing ticked counts as no problems." : m.checks ? "Tick what you used in each month. A month with nothing ticked counts as nothing used." : `Slide to correct any month (${esc((m.label || m.short).toLowerCase())}), and flag months that weren't typical so your average isn't thrown off. Months you haven't changed use your usual rate (${esc(useText(s))}).`}</p>
     <div class="months">${rows.map(r => `<div class="mrow${r.flag ? " flagged" : ""}"><div><b>${new Date(r.from + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })}</b><div class="note">${src(r)}</div></div>
       ${r.paused ? `<span class="small muted">Paused, no usage counted</span>` : `<div class="mact">${r.src === "you" ? `<button class="btn ghost small" data-hm-clear="${r.key}">${m.checks ? "Clear" : "Use my usual"}</button>` : ""}<select data-hf="${r.key}" aria-label="Flag ${r.key}"><option value="">Typical month</option>${Object.entries(FLAGS).map(([k, l]) => `<option value="${k}" ${r.flag === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>
       ${m.checks ? checksHtml(s, m, r.key) : slider(m, r.src === "rate" ? s.rate : Math.round(+s.hist[m.id][r.key] / PER[m.per].f * 10) / 10, `data-hm="${r.key}" aria-label="${esc(m.label)} in ${r.key}"${r.src === "rate" ? ' class="usual"' : ""}`)}
       `}</div>`).join("")}</div>
-    ${m.amount ? "" : `<p class="note" style="margin:0">Months run from your billing date. ${SYNC[s.svc] ? "Months filled from your data export are marked; your own corrections still win." : "Later, services you connect could fill these in for you, and your own corrections would still win."}</p>`}${syncHtml(s)}` };
+    ${m.amount ? "" : `<p class="note" style="margin:0">Months run from your billing date. ${SYNC[s.svc] ? "Months filled from your data export are marked; your own corrections still win." : "Later, services you connect could fill these in for you, and your own corrections would still win."}</p>`}` };
 }
 // Real usage from the service's own data export (Cuong asked, 2026-10-19). ChatGPT and Claude have no public API for a
 // personal plan's usage, but both let people export their account data; the zip holds conversations.json with a
-// timestamp on every message. We count the days with at least one message you sent, in this browser only.
+// timestamp on every message. We count the prompts sent each day, in this browser only.
+// v130 (Cuong, 2026-10-25): Netflix and Spotify too. Netflix's Viewing activity file has titles and dates only, so hours
+// there are our estimate per title; Netflix's full data request and Spotify's files have real time watched or played.
+const NF_EP_H = 0.75, NF_MOVIE_H = 1.75;  // our estimates: an episode is about 45 minutes, a movie about 1 hour 45
 const SYNC = {
-  chatgpt: { name: "ChatGPT", how: "In ChatGPT, open Settings, then Data controls, then Export data. OpenAI emails you a download link." },
-  claude: { name: "Claude", how: "In Claude, open Settings, then Privacy, then Export data. Anthropic emails you a download link." },
+  chatgpt: { name: "ChatGPT", file: "export", what: "your prompts (each message you sent)", accept: ".zip,.json,application/zip,application/json",
+    steps: ["In ChatGPT, open Settings, then Data controls, then Export data, and confirm.", "OpenAI emails you a link. Download the .zip within 24 hours.", "Choose the .zip (or the conversations.json inside it) here."] },
+  claude: { name: "Claude", file: "export", what: "your prompts (each message you sent)", accept: ".zip,.json,application/zip,application/json",
+    steps: ["In Claude, open Settings, then Privacy, then Export data.", "Anthropic emails you a download link.", "Choose the .zip (or the conversations.json inside it) here."] },
+  netflix: { name: "Netflix", file: "viewing history", what: "hours watched", accept: ".csv,.zip,text/csv,application/zip", multi: true, wait: false,
+    link: ["Open Netflix Account", "https://www.netflix.com/account"],
+    steps: ["On a computer, open your Netflix Account page and choose Profiles, then your profile.", "Open Viewing activity and select Download all at the bottom. You get a CSV file right away.",
+      "Choose the file here. To count everyone, download each profile's file and choose them all at once."],
+    extra: "Netflix's Viewing activity file lists titles and dates, not time watched, so we estimate about 45 minutes an episode and 1 hour 45 minutes a movie. For real watch time, the account owner can request a copy of your information at netflix.com/account/getmyinfo and choose that .zip instead. It covers every profile but can take up to 30 days." },
+  spotify: { name: "Spotify", file: "streaming history", what: "hours listened", accept: ".zip,.json,application/zip,application/json", multi: true, wait: true,
+    link: ["Open Spotify privacy settings", "https://www.spotify.com/account/privacy/"],
+    steps: ["At spotify.com, open your profile icon, then Account, then Privacy settings.", "Under Download your data, tick Extended streaming history and request it. Confirm from Spotify's email.",
+      "Spotify emails you when it's ready, usually in a few days and at most 30. Choose the .zip here."],
+    extra: "Your file covers only your own Spotify account. If others share your plan, their listening isn't in it, so add theirs on the month rows above. The Account data download works too, but it only covers the last year." },
 };
 function syncHtml(s) {
   const c = SYNC[s.svc]; if (!c) return "";
-  const info = s.syncInfo;
-  return `<div class="card" style="gap:8px;margin-top:4px"><b>Pull your real ${esc(c.name)} usage</b>
-    <p class="small muted" style="margin:0">${esc(c.how)} Then choose the .zip file (or the conversations.json inside it) here. We count your prompts (each message you sent). The file is read in this browser only and only the counts per day are kept.</p>
-    ${info ? `<p class="small" style="margin:0">Last pulled ${esc(fmtDate(info.at))}: ${info.prompts != null ? `${fmtN(info.prompts)} prompts on ` : ""}${info.days} active days from ${esc(fmtDate(info.first))} to ${esc(fmtDate(info.last))}, ${info.convs} conversations.</p>` : ""}
-    <label class="btn small" style="justify-self:start;cursor:pointer">${info ? "Pull again from a newer export" : "Choose export file"}<input type="file" id="sync-file" accept=".zip,.json,application/zip,application/json" hidden></label>
-    <span class="small muted" id="sync-msg" role="status"></span></div>`;
+  const info = s.syncInfo, asked = s.syncAsked;
+  const found = info ? (info.text || `${info.prompts != null ? `${fmtN(info.prompts)} prompts on ` : ""}${info.days} active days from ${fmtDate(info.first)} to ${fmtDate(info.last)}, ${info.convs} conversations`) : "";
+  return `<details class="card sync"${s.syncAsked ? " open" : ""}><summary><b>${info ? `Your real ${esc(c.name)} usage` : `Get your real ${esc(c.name)} usage`}</b>
+    <span class="small muted">${info ? `From your ${esc(c.file)}, pulled ${esc(fmtDate(info.at))}${info.estimated ? " (hours estimated)" : ""}` : s.syncAsked ? `Requested ${esc(fmtDate(s.syncAsked))}` : "Use your own history instead of an estimate"}</span><span class="small" style="color:var(--accent);font-weight:600">${info ? "Update it" : "Show me how"}</span></summary>
+    <p class="small muted" style="margin:0">Instead of estimating, use your own ${esc(c.name)} ${esc(c.file)} to fill in ${esc(c.what)} month by month. The file is read in this browser only. Only the monthly totals are kept, not what you ${s.svc === "netflix" ? "watched" : s.svc === "spotify" ? "played" : "wrote"}.</p>
+    <ol class="small sync-steps">${c.steps.map(t => `<li>${esc(t)}</li>`).join("")}</ol>
+    ${c.extra ? `<p class="small muted" style="margin:0">${esc(c.extra)}</p>` : ""}
+    ${info ? `<p class="small" style="margin:0">Last pulled ${esc(fmtDate(info.at))}: ${esc(found)}.</p>` : ""}
+    ${asked ? `<p class="small" style="margin:0">You requested it on ${esc(fmtDate(asked))}. Come back here when ${esc(c.name)}'s email arrives.</p>` : ""}
+    <div class="row-btns" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      ${c.link ? `<a class="btn small ghost" href="${c.link[1]}" target="_blank" rel="noopener">${esc(c.link[0])}</a>` : ""}
+      ${c.wait && !asked ? `<button class="btn small ghost" id="sync-asked">I've requested it</button>` : ""}
+      <label class="btn small" style="cursor:pointer">${info ? "Pull again from a newer file" : "Choose file"}<input type="file" id="sync-file" accept="${c.accept}" ${c.multi ? "multiple" : ""} hidden></label></div>
+    <span class="small muted" id="sync-msg" role="status"></span></details>`;
 }
 const loadZip = () => window.JSZip ? Promise.resolve(window.JSZip) : new Promise((ok, no) => { const sc = document.createElement("script");
   sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"; sc.onload = () => ok(window.JSZip); sc.onerror = () => no(new Error("zip")); document.head.append(sc); });
-async function readExport(file) {
-  let text;
-  if (/\.zip$/i.test(file.name) || file.type.includes("zip")) { const zip = await (await loadZip()).loadAsync(file);
+const isZip = f => /\.zip$/i.test(f.name) || f.type.includes("zip");
+const localDay = d => { const x = new Date(d); return isNaN(x) ? null : `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`; };
+// Every file to read: a zip's entries whose names match, or the chosen file itself. Returns [{ name, text }].
+async function filesIn(files, want) {
+  const out = [];
+  for (const f of files) {
+    if (isZip(f)) { const zip = await (await loadZip()).loadAsync(f);
+      for (const e of Object.values(zip.files)) if (!e.dir && want.test(e.name)) out.push({ name: e.name, text: await e.async("string") }); }
+    else out.push({ name: f.name, text: await f.text() });
+  }
+  return out;
+}
+// A small CSV reader (quoted fields may hold commas, quotes and line breaks).
+function parseCsv(t) {
+  const rows = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < t.length; i++) { const ch = t[i];
+    if (q) { if (ch === '"') { if (t[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += ch; }
+    else if (ch === '"') q = true; else if (ch === ",") { row.push(cell); cell = ""; }
+    else if (ch === "\n" || ch === "\r") { if (ch === "\r" && t[i + 1] === "\n") i++; row.push(cell); rows.push(row); row = []; cell = ""; }
+    else cell += ch; }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(c => c.trim()));
+}
+// Netflix's Viewing activity dates follow the account's country (10/24/26 in the US, 24/10/26 in most places).
+function nfDate(t, dayFirst) {
+  const m = String(t).trim().match(/^(\d{1,4})[\/.-](\d{1,2})[\/.-](\d{1,4})/); if (!m) return null;
+  let [a, b, c] = [+m[1], +m[2], +m[3]], y, mo, d;
+  if (m[1].length === 4) [y, mo, d] = [a, b, c]; else { y = c < 100 ? 2000 + c : c; [mo, d] = dayFirst ? [b, a] : [a, b]; }
+  return mo >= 1 && mo <= 12 && d >= 1 && d <= 31 ? `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}` : null;
+}
+const hms = t => { const p = String(t).split(":").map(Number); return p.length === 3 && p.every(n => !isNaN(n)) ? p[0] + p[1] / 60 + p[2] / 3600 : 0; };
+async function readNetflix(files) {
+  const csvs = await filesIn(files, /ViewingActivity\.csv$|NetflixViewingHistory.*\.csv$|\.csv$/i), count = {}, profiles = new Set();
+  let titles = 0, estimated = false;
+  const full = csvs.filter(c => /ViewingActivity\.csv$/i.test(c.name)), list = full.length ? full : csvs;
+  for (const c of list) {
+    const rows = parseCsv(c.text.replace(/^﻿/, "")), head = (rows[0] || []).map(h => h.trim().toLowerCase()), col = n => head.indexOf(n);
+    if (col("start time") >= 0 && col("duration") >= 0) {  // full data request: real time watched, every profile
+      const st = col("start time"), du = col("duration"), sv = col("supplemental video type"), pr = col("profile name");
+      rows.slice(1).forEach(r => { if (sv >= 0 && r[sv]?.trim()) return;  // trailers and previews
+        const d = localDay(String(r[st]).replace(" ", "T") + "Z"), h = hms(r[du]); if (!d || !h) return;
+        count[d] = (count[d] || 0) + h; titles++; if (pr >= 0) profiles.add(r[pr]); });
+    } else if (col("title") >= 0 && col("date") >= 0) {  // Viewing activity: titles and dates only, so hours are estimated
+      const ti = col("title"), da = col("date"), raw = rows.slice(1).map(r => String(r[da]));
+      const dayFirst = raw.some(t => +t.split(/[\/.-]/)[0] > 12) || !/^en-US$/i.test(navigator.language || "en-US") && !raw.some(t => +t.split(/[\/.-]/)[1] > 12);
+      rows.slice(1).forEach(r => { const d = nfDate(r[da], dayFirst); if (!d) return;
+        const ep = /: (Season|Series|Part|Volume|Chapter|Limited Series|Episode|Book)\b/i.test(r[ti]) || r[ti].split(": ").length >= 3;
+        count[d] = (count[d] || 0) + (ep ? NF_EP_H : NF_MOVIE_H); titles++; });
+      estimated = true; profiles.add(c.name);
+    }
+  }
+  if (!titles) throw new Error("This doesn't look like a Netflix viewing history. Choose the CSV from Viewing activity, or the .zip from Netflix's data request.");
+  const hrs = Object.values(count).reduce((a, n) => a + n, 0);
+  return { count, round: 10, text: `${fmtN(Math.round(hrs))} hours ${estimated ? "(estimated) " : ""}from ${titles} titles${profiles.size > 1 ? ` across ${profiles.size} ${estimated ? "files" : "profiles"}` : ""}`, estimated };
+}
+async function readSpotify(files) {
+  const all = await filesIn(files, /Streaming_?History.*\.json$/i), count = {};
+  // The extended history (every play since the account began) wins over the account data's last-year files.
+  const ext = all.filter(f => /Streaming_History_(Audio|Video)/i.test(f.name) || /Streaming_History_\d/i.test(f.name)), use = ext.length ? ext : all;
+  let plays = 0;
+  for (const f of use) { let arr; try { arr = JSON.parse(f.text); } catch { continue; } if (!Array.isArray(arr)) continue;
+    arr.forEach(p => { const ms = p.ms_played ?? p.msPlayed, when = p.ts || (p.endTime ? p.endTime.replace(" ", "T") + "Z" : null); if (!ms || !when) return;
+      const d = localDay(when); if (!d) return; count[d] = (count[d] || 0) + ms / 36e5; plays++; }); }
+  if (!plays) throw new Error("No Spotify listening found. Choose the .zip Spotify emailed you (or the Streaming_History JSON files inside it).");
+  const hrs = Object.values(count).reduce((a, n) => a + n, 0);
+  return { count, round: 10, text: `${fmtN(Math.round(hrs))} hours from ${fmtN(plays)} plays${ext.length ? "" : " (last year only)"}` };
+}
+async function readExport(files) {
+  const file = files[0]; let text;
+  if (isZip(file)) { const zip = await (await loadZip()).loadAsync(file);
     const entry = Object.values(zip.files).find(f => /(^|\/)conversations\.json$/i.test(f.name)); if (!entry) throw new Error("No conversations.json in this zip.");
     text = await entry.async("string"); } else text = await file.text();
   const convs = JSON.parse(text); if (!Array.isArray(convs)) throw new Error("This doesn't look like a conversations export.");
-  const day = d => { const x = new Date(d); return isNaN(x) ? null : `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`; }, days = new Set(), count = {};  // local calendar day
+  const days = new Set(), count = {};  // local calendar day
   // ChatGPT: messages sit in a "mapping" tree with create_time in seconds. Claude: chat_messages with sender "human" and ISO created_at.
   const kind = convs.some(c => c.mapping) ? "chatgpt" : convs.some(c => c.chat_messages) ? "claude" : null;
   if (!kind) throw new Error("This doesn't look like a ChatGPT or Claude export.");
   for (const c of convs) {
-    if (kind === "chatgpt") Object.values(c.mapping || {}).forEach(n => { const m = n?.message; if (m?.author?.role === "user" && m.create_time) { const d = day(m.create_time * 1000); if (d) { days.add(d); count[d] = (count[d] || 0) + 1; } } });
-    else (c.chat_messages || []).forEach(m => { if (m.sender === "human" && m.created_at) { const d = day(m.created_at); if (d) { days.add(d); count[d] = (count[d] || 0) + 1; } } });
+    if (kind === "chatgpt") Object.values(c.mapping || {}).forEach(n => { const m = n?.message; if (m?.author?.role === "user" && m.create_time) { const d = localDay(m.create_time * 1000); if (d) { days.add(d); count[d] = (count[d] || 0) + 1; } } });
+    else (c.chat_messages || []).forEach(m => { if (m.sender === "human" && m.created_at) { const d = localDay(m.created_at); if (d) { days.add(d); count[d] = (count[d] || 0) + 1; } } });
   }
   return { kind, days, count, convs: convs.length };
 }
-async function applyExport(s, file) {
-  const r = await readExport(file);
-  if (r.kind !== s.svc) throw new Error(`This is a ${SYNC[r.kind].name} export, not ${SYNC[s.svc].name}.`);
-  if (!r.days.size) throw new Error("No messages found in this export.");
-  const m = measureOf(s), id = m.id, vs = valueSeries(s), sorted = [...r.days].sort();
+async function applyExport(s, files) {
+  files = [...(files.length != null ? files : [files])];
+  let r;
+  if (s.svc === "netflix") r = await readNetflix(files);
+  else if (s.svc === "spotify") r = await readSpotify(files);
+  else { r = await readExport(files);
+    if (r.kind !== s.svc) throw new Error(`This is a ${SYNC[r.kind].name} export, not ${SYNC[s.svc].name}.`);
+    if (!r.days.size) throw new Error("No messages found in this export."); }
+  const m = measureOf(s), id = m.id, vs = valueSeries(s), sorted = Object.keys(r.count).filter(d => r.count[d] > 0).sort(), first = sorted[0], lastDay = sorted.at(-1);
+  if (!first) throw new Error("Nothing to count in this file.");
   (s.hist ||= {})[id] ||= {}; (s.histSrc ||= {})[id] ||= {};
-  let last = null;
+  Object.keys(s.histSrc[id]).forEach(k => { if (s.histSrc[id][k] === "sync") { delete s.hist[id][k]; delete s.histSrc[id][k]; } });  // a new file replaces the last one
+  let last = null, filled = 0;
   vs.rows.slice(1).forEach(row => { if (s.histSrc[id][row.key] === "you") return;
+    if (row.d <= first || (row.from > lastDay && row.from > today())) return;  // months the file doesn't cover stay as they were
     const n = Object.entries(r.count).reduce((a, [d, c]) => a + (d >= row.from && d < row.d ? c : 0), 0), f = dayDiff(row.from, row.d) / 30.44;
     // A month still in progress is stored as its pace for a full month, since the chart scales each month by its length.
-    s.hist[id][row.key] = f >= 0.95 ? n : Math.round(n / Math.max(f, 0.1) * 10) / 10; s.histSrc[id][row.key] = "sync"; if (f >= 0.95) last = n; });
+    const v = f >= 0.95 ? n : n / Math.max(f, 0.1), k = r.round || 1;
+    s.hist[id][row.key] = Math.round(v * k) / k; s.histSrc[id][row.key] = "sync"; filled++; if (f >= 0.95) last = s.hist[id][row.key]; });
+  if (!filled) throw new Error(`The file covers ${fmtDate(first)} to ${fmtDate(lastDay)}, which doesn't overlap the months you've had ${SYNC[s.svc].name}.`);
   if (last != null) setUse(s, Math.round(last / PER[m.per].f * 10) / 10, m.per);
-  s.syncInfo = { at: today(), days: r.days.size, prompts: Object.values(r.count).reduce((a, c) => a + c, 0), convs: r.convs, first: sorted[0], last: sorted.at(-1) }; s.example = false;
+  s.syncInfo = r.text ? { at: today(), first, last: lastDay, text: `${r.text}, ${fmtDate(first)} to ${fmtDate(lastDay)}`, estimated: !!r.estimated }
+    : { at: today(), days: r.days.size, prompts: Object.values(r.count).reduce((a, c) => a + c, 0), convs: r.convs, first, last: lastDay };
+  delete s.syncAsked; s.example = false;
 }
 // Alternatives: services that do the same main job, from the catalog plus a few the catalog doesn't carry yet.
 // APP_TAGS adds matching tags the catalog lacks, used only here (not in Overlaps). Features compare by tag, so this is a rough match.
@@ -3101,6 +3204,7 @@ function openSheet(id) {
           ${m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.insure || (m.results && !fairPrice(s)) ? (b => `<div class="stat"><div class="label">Service rating</div><div class="value" style="font-size:20px">${b ? BAND_LABEL[b] : "—"}</div><div class="small muted">${s.service && s.service !== "none" && s.service !== "ok" ? "from your own experience" : b ? "from published ratings" : "not rated yet"}</div></div>`)(serviceOf(s)) : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
         </div>
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
+        ${syncHtml(s)}
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
         ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
         ${m.insure ? insureHtml(s) : `
@@ -3199,8 +3303,9 @@ function openSheet(id) {
       s.example = false; save(); setTimeout(draw); };
     root.querySelectorAll("[data-hm]").forEach(inp => { inp.oninput = () => { inp.classList.remove("usual"); inp.nextElementSibling.textContent = slideText(measureOf(s), +inp.value); }; inp.onchange = () => setMonth(inp.dataset.hm, +inp.value); });
     root.querySelectorAll("[data-hm-clear]").forEach(b => b.onclick = () => setMonth(b.dataset.hmClear, null));
-    root.querySelector("#sync-file")?.addEventListener("change", async e => { const file = e.target.files[0], msg = t => { const m = root.querySelector("#sync-msg"); if (m) m.textContent = t; }; if (!file) return;
-      msg("Reading your export…"); try { await applyExport(s, file); save(); draw(); } catch (err) { msg(err.message === "zip" ? "Couldn't open the zip here. Unzip it and choose conversations.json instead." : err.message || "Couldn't read that file."); } });
+    root.querySelector("#sync-file")?.addEventListener("change", async e => { const files = e.target.files, msg = t => { const m = root.querySelector("#sync-msg"); if (m) m.textContent = t; }; if (!files.length) return;
+      msg("Reading your file…"); try { await applyExport(s, files); save(); draw(); } catch (err) { msg(err.message === "zip" ? "Couldn't open the zip here. Unzip it and choose the files inside instead." : err.message || "Couldn't read that file."); } });
+    root.querySelector("#sync-asked")?.addEventListener("click", () => { s.syncAsked = today(); save(); draw(); });
     root.querySelectorAll("[data-hf]").forEach(sel => sel.onchange = () => { s.flags ||= {}; if (sel.value) s.flags[sel.dataset.hf] = { why: sel.value }; else delete s.flags[sel.dataset.hf]; save(); setTimeout(draw); });
     const sa = root.querySelector("#s-alt"); if (sa) sa.onchange = () => { if (/^\d+$/.test(sa.value)) { s.alt = +sa.value; if (s.worth) delete s.worth[measureOf(s).id]; } save(); setTimeout(draw); };
     const sw2 = root.querySelector("#s-worth");
@@ -3252,7 +3357,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 129 · Standalone copy · Oct 25", VERSION_NUM = 129;
+const APP_VERSION = "Prototype · Version 130 · Standalone copy · Oct 25", VERSION_NUM = 130;
 // Phase 1 (Cuong, 2026-10-22, tester feedback "too busy"): start dates, pauses, trials and discounts stay in the code but are hidden.
 const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
