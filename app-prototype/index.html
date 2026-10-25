@@ -131,7 +131,10 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .intro-next { min-width: 200px; margin-top: 6px; }
 @media (max-width: 520px) { .intro-h { font-size: 25px; } .intro-p { font-size: 16px; } .intro-pillars { gap: 8px; } .intro-pill { padding: 12px 6px; gap: 4px; } .intro-pill b { font-size: 13px; } .intro-pill .small { font-size: 11.5px; line-height: 1.35; } .intro-pill svg { width: 26px; height: 26px; } }
 #persona-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 6px 6px 6px 14px; border-radius: 14px; background: var(--accent-soft); border: 2px solid var(--accent); font-size: 14px; }
-#persona-btn.on { box-shadow: 0 0 0 2px #fff; } .pp-list { display: grid; gap: 8px; } .pp-opt { display: grid; gap: 2px; text-align: left; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; position: relative; }
+.pp-txt { display: grid; gap: 2px; padding-right: 54px; } .pp-pic { flex: none; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: var(--accent); color: #fff; }
+.pp-pic svg { width: 100%; height: 100%; } .pp-pic:not(:has(rect)) svg { width: 26px; height: 26px; } .pp-pic.sm { width: 28px; height: 28px; } .pb-who { display: flex; align-items: center; gap: 8px; }
+.avatar.pic { padding: 0; overflow: hidden; } .avatar.pic svg { width: 100%; height: 100%; display: block; }
+#persona-btn.on { box-shadow: 0 0 0 2px #fff; } .pp-list { display: grid; gap: 8px; } .pp-opt { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; position: relative; }
 .pp-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); } .pp-on { position: absolute; top: 12px; right: 14px; font-size: 12px; font-weight: 700; color: var(--accent); }
 .about-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-width: 860px; }
 .about-opt { display: grid; justify-items: center; gap: 8px; padding: 18px 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; color: var(--ink); font: 600 14px var(--f-body); cursor: pointer; text-align: center; }
@@ -866,24 +869,39 @@ function save() { try { localStorage.setItem(storeKey(), JSON.stringify(state));
 // Lists and amounts are our made-up examples; prices without a catalog list price (insurance, phone, internet) are made up too.
 const PERSONAS = {
   me: { label: "Me", desc: "Your own list" },
-  student: { label: "Student, under 25", name: "Jordan", desc: "Single student on a tight budget",
+  student: { label: "Student, under 25", name: "Jordan Rivera", short: "Jordan", desc: "Single student on a tight budget",
     profile: { about: ["student"], age: "u25", shares: true },
     subs: [["spotify", 14, ["ad_free", "offline"], 3, "student", 20], ["netflix", 5, [], 9, "ads", 14], ["youtube_premium", 6, [], 21, "individual", 8],
       ["chatgpt", 8, [], 12, "plus", 6], ["xbox_game_pass", 9, [], 17, null, 11], ["discord_nitro", 12, [], 5, null, 10], ["chegg_study", 2, [], 2, null, 3],
       ["planet_fitness", 6, [], 15, null, 13], ["doordash_dashpass", 5, [], 25, null, 7], ["mint_mobile", 0, [], 1, null, 18, 15], ["icloud", 38, [], 8, "50gb", 30], ["duolingo", 3, [], 19, null, 9]] },
-  family: { label: "Married couple, 40s, with kids", name: "Sam & Alex", desc: "Two parents and two kids",
+  family: { label: "Married couple, 40s, with kids", name: "Sam & Alex Chen", short: "Sam & Alex", desc: "Two parents and two kids",
     profile: { about: ["married", "kids"], age: "45", shares: true },
     subs: [["netflix", 12, ["ad_free", "hd"], 4, "standard", 70], ["disney_plus", 9, [], 11, "trio_ads", 26], ["spotify", 22, ["ad_free", "offline"], 14, "family", 48],
       ["amazon_prime", 9, ["shipping", "video"], 6, "monthly", 90], ["costco", 3, ["bulk"], 20, null, 60], ["m365", 14, ["apps", "onedrive"], 27, "family", 36],
       ["icloud", 1100, [], 2, "2tb", 40], ["xbox_game_pass", 7, [], 23, null, 15], ["ixl", 2, [], 8, null, 12], ["doordash_dashpass", 6, [], 16, null, 14],
       ["state_farm_auto", 0, ["coverage"], 10, null, 72, 212], ["state_farm_home", 0, ["coverage"], 10, null, 72, 168], ["verizon_wireless", 0, [], 22, null, 84, 185],
       ["xfinity_internet", 0, [], 18, null, 50, 85], ["ring_home", 0, [], 3, null, 30], ["chewy_plus", 2, [], 12, null, 9]] },
-  seniors: { label: "Senior couple, 60s, no kids", name: "Pat & Lee", desc: "Retired couple, no kids at home",
+  seniors: { label: "Senior couple, 60s, no kids", name: "Pat & Lee Morgan", short: "Pat & Lee", desc: "Retired couple, no kids at home",
     profile: { about: ["married"], age: "55", shares: false },
     subs: [["aarp", 1, [], 1, null, 120], ["aaa", 0, [], 10, null, 300, null, { members: 2 }], ["netflix", 10, ["hd"], 7, "standard", 96], ["amazon_prime", 5, ["shipping", "video"], 15, "monthly", 110],
       ["nyt", 12, [], 20, null, 60], ["kindle_unlimited", 3, [], 26, null, 24], ["audible", 1, [], 4, null, 40], ["tmobile_wireless", 0, [], 12, null, 54, 70],
       ["xfinity_internet", 0, [], 18, null, 100, 70], ["icloud", 140, [], 9, "200gb", 70], ["geico_auto", 0, ["coverage"], 28, null, 96, 118],
       ["silversneakers", 8, [], 1, null, 30], ["medical_guardian", 30, [], 5, null, 14]] },
+};
+// Persona pictures (v146): simple drawn portraits, not photos of real people.
+const PERSONA_PICS = {
+  student: `<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="#0f766e"/><path d="M10 48c1-9 7-13 14-13s13 4 14 13z" fill="#fbbf24"/><circle cx="24" cy="24" r="9" fill="#e0a77a"/>
+    <path d="M15 22c0-6 4-9 9-9s9 3 9 9c-2-3-5-4-9-4s-7 1-9 4z" fill="#3b2314"/><path d="M11 13l13-6 13 6-13 6z" fill="#111827"/><path d="M33 14v7" stroke="#facc15" stroke-width="1.6"/><circle cx="33" cy="22" r="1.4" fill="#facc15"/>
+    <circle cx="20.5" cy="25" r="1.1" fill="#1f2937"/><circle cx="27.5" cy="25" r="1.1" fill="#1f2937"/><path d="M21 29q3 2.2 6 0" stroke="#7c2d12" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>`,
+  family: `<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="#b45309"/>
+    <path d="M2 48c1-8 5-12 11-12s10 4 11 12z" fill="#60a5fa"/><circle cx="13" cy="25" r="7" fill="#c68642"/><path d="M6 24c0-5 3-8 7-8s7 3 7 8c-2-2-4-3-7-3s-5 1-7 3z" fill="#1f2937"/>
+    <path d="M24 48c1-8 5-12 11-12s10 4 11 12z" fill="#f472b6"/><circle cx="35" cy="25" r="7" fill="#f1c27d"/><path d="M27 27c-1-7 3-11 8-11s9 4 8 11c-1-4-4-6-8-6s-7 2-8 6z" fill="#7c2d12"/>
+    <path d="M15 48c1-6 4-8 9-8s8 2 9 8z" fill="#fde047"/><circle cx="24" cy="34" r="5.5" fill="#e0a77a"/><path d="M18.6 33c0-4 2.4-6 5.4-6s5.4 2 5.4 6c-1.4-1.6-3.2-2.2-5.4-2.2s-4 .6-5.4 2.2z" fill="#3b2314"/><circle cx="10.7" cy="26" r=".9" fill="#1f2937"/><circle cx="15.3" cy="26" r=".9" fill="#1f2937"/><path d="M10.8 29q2.2 1.7 4.4 0" stroke="#7c2d12" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="32.7" cy="26" r=".9" fill="#1f2937"/><circle cx="37.3" cy="26" r=".9" fill="#1f2937"/><path d="M32.8 29q2.2 1.7 4.4 0" stroke="#7c2d12" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="22.1" cy="34.5" r=".9" fill="#1f2937"/><circle cx="25.9" cy="34.5" r=".9" fill="#1f2937"/><path d="M22.4 37q1.6 1.7 3.2 0" stroke="#7c2d12" stroke-width="1.1" fill="none" stroke-linecap="round"/></svg>`,
+  seniors: `<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="#6d28d9"/>
+    <path d="M1 48c1-9 6-13 12-13s11 4 12 13z" fill="#93c5fd"/><circle cx="13" cy="24" r="7.5" fill="#f1c27d"/><path d="M5.5 23c0-5 3.5-8.5 7.5-8.5s7.5 3.5 7.5 8.5c-1-2.4-2-3.4-3-3.6-1.2 1.4-7.8 1.4-9 0-1 .2-2 1.2-3 3.6z" fill="#e5e7eb"/>
+    <circle cx="10.4" cy="25" r="2.2" fill="none" stroke="#374151" stroke-width="1"/><circle cx="15.6" cy="25" r="2.2" fill="none" stroke="#374151" stroke-width="1"/><path d="M12.6 25h.8" stroke="#374151" stroke-width="1"/>
+    <path d="M23 48c1-9 6-13 12-13s11 4 12 13z" fill="#fca5a5"/><circle cx="35" cy="24" r="7.5" fill="#c68642"/><path d="M26.5 26c-1.2-7.5 3-11.5 8.5-11.5s9.7 4 8.5 11.5c-.8-4-3.6-6.6-8.5-6.6s-7.7 2.6-8.5 6.6z" fill="#f3f4f6"/>
+    <circle cx="32.7" cy="25.2" r=".9" fill="#1f2937"/><circle cx="37.3" cy="25.2" r=".9" fill="#1f2937"/><path d="M10.5 28.6q2.5 1.8 5 0M32.5 28.4q2.5 1.8 5 0" stroke="#7c2d12" stroke-width="1.1" fill="none" stroke-linecap="round"/></svg>`,
 };
 const PERSONA_KEY = "sk-persona";
 let persona = (() => { try { const p = localStorage.getItem(PERSONA_KEY); return PERSONAS[p] ? p : "me"; } catch { return "me"; } })();
@@ -908,7 +926,7 @@ function personaBar(root) {
   document.getElementById("persona-btn")?.classList.toggle("on", persona !== "me");
   const P = PERSONAS[persona]; if (persona === "me" || view === "welcome") return;
   const bar = document.createElement("div"); bar.id = "persona-bar"; root.prepend(bar);
-  bar.innerHTML = `<span>Viewing as <b>${esc(P.name)}</b> <span class="muted">(example)</span></span><button class="btn small" id="pb-switch">Switch</button>`; bar.title = P.label;
+  bar.innerHTML = `<span class="pb-who"><span class="pp-pic sm">${PERSONA_PICS[persona]}</span><span>Viewing as <b>${esc(P.name)}</b> <span class="muted">(example)</span></span></span><button class="btn small" id="pb-switch">Switch</button>`; bar.title = P.label;
   bar.querySelector("#pb-switch").onclick = openPersonas;
 }
 function openPersonas() {
@@ -917,8 +935,8 @@ function openPersonas() {
     <aside class="sheet me-sheet enter" role="dialog" aria-modal="true" aria-labelledby="pp-title">
       <div class="me-head"><span class="avatar">${PERSONA_ICON}</span><div style="flex:1;min-width:0"><h2 id="pp-title">View as</h2><div class="small muted">See the app through different households' eyes</div></div>
         <button class="btn" id="pp-close">Close</button></div>
-      <div class="pp-list">${Object.entries(PERSONAS).map(([k, p]) => `<button class="pp-opt" data-persona="${k}" aria-pressed="${k === persona}">
-        <b>${esc(k === "me" ? "Me" : `${p.name}`)}</b><span class="small muted">${esc(k === "me" ? "Your own list" : `${p.label}. ${p.desc}`)}</span>${k === persona ? '<span class="pp-on">Viewing</span>' : ""}</button>`).join("")}</div>
+      <div class="pp-list">${Object.entries(PERSONAS).map(([k, p]) => `<button class="pp-opt" data-persona="${k}" aria-pressed="${k === persona}"><span class="pp-pic">${PERSONA_PICS[k] || PERSONA_ICON}</span><span class="pp-txt">
+        <b>${esc(k === "me" ? "Me" : `${p.name}`)}</b><span class="small muted">${esc(k === "me" ? "Your own list" : `${p.label}. ${p.desc}`)}</span></span>${k === persona ? '<span class="pp-on">Viewing</span>' : ""}</button>`).join("")}</div>
       ${persona !== "me" ? `<button class="btn ghost small" id="pp-reset" style="justify-self:start">Reset ${esc(PERSONAS[persona].name)}'s example</button>` : ""}
       <p class="note" style="margin:0">Each example household has its own made-up list with a year of usage. Changes you make while viewing as someone stay with that example in this browser. Your own list isn't touched.</p>
     </aside>`));
@@ -3483,7 +3501,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 145 · Oct 25", VERSION_NUM = 145;
+const APP_VERSION = "Prototype · Version 146 · Oct 25", VERSION_NUM = 146;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -3503,11 +3521,11 @@ const PHASE1 = true;
 // Phase 1 also turns off Sam, the AI chat (Cuong, 2026-10-22): Help is just the FAQ and a way to contact support.
 // First name for the greeting: what the person typed here, else their Claude account name when the page knows it.
 let accountName = "";
-function firstName() { if (persona !== "me") return PERSONAS[persona].name.split(" ")[0]; let n = ""; try { n = localStorage.getItem("sk-name") || ""; } catch {} return (n || accountName).trim().split(/\s+/)[0] || ""; }
+function firstName() { if (persona !== "me") return PERSONAS[persona].short; let n = ""; try { n = localStorage.getItem("sk-name") || ""; } catch {} return (n || accountName).trim().split(/\s+/)[0] || ""; }
 (async () => { try { if (typeof claude === "undefined") return; const user = await claude.use("user"); const me = user && await user.me();
   if (me?.name) { accountName = me.name; if (state) render(); } } catch {} })();
 const PERSON_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg>';
-function drawAvatar(b) { const n = firstName(); b.innerHTML = n ? esc(n[0].toUpperCase()) : PERSON_ICON; }
+function drawAvatar(b) { if (persona !== "me" && b) { b.innerHTML = PERSONA_PICS[persona]; b.classList.add("pic"); return; } b?.classList.remove("pic"); const n = firstName(); b.innerHTML = n ? esc(n[0].toUpperCase()) : PERSON_ICON; }
 // Light/dark look: Auto follows the device setting; the choice is a per-viewer convenience kept in this browser.
 const THEMES = ["auto", "light", "dark"], THEME_LABEL = { auto: "Auto", light: "Light", dark: "Dark" };
 function themePref() { try { return localStorage.getItem("sk-theme") || "auto"; } catch { return "auto"; } }
