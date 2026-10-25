@@ -9290,6 +9290,1821 @@
    "region_group": "south-central",
    "color": "#334155",
    "mark": "QQ"
+  },
+  {
+   "id": "allo_fiber",
+   "name": "ALLO Fiber (Home Internet)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AZ",
+    "CO",
+    "MO",
+    "NE"
+   ],
+   "service_area_note": "Fiber in 30+ Nebraska towns (Lincoln, Kearney, North Platte, Scottsbluff), Joplin MO, plus Colorado and Arizona",
+   "official_url": "https://www.allocommunications.com/",
+   "plans": [
+    {
+     "id": "essentials_500",
+     "name": "Essentials 500 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official site shows no price; pricing is by address"
+    },
+    {
+     "id": "pro_1gig",
+     "name": "Pro 1 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official site shows no price; pricing is by address"
+    },
+    {
+     "id": "max_2gig",
+     "name": "Max 2 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official site shows no price; pricing is by address; includes Bark parental controls"
+    }
+   ],
+   "default_plan": "pro_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber speeds",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "no_contract",
+     "name": "No contract",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "no_data_caps",
+     "name": "No data caps",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Nebraska households in an ALLO town wanting symmetrical fiber with no contract.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Enter your address on the site to see the price; none is published."
+   ],
+   "sources": [
+    {
+     "label": "ALLO home page",
+     "url": "https://www.allocommunications.com/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#9d174d",
+   "mark": "AF"
+  },
+  {
+   "id": "paul_bunyan_gigazone",
+   "name": "Paul Bunyan Communications GigaZone",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MN"
+   ],
+   "service_area_note": "Member-owned cooperative serving a ~5,500 sq mi area of north-central Minnesota",
+   "official_url": "https://paulbunyan.net/gigazone",
+   "plans": [
+    {
+     "id": "gz_250",
+     "name": "GigaZone 250 Mbps",
+     "price_monthly": 60,
+     "price_annual": null,
+     "effective_monthly": 60,
+     "verified": true,
+     "note": "Excludes mandated fees, service charges, install, taxes"
+    },
+    {
+     "id": "gz_1gig",
+     "name": "GigaZone 1 Gbps",
+     "price_monthly": 80,
+     "price_annual": null,
+     "effective_monthly": 80,
+     "verified": true,
+     "note": "Excludes fees and taxes"
+    },
+    {
+     "id": "gz_2gig",
+     "name": "GigaZone 2 Gbps",
+     "price_monthly": 150,
+     "price_annual": null,
+     "effective_monthly": 150,
+     "verified": true,
+     "note": "Excludes fees and taxes"
+    },
+    {
+     "id": "gz_6gig",
+     "name": "GigaZone 6 Gbps",
+     "price_monthly": 300,
+     "price_annual": null,
+     "effective_monthly": 300,
+     "verified": true,
+     "note": "Excludes fees and taxes"
+    },
+    {
+     "id": "gz_10gig",
+     "name": "GigaZone 10 Gbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official page says 'Call for Pricing'"
+    },
+    {
+     "id": "gz_apt_250",
+     "name": "GigaZone Apartment 250 Mbps",
+     "price_monthly": 50,
+     "price_annual": null,
+     "effective_monthly": 50,
+     "verified": true,
+     "note": "Qualified apartment complexes only; includes GigaZone WiFi"
+    }
+   ],
+   "default_plan": "gz_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber speeds",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "coop_member",
+     "name": "Cooperative membership",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rural north-central Minnesota homes inside the GigaZone footprint.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Paul Bunyan GigaZone",
+     "url": "https://paulbunyan.net/gigazone"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#be123c",
+   "mark": "PB"
+  },
+  {
+   "id": "nextlink_internet",
+   "name": "Nextlink Internet (Fiber)",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AR",
+    "IA",
+    "IL",
+    "IN",
+    "KS",
+    "LA",
+    "MN",
+    "MO",
+    "NE",
+    "OK",
+    "SD",
+    "TX",
+    "WI",
+    "WY"
+   ],
+   "service_area_note": "Rural fiber and fixed wireless across 14 central states; fiber in select areas only",
+   "official_url": "https://nextlinkinternet.com/",
+   "plans": [
+    {
+     "id": "fiber_500",
+     "name": "Fiber 500",
+     "price_monthly": 50,
+     "price_annual": null,
+     "effective_monthly": 50,
+     "verified": true,
+     "note": "$40/mo first 12 months, then $50; eero 7 router included; free standard install"
+    },
+    {
+     "id": "fiber_1gig",
+     "name": "Fiber 1 Gig",
+     "price_monthly": 60,
+     "price_annual": null,
+     "effective_monthly": 60,
+     "verified": true,
+     "note": "$50/mo first 12 months, then $60; eero Pro 7 included"
+    },
+    {
+     "id": "fiber_2gig",
+     "name": "Fiber 2 Gig",
+     "price_monthly": 100,
+     "price_annual": null,
+     "effective_monthly": 100,
+     "verified": true,
+     "note": "$90/mo first 12 months, then $100"
+    },
+    {
+     "id": "wireless",
+     "name": "Fixed Wireless",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official page lists the plan without a price"
+    }
+   ],
+   "default_plan": "fiber_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber speeds",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "no_data_caps",
+     "name": "No data caps or overage fees",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "next_fi",
+     "name": "Next-Fi whole-home Wi-Fi add-on ($20/mo)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rural Plains households that have few wired options.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Prices shown are the regular rate from month 13; budget for the jump after the $10/mo first-year discount."
+   ],
+   "sources": [
+    {
+     "label": "Nextlink home page",
+     "url": "https://nextlinkinternet.com/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#2563eb",
+   "mark": "NI"
+  },
+  {
+   "id": "bluepeak_fiber",
+   "name": "Bluepeak Fiber",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MN",
+    "ND",
+    "OK",
+    "SD",
+    "TX",
+    "WY"
+   ],
+   "service_area_note": "Fiber in Sioux Falls, Rapid City and Vermillion SD, Grand Forks ND / East Grand Forks MN, plus Oklahoma, Wyoming and Denison TX",
+   "official_url": "https://mybluepeak.com/",
+   "plans": [
+    {
+     "id": "fiber_1gig",
+     "name": "1 Gig",
+     "price_monthly": 55,
+     "price_annual": null,
+     "effective_monthly": 55,
+     "verified": true,
+     "note": "Sioux Falls page: $45/mo for first 6 months, then $55; reflects $10 AutoPay (ACH) discount; 1-yr price lock; eero included"
+    },
+    {
+     "id": "fiber_2gig",
+     "name": "2 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Offered per FAQ; price not shown on official page"
+    },
+    {
+     "id": "fiber_5gig",
+     "name": "5 Gig",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Offered per FAQ; price not shown on official page"
+    }
+   ],
+   "default_plan": "fiber_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber speeds",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "no_contract",
+     "name": "No contract",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "no_data_caps",
+     "name": "No data limits",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Sioux Falls and other Dakota towns wanting gig fiber with no contract.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Price depends on keeping AutoPay by bank account (ACH)."
+   ],
+   "sources": [
+    {
+     "label": "Bluepeak Sioux Falls fiber page",
+     "url": "https://mybluepeak.com/?p=15120"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#9d174d",
+   "mark": "BF"
+  },
+  {
+   "id": "imon_communications",
+   "name": "ImOn Communications",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IA",
+    "MN",
+    "WI"
+   ],
+   "service_area_note": "Eastern Iowa (Cedar Rapids, Iowa City, Dubuque, Clinton, Marshalltown, Siouxland, SE Iowa) and Duluth MN / Superior WI",
+   "official_url": "https://www.imon.net/",
+   "plans": [
+    {
+     "id": "imon_200",
+     "name": "200Mb",
+     "price_monthly": 48.5,
+     "price_annual": null,
+     "effective_monthly": 48.5,
+     "verified": true,
+     "note": "Cedar Rapids Metro price with AutoPay, plus fees"
+    },
+    {
+     "id": "imon_300",
+     "name": "300Mb",
+     "price_monthly": 53.5,
+     "price_annual": null,
+     "effective_monthly": 53.5,
+     "verified": true,
+     "note": "Cedar Rapids Metro, with AutoPay, plus fees"
+    },
+    {
+     "id": "imon_500",
+     "name": "500Mb",
+     "price_monthly": 58.5,
+     "price_annual": null,
+     "effective_monthly": 58.5,
+     "verified": true,
+     "note": "Fiber areas only; with AutoPay, plus fees"
+    },
+    {
+     "id": "imon_1gig",
+     "name": "1 Gig",
+     "price_monthly": 68.5,
+     "price_annual": null,
+     "effective_monthly": 68.5,
+     "verified": true,
+     "note": "Fiber areas only; with AutoPay, plus fees"
+    }
+   ],
+   "default_plan": "imon_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "whole_home_wifi",
+     "name": "Whole Home Wi-Fi add-on",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Eastern Iowa households wanting a local fiber alternative to cable.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Prices are for Cedar Rapids Metro; other ImOn markets may differ."
+   ],
+   "sources": [
+    {
+     "label": "ImOn Cedar Rapids internet",
+     "url": "https://www.imon.net/residential/cedar-rapids-metro/internet"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#0369a1",
+   "mark": "IC"
+  },
+  {
+   "id": "nuvera_fiber",
+   "name": "Nuvera NuFiber",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IA",
+    "MN"
+   ],
+   "service_area_note": "Southern Minnesota (New Ulm, Hutchinson, Litchfield, Savage, Prior Lake and 30+ towns) plus Aurelia, Iowa",
+   "official_url": "https://www.nuvera.net/residential/internet/",
+   "plans": [
+    {
+     "id": "nufiber_200",
+     "name": "NuFiber 200 Mbps",
+     "price_monthly": 49.99,
+     "price_annual": null,
+     "effective_monthly": 49.99,
+     "verified": false,
+     "note": "CableTV.com (verified 8/10/26), Savage MN reference; official site prices by address"
+    },
+    {
+     "id": "nufiber_500",
+     "name": "NuFiber 500 Mbps",
+     "price_monthly": 59.99,
+     "price_annual": null,
+     "effective_monthly": 59.99,
+     "verified": false,
+     "note": "CableTV.com reference price"
+    },
+    {
+     "id": "nufiber_1gig",
+     "name": "NuFiber 1 Gig",
+     "price_monthly": 69.99,
+     "price_annual": null,
+     "effective_monthly": 69.99,
+     "verified": false,
+     "note": "CableTV.com reference price"
+    },
+    {
+     "id": "nufiber_5gig",
+     "name": "NuFiber 5 Gig",
+     "price_monthly": 109.99,
+     "price_annual": null,
+     "effective_monthly": 109.99,
+     "verified": false,
+     "note": "CableTV.com reference price; 8 Gig also offered in some areas"
+    }
+   ],
+   "default_plan": "nufiber_1gig",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "price_guarantee",
+     "name": "36-month price guarantee",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Southern Minnesota towns served by Nuvera's fiber network.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Official terms: price guaranteed months 1-36, then market rate; $60 activation fee can be credited."
+   ],
+   "sources": [
+    {
+     "label": "Nuvera internet (terms)",
+     "url": "https://www.nuvera.net/residential/internet/"
+    },
+    {
+     "label": "CableTV.com Nuvera prices",
+     "url": "https://www.cabletv.com/nuvera/internet"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#2563eb",
+   "mark": "NN"
+  },
+  {
+   "id": "ideatek_fiber",
+   "name": "IdeaTek Fiber",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KS"
+   ],
+   "service_area_note": "Fiber in 100+ mostly rural Kansas communities (Hutchinson, Liberal, Moundridge, Stafford and more)",
+   "official_url": "https://ideatek.com/residential/",
+   "plans": [
+    {
+     "id": "basic_500",
+     "name": "Basic 500 Mbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official site shows no price; pricing is by address"
+    },
+    {
+     "id": "gigabit",
+     "name": "Gigabit",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official site shows no price; pricing is by address"
+    },
+    {
+     "id": "super_gig",
+     "name": "Super Gig 2.5 Gbps",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official site shows no price; pricing is by address"
+    },
+    {
+     "id": "five_gig",
+     "name": "5 Gigabit",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official site shows no price; pricing is by address"
+    },
+    {
+     "id": "eight_gig",
+     "name": "8 Gigabit",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official site shows no price; pricing is by address"
+    }
+   ],
+   "default_plan": "gigabit",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "symmetrical_fiber",
+     "name": "Symmetrical fiber speeds",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "no_contract",
+     "name": "No contract",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "no_data_caps",
+     "name": "Unlimited data",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rural and small-town Kansas homes wanting symmetrical fiber.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "IdeaTek residential",
+     "url": "https://ideatek.com/residential/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#9d174d",
+   "mark": "IF"
+  },
+  {
+   "id": "viaero_home_internet",
+   "name": "Viaero Wireless Home Internet",
+   "category": "internet",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CO",
+    "KS",
+    "NE",
+    "WY"
+   ],
+   "service_area_note": "Fixed wireless internet in rural western Nebraska, eastern Colorado, Wyoming and western Kansas",
+   "official_url": "https://www.viaero.com/home-internet",
+   "plans": [
+    {
+     "id": "plus",
+     "name": "Unlimited Internet Plus (up to 50 Mbps)",
+     "price_monthly": 40,
+     "price_annual": null,
+     "effective_monthly": 40,
+     "verified": true,
+     "note": "As low as $20 with a Viaero mobile plan; 36-month term on Broadband Facts label; page is inconsistent on tiers"
+    },
+    {
+     "id": "pro",
+     "name": "Unlimited Internet Pro (up to 100 Mbps)",
+     "price_monthly": 50,
+     "price_annual": null,
+     "effective_monthly": 50,
+     "verified": true,
+     "note": "As low as $25 with a mobile plan; 36-month term"
+    },
+    {
+     "id": "max",
+     "name": "Unlimited Internet Max (up to 200 Mbps)",
+     "price_monthly": 60,
+     "price_annual": null,
+     "effective_monthly": 60,
+     "verified": true,
+     "note": "As low as $30 with a mobile plan; 36-month term"
+    }
+   ],
+   "default_plan": "pro",
+   "features": [
+    {
+     "id": "home_internet",
+     "name": "Home internet",
+     "plans": "all",
+     "overlap_tag": "home_internet"
+    },
+    {
+     "id": "unlimited_data",
+     "name": "Unlimited data",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rural High Plains homes outside cable and fiber reach.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "$10/mo equipment fee unless you buy the equipment upfront."
+   ],
+   "sources": [
+    {
+     "label": "Viaero home internet",
+     "url": "https://www.viaero.com/home-internet"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#4d7c0f",
+   "mark": "VW"
+  },
+  {
+   "id": "viaero_wireless",
+   "name": "Viaero Wireless (Mobile)",
+   "category": "mobile",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CO",
+    "KS",
+    "NE",
+    "WY"
+   ],
+   "service_area_note": "Regional carrier covering rural Nebraska, Colorado, Wyoming and Kansas",
+   "official_url": "https://www.viaero.com/plans/",
+   "plans": [
+    {
+     "id": "unlimited",
+     "name": "Unlimited One Rate",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official page shows per-line price only after choosing line count; site banner says plans start at $25/mo"
+    },
+    {
+     "id": "hotspot",
+     "name": "Hotspot Data",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official: 'From $30/month'; exact plan price not shown"
+    },
+    {
+     "id": "first_responder",
+     "name": "First Responders",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Official: 'from $10/mo'; eligibility required"
+    }
+   ],
+   "default_plan": "unlimited",
+   "features": [
+    {
+     "id": "mobile_service",
+     "name": "Mobile phone service",
+     "plans": "all",
+     "overlap_tag": "mobile_plan"
+    },
+    {
+     "id": "unlimited_data",
+     "name": "Unlimited talk, text and data",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "People in rural Plains areas where national carriers have weak coverage.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Viaero plans",
+     "url": "https://www.viaero.com/plans/unlimited-data-plans/?pType=0"
+    },
+    {
+     "label": "Viaero home internet page (state list)",
+     "url": "https://www.viaero.com/home-internet"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#0f766e",
+   "mark": "VW"
+  },
+  {
+   "id": "midco_mobile",
+   "name": "Midco Mobile",
+   "category": "mobile",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IA",
+    "KS",
+    "MN",
+    "ND",
+    "SD",
+    "WI"
+   ],
+   "service_area_note": "Only for Midco home internet customers (Dakotas, Minnesota, parts of Kansas, Iowa, Wisconsin); runs on a national partner's 5G network",
+   "official_url": "https://midco.com/mobile",
+   "plans": [
+    {
+     "id": "unlimited",
+     "name": "Unlimited",
+     "price_monthly": 30,
+     "price_annual": null,
+     "effective_monthly": 30,
+     "verified": true,
+     "note": "Per line; includes $15/mo Midco home-service discount (rises to $45 if you drop Midco home service); slowed after 30 GB; 5 GB hotspot"
+    },
+    {
+     "id": "flex",
+     "name": "Flex 1 GB",
+     "price_monthly": 15,
+     "price_annual": null,
+     "effective_monthly": 15,
+     "verified": true,
+     "note": "Per line; includes $15/mo Midco customer discount; no hotspot"
+    }
+   ],
+   "default_plan": "unlimited",
+   "features": [
+    {
+     "id": "mobile_service",
+     "name": "Mobile phone service",
+     "plans": "all",
+     "overlap_tag": "mobile_plan"
+    },
+    {
+     "id": "hotspot",
+     "name": "5 GB hotspot",
+     "plans": "all",
+     "overlap_tag": "mobile_plan"
+    }
+   ],
+   "best_for": "Midco internet customers wanting a cheap add-on phone line.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Requires Midco internet, TV or home phone; bring an unlocked phone."
+   ],
+   "sources": [
+    {
+     "label": "Midco Mobile",
+     "url": "https://midco.com/mobile"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#7c3aed",
+   "mark": "MM"
+  },
+  {
+   "id": "minnesota_star_tribune",
+   "name": "Minnesota Star Tribune",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MN"
+   ],
+   "service_area_note": "Statewide Minnesota daily based in Minneapolis",
+   "official_url": "https://www.startribune.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital Access",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not confirmed: official subscribe pages block automated access; offers change often"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "local_news",
+     "name": "Local news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    },
+    {
+     "id": "epaper",
+     "name": "E-edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Minnesotans who want Twin Cities and statewide coverage.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Check the renewal rate after any intro offer."
+   ],
+   "sources": [
+    {
+     "label": "Star Tribune",
+     "url": "https://www.startribune.com/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#0369a1",
+   "mark": "MS"
+  },
+  {
+   "id": "st_louis_post_dispatch",
+   "name": "St. Louis Post-Dispatch",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IL",
+    "MO"
+   ],
+   "service_area_note": "St. Louis metro daily (Missouri and Metro East Illinois)",
+   "official_url": "https://www.stltoday.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital (stltoday.com)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not confirmed: subscribe page requires a token and could not be read"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "local_news",
+     "name": "Local news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    },
+    {
+     "id": "epaper",
+     "name": "E-edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "St. Louis readers wanting local news, sports and politics.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "STLtoday",
+     "url": "https://www.stltoday.com/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#7c3aed",
+   "mark": "SL"
+  },
+  {
+   "id": "kansas_city_star",
+   "name": "The Kansas City Star",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KS",
+    "MO"
+   ],
+   "service_area_note": "Kansas City metro daily (Missouri and Kansas)",
+   "official_url": "https://www.kansascity.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital Access",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not confirmed: official site blocks automated access"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "local_news",
+     "name": "Local news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    },
+    {
+     "id": "epaper",
+     "name": "E-edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Kansas City area readers on both sides of the state line.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Kansas City Star",
+     "url": "https://www.kansascity.com/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#9d174d",
+   "mark": "KC"
+  },
+  {
+   "id": "omaha_world_herald",
+   "name": "Omaha World-Herald",
+   "category": "news",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IA",
+    "NE"
+   ],
+   "service_area_note": "Omaha daily covering Nebraska and western Iowa",
+   "official_url": "https://omaha.com/",
+   "plans": [
+    {
+     "id": "digital",
+     "name": "Digital",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not confirmed: subscribe page requires a token; an April 2024 app listing showed $25.99-$38.99/mo tiers (old, third-party)"
+    }
+   ],
+   "default_plan": "digital",
+   "features": [
+    {
+     "id": "local_news",
+     "name": "Local news",
+     "plans": "all",
+     "overlap_tag": "local_news"
+    },
+    {
+     "id": "epaper",
+     "name": "E-edition",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Omaha and Nebraska readers.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Omaha World-Herald",
+     "url": "https://omaha.com/"
+    },
+    {
+     "label": "Adapty paywall library (Apr 2024)",
+     "url": "https://adapty.io/paywall-library/omaha-world-herald/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#be123c",
+   "mark": "OW"
+  },
+  {
+   "id": "ymca_north",
+   "name": "YMCA of the North",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MN"
+   ],
+   "service_area_note": "YMCA branches across the Twin Cities metro and greater Minnesota",
+   "official_url": "https://www.ymcanorth.org/membership",
+   "plans": [
+    {
+     "id": "adult",
+     "name": "Adult (19+)",
+     "price_monthly": 77,
+     "price_annual": null,
+     "effective_monthly": 77,
+     "verified": true,
+     "note": "$50 enrollment fee; prices vary by location"
+    },
+    {
+     "id": "youth",
+     "name": "Youth (10-18)",
+     "price_monthly": 43,
+     "price_annual": null,
+     "effective_monthly": 43,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "one_adult_family",
+     "name": "One Adult Family",
+     "price_monthly": 107,
+     "price_annual": null,
+     "effective_monthly": 107,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "dual",
+     "name": "Dual (two adults)",
+     "price_monthly": 130,
+     "price_annual": null,
+     "effective_monthly": 130,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "family",
+     "name": "Family (2-3 adults)",
+     "price_monthly": 141,
+     "price_annual": null,
+     "effective_monthly": 141,
+     "verified": true,
+     "note": "'Starting at' price"
+    },
+    {
+     "id": "virtual",
+     "name": "YMCA 360 Virtual",
+     "price_monthly": 9.99,
+     "price_annual": null,
+     "effective_monthly": 9.99,
+     "verified": true,
+     "note": ""
+    }
+   ],
+   "default_plan": "adult",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym and pool access",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "nationwide_y",
+     "name": "Visit participating YMCAs nationwide",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "virtual_classes",
+     "name": "YMCA 360 on-demand classes",
+     "plans": "all",
+     "overlap_tag": "fitness_app"
+    }
+   ],
+   "best_for": "Twin Cities families wanting pools, classes and kids programs.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Income-based pricing is available through financial assistance."
+   ],
+   "sources": [
+    {
+     "label": "YMCA of the North membership",
+     "url": "https://www.ymcanorth.org/node/5386212"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#0369a1",
+   "mark": "Yo"
+  },
+  {
+   "id": "ymca_greater_kc",
+   "name": "YMCA of Greater Kansas City",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KS",
+    "MO"
+   ],
+   "service_area_note": "Kansas City metro branches in Missouri and Kansas (Olathe, Bonner Springs, Atchison, Platte County)",
+   "official_url": "https://kansascityymca.org/membership",
+   "plans": [
+    {
+     "id": "adult",
+     "name": "Adult",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Rates load by branch in an online tool and could not be read; not published as static text"
+    }
+   ],
+   "default_plan": "adult",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym and pool access",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "kids_zone",
+     "name": "Kids Zone for family members",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Kansas City families wanting a community gym with child care.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Kansas City YMCA membership",
+     "url": "https://kansascityymca.org/membership"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#7c3aed",
+   "mark": "Yo"
+  },
+  {
+   "id": "genesis_health_clubs",
+   "name": "Genesis Health Clubs",
+   "category": "fitness",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AR",
+    "CO",
+    "FL",
+    "IA",
+    "KS",
+    "KY",
+    "LA",
+    "MO",
+    "NE",
+    "NJ",
+    "NM",
+    "NY",
+    "OK",
+    "TX"
+   ],
+   "service_area_note": "Wichita-based club chain, densest in Kansas, Missouri and Nebraska; ~70-90 clubs in 11-14 states",
+   "official_url": "https://www.genesishealthclubs.com/",
+   "plans": [
+    {
+     "id": "standard",
+     "name": "Standard membership",
+     "price_monthly": 79,
+     "price_annual": null,
+     "effective_monthly": 79,
+     "verified": false,
+     "note": "ThePricer (Sep 2026): one 2026 enrollment $79 regular / $69 promo plus $52.97 join fee; starts ~ $59 in some clubs; official site shows no prices"
+    }
+   ],
+   "default_plan": "standard",
+   "features": [
+    {
+     "id": "gym_access",
+     "name": "Gym access",
+     "plans": "all",
+     "overlap_tag": "gym"
+    },
+    {
+     "id": "pools_courts",
+     "name": "Pools, courts and classes at many clubs",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Kansas and Nebraska members wanting full-service clubs.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Official site offers a free 3-day pass; ask for the join fee in writing."
+   ],
+   "sources": [
+    {
+     "label": "Genesis locations",
+     "url": "https://www.genesishealthclubs.com/locations"
+    },
+    {
+     "label": "ThePricer Genesis cost guide",
+     "url": "https://www.thepricer.org/how-much-does-genesis-health-club-membership-cost/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#334155",
+   "mark": "GH"
+  },
+  {
+   "id": "centerpoint_hsp",
+   "name": "CenterPoint Energy Home Service Plus",
+   "category": "home",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MN"
+   ],
+   "service_area_note": "Repair plans for CenterPoint Energy's Minnesota service area",
+   "official_url": "https://www.centerpointenergy.com/en-us/home-service-plus/plans",
+   "plans": [
+    {
+     "id": "condo_2",
+     "name": "Two-appliance condo plan",
+     "price_monthly": 17.95,
+     "price_annual": null,
+     "effective_monthly": 17.95,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "essential_2",
+     "name": "Two-essential-equipment plan",
+     "price_monthly": 18.95,
+     "price_annual": null,
+     "effective_monthly": 18.95,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "major_4",
+     "name": "Four-major-appliance plan",
+     "price_monthly": 21.95,
+     "price_annual": null,
+     "effective_monthly": 21.95,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "major_4_heat",
+     "name": "Four-appliance plan (furnace/boiler, water heater, central AC, gas fireplace)",
+     "price_monthly": 25.95,
+     "price_annual": null,
+     "effective_monthly": 25.95,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "value_12",
+     "name": "12-appliance best-value plan",
+     "price_monthly": 56.95,
+     "price_annual": null,
+     "effective_monthly": 56.95,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "maintenance",
+     "name": "Maintenance Plan (twice-yearly service)",
+     "price_monthly": 30.95,
+     "price_annual": null,
+     "effective_monthly": 30.95,
+     "verified": true,
+     "note": "Add-on"
+    },
+    {
+     "id": "replacement",
+     "name": "Replacement Plan",
+     "price_monthly": 23.95,
+     "price_annual": null,
+     "effective_monthly": 23.95,
+     "verified": true,
+     "note": "Add-on; requires Basic or Total Repair Plan"
+    },
+    {
+     "id": "main_drain",
+     "name": "Main Drain Plan",
+     "price_monthly": 14.95,
+     "price_annual": null,
+     "effective_monthly": 14.95,
+     "verified": true,
+     "note": "Add-on"
+    },
+    {
+     "id": "gas_pipe",
+     "name": "Natural Gas Pipe Plan",
+     "price_monthly": 5.95,
+     "price_annual": null,
+     "effective_monthly": 5.95,
+     "verified": true,
+     "note": "Add-on"
+    }
+   ],
+   "default_plan": "major_4_heat",
+   "features": [
+    {
+     "id": "appliance_repair",
+     "name": "Appliance and HVAC repair coverage",
+     "plans": "all",
+     "overlap_tag": "home_warranty"
+    },
+    {
+     "id": "maintenance",
+     "name": "Seasonal HVAC tune-ups",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Minnesota homeowners wanting furnace and appliance repair coverage on their gas bill.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Compare with a home warranty; you can be billed on your CenterPoint gas bill."
+   ],
+   "sources": [
+    {
+     "label": "CenterPoint HSP plans (MN)",
+     "url": "https://www.centerpointenergy.com/en-us/home-service-plus/plans"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#4d7c0f",
+   "mark": "CE"
+  },
+  {
+   "id": "plunketts_home_guard",
+   "name": "Plunkett's Pest Control (Home Guard)",
+   "category": "lawn_pest",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IA",
+    "MN",
+    "NM",
+    "OH",
+    "WI"
+   ],
+   "service_area_note": "Minneapolis-based; serves MN, WI, IA, OH and NM per official site",
+   "official_url": "https://plunketts.net/residential-pest-control/home-guard",
+   "plans": [
+    {
+     "id": "home_guard",
+     "name": "Home Guard (1,200-1,700 sq ft)",
+     "price_monthly": 37,
+     "price_annual": null,
+     "effective_monthly": 37,
+     "verified": true,
+     "note": "Official range $37-$48/mo; larger homes $45-$84/mo; exact price after inspection; 3% off if prepaid annually; 1-year agreement"
+    }
+   ],
+   "default_plan": "home_guard",
+   "features": [
+    {
+     "id": "pest_control",
+     "name": "Year-round pest control",
+     "plans": "all",
+     "overlap_tag": "pest_control"
+    },
+    {
+     "id": "free_callbacks",
+     "name": "Free call-backs between visits",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Upper Midwest homeowners wanting year-round pest prevention.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Contract renews yearly; cancel without penalty only after year one."
+   ],
+   "sources": [
+    {
+     "label": "Plunkett's Home Guard",
+     "url": "https://plunketts.net/residential-pest-control/home-guard"
+    },
+    {
+     "label": "Plunkett's home page",
+     "url": "https://plunketts.net/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#334155",
+   "mark": "PP"
+  },
+  {
+   "id": "rottler_pest",
+   "name": "Rottler Pest Solutions (Signature Protection)",
+   "category": "lawn_pest",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IL",
+    "MO"
+   ],
+   "service_area_note": "St. Louis, Kansas City, Mid-Missouri and parts of Illinois",
+   "official_url": "https://rottler.com/residential-pest-control/pest-solutions",
+   "plans": [
+    {
+     "id": "signature",
+     "name": "Signature Protection",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "No price on official site; free quote required; termite add-on extra"
+    }
+   ],
+   "default_plan": "signature",
+   "features": [
+    {
+     "id": "pest_control",
+     "name": "Ongoing pest control",
+     "plans": "all",
+     "overlap_tag": "pest_control"
+    }
+   ],
+   "best_for": "Missouri homeowners wanting bi-monthly pest service.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Rottler pest solutions",
+     "url": "https://rottler.com/residential-pest-control/pest-solutions"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#c2410c",
+   "mark": "RP"
+  },
+  {
+   "id": "silverstar_car_wash",
+   "name": "Silverstar Car Wash Unlimited",
+   "category": "auto",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IA",
+    "IL",
+    "MN",
+    "ND",
+    "NE",
+    "SD"
+   ],
+   "service_area_note": "30+ washes in Sioux Falls, Fargo, Sioux City, Des Moines, Quad Cities and the Twin Cities",
+   "official_url": "https://www.silverstarcarwashes.com/services/unlimited-wash-pass/",
+   "plans": [
+    {
+     "id": "economy",
+     "name": "Economy",
+     "price_monthly": 19.99,
+     "price_annual": null,
+     "effective_monthly": 19.99,
+     "verified": true,
+     "note": "$10 off first month; full price after"
+    },
+    {
+     "id": "basic",
+     "name": "Basic",
+     "price_monthly": 27.99,
+     "price_annual": null,
+     "effective_monthly": 27.99,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "shine",
+     "name": "Shine",
+     "price_monthly": 33.99,
+     "price_annual": null,
+     "effective_monthly": 33.99,
+     "verified": true,
+     "note": ""
+    },
+    {
+     "id": "protect",
+     "name": "Protect",
+     "price_monthly": 39.99,
+     "price_annual": null,
+     "effective_monthly": 39.99,
+     "verified": true,
+     "note": ""
+    }
+   ],
+   "default_plan": "basic",
+   "features": [
+    {
+     "id": "unlimited_wash",
+     "name": "Unlimited car washes",
+     "plans": "all",
+     "overlap_tag": "car_wash"
+    },
+    {
+     "id": "free_vacuums",
+     "name": "Free vacuums",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Drivers near Sioux Falls, Fargo or Des Moines who wash often.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [
+    "Monthly, no long-term contract."
+   ],
+   "sources": [
+    {
+     "label": "Silverstar Unlimited Wash Pass",
+     "url": "https://www.silverstarcarwashes.com/services/unlimited-wash-pass/"
+    },
+    {
+     "label": "Silverstar locations",
+     "url": "https://www.silverstarcarwashes.com/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#4d7c0f",
+   "mark": "SC"
+  },
+  {
+   "id": "club_car_wash",
+   "name": "Club Car Wash Unlimited",
+   "category": "auto",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "AR",
+    "KS",
+    "MO",
+    "NE",
+    "TX",
+    "WI"
+   ],
+   "service_area_note": "160+ washes in ~10 Midwest/South states, headquartered in Columbia MO; state list may be incomplete",
+   "official_url": "https://clubcarwash.com/",
+   "plans": [
+    {
+     "id": "rookie",
+     "name": "Rookie",
+     "price_monthly": 22,
+     "price_annual": null,
+     "effective_monthly": 22,
+     "verified": false,
+     "note": "OmahaGuide (updated Aug 2025); official site shows no prices"
+    },
+    {
+     "id": "vip",
+     "name": "VIP",
+     "price_monthly": 30,
+     "price_annual": null,
+     "effective_monthly": 30,
+     "verified": false,
+     "note": "OmahaGuide (Aug 2025)"
+    },
+    {
+     "id": "elite",
+     "name": "Elite",
+     "price_monthly": 35,
+     "price_annual": null,
+     "effective_monthly": 35,
+     "verified": false,
+     "note": "OmahaGuide (Aug 2025)"
+    },
+    {
+     "id": "mvp",
+     "name": "MVP",
+     "price_monthly": 40,
+     "price_annual": null,
+     "effective_monthly": 40,
+     "verified": false,
+     "note": "OmahaGuide (Aug 2025)"
+    }
+   ],
+   "default_plan": "vip",
+   "features": [
+    {
+     "id": "unlimited_wash",
+     "name": "Unlimited car washes",
+     "plans": "all",
+     "overlap_tag": "car_wash"
+    }
+   ],
+   "best_for": "Missouri and Kansas drivers with a Club location on their commute.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Club Car Wash",
+     "url": "https://clubcarwash.com/"
+    },
+    {
+     "label": "OmahaGuide car wash memberships",
+     "url": "https://omahaguide.com/car-wash-memberships/"
+    },
+    {
+     "label": "Professional Carwashing: 14 new locations",
+     "url": "https://www.carwash.com/club-car-wash-14-new-locations/"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#7c3aed",
+   "mark": "CC"
+  },
+  {
+   "id": "per_mar_security",
+   "name": "Per Mar Security (Home Alarm Monitoring)",
+   "category": "home_security",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IA",
+    "IL",
+    "IN",
+    "MI",
+    "MN",
+    "MO",
+    "NE",
+    "OH",
+    "OK",
+    "TN",
+    "TX",
+    "WI"
+   ],
+   "service_area_note": "Iowa-based; offices across Iowa, Minnesota, Nebraska, Wisconsin, Illinois and St. Louis",
+   "official_url": "https://permarsecurity.com/residential/home-alarm-monitoring",
+   "plans": [
+    {
+     "id": "monitoring",
+     "name": "Home alarm monitoring",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "No price on official site; quote required"
+    }
+   ],
+   "default_plan": "monitoring",
+   "features": [
+    {
+     "id": "alarm_monitoring",
+     "name": "24/7 alarm monitoring",
+     "plans": "all",
+     "overlap_tag": "home_security"
+    }
+   ],
+   "best_for": "Iowa and Upper Midwest homeowners wanting a local monitored alarm.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US only",
+   "tips": [],
+   "sources": [
+    {
+     "label": "Per Mar home alarm monitoring",
+     "url": "https://permarsecurity.com/residential/home-alarm-monitoring"
+    },
+    {
+     "label": "Per Mar locations",
+     "url": "https://permarsecurity.com/locations"
+    }
+   ],
+   "checked_at": "2026-10-24",
+   "region_group": "plains",
+   "color": "#2563eb",
+   "mark": "PM"
   }
  ]
 }
