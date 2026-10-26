@@ -874,6 +874,9 @@ let state = null, view = "home", picked = null;
 
 function buildCatalog(d) {
   DATA = d; d.overlap_tags.forEach(t => TAGS[t.tag] = t);
+  // v213 (Cuong): Domain & Business Registration overlap tags, kept app-side like the services themselves.
+  [{ tag: "domain_registration", label: "Domain registrar", advice: "Keep your domains at one registrar so they renew together. Renewal prices differ a lot, and moving a domain is usually cheap." },
+   { tag: "registered_agent", label: "Registered agent", advice: "A business needs one registered agent per state. Paying two for the same state is a double charge." }].forEach(x => TAGS[x.tag] ||= x);
   d.services.forEach(s => { const [color, mark] = COLORS[s.id] || ["#6b7785", s.name.slice(0, 2)]; CATALOG[s.id] = { ...s, color, mark }; });
   // v115 (Cuong): Apple One was the only "Bundles" entry, so it sits under Music (its core) and keeps a note saying what it bundles.
   if (CATALOG.apple_one?.category === "bundle") CATALOG.apple_one = { ...CATALOG.apple_one, category: "music", bundleNote: "Bundle: Apple Music, Apple TV, Apple Arcade and iCloud+ for one price" };
@@ -1309,7 +1312,8 @@ const isPest = v => /pest|mosquito|termite|bug|exterminat|orkin|terminix|aptive/
 // is it doing its job, and is the price and service as good as a comparable option? What "doing its job" means, per category:
 const PROBLEM_TEXT = { privacy: "A virus, scam or data leak got through, or it slowed things down", home_security: "Missed motion alerts, or cameras glitched or went offline",
   internet: "Outages or slow speeds", mobile: "Dropped calls, slow data or poor coverage", tech_support: "A repair or claim didn't go well",
-  home: "A repair or claim didn't go well", pets: "A claim or delivery went wrong", beauty: "An order went wrong or arrived late" };
+  home: "A repair or claim didn't go well", pets: "A claim or delivery went wrong", beauty: "An order went wrong or arrived late",
+  domains: "A renewal lapsed, a legal notice was missed or a filing was late" };
 const RESULTS_CATS = new Set(["lawn_pest", ...Object.keys(PROBLEM_TEXT)]);
 const RESULTS = v => { const pest = isPest(v), lawn = v.category === "lawn_pest";
   return U("problems", "Anything go wrong this month?", "problem", "problems", "month", 3, { per1: "problem", results: true, pest, lawn, checks: [
@@ -1525,7 +1529,7 @@ function activeOverlaps() {
 // How hard it is to leave a service (Cuong, v71): years of notes, passwords or photos make a cheaper rival not worth the move.
 // Defaults by category; the user can change it per subscription (s.switch). Hard ones are never counted as easy savings.
 const SWITCH = { easy: "Easy", some: "Some work", hard: "Hard" };
-const SWITCH_BY_CAT = { passwords: "hard", storage: "hard", productivity: "hard", small_business: "hard", music: "some", ai: "some", finance: "some", gaming: "some", education: "some", privacy: "some", internet: "some", dating: "some" };
+const SWITCH_BY_CAT = { passwords: "hard", domains: "some", storage: "hard", productivity: "hard", small_business: "hard", music: "some", ai: "some", finance: "some", gaming: "some", education: "some", privacy: "some", internet: "some", dating: "some" };
 const SWITCH_BY_SVC = { cloaked: "hard" };  // masked emails and numbers are spread across your accounts
 const switchOf = s => s.switch || SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy";
 const isHard = s => switchOf(s) === "hard";
@@ -2964,7 +2968,7 @@ const CATEGORY_LABEL = { ai: "AI Assistants", video: "Video", music: "Music", ne
   privacy: "Privacy & Security", auto: "Auto & Roadside", travel: "Travel", shopping: "Shopping", bundle: "Bundles",
   education: "Education & Learning", mobile: "Mobile Plans", internet: "Home Internet", fitness: "Fitness & Gym", home_security: "Home Security", food: "Food Delivery & Meal Kits",
   gaming: "Gaming", home: "Home Maintenance", beauty: "Beauty & Personal Care", pets: "Pet Care", dating: "Dating", finance: "Financial Tools",
-  elder_care: "Elderly Care", lawn_pest: "Lawn & Pest Control", tech_support: "Tech Repair & Support", small_business: "Small Business", child_care: "Child Care & Tutoring", passwords: "Password Managers",
+  elder_care: "Elderly Care", lawn_pest: "Lawn & Pest Control", tech_support: "Tech Repair & Support", small_business: "Small Business", domains: "Domain & Business Registration", child_care: "Child Care & Tutoring", passwords: "Password Managers",
   books: "Digital Books", car_insurance: "Car Insurance", home_insurance: "Home & Renters Insurance",
   live_tv: "Live TV & Cable", energy: "Electricity & Gas" };
 const catLabel = c => CATEGORY_LABEL[c] || c.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join(" ");
@@ -4112,7 +4116,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 212 · Oct 26", VERSION_NUM = 212;
+const APP_VERSION = "Prototype · Version 213 · Oct 26", VERSION_NUM = 213;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.

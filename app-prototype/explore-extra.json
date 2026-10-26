@@ -1,6 +1,6 @@
 {
  "generated_at": "2026-10-19",
- "note": "New Explore categories researched 2026-10-19. verified=false means the price came from a news or review site. Added 2026-10-23: books (Digital Books) and car_insurance / home_insurance (no list prices). Added 2026-10-23: Adobe Creative Cloud (productivity), prices from Adobe's US plans page. Added 2026-10-25: Erie Insurance car and home (regional, service_states).",
+ "note": "New Explore categories researched 2026-10-19. verified=false means the price came from a news or review site. Added 2026-10-23: books (Digital Books) and car_insurance / home_insurance (no list prices). Added 2026-10-23: Adobe Creative Cloud (productivity), prices from Adobe's US plans page. Added 2026-10-25: Erie Insurance car and home (regional, service_states). Added 2026-10-26: domains (Domain & Business Registration): 6 domain registrars (.com yearly price) and 4 registered agents; prices from comparison sites except ZenBusiness (official page).",
  "services": [
   {
    "id": "duolingo",
@@ -14814,6 +14814,580 @@
    "sources": [],
    "mark": "Gas",
    "color": "#2563eb"
+  },
+  {
+   "id": "cloudflare_registrar",
+   "name": "Cloudflare Registrar",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.cloudflare.com/products/registrar/",
+   "plans": [
+    {
+     "id": "com",
+     "name": "One .com domain",
+     "price_monthly": null,
+     "price_annual": 10.46,
+     "effective_monthly": 0.87,
+     "verified": false,
+     "note": "$10.46/yr, same price at renewal (at cost); per etemora.com, Oct 2026"
+    }
+   ],
+   "default_plan": "com",
+   "features": [
+    {
+     "id": "domain",
+     "name": ".com domain registration and yearly renewal",
+     "plans": "all",
+     "overlap_tag": "domain_registration"
+    },
+    {
+     "id": "privacy",
+     "name": "Free WHOIS privacy (hides your name and address)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dns",
+     "name": "DNS and domain forwarding",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "People comfortable with a technical dashboard who want the lowest renewal price.",
+   "free_trial_days": 0,
+   "varies_by_region": false,
+   "regions": "Global",
+   "tips": [
+    "Sells domains at cost with no markup.",
+    "Your domain must use Cloudflare's name servers.",
+    "Registry prices for .com go up around Nov 1, 2026, so renewals may rise a few cents."
+   ],
+   "sources": [
+    {
+     "label": "etemora .com renewal report (Oct 2026)",
+     "url": "https://etemora.com/com-renewal-price-report/"
+    },
+    {
+     "label": "DEV Community renewal ranking (Oct 2026)",
+     "url": "https://dev.to/paullovelace/4-domain-registrars-ranked-by-renewal-price-october-2026-4eo0"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#f38020",
+   "mark": "Cf"
+  },
+  {
+   "id": "porkbun",
+   "name": "Porkbun",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://porkbun.com",
+   "plans": [
+    {
+     "id": "com",
+     "name": "One .com domain",
+     "price_monthly": null,
+     "price_annual": 11.08,
+     "effective_monthly": 0.92,
+     "verified": false,
+     "note": "$11.08/yr, same price at renewal; per etemora.com, Oct 2026"
+    }
+   ],
+   "default_plan": "com",
+   "features": [
+    {
+     "id": "domain",
+     "name": ".com domain registration and yearly renewal",
+     "plans": "all",
+     "overlap_tag": "domain_registration"
+    },
+    {
+     "id": "privacy",
+     "name": "Free WHOIS privacy (hides your name and address)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dns",
+     "name": "DNS and domain forwarding",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Low, steady prices with free privacy and an easy dashboard.",
+   "free_trial_days": 0,
+   "varies_by_region": false,
+   "regions": "Global",
+   "tips": [
+    "Renewal is the same as the first year.",
+    "Registry prices for .com go up around Nov 1, 2026, so renewals may rise a few cents."
+   ],
+   "sources": [
+    {
+     "label": "etemora .com renewal report (Oct 2026)",
+     "url": "https://etemora.com/com-renewal-price-report/"
+    },
+    {
+     "label": "DEV Community renewal ranking (Oct 2026)",
+     "url": "https://dev.to/paullovelace/4-domain-registrars-ranked-by-renewal-price-october-2026-4eo0"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#ef7878",
+   "mark": "Pb"
+  },
+  {
+   "id": "namecheap",
+   "name": "Namecheap",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.namecheap.com",
+   "plans": [
+    {
+     "id": "com",
+     "name": "One .com domain",
+     "price_monthly": null,
+     "price_annual": 18.48,
+     "effective_monthly": 1.54,
+     "verified": false,
+     "note": "Renews at $18.48/yr; first year $11.28 ($6.79 for new customers); a $0.20 ICANN fee may be added; per etemora.com, Oct 2026",
+     "intro_offer": "First year $11.28, or $6.79 for new customers"
+    }
+   ],
+   "default_plan": "com",
+   "features": [
+    {
+     "id": "domain",
+     "name": ".com domain registration and yearly renewal",
+     "plans": "all",
+     "overlap_tag": "domain_registration"
+    },
+    {
+     "id": "privacy",
+     "name": "Free WHOIS privacy (hides your name and address)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dns",
+     "name": "DNS and domain forwarding",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Beginners who want a cheap first year and simple tools.",
+   "free_trial_days": 0,
+   "varies_by_region": false,
+   "regions": "Global",
+   "tips": [
+    "The first-year price is a promo; renewal is higher.",
+    "Moving the domain to a cheaper registrar at renewal can save about $7 a year."
+   ],
+   "sources": [
+    {
+     "label": "etemora .com renewal report (Oct 2026)",
+     "url": "https://etemora.com/com-renewal-price-report/"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#de3723",
+   "mark": "Nc"
+  },
+  {
+   "id": "godaddy",
+   "name": "GoDaddy",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.godaddy.com",
+   "plans": [
+    {
+     "id": "com",
+     "name": "One .com domain",
+     "price_monthly": null,
+     "price_annual": 22.99,
+     "effective_monthly": 1.92,
+     "verified": false,
+     "note": "Renews at $22.99/yr; $0.01 first year with a 3-year purchase; a $0.20 ICANN fee may be added; per etemora.com, Oct 2026",
+     "intro_offer": "$0.01 first year with a 3-year purchase"
+    }
+   ],
+   "default_plan": "com",
+   "features": [
+    {
+     "id": "domain",
+     "name": ".com domain registration and yearly renewal",
+     "plans": "all",
+     "overlap_tag": "domain_registration"
+    },
+    {
+     "id": "privacy",
+     "name": "Free WHOIS privacy (hides your name and address)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dns",
+     "name": "DNS and domain forwarding",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "People who want phone support and website tools in one place.",
+   "free_trial_days": 0,
+   "varies_by_region": false,
+   "regions": "Global",
+   "tips": [
+    "The $0.01 first year needs a 3-year purchase.",
+    "Watch for add-ons at checkout.",
+    "Moving the domain to a cheaper registrar can save about $12 a year."
+   ],
+   "sources": [
+    {
+     "label": "etemora .com renewal report (Oct 2026)",
+     "url": "https://etemora.com/com-renewal-price-report/"
+    },
+    {
+     "label": "DEV Community renewal ranking (Oct 2026)",
+     "url": "https://dev.to/paullovelace/4-domain-registrars-ranked-by-renewal-price-october-2026-4eo0"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#1bdbdb",
+   "mark": "GD"
+  },
+  {
+   "id": "squarespace_domains",
+   "name": "Squarespace Domains",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://domains.squarespace.com",
+   "plans": [
+    {
+     "id": "com",
+     "name": "One .com domain",
+     "price_monthly": null,
+     "price_annual": 20.0,
+     "effective_monthly": 1.67,
+     "verified": false,
+     "note": "$20/yr with privacy and fees included; per etemora.com, Oct 2026"
+    }
+   ],
+   "default_plan": "com",
+   "features": [
+    {
+     "id": "domain",
+     "name": ".com domain registration and yearly renewal",
+     "plans": "all",
+     "overlap_tag": "domain_registration"
+    },
+    {
+     "id": "privacy",
+     "name": "Free WHOIS privacy (hides your name and address)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dns",
+     "name": "DNS and domain forwarding",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Squarespace website owners, and former Google Domains customers.",
+   "free_trial_days": 0,
+   "varies_by_region": false,
+   "regions": "Global",
+   "tips": [
+    "Took over Google Domains customers in 2023."
+   ],
+   "sources": [
+    {
+     "label": "etemora .com renewal report (Oct 2026)",
+     "url": "https://etemora.com/com-renewal-price-report/"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#111111",
+   "mark": "Sq"
+  },
+  {
+   "id": "hover",
+   "name": "Hover",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.hover.com",
+   "plans": [
+    {
+     "id": "com",
+     "name": "One .com domain",
+     "price_monthly": null,
+     "price_annual": 18.99,
+     "effective_monthly": 1.58,
+     "verified": false,
+     "note": "$18.99/yr with privacy included and no checkout upsells; per etemora.com, Oct 2026"
+    }
+   ],
+   "default_plan": "com",
+   "features": [
+    {
+     "id": "domain",
+     "name": ".com domain registration and yearly renewal",
+     "plans": "all",
+     "overlap_tag": "domain_registration"
+    },
+    {
+     "id": "privacy",
+     "name": "Free WHOIS privacy (hides your name and address)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dns",
+     "name": "DNS and domain forwarding",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "People who want a simple, no-upsell registrar.",
+   "free_trial_days": 0,
+   "varies_by_region": false,
+   "regions": "Global",
+   "tips": [],
+   "sources": [
+    {
+     "label": "etemora .com renewal report (Oct 2026)",
+     "url": "https://etemora.com/com-renewal-price-report/"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#2f6f9f",
+   "mark": "Hv"
+  },
+  {
+   "id": "northwest_registered_agent",
+   "name": "Northwest Registered Agent",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.northwestregisteredagent.com",
+   "plans": [
+    {
+     "id": "agent",
+     "name": "Registered agent, one state",
+     "price_monthly": null,
+     "price_annual": 125,
+     "effective_monthly": 10.42,
+     "verified": false,
+     "note": "$125/yr per state, same at renewal; per Rho and Real Cost Report, 2026"
+    }
+   ],
+   "default_plan": "agent",
+   "features": [
+    {
+     "id": "agent",
+     "name": "Registered agent: receives legal and state mail for your business",
+     "plans": "all",
+     "overlap_tag": "registered_agent"
+    },
+    {
+     "id": "reminders",
+     "name": "Annual report and compliance reminders",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Small businesses that want a flat price that doesn't go up.",
+   "free_trial_days": 0,
+   "varies_by_region": true,
+   "regions": "United States (one state per plan)",
+   "tips": [
+    "$100 a year per state at 5 or more states."
+   ],
+   "sources": [
+    {
+     "label": "Rho registered agent comparison (Oct 2026)",
+     "url": "https://www.rho.co/blog/best-registered-agent-services"
+    },
+    {
+     "label": "Real Cost Report (Jul 2026)",
+     "url": "https://www.realcostreport.com/business/llc-legal-structure/registered-agent-cost/"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#1f4e79",
+   "mark": "NW"
+  },
+  {
+   "id": "zenbusiness",
+   "name": "ZenBusiness",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.zenbusiness.com/registered-agent/",
+   "plans": [
+    {
+     "id": "agent",
+     "name": "Registered agent, one state",
+     "price_monthly": null,
+     "price_annual": 199,
+     "effective_monthly": 16.58,
+     "verified": true,
+     "note": "$99 + state fees the first year, renews at $199/yr; from ZenBusiness's registered agent page, Oct 2026",
+     "intro_offer": "$99 the first year"
+    }
+   ],
+   "default_plan": "agent",
+   "features": [
+    {
+     "id": "agent",
+     "name": "Registered agent: receives legal and state mail for your business",
+     "plans": "all",
+     "overlap_tag": "registered_agent"
+    },
+    {
+     "id": "reminders",
+     "name": "Annual report and compliance reminders",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "People who formed their LLC with ZenBusiness.",
+   "free_trial_days": 0,
+   "varies_by_region": true,
+   "regions": "United States (one state per plan)",
+   "tips": [
+    "The first year is $99; the price goes up to $199 at renewal.",
+    "Compare with a flat-price agent before it renews."
+   ],
+   "sources": [
+    {
+     "label": "ZenBusiness registered agent page",
+     "url": "https://www.zenbusiness.com/registered-agent/"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#3a1f7a",
+   "mark": "ZB"
+  },
+  {
+   "id": "legalzoom",
+   "name": "LegalZoom",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.legalzoom.com",
+   "plans": [
+    {
+     "id": "agent",
+     "name": "Registered agent, one state",
+     "price_monthly": null,
+     "price_annual": 249,
+     "effective_monthly": 20.75,
+     "verified": false,
+     "note": "$249/yr, auto-renews; per Rho and Real Cost Report, 2026"
+    }
+   ],
+   "default_plan": "agent",
+   "features": [
+    {
+     "id": "agent",
+     "name": "Registered agent: receives legal and state mail for your business",
+     "plans": "all",
+     "overlap_tag": "registered_agent"
+    },
+    {
+     "id": "reminders",
+     "name": "Annual report and compliance reminders",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "People who also want LegalZoom's legal documents and attorney plans.",
+   "free_trial_days": 0,
+   "varies_by_region": true,
+   "regions": "United States (one state per plan)",
+   "tips": [
+    "One of the priciest registered agents; flat-price options cost about half."
+   ],
+   "sources": [
+    {
+     "label": "Rho registered agent comparison (Oct 2026)",
+     "url": "https://www.rho.co/blog/best-registered-agent-services"
+    },
+    {
+     "label": "Real Cost Report (Jul 2026)",
+     "url": "https://www.realcostreport.com/business/llc-legal-structure/registered-agent-cost/"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#f05a28",
+   "mark": "LZ"
+  },
+  {
+   "id": "bizee",
+   "name": "Bizee (formerly Incfile)",
+   "category": "domains",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://bizee.com",
+   "plans": [
+    {
+     "id": "agent",
+     "name": "Registered agent, one state",
+     "price_monthly": null,
+     "price_annual": 149,
+     "effective_monthly": 12.42,
+     "verified": false,
+     "note": "$149/yr standalone; free the first year with a formation package; per Bizee's own article, Rho and Real Cost Report (NerdWallet says $119)",
+     "intro_offer": "Free the first year with a formation package"
+    }
+   ],
+   "default_plan": "agent",
+   "features": [
+    {
+     "id": "agent",
+     "name": "Registered agent: receives legal and state mail for your business",
+     "plans": "all",
+     "overlap_tag": "registered_agent"
+    },
+    {
+     "id": "reminders",
+     "name": "Annual report and compliance reminders",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "People who formed their LLC with Bizee and got the free first year.",
+   "free_trial_days": 0,
+   "varies_by_region": true,
+   "regions": "United States (one state per plan)",
+   "tips": [
+    "The first year is free with a Bizee formation package.",
+    "Sources differ on the renewal price ($119 or $149), so check your invoice."
+   ],
+   "sources": [
+    {
+     "label": "Rho registered agent comparison (Oct 2026)",
+     "url": "https://www.rho.co/blog/best-registered-agent-services"
+    },
+    {
+     "label": "Bizee article",
+     "url": "https://bizee.com/articles/strategies/cheapest-registered-agent-service"
+    },
+    {
+     "label": "NerdWallet Bizee review (Mar 2026)",
+     "url": "https://www.nerdwallet.com/reviews/small-business/bizee"
+    }
+   ],
+   "checked_at": "2026-10-26",
+   "color": "#00a6a6",
+   "mark": "Bz"
   }
  ]
 }
