@@ -2181,6 +2181,7 @@ function mixHtml(home) {
 function shelfView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const f = el(`<div class="section-head"><h2>Shelf</h2><span class="small muted">Widgets taken off Overview and the intro page. They still work here, and any of them can go back.</span></div>
+    <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">Household Services checkup was on Overview until Oct 26, 2026 (v189).</p>${hhHtml() || `<p class="small muted" style="margin:0">Shows here once your list has a household service, like a phone plan, internet or insurance.</p>`}</section>
     <section class="shelf-item" style="max-width:none"><h3 style="margin:0">How we help</h3><p class="note" style="margin:2px 0 8px">Was on the intro page until Oct 25, 2026.</p>
       <div class="intro-pillars">${INTRO_PILLARS.map(([t, d, svg]) => `<div class="intro-pill"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><b>${t}</b><span class="small muted">${d}</span></div>`).join("")}</div></section>
     <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">What's trending was on Overview until Oct 24, 2026. What you use most and least took its place.</p>${trendHtml()}</section>
@@ -2189,6 +2190,7 @@ function shelfView() {
   f.getElementById("bench-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   f.getElementById("trend-all")?.addEventListener("click", e => { const c = e.target.closest(".trend-card"), on = c.classList.toggle("all"); e.target.textContent = on ? "Show less" : `Show ${c.querySelectorAll(".trend.more").length} more`; });
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
+  f.querySelectorAll(".hh-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   return f;
 }
 // Usage page (Cuong, v67): last month's value in three donuts (Great, Fair, Costly), then a slider per subscription for this month.
@@ -2462,7 +2464,6 @@ function homeView() {
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
-    ${hhHtml()}
     ${useRanked().length ? useMostHtml() : ""}
     ${saveAmt > 0 ? saveHtml(saveAmt) : ""}
     ${PHASE1 ? "" : upcomingHtml()}
@@ -3854,7 +3855,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 188 · Standalone copy · Oct 26", VERSION_NUM = 188;
+const APP_VERSION = "Prototype · Version 189 · Standalone copy · Oct 26", VERSION_NUM = 189;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
