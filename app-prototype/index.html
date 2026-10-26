@@ -305,14 +305,16 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 #ways { scroll-margin-top: 16px; }
 .summary.n2 { grid-template-columns: 1.4fr 1fr; } .summary.n1 { grid-template-columns: 1fr; }
 @media (max-width: 620px) { .summary.n2 { grid-template-columns: 1fr; } }
-.setup { display: grid; gap: 10px; margin-bottom: 14px; border: 2px solid var(--accent); background: color-mix(in srgb, var(--accent) 13%, var(--surface)); }  /* v180: tinted so it stands out */
-.card.setup { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
-.setup input { background: var(--surface); }
+/* v210 (Cuong): same look as the welcome screens (page background, white question cards, larger type). Was tinted (v180). */
+.setup { display: grid; gap: 12px; margin-bottom: 14px; background: var(--bg); }
+.card.setup { border: 1px solid var(--line); }
+.setup > .su-top h3 { font-size: 21px; } body:not(.short-band) #view .setup .ws-card > h3:first-child { padding-bottom: 0; border-bottom: 0; } .su-price input { width: 104px; } .su-price .freq { flex: 0 1 auto; min-width: 0; max-width: 170px; } .setup .ws-card { background: var(--surface); } .setup .ws-q { font-size: 18px; } .setup p.small { font-size: 14px; }
+.freq { width: auto; padding: 8px 10px; } .use-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; } .use-head .su-l { font-size: 16px; }
 .su-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .su-bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; } .su-bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
 .su-sub { display: flex; align-items: center; gap: 10px; margin-top: 4px; } .su-sub b { font-size: 17px; }
 .su-l { font-weight: 600; font-size: 14px; display: block; } .su-l .small { display: block; margin-top: 2px; }
-.su-price { display: flex; align-items: center; gap: 8px; } .su-price input { width: 120px; }
+.su-price { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; } .su-price input { width: 120px; }
 .su-btns { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
 .pop[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 .pop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 6px; }
@@ -1769,6 +1771,36 @@ const WELCOME_SKIP = new Set(["energy"]);
 // v204 (Cuong): 1Password and other "doing its job" services were told they'd tick off what they *used*; they tick off what went wrong.
 const checksText = m => m.results ? `We rate this one on whether it does its job, plus price and service, not on how much you use it. Each month on the Usage tab you can tick anything that went wrong (${m.checks[0].name.charAt(0).toLowerCase() + m.checks[0].name.slice(1)}). Or tick "Everything's going great!" Nothing ticked also means it's working.`
   : "You'll tick off what you used each month on the Usage tab.";
+// v210 (Cuong): Finish setting up asks how often you pay (month, 3 months, 6 months, year) and lets usage be given per day,
+// week, month or year, whichever fit the measure. Prices are stored per month (or per year when paid yearly); usage goes through setUse.
+const PAY_EVERY = { month: ["a month", 1], quarter: ["every 3 months", 3], half: ["every 6 months", 6], year: ["a year", 12] };
+const payEveryOf = s => s.payEvery || (s.cycle === "year" ? "year" : "month");
+const paidAmount = (s, t) => t == null ? "" : (s.cycle === "year" ? t / 12 * PAY_EVERY[payEveryOf(s)][1] : t * PAY_EVERY[payEveryOf(s)][1]).toFixed(2);
+const priceRowHtml = (id, s, t) => `<div class="su-price"><span>$</span><input id="${id}" type="number" inputmode="decimal" min="0" step="0.01" value="${paidAmount(s, t)}" placeholder="0.00"><select id="${id}-every" class="freq" aria-label="How often you pay">${Object.entries(PAY_EVERY).map(([k, [l]]) => `<option value="${k}" ${k === payEveryOf(s) ? "selected" : ""}>${l}</option>`).join("")}</select></div>`;
+function wirePrice(f, id) { const sel = f.getElementById(id + "-every"), inp = f.getElementById(id); if (!sel) return; let prev = sel.value;
+  sel.addEventListener("change", () => { const v = parseFloat(inp.value); if (!isNaN(v)) inp.value = (v / PAY_EVERY[prev][1] * PAY_EVERY[sel.value][1]).toFixed(2); prev = sel.value; }); }
+// Saves the price row as the user's own price, unless it's the list price left as it was.
+function readPrice(id, s) { const inp = document.getElementById(id), every = document.getElementById(id + "-every")?.value || "month";
+  if (!inp || inp.value === "") return; const val = parseFloat(inp.value); if (isNaN(val)) return;
+  if (every === payEveryOf(s) && total(s) != null && Math.abs(val - +paidAmount(s, total(s))) < 0.005) return;
+  if (every === "year") { s.cycle = "year"; s.myTotal = Math.max(0, val); } else { s.cycle = "month"; s.myTotal = Math.round(Math.max(0, val) / PAY_EVERY[every][1] * 100) / 100; }
+  s.payEvery = every; s.priceMine = true; }
+const USE_PERS = { day: ["day", "week", "month"], week: ["day", "week", "month"], month: ["week", "month", "year"], year: ["month", "year"] };
+const PER_RX = /\s+(a|per|this)\s+(day|week|month|year)$/i;
+const usePersFor = m => PER_RX.test(m.label) && !m.amount ? USE_PERS[m.per] || [] : [];
+const measureAt = (m, p) => { if (p === m.per) return m; const x = m.max * PER[m.per].f / PER[p].f, max = x <= 10 ? Math.ceil(x * 2) / 2 : x > 400 ? Math.ceil(x / 10) * 10 : Math.ceil(x);
+  return { ...m, per: p, max, step: max <= 10 ? 0.5 : max > 400 ? 10 : 1 }; };
+function useBlockHtml(id, s, m) { const pers = usePersFor(m), p = !s.needsUse && pers.includes(s.per) ? s.per : m.per;
+  return `<div class="use-head"><span class="su-l">${esc(pers.length ? m.label.replace(PER_RX, "") : m.label)}</span>${pers.length ? `<select id="${id}-per" class="freq" aria-label="How often">${pers.map(k => `<option value="${k}" ${k === p ? "selected" : ""}>${PER[k].label}</option>`).join("")}</select>` : ""}</div>
+    <div id="${id}-wrap">${slider(measureAt(m, p), s.needsUse ? 0 : s.rate || 0, `id="${id}" aria-label="${esc(m.label)}"`)}</div>`; }
+function wireUse(f, id, s, m) { const sel = f.getElementById(id + "-per"), st = { moved: false, per: sel ? sel.value : m.per };
+  const hook = inp => { inp.oninput = () => { st.moved = true; inp.nextElementSibling.textContent = slideText(measureAt(m, st.per), +inp.value); }; };
+  const inp0 = f.getElementById(id); if (!inp0) return st; hook(inp0);
+  sel?.addEventListener("change", () => { const inp = document.getElementById(id), v = +inp.value * PER[st.per].f / PER[sel.value].f; st.per = sel.value; const mm = measureAt(m, st.per);
+    document.getElementById(id + "-wrap").innerHTML = slider(mm, Math.round(v / mm.step) * mm.step, `id="${id}" aria-label="${esc(m.label)}"`); hook(document.getElementById(id)); });
+  st.save = () => { const inp = document.getElementById(id); if (!inp || !(st.moved || +inp.value > 0)) return; const n = +inp.value, { cur } = periodKeys(s); setUse(s, n, st.per);
+    ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(n * PER[st.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you"; };
+  return st; }
 function setupStepView() {
   const inBatch = x => !wsBatch || wsBatch.has(x.id), todo = setupTodo().filter(inBatch), all = state.subs.filter(x => x.setup && inBatch(x)).length, done = all - todo.length;
   const toHome = () => { view = "home"; welcomeStep = 1; addMode = false; wsBatch = null; save(); render(); window.scrollTo(0, 0); };
@@ -1776,31 +1808,27 @@ function setupStepView() {
   const s = todo[0], v = svcOf(s), m = measureOf(s), plans = v.plans || [], showPrice = profile().country === catalogCountry();
   const planLine = p => { const mo = p.price_monthly, yr = p.price_annual;
     return !showPrice ? "" : mo != null ? `${money(mo)} a month` : yr != null ? `${money(yr)} a year` : p.effective_monthly != null ? `about ${money(p.effective_monthly)} a month` : ""; };
-  const priceQ = `<div class="su-price"><span>$</span><input id="ws-price" type="number" inputmode="decimal" min="0" step="0.01" value="${s.myTotal != null ? s.myTotal : ""}" placeholder="0.00"><span class="small muted">a month, with tax</span></div>`;
+  const priceQ = priceRowHtml("ws-price", s, total(s));
   // v207 (Cuong): plans with no published price (Progressive and other insurers) ask what you pay instead of showing $0.
-  const q1 = plans.length && plans.every(unpricedPlan) ? `<h3 class="ws-q">1. What do you pay?</h3><p class="small muted" style="margin:0 0 6px">${esc(v.name)} doesn't publish a price, so enter yours.</p>${priceQ}`
+  const q1 = plans.length && plans.every(unpricedPlan) ? `<h3 class="ws-q">1. What do you pay?</h3><p class="small muted" style="margin:0 0 6px">${esc(v.name)} doesn't publish a price, so enter yours, with tax.</p>${priceQ}`
     : plans.length
     ? `<h3 class="ws-q">1. Which plan do you have?</h3><div class="ws-plans" role="radiogroup" aria-label="Plan">${plans.map(p => `<label class="ws-plan"><input type="radio" name="ws-plan" value="${p.id}" ${p.id === s.plan ? "checked" : ""}><span><b>${esc(p.name)}</b><span class="small muted">${planLine(p)}</span></span></label>`).join("")}</div>`
-    : `<h3 class="ws-q">1. What do you pay?</h3><div class="su-price"><span>$</span><input id="ws-price" type="number" inputmode="decimal" min="0" step="0.01" value="${s.myTotal != null ? s.myTotal : ""}" placeholder="0.00"><span class="small muted">a month, with tax</span></div>`;
+    : `<h3 class="ws-q">1. What do you pay?</h3>${priceQ}`;
   const q2 = m.costOnly || m.checks || !m.max
     ? `<h3 class="ws-q">2. ${m.checks && !m.results ? "How much you use it" : "How we rate it"}</h3><p class="small muted" style="margin:0">${m.checks ? checksText(m) : "We rate this one on price and service, not on how much you use it, so there's nothing to add."}</p>`
-    : `<h3 class="ws-q">2. ${esc(m.label)}</h3><p class="small muted" style="margin:0 0 6px">A rough guess is fine. This builds your value chart, and you can change it any time on the Usage tab.</p>${slider(m, s.needsUse ? 0 : s.rate || 0, `id="ws-use" aria-label="${esc(m.label)}"`)}`;
+    : `<h3 class="ws-q">2. How much do you use it?</h3><p class="small muted" style="margin:0 0 6px">A rough guess is fine. This builds your value chart, and you can change it any time on the Usage tab.</p>${useBlockHtml("ws-use", s, m)}`;
   const f = el(`<div class="ws"><div class="su-top"><h2 style="margin:0">Finish setting up</h2><span class="small muted">${done + 1} of ${all}</span></div>
     <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${all}" aria-valuenow="${done}"><i style="width:${(done / all * 100).toFixed(1)}%"></i></div>
     <div class="su-sub ws-sub">${logoHtml(v)}<b>${esc(s.name)}</b></div>
     <section class="card ws-card">${q1}</section>
     <section class="card ws-card">${q2}</section>
     <div class="w-basket"><div class="w-bk-btns"><button type="button" class="btn w-big" id="ws-later">Finish later</button><button type="button" class="btn primary w-big" id="ws-next">${todo.length > 1 ? "Next" : "Done"}</button></div></div></div>`);
-  let moved = false;
-  const inp = f.getElementById("ws-use");
-  if (inp) inp.oninput = () => { moved = true; inp.nextElementSibling.textContent = slideText(m, +inp.value); };
+  const u = wireUse(f, "ws-use", s, m); wirePrice(f, "ws-price");
   // Changing the plan can change the price and, for a few services, the usage question, so redraw with it.
   f.querySelectorAll('input[name="ws-plan"]').forEach(r => r.addEventListener("change", () => { const p = planOf(v, r.value);
     s.plan = p.id; s.cycle = defaultCycle(p); s.price = priceFor(p, s.cycle); save(); const y = scrollY; render(); window.scrollTo(0, y); }));
   f.getElementById("ws-next").addEventListener("click", () => {
-    const pr = document.getElementById("ws-price"); if (pr && pr.value !== "") { const val = parseFloat(pr.value); if (!isNaN(val)) { s.myTotal = Math.max(0, val); s.priceMine = true; s.cycle = "month"; } }
-    if (inp && (moved || +inp.value > 0)) { const n = +inp.value, { cur } = periodKeys(s); setUse(s, n, m.per);
-      ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(n * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you"; }
+    readPrice("ws-price", s); u.save?.();
     s.setup = "done"; save();
     if (todo.length > 1) { render(); window.scrollTo(0, 0); } else toHome(); });
   f.getElementById("ws-later").addEventListener("click", toHome);
@@ -2843,26 +2871,21 @@ const setupTodo = () => state.subs.filter(s => s.setup === "todo");
 function setupHtml() {
   const todo = setupTodo(); if (!todo.length) return "";
   const all = state.subs.filter(s => s.setup).length, done = all - todo.length, s = todo[0], m = measureOf(s), v = svcOf(s), t0 = total(s);
-  const use = m.costOnly || m.checks || !m.max ? `<p class="small muted" style="margin:0">${m.checks ? checksText(m) : "We don't rate this one on use, so the price is all we need."}</p>`
-    : `<label class="su-l" for="su-use">${esc(m.label)}</label>${slider(m, s.needsUse ? 0 : s.rate || 0, `id="su-use" aria-label="${esc(m.label)}"`)}`;
+  const use = m.costOnly || m.checks || !m.max ? `<h3 class="ws-q">2. ${m.checks && !m.results ? "How much you use it" : "How we rate it"}</h3><p class="small muted" style="margin:0">${m.checks ? checksText(m) : "We don't rate this one on use, so the price is all we need."}</p>`
+    : `<h3 class="ws-q">2. How much do you use it?</h3><p class="small muted" style="margin:0">A rough guess is fine.</p>${useBlockHtml("su-use", s, m)}`;
   return `<section class="card setup"><div class="su-top"><h3 style="margin:0">Finish setting up</h3><span class="small muted">${done} of ${all} done</span></div>
     <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${all}" aria-valuenow="${done}"><i style="width:${(done / all * 100).toFixed(1)}%"></i></div>
     <p class="small muted" style="margin:0">Two quick questions each, so we can show what you spend and what's worth it.</p>
-    <div class="su-sub">${logoHtml(v)}<b>${esc(s.name)}</b></div>
-    <label class="su-l" for="su-price">What do you pay? <span class="small muted" style="font-weight:400">${t0 != null && !s.priceMine ? "List price filled in; change it if yours is different." : t0 == null ? "We don't have a list price for this one." : ""}</span></label>
-    <div class="su-price"><span>$</span><input id="su-price" type="number" inputmode="decimal" min="0" step="0.01" value="${t0 != null ? t0.toFixed(2) : ""}" placeholder="0.00"><span class="small muted">${s.cycle === "year" ? "a year" : "a month"}, with tax</span></div>
-    ${use}
-    <div class="su-btns"><button class="btn primary" id="su-save">${todo.length > 1 ? "Save and next" : "Save"}</button><button class="btn ghost small" id="su-skip">Skip for now</button></div></section>`;
+    <div class="su-sub ws-sub">${logoHtml(v)}<b>${esc(s.name)}</b></div>
+    <section class="card ws-card"><h3 class="ws-q">1. What do you pay?</h3><p class="small muted" style="margin:0">${t0 != null && !s.priceMine ? "List price filled in. Change it if yours is different (with tax), and pick how often you pay." : t0 == null ? "We don't have a list price for this one. Enter what you pay, with tax." : "Pick how often you pay."}</p>${priceRowHtml("su-price", s, t0)}</section>
+    <section class="card ws-card">${use}</section>
+    <div class="su-btns"><button class="btn primary w-big" id="su-save">${todo.length > 1 ? "Save and next" : "Save"}</button><button class="btn w-big" id="su-skip">Skip for now</button></div></section>`;
 }
 function wireSetup(f) {
   const s = setupTodo()[0], go = f.getElementById("su-save"); if (!s || !go) return;
-  const m = measureOf(s), inp = f.getElementById("su-use"); let moved = false;
-  if (inp) inp.oninput = () => { moved = true; inp.nextElementSibling.textContent = slideText(m, +inp.value); };
+  const m = measureOf(s), u = wireUse(f, "su-use", s, m); wirePrice(f, "su-price");
   const next = () => { save(); const y = scrollY; render(); window.scrollTo(0, y); };
-  go.onclick = () => { const val = parseFloat(document.getElementById("su-price").value), t0 = total(s);
-    if (!isNaN(val) && (t0 == null || Math.abs(val - t0) > 0.005)) { s.myTotal = Math.max(0, val); s.priceMine = true; }
-    if (inp && (moved || +inp.value > 0)) { const n = +inp.value, { cur } = periodKeys(s); setUse(s, n, m.per);
-      ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(n * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you"; }
+  go.onclick = () => { readPrice("su-price", s); u.save?.();
     s.example = false; s.setup = "done"; next(); };
   f.getElementById("su-skip").onclick = () => { s.setup = "skip"; next(); };
 }
@@ -4082,7 +4105,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 209 · Oct 26", VERSION_NUM = 209;
+const APP_VERSION = "Prototype · Version 210 · Oct 26", VERSION_NUM = 210;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
