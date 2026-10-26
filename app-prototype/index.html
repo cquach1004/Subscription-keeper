@@ -1658,13 +1658,12 @@ function aboutView() {
     <h3 style="margin:22px 0 8px">2. My age group</h3>
     <div class="seg age-seg" role="radiogroup" aria-label="Age">${AGES.map(([k, l]) => `<button type="button" role="radio" data-age="${k}" aria-checked="${age === k}" aria-pressed="${age === k}">${l}</button>`).join("")}</div>
     <label class="share-box"><input type="checkbox" id="w-share" ${p.shares ? "checked" : ""}><span><b>I'm open to sharing plans</b><span class="small muted">With family or friends, like a family or duo plan, to split the cost.</span></span></label>
-    <h3 style="margin:22px 0 2px">3. Where do you live?</h3>
-    <p class="small muted" style="margin:0 0 10px">We use your location to show you regional and local services.</p>
+    <h3 style="margin:22px 0 8px">3. Where do you live?</h3>
     <div class="loc-row" style="margin-bottom:18px"><label>Country<select id="w-country">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === country ? "selected" : ""}>${n}</option>`).join("")}</select></label>
       ${country === "US" ? `<label>State<select id="w-state"><option value="">Choose your state</option>${Object.entries(US_STATES).map(([k, n]) => `<option value="${k}" ${k === p.region ? "selected" : ""}>${n}</option>`).join("")}</select></label>` : ""}</div>
     <h3 style="margin:22px 0 8px">4. Your email address</h3>
     <label class="w-email" style="display:block;margin-bottom:6px"><input id="w-email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" value="${esc(p.email || "")}" aria-label="Email address"></label>
-    <p class="small muted" id="w-email-msg" style="margin:0 0 18px">In this prototype it's saved only in this browser.</p>
+    <p class="small muted" id="w-email-msg" style="margin:0 0 18px"></p>
     <div class="w-bar" style="display:flex;gap:12px;justify-content:center;align-items:center">
       <button type="button" class="btn intro-next" id="w-intro" style="min-width:130px">Back</button>
       <button class="btn primary intro-next" id="w-next" style="min-width:130px">Next</button></div>`);
@@ -1673,7 +1672,7 @@ function aboutView() {
     state.profile = { ...profile(), first, last, email: $("w-email").value.trim(), country: c, region: c === "US" ? ($("w-state")?.value || "") : "", about: [...about], age, group: groupFor([...about], age), shares: $("w-share").checked };
     if (first || last) try { localStorage.setItem("sk-name", [first, last].filter(Boolean).join(" ")); } catch {} };
   const emailOk = () => { const i = $("w-email"), ok = !i.value.trim() || i.checkValidity(); i.setAttribute("aria-invalid", !ok);
-    $("w-email-msg").textContent = ok ? "In this prototype it's saved only in this browser." : "That doesn't look like an email address. Check it, or leave it blank for now.";
+    $("w-email-msg").textContent = ok ? "" : "That doesn't look like an email address. Check it, or leave it blank for now.";
     $("w-email-msg").style.color = ok ? "" : "var(--bad)"; return ok; };
   $("w-email").addEventListener("blur", emailOk);
   f.querySelectorAll("[data-about]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.about;
@@ -3857,7 +3856,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 175 · Oct 26", VERSION_NUM = 175;
+const APP_VERSION = "Prototype · Version 176 · Oct 26", VERSION_NUM = 176;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
