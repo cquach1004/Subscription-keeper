@@ -171,6 +171,8 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .w-bk-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; max-height: 40vh; overflow-y: auto; } .w-bk-head > b { font-size: 15px; white-space: nowrap; }
 .w-bk-chips { display: contents; } .w-bk-chips .own-item { padding: 3px 4px 3px 4px; gap: 6px; font-size: 14px; box-shadow: none; } .w-bk-chips .own-item .logo { width: 22px; height: 22px; font-size: 10px; border-radius: 6px; }
 .w-bk-btns { display: flex; gap: 12px; justify-content: center; }
+.w-clear { padding-left: 0; padding-right: 0; margin-left: auto; color: var(--bad); }  /* v193 (Cuong) */
+.w-clear-ask { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; } .w-clear-ask[hidden] { display: none; }
 .ov-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }  /* v192 (Cuong): Add subscriptions / Manage my list */
 .cat-item[data-have] { opacity: .55; cursor: default; }
 .mg-list { display: grid; gap: 0; padding-top: 6px; padding-bottom: 6px; }
@@ -1781,7 +1783,9 @@ function welcomeView() {
   if (welcomeStep === 0) return introView();
   if (welcomeStep === 1) return aboutView();
   if (welcomeStep === 3) return setupStepView();
-  const p = profile(), picks = new Set(), own = [], country = p.country;  // own: names of services we don't list (v153)
+  // v193 (Cuong): picks are kept in state.wDraft, so Back and Next (or a reload) don't lose them. Not in Add mode.
+  const draft = addMode ? { picks: [], own: [] } : (state.wDraft ||= { picks: [], own: [] });
+  const p = profile(), picks = new Set(draft.picks.filter(id => CATALOG[id])), own = draft.own.slice(), country = p.country;  // own: names of services we don't list (v153)
   // v157 (Cuong): electricity and gas aren't subscriptions people pick here; they're in Explore only.
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no" && !WELCOME_SKIP.has(v.category));
   // v114 (Cuong): "Popular" holds only the same 12 picks as the Overview card. v115: every service also sits in its category (picks stay in step).
@@ -1807,7 +1811,8 @@ function welcomeView() {
       <div id="w-catlist"></div>
     </div>
     <div class="w-basket" id="w-basket">
-      <div class="w-bk-head"><b>Your list (<span id="w-count">0</span>)</b><span class="w-bk-chips" id="w-bk-chips"></span></div>
+      <div class="w-bk-head"><b>Your list (<span id="w-count">0</span>)</b><span class="w-bk-chips" id="w-bk-chips"></span><button type="button" class="btn ghost small w-clear" id="w-clear" hidden>Clear selections</button></div>
+      <div class="w-clear-ask" id="w-clear-ask" hidden><span class="small">Clear <span id="w-clear-n">all selections</span>?</span><button type="button" class="btn danger small" id="w-clear-yes">Clear</button><button type="button" class="btn ghost small" id="w-clear-no">Cancel</button></div>
       <div class="w-bk-btns"><button type="button" class="btn w-big" id="w-back">Back</button><button class="btn primary w-big" id="w-go">Next</button></div>
     </div>
     <div class="w-alt" style="display:flex;flex-direction:column;gap:10px;align-items:center;margin:14px 0 24px"${addMode ? " hidden" : ""}>
@@ -1831,11 +1836,14 @@ function welcomeView() {
     press(box); };
   const drawBasket = () => { const items = [...[...picks].map(id => ({ k: "s:" + id, name: CATALOG[id].name, v: CATALOG[id] })), ...own.map((n, i) => ({ k: "o:" + i, name: n, v: { color: "#6b7785", mark: n.slice(0, 2) } }))];
     $("w-count").textContent = items.length;
+    $("w-clear").hidden = !items.length || clearAsk; $("w-clear-ask").hidden = !items.length || !clearAsk;
+    $("w-clear-n").textContent = items.length === 1 ? "this selection" : `all ${items.length} selections`;
     const cut = bkOpen ? items.length : 3, extra = items.length - cut;
     $("w-bk-chips").innerHTML = items.length ? items.slice(0, cut).map(x => `<span class="own-item">${logoHtml(x.v)}<span>${esc(baseName(x.name) || x.name)}</span><button type="button" data-bk-x="${x.k}" aria-label="Remove ${esc(x.name)}">&times;</button></span>`).join("")
       + (extra > 0 ? `<button type="button" class="btn ghost small" id="w-bk-more">+${extra} more</button>` : bkOpen && items.length > 3 ? `<button type="button" class="btn ghost small" id="w-bk-more">Show less</button>` : "")
       : `<span class="small muted">Nothing yet. Tap a service to add it.</span>`; };
-  const update = () => { press(f); press(document); drawPills(); drawBasket(); };
+  let clearAsk = false;
+  const update = () => { if (!addMode) { state.wDraft = { picks: [...picks], own: own.slice() }; save(); } press(f); press(document); drawPills(); drawBasket(); };
   const addOwn = name => { name = name.trim().replace(/\s+/g, " "); if (!name) return;
     if (!own.some(n => n.toLowerCase() === name.toLowerCase())) own.push(name.slice(0, 60)); update(); };
   const search = () => { const raw = $("w-q").value.trim(), q = raw.toLowerCase(), res = $("w-results"), nr = $("w-nores");
@@ -1852,10 +1860,13 @@ function welcomeView() {
     else if (t.id === "w-allcats") { allCats = !allCats; drawPills(); }
     else if (t.dataset.bkX) { const [k, v] = t.dataset.bkX.split(/:(.*)/); k === "s" ? picks.delete(v) : own.splice(+v, 1); update(); }
     else if (t.id === "w-bk-more") { bkOpen = !bkOpen; drawBasket(); }
+    else if (t.id === "w-clear") { clearAsk = true; drawBasket(); }
+    else if (t.id === "w-clear-no") { clearAsk = false; drawBasket(); }
+    else if (t.id === "w-clear-yes") { picks.clear(); own.length = 0; clearAsk = false; bkOpen = false; update(); }
     else if (t.id === "w-nores-add") { addOwn($("w-q").value); $("w-q").value = ""; search(); } });
   $("w-q").addEventListener("input", search);
   $("w-q").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); if (!$("w-results").children.length && e.target.value.trim()) { addOwn(e.target.value); e.target.value = ""; search(); } } });
-  drawPills(); drawBasket();
+  press(f); drawPills(); drawBasket();
   const setLoc = () => {};  // v125: location is set on step 1
   $("w-back").addEventListener("click", () => { if (addMode) { addMode = false; view = "home"; } else welcomeStep = 1; render(); window.scrollTo(0, 0); });
   $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile, kept = addMode ? state.subs : [];
@@ -3943,7 +3954,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 192 · Standalone copy · Oct 26", VERSION_NUM = 192;
+const APP_VERSION = "Prototype · Version 193 · Standalone copy · Oct 26", VERSION_NUM = 193;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4079,6 +4090,7 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   const saved = load();
   // New visitors start on the welcome screen and pick their own subscriptions; returning visitors keep their list.
   state = saved?.subs ? saved : persona !== "me" ? personaState(persona) : FRESH(); if (!state.subs.length && persona === "me" && !saved?.subs) { view = "welcome"; welcomeStep = 0; }
+  else if (!state.subs.length && persona === "me" && (state.wDraft?.picks?.length || state.wDraft?.own?.length)) { view = "welcome"; welcomeStep = 2; }  // v193: back to their unfinished picks
   // Services added from Explore live in alternatives.json / explore-extra.json. If those files fail to load, keep the
   // subscription as a custom one and restore the link next time, rather than discarding the user's list.
   state.subs.forEach(s => { if (s.svcOrig && CATALOG[s.svcOrig]) { s.svc = s.svcOrig; delete s.svcOrig; }
