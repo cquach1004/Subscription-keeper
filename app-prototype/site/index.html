@@ -2517,12 +2517,13 @@ function cmpNote(d) {
 }
 // v154 (Cuong): what goes to subscriptions vs household services, as one bar under the top numbers.
 function splitHtml(d, total) {
-  if (!d.billN || !d.n || !total) return "";
-  const pS = d.amt / total * 100;
+  // v206 (Cuong): no bar until a household service has a price (insurers have no list price, so they start at $0).
+  if (!d.billN || !d.n || !total || !d.billAmt) return "";
+  const pS = d.amt / total * 100, noPrice = state.subs.filter(s => isHousehold(s) && needsPrice(s)).length;
   return `<div class="hh-split" role="img" aria-label="Subscriptions ${money(d.amt)} a month, household services ${money(d.billAmt)} a month">
     <div class="hh-bar"><i style="width:${pS.toFixed(1)}%;background:var(--pie-1)"></i><i style="width:${(100 - pS).toFixed(1)}%;background:var(--pie-4)"></i></div>
     <div class="hh-leg"><span><i style="background:var(--pie-1)"></i>Subscriptions <b class="num">${money(d.amt)}</b>/mo &middot; ${d.n}</span>
-      <span><i style="background:var(--pie-4)"></i>Household Services <b class="num">${money(d.billAmt)}</b>/mo &middot; ${d.billN}</span></div></div>`;
+      <span><i style="background:var(--pie-4)"></i>Household Services <b class="num">${money(d.billAmt)}</b>/mo &middot; ${d.billN}${noPrice ? ` (${noPrice} without a price)` : ""}</span></div></div>`;
 }
 // Household Services checkup (Cuong, v155): one line per household service with the next thing worth doing.
 function hhCheck(s) {
@@ -3996,7 +3997,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 196 · Standalone copy · Oct 26", VERSION_NUM = 205;
+const APP_VERSION = "Prototype · Version 206 · Standalone copy · Oct 26", VERSION_NUM = 206;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
