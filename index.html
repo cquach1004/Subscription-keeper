@@ -358,6 +358,7 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .hh-leg { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 14px; margin-top: 6px; font-size: 13px; color: var(--ink); }
 .hh-leg span { display: inline-flex; align-items: center; gap: 6px; } .hh-leg i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
 .hh-split + .cmp-note { margin-top: 0; }
+.shelf-item .hh-split { margin: 0; }
 .info-btn { display: inline-grid; place-items: center; width: 22px; height: 22px; padding: 0; margin-left: 8px; border-radius: 50%; border: 1.5px solid currentColor; background: none; color: var(--muted); font: italic 700 12px/1 Georgia, serif; vertical-align: 2px; cursor: pointer; flex: none; }
 .info-btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .stat.lead { position: relative; } .stat.lead > .info-btn { position: absolute; top: 14px; right: 14px; margin: 0; color: rgba(255,255,255,.85); }
@@ -2397,7 +2398,9 @@ function mixHtml(home) {
 // Shelf (Cuong, v102): widgets taken off Overview but kept working, so any can be put back. Turned on in the profile menu, like Admin.
 function shelfView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
+  const split = state.subs.length ? splitHtml(cmpData(), total) : "";
   const f = el(`<div class="section-head"><h2>Shelf</h2><span class="small muted">Widgets taken off Overview and the intro page. They still work here, and any of them can go back.</span></div>
+    <section class="shelf-item" style="max-width:none"><h3 style="margin:0">Subscriptions vs Household Services</h3><p class="note" style="margin:2px 0 8px">Was on Overview under the top numbers until Oct 26, 2026 (v212).</p>${split || `<p class="small muted" style="margin:0">Shows here once a household service on your list has a price.</p>`}</section>
     <section class="shelf-item" style="max-width:none"><p class="note" style="margin:0 0 8px">Household Services checkup was on Overview until Oct 26, 2026 (v189).</p>${hhHtml() || `<p class="small muted" style="margin:0">Shows here once your list has a household service, like a phone plan, internet or insurance.</p>`}</section>
     <section class="shelf-item" style="max-width:none"><h3 style="margin:0">How we help</h3><p class="note" style="margin:2px 0 8px">Was on the intro page until Oct 25, 2026.</p>
       <div class="intro-pillars">${INTRO_PILLARS.map(([t, d, svg]) => `<div class="intro-pill"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><b>${t}</b><span class="small muted">${d}</span></div>`).join("")}</div></section>
@@ -2715,7 +2718,7 @@ function homeView() {
       <div class="stat lead"><div class="label">You pay each month</div>${cmpInfo ? infoBtn("cmp", "How we compare") : ""}<div class="value num">${money(total)}</div>${cmpLine(cd.allAmt, cd.avgAll, money, total)}</div>
       <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div></div>
       <div class="stat tint"><div class="label">${cd.billN ? "Subscriptions & services" : "Subscriptions"}</div><div class="value num">${state.subs.length}</div></div>
-    </section>${splitHtml(cd, total)}${infoPanel("cmp", cmpInfo)}` : ""}
+    </section>${infoPanel("cmp", cmpInfo)}` : ""}
     ${plkHtml()}
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
@@ -4112,7 +4115,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 211 · Standalone copy · Oct 26", VERSION_NUM = 211;
+const APP_VERSION = "Prototype · Version 212 · Standalone copy · Oct 26", VERSION_NUM = 212;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
