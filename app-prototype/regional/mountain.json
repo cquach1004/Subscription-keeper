@@ -1,0 +1,1451 @@
+[
+ {
+  "id": "ziply_fiber",
+  "name": "Ziply Fiber (Home Internet)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "ID",
+   "MT",
+   "OR",
+   "WA"
+  ],
+  "service_area_note": "Fiber and DSL across the Northwest, including north Idaho and western Montana",
+  "official_url": "https://ziplyfiber.com/",
+  "plans": [
+   {
+    "id": "fiber_100",
+    "name": "Fiber 100/100",
+    "price_monthly": 20,
+    "price_annual": null,
+    "effective_monthly": 20,
+    "verified": true,
+    "note": "Official offer page; page also mentions $10 off for the first 3 months, so the $20 may include a promo"
+   },
+   {
+    "id": "fiber_gig",
+    "name": "Fiber Gig",
+    "price_monthly": 40,
+    "price_annual": null,
+    "effective_monthly": 40,
+    "verified": true,
+    "note": "Official offer page; WiFi 6 router lease and install included"
+   },
+   {
+    "id": "fiber_2gig",
+    "name": "2 Gig Fiber",
+    "price_monthly": 60,
+    "price_annual": null,
+    "effective_monthly": 60,
+    "verified": true,
+    "note": "Official offer page; free first month on select multi-gig plans"
+   },
+   {
+    "id": "dsl",
+    "name": "DSL Internet",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "No price published; check address"
+   }
+  ],
+  "default_plan": "fiber_gig",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "no_contract",
+    "name": "No contract",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "no_data_caps",
+    "name": "No data caps",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical fiber speeds",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Northwest households in a Ziply fiber area wanting cheap symmetrical gig service.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Prices assume paperless billing and autopay.",
+   "30-day money-back guarantee."
+  ],
+  "sources": [
+   {
+    "label": "Ziply Fiber Gig offer",
+    "url": "https://ziplyfiber.com/lp/gig-special"
+   },
+   {
+    "label": "Ziply internet plans",
+    "url": "https://ziplyfiber.com/internet"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "utopia_fiber",
+  "name": "UTOPIA Fiber (Open-Access Network)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "UT"
+  ],
+  "service_area_note": "Open-access fiber in about 20 Utah cities (Layton, Orem, Murray, West Valley City, Brigham City and more)",
+  "official_url": "https://www.utopiafiber.com/",
+  "plans": [
+   {
+    "id": "connection_fee",
+    "name": "UTOPIA connection fee only",
+    "price_monthly": 30,
+    "price_annual": null,
+    "effective_monthly": 30,
+    "verified": true,
+    "note": "Paid to UTOPIA on top of your chosen ISP's price, month to month"
+   },
+   {
+    "id": "250_mbps",
+    "name": "250 Mbps (from lowest-priced ISP)",
+    "price_monthly": 64,
+    "price_annual": null,
+    "effective_monthly": 64,
+    "verified": true,
+    "note": "$30 UTOPIA fee + $34 ETS; other ISPs $34.95-$41"
+   },
+   {
+    "id": "1_gbps",
+    "name": "1 Gbps (from lowest-priced ISP)",
+    "price_monthly": 73,
+    "price_annual": null,
+    "effective_monthly": 73,
+    "verified": true,
+    "note": "$30 UTOPIA fee + $43 ETS; other ISPs up to $58.95"
+   },
+   {
+    "id": "10_gbps",
+    "name": "10 Gbps (from lowest-priced ISP)",
+    "price_monthly": 140,
+    "price_annual": null,
+    "effective_monthly": 140,
+    "verified": true,
+    "note": "$30 UTOPIA fee + $110 ETS; other ISPs up to $199.99"
+   }
+  ],
+  "default_plan": "1_gbps",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical fiber speeds",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "provider_choice",
+    "name": "Choose from 18+ ISPs",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Utah residents in a UTOPIA city who want fiber with a choice of ISP.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Your bill has two parts: the $30 UTOPIA fee and the ISP's own price.",
+   "XMission, Rise, InfoWest and others sell on this network."
+  ],
+  "sources": [
+   {
+    "label": "UTOPIA residential pricing",
+    "url": "https://www.utopiafiber.com/residential-pricing/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "nextlight_longmont",
+  "name": "NextLight (Longmont Power & Communications)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "CO"
+  ],
+  "service_area_note": "City-owned fiber in Longmont, Colorado",
+  "official_url": "https://www.mynextlight.com/",
+  "plans": [
+   {
+    "id": "essential",
+    "name": "Essential 100 Mbps",
+    "price_monthly": 39.95,
+    "price_annual": null,
+    "effective_monthly": 39.95,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "complete",
+    "name": "Complete 1 Gig",
+    "price_monthly": 69.95,
+    "price_annual": null,
+    "effective_monthly": 69.95,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "advanced",
+    "name": "Advanced 2.5 Gig",
+    "price_monthly": 149.95,
+    "price_annual": null,
+    "effective_monthly": 149.95,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "ultimate",
+    "name": "Ultimate 8 Gig",
+    "price_monthly": 249.95,
+    "price_annual": null,
+    "effective_monthly": 249.95,
+    "verified": true,
+    "note": ""
+   }
+  ],
+  "default_plan": "complete",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "no_contract",
+    "name": "No contract",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "no_data_caps",
+    "name": "No data caps",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "municipal_fiber",
+    "name": "Municipal fiber",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Longmont residents wanting simple, contract-free municipal fiber.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "$50 bill credit per referral.",
+   "Income-qualified discounts available."
+  ],
+  "sources": [
+   {
+    "label": "NextLight internet plans",
+    "url": "https://mynextlight.com/internet/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "fort_collins_connexion",
+  "name": "Fort Collins Connexion",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "CO"
+  ],
+  "service_area_note": "City-owned fiber in Fort Collins, Colorado",
+  "official_url": "https://fcconnexion.com/",
+  "plans": [
+   {
+    "id": "classic",
+    "name": "Classic 1 Gig",
+    "price_monthly": 70,
+    "price_annual": null,
+    "effective_monthly": 70,
+    "verified": true,
+    "note": "Wi-Fi router and install included"
+   },
+   {
+    "id": "enhanced",
+    "name": "Enhanced 2 Gig",
+    "price_monthly": 100,
+    "price_annual": null,
+    "effective_monthly": 100,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "premier",
+    "name": "Premier 10 Gig",
+    "price_monthly": 200,
+    "price_annual": null,
+    "effective_monthly": 200,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "student",
+    "name": "Student 1 Gig",
+    "price_monthly": 50,
+    "price_annual": null,
+    "effective_monthly": 50,
+    "verified": true,
+    "note": "Student offer; eligibility terms not shown"
+   }
+  ],
+  "default_plan": "classic",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "no_contract",
+    "name": "No contract",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "no_data_caps",
+    "name": "No data caps",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "municipal_fiber",
+    "name": "Municipal fiber",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Fort Collins households wanting flat-priced symmetrical fiber.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Connexion home page",
+    "url": "https://fcconnexion.com/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "visionary_broadband",
+  "name": "Visionary Broadband (Fiber)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "CO",
+   "MT",
+   "WY"
+  ],
+  "service_area_note": "Fiber and fixed wireless in Wyoming towns (Casper, Buffalo, Torrington, Wright) plus parts of Colorado and Montana",
+  "official_url": "https://www.vcn.com/",
+  "plans": [
+   {
+    "id": "1_gig",
+    "name": "1 Gig Fiber",
+    "price_monthly": 60,
+    "price_annual": null,
+    "effective_monthly": 60,
+    "verified": true,
+    "note": "Casper page; select areas"
+   },
+   {
+    "id": "2_5_gig",
+    "name": "2.5 Gig Fiber",
+    "price_monthly": 70,
+    "price_annual": null,
+    "effective_monthly": 70,
+    "verified": true,
+    "note": "Casper page; select areas"
+   },
+   {
+    "id": "5_gig",
+    "name": "5 Gig Fiber",
+    "price_monthly": 85,
+    "price_annual": null,
+    "effective_monthly": 85,
+    "verified": true,
+    "note": "Casper page; select areas"
+   }
+  ],
+  "default_plan": "1_gig",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "no_contract",
+    "name": "No contract",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "no_data_caps",
+    "name": "No data caps",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "free_install",
+    "name": "Free installation",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Wyoming households in a Visionary fiber town.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Prices shown are for Casper; check your address for other towns."
+  ],
+  "sources": [
+   {
+    "label": "Visionary fiber in Casper",
+    "url": "https://www.vcn.com/?p=4468"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "triangle_communications",
+  "name": "Triangle Communications (Fiber)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "MT"
+  ],
+  "service_area_note": "Member-owned co-op serving 16 rural north-central Montana counties",
+  "official_url": "https://itstriangle.com/",
+  "plans": [
+   {
+    "id": "standard_300",
+    "name": "Standard 300 Mbps",
+    "price_monthly": 75,
+    "price_annual": null,
+    "effective_monthly": 75,
+    "verified": true,
+    "note": "New plan from July 1, 2026; 911 and MTAP fees extra"
+   },
+   {
+    "id": "higher_speed",
+    "name": "Higher-speed plan",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Offered but price not published"
+   }
+  ],
+  "default_plan": "standard_300",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "no_data_caps",
+    "name": "No data caps",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Rural north-central Montana households on Triangle's fiber.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Triangle new plans announcement",
+    "url": "https://itstriangle.com/news/312-a-better-internet-experience-is-here"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "denver_post",
+  "name": "The Denver Post",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "CO"
+  ],
+  "service_area_note": "Colorado's largest daily; digital and print",
+  "official_url": "https://www.denverpost.com/",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital Access",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not published on an accessible page; offers vary"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Unlimited digital articles",
+    "plans": "all",
+    "overlap_tag": "news"
+   },
+   {
+    "id": "eedition",
+    "name": "E-edition",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "Coloradans who want Denver and state news.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Intro offers are common; check the renewal rate."
+  ],
+  "sources": [
+   {
+    "label": "Denver Post",
+    "url": "https://www.denverpost.com/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "deseret_news",
+  "name": "Deseret News (Utah Edition)",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "UT"
+  ],
+  "service_area_note": "Utah newspaper; weekly mailed print plus digital",
+  "official_url": "https://www.deseret.com/",
+  "plans": [
+   {
+    "id": "1_year",
+    "name": "1 Year (weekly print + digital)",
+    "price_monthly": null,
+    "price_annual": 69,
+    "effective_monthly": 5.75,
+    "verified": true,
+    "note": "Official subscription checkout; includes Church News"
+   },
+   {
+    "id": "26_weeks",
+    "name": "26 Weeks auto-renew",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": 5.42,
+    "verified": true,
+    "note": "$32.50 per 26 weeks"
+   },
+   {
+    "id": "2_years",
+    "name": "2 Years",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": 5.75,
+    "verified": true,
+    "note": "$138 for two years"
+   }
+  ],
+  "default_plan": "1_year",
+  "features": [
+   {
+    "id": "print",
+    "name": "Weekly print edition",
+    "plans": "all",
+    "overlap_tag": "news"
+   },
+   {
+    "id": "digital",
+    "name": "Digital access",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "Utah readers wanting a low-cost weekly paper plus digital.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Deseret News Utah subscription",
+    "url": "https://simplecirc.com/subscribe/deseret-news-utah-dnneut"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "salt_lake_tribune",
+  "name": "The Salt Lake Tribune (Membership)",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "UT"
+  ],
+  "service_area_note": "Nonprofit Utah daily; paywall removed May 2026, now reader-supported",
+  "official_url": "https://www.sltrib.com/",
+  "plans": [
+   {
+    "id": "monthly_member",
+    "name": "Monthly member",
+    "price_monthly": 10,
+    "price_annual": null,
+    "effective_monthly": 10,
+    "verified": false,
+    "note": "Former $10 digital subscribers converted at the same level (Nieman Lab); tiers reported at $5-$26/mo but not confirmed on the Tribune's site"
+   }
+  ],
+  "default_plan": "monthly_member",
+  "features": [
+   {
+    "id": "ad_comments",
+    "name": "Commenting and e-edition access",
+    "plans": "all",
+    "overlap_tag": "news"
+   },
+   {
+    "id": "archive",
+    "name": "Older-story archive access",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "Utah readers who want to support free local news.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "New stories are free since May 2026; membership is optional."
+  ],
+  "sources": [
+   {
+    "label": "Tribune on dropping its paywall",
+    "url": "https://www.sltrib.com/news/2026/05/15/why-salt-lake-tribune-dropped-its/"
+   },
+   {
+    "label": "Nieman Lab",
+    "url": "https://www.niemanlab.org/2026/04/the-nonprofit-salt-lake-tribune-is-ready-to-tear-down-its-paywall/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "las_vegas_review_journal",
+  "name": "Las Vegas Review-Journal",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NV"
+  ],
+  "service_area_note": "Nevada's largest daily",
+  "official_url": "https://www.reviewjournal.com/",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital subscription",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Checkout page did not load prices; an older RJ page cited $8.99/mo after a $0.99 intro (undated)"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Unlimited digital articles",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "Las Vegas residents wanting local and Nevada news.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "RJ subscribe info",
+    "url": "https://www.reviewjournal.com/?p=1514067"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "idaho_statesman",
+  "name": "Idaho Statesman",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "ID"
+  ],
+  "service_area_note": "Boise-based daily (McClatchy)",
+  "official_url": "https://www.idahostatesman.com/",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital Access",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Subscribe page blocked; price not confirmed"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Unlimited digital articles",
+    "plans": "all",
+    "overlap_tag": "news"
+   },
+   {
+    "id": "eedition",
+    "name": "E-edition",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "Treasure Valley readers wanting Boise and Idaho news.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Idaho Statesman",
+    "url": "https://www.idahostatesman.com/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "coeur_d_alene_press",
+  "name": "Coeur d'Alene Press",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "ID"
+  ],
+  "service_area_note": "North Idaho daily (Kootenai County)",
+  "official_url": "https://cdapress.com/",
+  "plans": [
+   {
+    "id": "all_access_monthly",
+    "name": "All Access (print + digital)",
+    "price_monthly": 29.5,
+    "price_annual": null,
+    "effective_monthly": 29.5,
+    "verified": true,
+    "note": "'Forever Rate'; $7.38/week"
+   },
+   {
+    "id": "12_month",
+    "name": "12 Month Unlimited",
+    "price_monthly": null,
+    "price_annual": 341.21,
+    "effective_monthly": 28.43,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "6_month",
+    "name": "6 Month Unlimited",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": 29.63,
+    "verified": true,
+    "note": "$177.76 per 6 months"
+   },
+   {
+    "id": "weekend",
+    "name": "Weekend Unlimited",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": 17.59,
+    "verified": true,
+    "note": "$4.06/week"
+   }
+  ],
+  "default_plan": "all_access_monthly",
+  "features": [
+   {
+    "id": "print",
+    "name": "Home delivery",
+    "plans": "all",
+    "overlap_tag": "news"
+   },
+   {
+    "id": "digital",
+    "name": "Digital access",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "North Idaho households wanting a local daily.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "$0.99 24-hour digital day pass also available."
+  ],
+  "sources": [
+   {
+    "label": "CDA Press subscription plans",
+    "url": "https://cdapress.com/subscription_plans/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "vasa_fitness",
+  "name": "VASA Fitness",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "CO",
+   "IA",
+   "ID",
+   "IL",
+   "IN",
+   "MI",
+   "NE",
+   "OH",
+   "UT",
+   "WI"
+  ],
+  "service_area_note": "70+ gyms, mostly Utah and Colorado, now expanding to the Midwest",
+  "official_url": "https://vasafitness.com/",
+  "plans": [
+   {
+    "id": "basic",
+    "name": "Basic (one gym)",
+    "price_monthly": 14.99,
+    "price_annual": null,
+    "effective_monthly": 14.99,
+    "verified": false,
+    "note": "Site says memberships 'start at $14.99'; not tied to a plan by name"
+   },
+   {
+    "id": "fitness",
+    "name": "Fitness (all locations)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not published"
+   },
+   {
+    "id": "studio",
+    "name": "Studio (all gyms + classes)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not published"
+   }
+  ],
+  "default_plan": "fitness",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "no_contract",
+    "name": "No annual commitment",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Budget gym-goers in Utah and Colorado.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "States list is from the locations page and may be incomplete."
+  ],
+  "sources": [
+   {
+    "label": "VASA membership plans",
+    "url": "https://vasafitness.com/membership-plans/"
+   },
+   {
+    "label": "VASA locations",
+    "url": "https://vasafitness.com/locations/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "ymca_metro_denver",
+  "name": "YMCA of Metropolitan Denver",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "CO"
+  ],
+  "service_area_note": "YMCA branches across the Denver metro",
+  "official_url": "https://denverymca.org/",
+  "plans": [
+   {
+    "id": "starter",
+    "name": "Y-Starter",
+    "price_monthly": 41,
+    "price_annual": 418,
+    "effective_monthly": 41,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "premium_individual",
+    "name": "Y-Premium Individual",
+    "price_monthly": 67,
+    "price_annual": 683,
+    "effective_monthly": 67,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "premium_couple",
+    "name": "Y-Premium Couple",
+    "price_monthly": 87,
+    "price_annual": 887,
+    "effective_monthly": 87,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "premium_household",
+    "name": "Y-Premium Household",
+    "price_monthly": 108,
+    "price_annual": 1102,
+    "effective_monthly": 108,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "virtual",
+    "name": "Virtual Y",
+    "price_monthly": 14.99,
+    "price_annual": null,
+    "effective_monthly": 14.99,
+    "verified": true,
+    "note": ""
+   }
+  ],
+  "default_plan": "premium_individual",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym and pool access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "group_classes",
+    "name": "Group classes",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "app_workouts",
+    "name": "Virtual Y workouts",
+    "plans": "all",
+    "overlap_tag": "workouts"
+   }
+  ],
+  "best_for": "Denver families wanting a gym plus classes and pools.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Rates effective Jan 1, 2026; scholarships available.",
+   "Annual prepay saves about one month."
+  ],
+  "sources": [
+   {
+    "label": "Denver YMCA 2026 rates",
+    "url": "https://denverymca.org/node/999085"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "salt_lake_county_rec",
+  "name": "Salt Lake County Parks & Recreation Pass",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "UT"
+  ],
+  "service_area_note": "Salt Lake County rec centers, outdoor pools and ice centers",
+  "official_url": "https://www.saltlakecounty.gov/parks-recreation/",
+  "plans": [
+   {
+    "id": "adult_easy_pay",
+    "name": "Adult Easy Pay",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Rate sheet lists $23 and $36/mo Easy Pay for all-county vs single-center, but the column labels were unclear; confirm at the front desk"
+   },
+   {
+    "id": "family_easy_pay",
+    "name": "Family Easy Pay (first 2)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Rate sheet lists $35 and $58/mo; same caveat"
+   },
+   {
+    "id": "senior_easy_pay",
+    "name": "Senior Easy Pay",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": false,
+    "note": "Rate sheet lists $14 and $16/mo; same caveat"
+   }
+  ],
+  "default_plan": "adult_easy_pay",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Rec center gym and pool access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   }
+  ],
+  "best_for": "Salt Lake County residents wanting low-cost gym and pool access.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Plus $1/mo facility improvement fee."
+  ],
+  "sources": [
+   {
+    "label": "South Jordan rate sheet",
+    "url": "https://saltlakecounty.gov/globalassets/2-parks--rec/niftic/resources/fees/south-jordan-rate-sheet.pdf"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "las_vegas_athletic_club",
+  "name": "Las Vegas Athletic Clubs (LVAC)",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NV"
+  ],
+  "service_area_note": "7 clubs across Las Vegas and Henderson",
+  "official_url": "https://www.lvac.com/",
+  "plans": [
+   {
+    "id": "membership",
+    "name": "All-club membership",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Monthly dues not published; $5 enrollment promo shown"
+   }
+  ],
+  "default_plan": "membership",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "All-club access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "group_classes",
+    "name": "Group classes",
+    "plans": "all",
+    "overlap_tag": "gym"
+   }
+  ],
+  "best_for": "Las Vegas residents wanting a local multi-club gym.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "LVAC home page",
+    "url": "https://www.lvac.com/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "town_pump_express_wash",
+  "name": "Town Pump Express Wash Club",
+  "category": "auto",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "MT"
+  ],
+  "service_area_note": "Express car washes beside Town Pump stations in Montana (Great Falls, Butte and others)",
+  "official_url": "https://www.townpump.com/carwash",
+  "plans": [
+   {
+    "id": "express",
+    "name": "Express Wash Club",
+    "price_monthly": 19.99,
+    "price_annual": null,
+    "effective_monthly": 19.99,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "works",
+    "name": "The Works Wash Club",
+    "price_monthly": 34.99,
+    "price_annual": null,
+    "effective_monthly": 34.99,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "ultimate",
+    "name": "Ultimate Wash Club",
+    "price_monthly": 39.99,
+    "price_annual": null,
+    "effective_monthly": 39.99,
+    "verified": true,
+    "note": ""
+   }
+  ],
+  "default_plan": "works",
+  "features": [
+   {
+    "id": "unlimited_wash",
+    "name": "Unlimited washes",
+    "plans": "all",
+    "overlap_tag": "car_wash"
+   }
+  ],
+  "best_for": "Montana drivers who wash more than twice a month.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Pump It Up Rewards+ members are already club members."
+  ],
+  "sources": [
+   {
+    "label": "Town Pump wash club signup",
+    "url": "https://websiteconnect.drb.com/townpumpexpresswash"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "cobblestone_auto_spa",
+  "name": "Cobblestone Auto Spa Unlimited",
+  "category": "auto",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ",
+   "CO",
+   "ID",
+   "OR"
+  ],
+  "service_area_note": "Car washes in Arizona, Denver/Front Range, Boise/Treasure Valley and Ontario OR",
+  "official_url": "https://cobblestone.com/",
+  "plans": [
+   {
+    "id": "unlimited",
+    "name": "Unlimited Wash Plan",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Prices not published on the plans page"
+   }
+  ],
+  "default_plan": "unlimited",
+  "features": [
+   {
+    "id": "unlimited_wash",
+    "name": "Unlimited washes",
+    "plans": "all",
+    "overlap_tag": "car_wash"
+   }
+  ],
+  "best_for": "Front Range and Boise drivers who wash often.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Membership is valid only in the state of purchase."
+  ],
+  "sources": [
+   {
+    "label": "Cobblestone unlimited plans",
+    "url": "https://cobblestone.com/unlimited-wash-plans/"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "rocky_mountain_power_blue_sky",
+  "name": "Rocky Mountain Power Blue Sky",
+  "category": "home",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "ID",
+   "UT",
+   "WY"
+  ],
+  "service_area_note": "Rocky Mountain Power electric customers",
+  "official_url": "https://www.rockymountainpower.net/",
+  "plans": [
+   {
+    "id": "one_block",
+    "name": "Blue Sky (1 block of 100 kWh)",
+    "price_monthly": 1.95,
+    "price_annual": null,
+    "effective_monthly": 1.95,
+    "verified": true,
+    "note": "Add more blocks for more renewable energy"
+   }
+  ],
+  "default_plan": "one_block",
+  "features": [
+   {
+    "id": "renewable",
+    "name": "Renewable energy support",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Rocky Mountain Power customers wanting to back renewables for a few dollars.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Added to your monthly power bill; cancel anytime."
+  ],
+  "sources": [
+   {
+    "label": "Blue Sky program",
+    "url": "https://www.rockymountainpower.net/savings-energy-choices/blue-sky-renewable-energy.html"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "union_wireless",
+  "name": "Union Wireless",
+  "category": "mobile",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "CO",
+   "UT",
+   "WY"
+  ],
+  "service_area_note": "Wyoming-based carrier also covering parts of Colorado and Utah",
+  "official_url": "https://unionwireless.com/",
+  "plans": [
+   {
+    "id": "talk_text",
+    "name": "Talk and Text",
+    "price_monthly": 25,
+    "price_annual": null,
+    "effective_monthly": 25,
+    "verified": true,
+    "note": "Per the plans page"
+   },
+   {
+    "id": "55_plus",
+    "name": "55 Plus",
+    "price_monthly": 35,
+    "price_annual": null,
+    "effective_monthly": 35,
+    "verified": true,
+    "note": ""
+   },
+   {
+    "id": "unlimited_connect",
+    "name": "Unlimited Connect (25 GB premium)",
+    "price_monthly": 157,
+    "price_annual": null,
+    "effective_monthly": 157,
+    "verified": false,
+    "note": "Shown on a page with a line-count selector; line count for this price unclear"
+   },
+   {
+    "id": "unlimited_explore",
+    "name": "Unlimited Explore (50 GB premium)",
+    "price_monthly": 197,
+    "price_annual": null,
+    "effective_monthly": 197,
+    "verified": false,
+    "note": "Same caveat"
+   },
+   {
+    "id": "unlimited_premier",
+    "name": "Unlimited Premier (100 GB premium)",
+    "price_monthly": 237,
+    "price_annual": null,
+    "effective_monthly": 237,
+    "verified": false,
+    "note": "Same caveat"
+   }
+  ],
+  "default_plan": "talk_text",
+  "features": [
+   {
+    "id": "mobile_service",
+    "name": "Cell service",
+    "plans": "all",
+    "overlap_tag": "mobile"
+   }
+  ],
+  "best_for": "Rural Wyoming users who need local coverage.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Union Wireless plans",
+    "url": "https://unionwireless.com/wireless-plans"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ },
+ {
+  "id": "boulder_county_farmers_markets_box",
+  "name": "Boulder County Farmers Markets Subscription Box",
+  "category": "food",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "CO"
+  ],
+  "service_area_note": "Weekly curbside pickup in Boulder, Lafayette and Longmont",
+  "official_url": "https://bcfm.org/",
+  "plans": [
+   {
+    "id": "vegan",
+    "name": "Vegan box (8 weeks)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": 238.33,
+    "verified": true,
+    "note": "$440 per 8-week season plus tax, or two $220 payments"
+   },
+   {
+    "id": "omnivore",
+    "name": "Omnivore box (8 weeks)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": 260.0,
+    "verified": true,
+    "note": "$480 per 8-week season plus tax"
+   }
+  ],
+  "default_plan": "vegan",
+  "features": [
+   {
+    "id": "local_produce",
+    "name": "Local produce, protein and pantry goods",
+    "plans": "all",
+    "overlap_tag": "grocery"
+   }
+  ],
+  "best_for": "Boulder County households wanting a weekly local grocery box.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Seasonal; sign-ups open per season.",
+   "Feeds about two people."
+  ],
+  "sources": [
+   {
+    "label": "BCFM subscription box",
+    "url": "https://bcfm.org/?p=4226"
+   }
+  ],
+  "checked_at": "2026-10-26"
+ }
+]
