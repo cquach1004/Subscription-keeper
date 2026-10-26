@@ -1728,7 +1728,7 @@ function welcomeView() {
   const popular = POPULAR.map(id => CATALOG[id]).filter(v => v && availability(v.id, country) !== "no").slice(0, 12);
   const more = offered.slice().sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
   const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
-  const groups = [...new Set(more.map(v => v.category))];
+  const groups = [...new Set(more.map(v => v.category))], wcatDefault = groups.includes("ai") ? "ai" : groups[0];
   // v115 (Cuong): each category shows its top 6 (svcRank order), then "See all".
   // v178 (Cuong): numbered sections; categories sit under "2. Want to add more?" with Explore-style pills that narrow the list.
   const f = el(`<h3 style="margin:18px 0 8px">1. Which subscriptions do you have?</h3>
@@ -1736,9 +1736,10 @@ function welcomeView() {
     <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
     <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
     <h3 style="margin:26px 0 8px">2. Want to add more?</h3>
-    <div class="chips w-cats" role="group" aria-label="Categories" style="margin:0 0 14px">${["all", ...groups].map(c => `<button type="button" class="chip x-cat" data-wcat="${c}" aria-pressed="${c === "all"}">${c === "all" ? "All" : esc(catLabel(c))}</button>`).join("")}</div>
+    <label class="w-cat-pick" style="display:block;margin:0 0 14px"><span class="small muted">Pick a category</span><select id="w-cat" aria-label="Category" style="margin-top:4px">${groups.map(c => `<option value="${c}" ${c === wcatDefault ? "selected" : ""}>${esc(catLabel(c))}</option>`).join("")}<option value="all">All categories</option></select></label>
     ${groups.map(c => { const list = more.filter(v => v.category === c).sort(svcRank);
-      return `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog" data-open="0" data-cat="${c}">${list.map((v, i) => i < 6 ? tile(v) : tile(v).replace('<button ', '<button hidden data-extra="1" ')).join("")}</div>${list.length > 6 ? `<button type="button" class="btn ghost small w-more">See all ${list.length}</button>` : ""}`; }).join("")}
+      const hid = c === wcatDefault ? "" : " hidden";
+      return `<h4 class="w-h" style="margin:4px 0 8px" hidden>${esc(catLabel(c))}</h4><div class="catalog" data-open="0" data-cat="${c}"${hid}>${list.map((v, i) => i < 6 ? tile(v) : tile(v).replace('<button ', '<button hidden data-extra="1" ')).join("")}</div>${list.length > 6 ? `<button type="button" class="btn ghost small w-more"${hid}>See all ${list.length}</button>` : ""}`; }).join("")}
     <p class="small muted" id="w-nores" hidden style="margin:4px 0 12px"></p>
     <section class="w-own"><h3 style="margin:26px 0 4px">3. Don't see yours?</h3>
       <p class="small muted" style="margin:0 0 8px">Add it yourself. You'll enter what you pay when you finish setting up.</p>
@@ -1746,12 +1747,12 @@ function welcomeView() {
       <div class="own-list" id="w-own-list"></div></section>
     <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;margin-top:18px;display:flex;gap:12px;justify-content:center;align-items:center;border-top:1px solid var(--line)">
       <button type="button" class="btn w-big" id="w-back">Back</button>
-      <button class="btn primary w-big" id="w-go">Start with 0 subscriptions</button></div>
+      <button class="btn primary w-big" id="w-go">Subscriptions Selected: 0</button></div>
     <div class="w-alt" style="display:flex;flex-direction:column;gap:10px;align-items:center;margin:8px 0 24px">
       <button type="button" class="btn" id="w-later">Skip, I'll add them later</button>
       <button type="button" class="btn" id="w-example">Just looking? Try it with example data</button></div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
-  const count = () => { const n = picks.size + own.length; $("w-go").textContent = `Start with ${n} subscription${n === 1 ? "" : "s"}`; };
+  const count = () => { const n = picks.size + own.length; $("w-go").textContent = `Subscriptions Selected: ${n}`; };
   const drawOwn = () => { $("w-own-list").innerHTML = own.map((n, i) => `<span class="own-item">${logoHtml({ color: "#6b7785", mark: n.slice(0, 2) })}<span>${esc(n)}</span><button type="button" data-own-x="${i}" aria-label="Remove ${esc(n)}">&times;</button></span>`).join("");
     $("w-own-list").querySelectorAll("[data-own-x]").forEach(b => b.addEventListener("click", () => { own.splice(+b.dataset.ownX, 1); drawOwn(); count(); })); };
   const addOwn = name => { name = name.trim().replace(/\s+/g, " "); if (!name) return;
@@ -1763,15 +1764,13 @@ function welcomeView() {
     document.querySelectorAll(`#view .cat-item[data-svc="${id}"]`).forEach(x => x.setAttribute("aria-pressed", picks.has(id))); count(); }));
   f.querySelectorAll(".w-more").forEach(m => m.addEventListener("click", () => { const g = m.previousElementSibling, open = g.dataset.open !== "1";
     g.dataset.open = open ? "1" : "0"; g.querySelectorAll("[data-extra]").forEach(b => b.hidden = !open); m.textContent = open ? "Show fewer" : `See all ${g.children.length}`; }));
-  const wcats = new Set();  // v178: picked category pills; none = all. Search looks across every category.
-  f.querySelectorAll("[data-wcat]").forEach(b => b.addEventListener("click", () => { const c = b.dataset.wcat;
-    if (c === "all") wcats.clear(); else wcats.has(c) ? wcats.delete(c) : wcats.add(c);
-    document.querySelectorAll("#view [data-wcat]").forEach(x => x.setAttribute("aria-pressed", x.dataset.wcat === "all" ? !wcats.size : wcats.has(x.dataset.wcat)));
-    $("w-q").dispatchEvent(new Event("input")); }));
+  // v179 (Cuong): one category at a time from a dropdown, AI Assistants first. Search still looks across every category.
+  let wcat = wcatDefault;
+  $("w-cat").addEventListener("change", e => { wcat = e.target.value; $("w-q").dispatchEvent(new Event("input")); });
   $("w-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase();
-    document.querySelectorAll("#view .catalog").forEach((g, gi) => { let n = 0; const catOk = !g.dataset.cat || !!q || !wcats.size || wcats.has(g.dataset.cat);
+    document.querySelectorAll("#view .catalog").forEach((g, gi) => { let n = 0; const catOk = !g.dataset.cat || !!q || wcat === "all" || wcat === g.dataset.cat;
       g.querySelectorAll(".cat-item").forEach(b => { b.hidden = !catOk || (q ? !b.dataset.text.includes(q) : (b.dataset.extra && g.dataset.open !== "1")); n += !b.hidden; });
-      if (gi === 0 && q) n = 0; g.hidden = !n; g.previousElementSibling.hidden = !n; const m = g.nextElementSibling; if (m?.classList.contains("w-more")) m.hidden = !!q || !n; });
+      if (gi === 0 && q) n = 0; g.hidden = !n; g.previousElementSibling.hidden = !n || (!q && wcat !== "all" && !!g.dataset.cat); const m = g.nextElementSibling; if (m?.classList.contains("w-more")) m.hidden = !!q || !n; });
     // Nothing matches: offer to add it as their own (v153, Cuong: e.g. an insurer we don't list).
     const none = q && ![...document.querySelectorAll("#view .catalog .cat-item")].some(b => !b.hidden), nr = $("w-nores"), raw = e.target.value.trim();
     nr.hidden = !none;
@@ -3868,7 +3867,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 178 · Standalone copy · Oct 26", VERSION_NUM = 178;
+const APP_VERSION = "Prototype · Version 179 · Standalone copy · Oct 26", VERSION_NUM = 179;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
