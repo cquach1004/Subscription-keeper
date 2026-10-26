@@ -162,6 +162,9 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .about-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
 .about-grid.about-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 620px; }
+.wb-lead { margin: -4px 0 12px; } .wb-gold { display: block; font-size: 19px; font-weight: 600; color: #a87a00; margin-bottom: 2px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wb-gold { color: #fbbf24; } }
+:root[data-theme="dark"] .wb-gold { color: #fbbf24; }
 .wb-card { gap: 12px; margin-bottom: 4px; } .wb-card .su-btns { margin-top: 6px; }
 .w-big { font-size: 16px; padding: 12px 18px; border-radius: 99px; white-space: nowrap; } #w-back.w-big { min-width: 84px; } #w-go.w-big { min-width: 120px; }
 .w-pills { display: flex; flex-wrap: wrap; gap: 8px; }  /* v188 (Cuong): picker page categories, one open at a time */
@@ -1854,7 +1857,7 @@ function backView() {
   } else { title = "Which state do you live in?";
     body = `<p class="small muted" style="margin:0">So we can show regional providers and local prices.</p>
       <select id="wb-state" aria-label="State"><option value="">Choose your state</option>${Object.entries(US_STATES).map(([k, nm]) => `<option value="${k}">${nm}</option>`).join("")}</select>`; }
-  const f = el(`${head}<p class="small muted" style="margin:-4px 0 12px">A few details are still missing. Each one makes your ratings and savings more accurate.</p>
+  const f = el(`${head}<p class="wb-lead"><span class="wb-gold">We noticed some information is missing.</span> <span class="small muted">Completing this makes your ratings and savings more accurate.</span></p>
     <section class="card wb-card"><div class="su-top"><h3 style="margin:0">${title}</h3><span class="small muted">${n} of ${all}</span></div>
       <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${all}" aria-valuenow="${wbDone}"><i style="width:${(wbDone / all * 100).toFixed(1)}%"></i></div>
       ${body}
@@ -4082,7 +4085,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 207 · Standalone copy · Oct 26", VERSION_NUM = 207;
+const APP_VERSION = "Prototype · Version 208 · Standalone copy · Oct 26", VERSION_NUM = 208;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
