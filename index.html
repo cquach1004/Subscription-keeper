@@ -162,6 +162,7 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .about-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
 .about-grid.about-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 620px; }
+.wb-card { gap: 12px; margin-bottom: 4px; } .wb-card .su-btns { margin-top: 6px; }
 .w-big { font-size: 16px; padding: 12px 18px; border-radius: 99px; white-space: nowrap; } #w-back.w-big { min-width: 84px; } #w-go.w-big { min-width: 120px; }
 .w-pills { display: flex; flex-wrap: wrap; gap: 8px; }  /* v188 (Cuong): picker page categories, one open at a time */
 .w-pill { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 7px 14px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
@@ -908,7 +909,9 @@ const moneyIn = (n, cur) => n == null ? "—" : new Intl.NumberFormat(undefined,
 const locPlan = (l, p) => { const em = p.effective_monthly ?? p.price_monthly ?? (p.price_annual != null ? +(p.price_annual / 12).toFixed(2) : null); return { ...p, effective_monthly: em }; };
 const EXTRA_FEATURES = { amazon_prime: [{ id: "nfl", name: "Thursday Night Football (NFL)", plans: "all" }] };
 const planOf = (svc, planId) => svc.plans.find(p => p.id === planId) || svc.plans.find(p => p.id === svc.default_plan) || svc.plans[0];
-const priceFor = (plan, cycle) => cycle === "year" ? (plan.price_annual ?? plan.effective_monthly * 12) : (plan.price_monthly ?? plan.effective_monthly);
+// v207: a plan with no published price (insurers) gives null, not $0 (null * 12 was 0), so the app asks what you pay.
+const priceFor = (plan, cycle) => cycle === "year" ? (plan.price_annual ?? (plan.effective_monthly != null ? plan.effective_monthly * 12 : null)) : (plan.price_monthly ?? plan.effective_monthly);
+const unpricedPlan = p => !!p && p.price_monthly == null && p.price_annual == null && p.effective_monthly == null;
 const defaultCycle = plan => plan.price_monthly != null ? "month" : "year";
 const featuresFor = (svc, planId) => svc.features.filter(f => f.plans === "all" || f.plans.includes(planId));
 
@@ -1201,7 +1204,7 @@ function addonCounts(s) { const a = ADDONS[s.svc]; let left = addonMax(s); const
 const addonList = s => (ADDONS[s.svc]?.opts || []).map(o => ({ ...o, n: addonCounts(s)[o.id] })).filter(o => o.n);
 const addonCost = s => { const m = addonList(s).reduce((t, o) => t + o.n * o.price, 0); return s.cycle === "year" ? m * 12 : m; };
 const extras = s => (HOUSEHOLD[s.svc] ? Math.max(0, (s.members || 1) - 1) * (s.memberFee ?? HOUSEHOLD[s.svc].fee) : 0) + addonCost(s);
-const listTotal = s => { const b = listBase(s); return b ? b.price + extras(s) : null; };
+const listTotal = s => { const b = listBase(s); return b && b.price != null ? b.price + extras(s) : null; };  // v207: no published price = unknown, not $0
 // What the user pays: their own figure for the whole household when entered, otherwise the list total.
 // Discounts (autopay, loyalty, student...) lower the list total; a price the user typed in already includes them.
 const discountSum = s => (s.discounts || []).reduce((a, d) => a + (d.on ? d.amount : 0), 0);
@@ -1606,7 +1609,7 @@ function render() {
   document.body.classList.toggle("intro-mode", view === "welcome");  // v171-178: big title, no header buttons on all three welcome pages
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
-  root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, manage: manageView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
+  root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, manage: manageView, feedback: feedbackView, help: helpView, legal: legalView, back: backView }[view]());
   personaBar(root);
   root.querySelectorAll("[data-info]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); const k = b.dataset.info;
     infoOpen.has(k) ? infoOpen.delete(k) : infoOpen.add(k); const y = scrollY; render(); window.scrollTo(0, y); }));
@@ -1773,7 +1776,10 @@ function setupStepView() {
   const s = todo[0], v = svcOf(s), m = measureOf(s), plans = v.plans || [], showPrice = profile().country === catalogCountry();
   const planLine = p => { const mo = p.price_monthly, yr = p.price_annual;
     return !showPrice ? "" : mo != null ? `${money(mo)} a month` : yr != null ? `${money(yr)} a year` : p.effective_monthly != null ? `about ${money(p.effective_monthly)} a month` : ""; };
-  const q1 = plans.length
+  const priceQ = `<div class="su-price"><span>$</span><input id="ws-price" type="number" inputmode="decimal" min="0" step="0.01" value="${s.myTotal != null ? s.myTotal : ""}" placeholder="0.00"><span class="small muted">a month, with tax</span></div>`;
+  // v207 (Cuong): plans with no published price (Progressive and other insurers) ask what you pay instead of showing $0.
+  const q1 = plans.length && plans.every(unpricedPlan) ? `<h3 class="ws-q">1. What do you pay?</h3><p class="small muted" style="margin:0 0 6px">${esc(v.name)} doesn't publish a price, so enter yours.</p>${priceQ}`
+    : plans.length
     ? `<h3 class="ws-q">1. Which plan do you have?</h3><div class="ws-plans" role="radiogroup" aria-label="Plan">${plans.map(p => `<label class="ws-plan"><input type="radio" name="ws-plan" value="${p.id}" ${p.id === s.plan ? "checked" : ""}><span><b>${esc(p.name)}</b><span class="small muted">${planLine(p)}</span></span></label>`).join("")}</div>`
     : `<h3 class="ws-q">1. What do you pay?</h3><div class="su-price"><span>$</span><input id="ws-price" type="number" inputmode="decimal" min="0" step="0.01" value="${s.myTotal != null ? s.myTotal : ""}" placeholder="0.00"><span class="small muted">a month, with tax</span></div>`;
   const q2 = m.costOnly || m.checks || !m.max
@@ -1798,6 +1804,85 @@ function setupStepView() {
     s.setup = "done"; save();
     if (todo.length > 1) { render(); window.scrollTo(0, 0); } else toHome(); });
   f.getElementById("ws-later").addEventListener("click", toHome);
+  return f;
+}
+// Welcome Back (Cuong, v207): a returning visitor with missing info is walked through it one item at a time (a subscription's
+// price or usage, then name, age group and state), with Skip and "Come back later" on every step. Once nothing is missing,
+// a Costly subscription gets an offer to review cheaper options. Shown once per visit (sessionStorage sk-wb).
+let wbSkip = new Set(), wbDone = 0;
+function backItems() {
+  const p = profile(), out = [];
+  state.subs.filter(s => !s.example && !pausedNow(s) && !wbSkip.has(s.id)).forEach(s => { const m = measureOf(s);
+    const price = needsPrice(s), use = !!(s.needsUse && !m.costOnly && !m.checks && m.max);
+    if (price || use) out.push({ k: s.id, s, price, use }); });
+  if (!firstName() && !wbSkip.has("name")) out.push({ k: "name" });
+  if (!p.age && !wbSkip.has("age")) out.push({ k: "age" });
+  if (p.country === "US" && !p.region && !wbSkip.has("state")) out.push({ k: "state" });
+  return out;
+}
+const costlyOf = () => state.subs.filter(s => !pausedNow(s) && rate(s).key === "poor").sort((a, b) => monthly(b) - monthly(a));
+function backView() {
+  const items = backItems(), name = firstName(), later = () => { view = "home"; render(); window.scrollTo(0, 0); };
+  const head = `<div class="section-head"><h2 class="about-title">Welcome Back${name ? `, ${esc(name)}` : ""}!</h2></div>`;
+  if (!items.length) {
+    const c = costlyOf()[0];
+    if (!c) { later(); return el(""); }
+    const opts = cheaperOptions(c), best = opts.length ? Math.max(...opts.map(o => o.save)) : 0;
+    const f = el(`${head}<section class="card wb-card">
+      <p class="small muted" style="margin:0">${wbSkip.size ? "That's all for now." : wbDone ? "Thanks, your list is up to date." : "Your list is up to date."}</p>
+      <h3 style="margin:0">Would you like to lower what you pay?</h3>
+      <div class="su-sub">${logoHtml(svcOf(c))}<b>${esc(c.name)}</b><span class="pill poor">${esc(rate(c).label)}</span></div>
+      <p style="margin:0">You pay ${money(monthly(c))} a month for ${esc(c.name)}, and it's rated Costly. ${best > 0 ? `We found ${opts.length} cheaper option${opts.length === 1 ? "" : "s"} that could save up to ${money(best)} a month.` : "Take a look at other ways to get the same thing for less."}</p>
+      <div class="su-btns"><button class="btn primary w-big" id="wb-alts">Review options</button><button class="btn w-big" id="wb-later">Not now</button></div></section>`);
+    f.getElementById("wb-alts").addEventListener("click", () => { later(); openSheet(c.id); });
+    f.getElementById("wb-later").addEventListener("click", later);
+    return f;
+  }
+  const it = items[0], n = wbDone + 1, all = wbDone + items.length, p = profile();
+  let title, body;
+  if (it.s) { const s = it.s, m = measureOf(s);
+    title = it.price && it.use ? "Finish adding this subscription" : it.price ? "What do you pay for this one?" : "How much do you use it?";
+    body = `<div class="su-sub">${logoHtml(svcOf(s))}<b>${esc(s.name)}</b></div>
+      ${it.price ? `<label class="su-l" for="wb-price">What do you pay? <span class="small muted" style="font-weight:400">We don't have a list price for this one, so we count it as $0 until you add yours.</span></label>
+        <div class="su-price"><span>$</span><input id="wb-price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00"><span class="small muted">a month, with tax</span></div>` : ""}
+      ${it.use ? `<label class="su-l" for="wb-use">${esc(m.label)} <span class="small muted" style="font-weight:400">A rough guess is fine. It tells us whether this one is worth what you pay.</span></label>${slider(m, 0, `id="wb-use" aria-label="${esc(m.label)}"`)}` : ""}`;
+  } else if (it.k === "name") { title = "What should we call you?";
+    body = `<div class="loc-row"><label>First name<input id="wb-first" autocomplete="given-name"></label><label>Last name<input id="wb-last" autocomplete="family-name"></label></div>`;
+  } else if (it.k === "age") { title = "What's your age group?";
+    body = `<p class="small muted" style="margin:0">It helps us compare you with people like you and suggest plans that fit.</p>
+      <div class="about-grid about-3 age-grid" role="radiogroup" aria-label="Age">${AGES.map(([k, l]) => `<button type="button" class="about-opt age-opt" role="radio" data-age="${k}" aria-checked="false" aria-pressed="false" aria-label="${l}"><b>${AGE_TILE[k]}</b><span>years old</span></button>`).join("")}</div>`;
+  } else { title = "Which state do you live in?";
+    body = `<p class="small muted" style="margin:0">So we can show regional providers and local prices.</p>
+      <select id="wb-state" aria-label="State"><option value="">Choose your state</option>${Object.entries(US_STATES).map(([k, nm]) => `<option value="${k}">${nm}</option>`).join("")}</select>`; }
+  const f = el(`${head}<p class="small muted" style="margin:-4px 0 12px">A few details are still missing. Each one makes your ratings and savings more accurate.</p>
+    <section class="card wb-card"><div class="su-top"><h3 style="margin:0">${title}</h3><span class="small muted">${n} of ${all}</span></div>
+      <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${all}" aria-valuenow="${wbDone}"><i style="width:${(wbDone / all * 100).toFixed(1)}%"></i></div>
+      ${body}
+      <p class="small muted" id="wb-msg" role="status" style="margin:0"></p>
+      <div class="su-btns"><button class="btn primary w-big" id="wb-save">${items.length > 1 ? "Save and next" : "Save"}</button><button class="btn w-big" id="wb-skip">Skip</button></div></section>
+    <div style="text-align:center;margin:14px 0 24px"><button type="button" class="btn ghost" id="wb-later">Come back later</button></div>`);
+  const $ = id => f.getElementById(id) || document.getElementById(id), msg = t => { $("wb-msg").textContent = t; };
+  let age = "", moved = false;
+  const inp = $("wb-use"); if (inp) inp.oninput = () => { moved = true; inp.nextElementSibling.textContent = slideText(measureOf(it.s), +inp.value); };
+  f.querySelectorAll("[data-age]").forEach(b => b.addEventListener("click", () => { age = b.dataset.age;
+    document.querySelectorAll("#view [data-age]").forEach(x => { x.setAttribute("aria-pressed", x.dataset.age === age); x.setAttribute("aria-checked", x.dataset.age === age); }); }));
+  const next = () => { wbDone++; save(); render(); window.scrollTo(0, 0); };
+  $("wb-save").addEventListener("click", () => {
+    if (it.s) { const s = it.s, m = measureOf(s);
+      if (it.price) { const val = parseFloat($("wb-price").value); if (isNaN(val)) { msg("Enter what you pay, or tap Skip."); $("wb-price").focus(); return; }
+        s.myTotal = Math.max(0, val); s.priceMine = true; s.cycle = "month"; }
+      if (it.use) { if (!moved) { msg("Move the slider to about how much you use it, or tap Skip."); return; }
+        const v = +inp.value, { cur } = periodKeys(s); setUse(s, v, m.per);
+        ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(v * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you"; }
+      s.example = false; if (s.setup === "todo" && !needsPrice(s) && !(s.needsUse && !m.costOnly && !m.checks && m.max)) s.setup = "done";
+    } else if (it.k === "name") { const first = $("wb-first").value.trim(), last = $("wb-last").value.trim(); if (!first) { msg("Enter your first name, or tap Skip."); $("wb-first").focus(); return; }
+      state.profile = { ...p, first, last }; try { localStorage.setItem("sk-name", [first, last].filter(Boolean).join(" ")); } catch {}
+    } else if (it.k === "age") { if (!age) { msg("Pick your age group, or tap Skip."); return; }
+      state.profile = { ...p, age, group: groupFor(p.about || [], age) };
+    } else { const r = $("wb-state").value; if (!r) { msg("Choose your state, or tap Skip."); return; } state.profile = { ...p, region: r }; }
+    next(); });
+  $("wb-skip").addEventListener("click", () => { wbSkip.add(it.k); render(); window.scrollTo(0, 0); });
+  $("wb-later").addEventListener("click", later);
   return f;
 }
 function welcomeView() {
@@ -3997,7 +4082,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 206 · Standalone copy · Oct 26", VERSION_NUM = 206;
+const APP_VERSION = "Prototype · Version 207 · Standalone copy · Oct 26", VERSION_NUM = 207;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4177,6 +4262,11 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   if (state.sampleV < 3) { if (state.subs.some(s => s.example)) state.subs.forEach(s => { if (SAMPLE_QUOTE[s.svc] && !s.quote) s.quote = sampleQuote(s.svc); }); state.sampleV = 3; }
   if (state.sampleV < 4) state.sampleV = 4;
   if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { s.measure = "replace"; if (!s.hist?.replace) genHistory(s); s.used = ["data_removal"]; }); state.cloakedV = 1; }
+  // v207: subscriptions on a plan with no published price were saved at $0; they need the user's price instead.
+  state.subs.forEach(x => { if (x.price === 0 && !x.priceMine && x.myTotal == null && CATALOG[x.svc]?.plans?.length && unpricedPlan(planOf(CATALOG[x.svc], x.plan))) x.price = null; });
+  // v207 (Cuong): returning visitors with missing info, or a Costly subscription, start on Welcome Back once per visit.
+  if (persona === "me" && saved?.subs?.length && view === "home") { let seen = false; try { seen = sessionStorage.getItem("sk-wb") === "1"; sessionStorage.setItem("sk-wb", "1"); } catch {}
+    if (!seen && (backItems().length || costlyOf().length)) view = "back"; }
   save();
   render();
 }).catch(() => { document.getElementById("view").innerHTML = `<p class="muted">Service prices didn't load. Reload the page to try again.</p>`; });
