@@ -171,7 +171,7 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .w-bk-btns { display: flex; gap: 12px; justify-content: center; }
 .w-clear { padding-left: 0; padding-right: 0; margin-left: auto; color: var(--bad); }  /* v193 (Cuong) */
 .w-clear-ask { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; } .w-clear-ask[hidden] { display: none; }
-.ov-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }  /* v192 (Cuong): Add subscriptions / Manage my list */
+.ov-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; justify-content: center; }  /* v195: centered */  /* v192 (Cuong): Add subscriptions / Manage my list */
 .cat-item[data-have] { opacity: .55; cursor: default; }
 .mg-list { display: grid; gap: 0; padding-top: 6px; padding-bottom: 6px; }
 .mg-row { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); } .mg-row:first-child { border-top: 0; }
@@ -3951,7 +3951,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 194 · Oct 26", VERSION_NUM = 194;
+const APP_VERSION = "Prototype · Version 195 · Oct 26", VERSION_NUM = 195;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
