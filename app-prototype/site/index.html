@@ -2252,10 +2252,12 @@ function usageView() {
   wireCheckin(f);
   wireChecks(f, (s, box) => { const r = rate(s), pill = box.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; });
   f.querySelectorAll("[data-u]").forEach(inp => { const s = state.subs.find(x => x.id === inp.dataset.u), m = measureOf(s);
-    inp.oninput = () => { inp.nextElementSibling.textContent = slideText(m, +inp.value); };
-    inp.onchange = () => { const { cur } = periodKeys(s), n = +inp.value; setUse(s, n, m.per); s.example = false;
+    // v181 (Cuong): the Great / Fair / Costly pill follows the slider while it moves; the value is saved on release.
+    const apply = () => { const { cur } = periodKeys(s), n = +inp.value; setUse(s, n, m.per); s.example = false;
       ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(n * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you";
-      save(); const r = rate(s), pill = inp.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; }; });
+      const r = rate(s), pill = inp.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; };
+    inp.oninput = () => { inp.nextElementSibling.textContent = slideText(m, +inp.value); apply(); };
+    inp.onchange = () => { apply(); save(); }; });
   return f;
 }
 // Months that ended since the last visit, with no entry of their own, keep the usage that was set when they ended.
@@ -3869,7 +3871,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 180 · Standalone copy · Oct 26", VERSION_NUM = 180;
+const APP_VERSION = "Prototype · Version 181 · Standalone copy · Oct 26", VERSION_NUM = 181;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
