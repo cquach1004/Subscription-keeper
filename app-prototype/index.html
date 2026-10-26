@@ -496,7 +496,7 @@ details.ov-why p { margin: 8px 0 0; font-size: 14px; }
 .mrow .slide { grid-column: 1 / -1; }
 .mrow .slide output { font-size: 16px; }
 .mrow .slide-ends { display: none; }
-.checks { display: grid; gap: 6px; margin-top: 8px; } .checks .feature { color: var(--ink); font-weight: 500; border: 0; padding: 0; display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.checks { display: grid; gap: 6px; margin-top: 8px; } .checks .feature.ck-great { color: var(--good); font-weight: 600; } .checks .feature { color: var(--ink); font-weight: 500; border: 0; padding: 0; display: flex; gap: 8px; align-items: center; font-size: 14px; }
 .mrow .checks, .u-row .checks { grid-column: 1 / -1; margin-top: 2px; }
 .mact { display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
 .mrow .mact select { grid-column: auto; }
@@ -1396,7 +1396,7 @@ const unitOf = (m, n) => n === 1 ? m.one : m.short;
 const useText = s => { const m = measureOf(s);
   if (m.insure) { const q = quoteMonthly(s.quote); return q == null ? "No quote to compare yet" : `Best quote ${money(q)}/mo`; }
   if (m.costOnly) return "Not measured by use";
-  if (m.checks) { const on = s.checks?.[periodKeys(s).cur] || []; return on.length ? on.map(id => m.checks.find(c => c.id === id)?.short || id).join(", ") + " this month" : m.results ? "No problems this month" : "Nothing used this month"; }
+  if (m.checks) { const k = periodKeys(s).cur, on = checkedIn(s, m, k); if (!on.length && isGreat(s, k)) return "Everything's going great this month"; return on.length ? on.map(id => m.checks.find(c => c.id === id)?.short || id).join(", ") + " this month" : m.results ? "No problems this month" : "Nothing used this month"; }
   if (m.per1 === "dollar") return `${money(s.rate)} of perks a ${m.per}`;
   return m.amount ? `${fmtN(s.rate)} ${m.short}` : `${fmtN(s.rate)} ${unitOf(m, s.rate)} a ${m.per}`; };
 // The usage slider runs from 0 to the measure's top ("100+": the top means that much or more).
@@ -1404,13 +1404,17 @@ const slideText = (m, n) => (m.per1 === "dollar" ? "$" : "") + (n >= m.max ? `${
 const slider = (m, n, attrs) => `<div class="slide"><input type="range" min="0" max="${m.max}" step="${m.step}" value="${Math.min(n, m.max)}" ${attrs}><output class="num">${slideText(m, n)}</output>
   <div class="slide-ends" aria-hidden="true"><span>0</span><span>${m.per1 === "dollar" ? "$" : ""}${fmtN(m.max)}+</span></div></div>`;
 // Checkbox usage (AAA): s.checks[month] lists what was used; a roadside call also counts as 1 in the month's history for the chart.
-const checkedIn = (s, m, k) => s.checks?.[k] || (s.hist?.[m.id]?.[k] > 0 ? [m.results ? "problem" : "roadside"] : []);
-const checksHtml = (s, m, key) => `<div class="checks" data-ck="${s.id || "new"}|${key}">${m.checks.filter(c => !c.plans || c.plans.includes(s.plan)).map(c =>
+// v205 (Cuong): "doing its job" services also get an "Everything's going great" box. It's stored as "great" but never counts as a problem,
+// and it and the problem boxes clear each other.
+const checkedIn = (s, m, k) => (s.checks?.[k] || (s.hist?.[m.id]?.[k] > 0 ? [m.results ? "problem" : "roadside"] : [])).filter(id => id !== "great");
+const isGreat = (s, k) => !!s.checks?.[k]?.includes("great");
+const checksHtml = (s, m, key) => `<div class="checks" data-ck="${s.id || "new"}|${key}">${m.results ? `<label class="feature ck-great"><input type="checkbox" value="great" ${isGreat(s, key) ? "checked" : ""}>Everything's going great!</label>` : ""}${m.checks.filter(c => !c.plans || c.plans.includes(s.plan)).map(c =>
   `<label class="feature"><input type="checkbox" value="${c.id}" ${checkedIn(s, m, key).includes(c.id) ? "checked" : ""}>${esc(c.name)}</label>`).join("")}</div>`;
 function setChecks(s, key, ids) { const m = measureOf(s); (s.checks ||= {})[key] = ids;
-  ((s.hist ||= {})[m.id] ||= {})[key] = m.results ? ids.length : ids.includes("roadside") ? 1 : 0; ((s.histSrc ||= {})[m.id] ||= {})[key] = "you"; delete s.needsUse; s.example = false; save(); }
-const wireChecks = (root, after) => root.querySelectorAll("[data-ck]").forEach(box => box.onchange = () => { const [id, key] = box.dataset.ck.split("|"), s = state.subs.find(x => x.id === id);
-  if (!s) return; setChecks(s, key, [...box.querySelectorAll("input:checked")].map(i => i.value)); after?.(s, box); });
+  ((s.hist ||= {})[m.id] ||= {})[key] = m.results ? ids.filter(id => id !== "great").length : ids.includes("roadside") ? 1 : 0; ((s.histSrc ||= {})[m.id] ||= {})[key] = "you"; delete s.needsUse; s.example = false; save(); }
+const wireChecks = (root, after) => root.querySelectorAll("[data-ck]").forEach(box => box.onchange = e => { const [id, key] = box.dataset.ck.split("|"), s = state.subs.find(x => x.id === id);
+  if (!s) return; const t = e?.target;
+  if (t?.checked) box.querySelectorAll("input").forEach(i => { if (i !== t && (t.value === "great" || i.value === "great")) i.checked = false; }); setChecks(s, key, [...box.querySelectorAll("input:checked")].map(i => i.value)); after?.(s, box); });
 // v66: entries carry over when the unit is the same; otherwise example rows get example numbers and real ones ask again.
 function migrateUse(s) {
   const m = measureOf(s), prev = s.usage?.[m.id] || (s.measure === m.id ? { rate: s.rate, per: s.per } : null), sample = SAMPLE.find(x => x[0] === s.svc);
@@ -1757,7 +1761,7 @@ const WELCOME_SKIP = new Set(["energy"]);
 // Welcome, step 3 (Cuong, v190): one subscription at a time, two questions each: which plan, then one usage number for the value
 // chart (the subscription's own measure). Next saves and moves on; "Finish later" goes to Overview, where Finish setting up picks up the rest.
 // v204 (Cuong): 1Password and other "doing its job" services were told they'd tick off what they *used*; they tick off what went wrong.
-const checksText = m => m.results ? `We rate this one on whether it does its job, plus price and service, not on how much you use it. Each month on the Usage tab you can tick anything that went wrong (${m.checks[0].name.charAt(0).toLowerCase() + m.checks[0].name.slice(1)}). Nothing ticked means it's working.`
+const checksText = m => m.results ? `We rate this one on whether it does its job, plus price and service, not on how much you use it. Each month on the Usage tab you can tick anything that went wrong (${m.checks[0].name.charAt(0).toLowerCase() + m.checks[0].name.slice(1)}). Or tick "Everything's going great!" Nothing ticked also means it's working.`
   : "You'll tick off what you used each month on the Usage tab.";
 function setupStepView() {
   const inBatch = x => !wsBatch || wsBatch.has(x.id), todo = setupTodo().filter(inBatch), all = state.subs.filter(x => x.setup && inBatch(x)).length, done = all - todo.length;
@@ -3835,7 +3839,7 @@ function openSheet(id) {
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
         ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
         ${m.insure ? insureHtml(s) : `
-        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${needHtml(s)}${insureHtml(s)}</div>` : ""}`
+        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Tick \u201cEverything's going great!\u201d or leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${needHtml(s)}${insureHtml(s)}</div>` : ""}`
         : m.costOnly ? energyFuel(s) ? energyHtml(s) : `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
           ${slider(m, s.rate, 'id="s-rate"')}
           ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}`}
@@ -3989,7 +3993,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 196 · Oct 26", VERSION_NUM = 204;
+const APP_VERSION = "Prototype · Version 196 · Oct 26", VERSION_NUM = 205;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
