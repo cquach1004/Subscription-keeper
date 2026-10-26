@@ -352,6 +352,12 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .hh-leg { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 14px; margin-top: 6px; font-size: 13px; color: var(--ink); }
 .hh-leg span { display: inline-flex; align-items: center; gap: 6px; } .hh-leg i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
 .hh-split + .cmp-note { margin-top: 0; }
+.info-btn { display: inline-grid; place-items: center; width: 22px; height: 22px; padding: 0; margin-left: 8px; border-radius: 50%; border: 1.5px solid currentColor; background: none; color: var(--muted); font: italic 700 12px/1 Georgia, serif; vertical-align: 2px; cursor: pointer; flex: none; }
+.info-btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.stat.lead { position: relative; } .stat.lead > .info-btn { position: absolute; top: 14px; right: 14px; margin: 0; color: rgba(255,255,255,.85); }
+.stat.lead > .info-btn.on { background: #fff; border-color: #fff; color: #142f73; }
+.info-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; margin: 10px 0 14px; }
+.info-panel .cmp-note, .card .info-panel { margin: 0; } .card .info-panel { font-size: 12px; color: var(--muted); }
 .cmp-note { margin: 18px 0 6px; } .cmp-note a { color: var(--accent); } .cmp-note select.bench-grp { display: inline-block; width: auto; font-size: 12px; padding: 1px 4px; margin: 0 2px; }
 .bench-grp { font-size: 12px; padding: 2px 6px; border-radius: 8px; max-width: 100%; }
 /* v102 (Cuong): Overview tile with the share of subscriptions rated Great, Fair and Costly. */
@@ -1598,6 +1604,8 @@ function render() {
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
   root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, manage: manageView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
   personaBar(root);
+  root.querySelectorAll("[data-info]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); const k = b.dataset.info;
+    infoOpen.has(k) ? infoOpen.delete(k) : infoOpen.add(k); const y = scrollY; render(); window.scrollTo(0, y); }));
 }
 
 function upcomingHtml() {
@@ -2478,12 +2486,17 @@ function cmpData() {
 }
 // v166 (Cuong): name the group on the tile, with an asterisk pointing to the note at the bottom of Overview.
 const cmpWho = () => BENCH_GROUPS[benchGroup()]?.replace("Average ", "").replace(/^./, c => c.toUpperCase()) || "";
+// v199 (Cuong): footnotes sit behind a small "i" circle so screens stay calm. infoBtn goes where the note belongs, infoPanel where it opens.
+// Any screen can use them; render() wires every [data-info] button, and what's open is kept across re-renders.
+const infoOpen = new Set();
+const infoBtn = (key, label) => `<button type="button" class="info-btn${infoOpen.has(key) ? " on" : ""}" data-info="${key}" aria-expanded="${infoOpen.has(key)}" aria-label="${esc(label)}" title="${esc(label)}">i</button>`;
+const infoPanel = (key, html) => infoOpen.has(key) && html ? `<div class="info-panel" id="info-${key}">${html}</div>` : "";
 function cmpLine(you, avg, fmt, all) {
   if (avg == null) return "";
   // v160 (Cuong): no subscriptions-only figure in the tiles, to keep them clean. v161: you and the average both include household services.
   const ex = "";
   const pct = avg ? Math.round((you - avg) / avg * 100) : 0, k = pct > 0 ? "more" : pct < 0 ? "less" : "";
-  return `<div class="cmp">${ex}<span>${esc(cmpWho())} avg<a href="#cmp-note" class="cmp-star" aria-label="How we compare">*</a> ${avg >= 1000 ? fmt(Math.round(avg)).replace(/\.00(?=\D*$)/, "") : fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
+  return `<div class="cmp">${ex}<span>${esc(cmpWho())} avg ${avg >= 1000 ? fmt(Math.round(avg)).replace(/\.00(?=\D*$)/, "") : fmt(avg)}</span><b class="${k}">${pct === 0 ? "Same" : `${pct > 0 ? "&uarr;" : "&darr;"} ${Math.abs(pct)}% ${k}`}</b></div>`;
 }
 function cmpNote(d) {
   if (!d.b && !d.bn) return "";
@@ -2491,7 +2504,7 @@ function cmpNote(d) {
   const pick = `<select id="cmp-grp" class="bench-grp" aria-label="Compare me with">${Object.entries(BENCH_GROUPS).map(([k, n]) => `<option value="${k}" ${k === d.g ? "selected" : ""}>${n.replace("Average ", "")}</option>`).join("")}</select>`;
   const srcs = [d.b, d.bn, ...d.used].filter(x => x?.url).filter((x, i, a) => a.findIndex(y => y.url === x.url) === i);
   const src = srcs.map((x, i) => `<a href="${esc(x.url)}" target="_blank" rel="noopener" title="${esc(x.src)}">Source${srcs.length > 1 ? ` ${i + 1}` : ""}</a>`).join(" &middot; ");
-  return `<p class="note cmp-note" id="cmp-note">* Compared with the average ${pick} in ${esc(countryName(profile().country))}${est ? " (estimates)" : ""}.${d.billN ? d.used.length ? ` Household services use published US household averages where there is one (${d.used.length === 1 ? "one category" : `${d.used.length} categories`}); the rest count at what you pay.` : " Household services count at what you pay, since we have no averages for them here." : ""} ${src}</p>`;
+  return `<p class="note cmp-note" id="cmp-note">Compared with the average ${pick} in ${esc(countryName(profile().country))}${est ? " (estimates)" : ""}.${d.billN ? d.used.length ? ` Household services use published US household averages where there is one (${d.used.length === 1 ? "one category" : `${d.used.length} categories`}); the rest count at what you pay.` : " Household services count at what you pay, since we have no averages for them here." : ""} ${src}</p>`;
 }
 // v154 (Cuong): what goes to subscriptions vs household services, as one bar under the top numbers.
 function splitHtml(d, total) {
@@ -2566,10 +2579,10 @@ function homeView() {
     <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
     ${state.subs.length ? "" : listBtns()}
     ${state.subs.length ? `<section class="summary">
-      <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div>${cmpLine(cd.allAmt, cd.avgAll, money, total)}</div>
+      <div class="stat lead"><div class="label">You pay each month</div>${cmpNote(cd) ? infoBtn("cmp", "How we compare") : ""}<div class="value num">${money(total)}</div>${cmpLine(cd.allAmt, cd.avgAll, money, total)}</div>
       <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div>${cmpLine(cd.allAmt * 12, cd.avgAll && cd.avgAll * 12, money, total * 12)}</div>
       <div class="stat tint"><div class="label">${cd.billN ? "Subscriptions & services" : "Subscriptions"}</div><div class="value num">${state.subs.length}</div>${cmpLine(state.subs.length, cd.avgAllN, x => x, state.subs.length)}</div>
-    </section>${splitHtml(cd, total)}` : ""}
+    </section>${splitHtml(cd, total)}${infoPanel("cmp", cmpNote(cd))}` : ""}
     ${plkHtml()}
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
@@ -2579,7 +2592,6 @@ function homeView() {
     ${PHASE1 ? "" : upcomingHtml()}
     ${renewHtml()}
     ${state.subs.length ? listBtns() : ""}
-    ${state.subs.length ? cmpNote(cd) : ""}
     ${persona === "me" ? `<div class="note ov-restart" style="margin:6px 0 0">${resetAsk ? `<span class="small">Remove all ${state.subs.length} subscriptions on your list and start over? This can't be undone.</span><button class="btn danger small" id="reset-yes">Reset</button><button class="btn ghost small" id="reset-no">Cancel</button>`
       : `<button class="btn ghost small" id="restart">Go to Welcome Screen</button>${state.subs.length ? `<button class="btn ghost small" id="reset-ask" style="color:var(--bad)">Reset My Selections</button>` : ""}`}</div>` : ""}`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
@@ -2774,9 +2786,8 @@ function useMostHtml() {
   // 6 or more: top 3 and bottom 3. Fewer: split evenly, the odd one going to Most (so a single one shows there).
   const most = list.slice(0, k), least = n >= 6 ? list.slice(-3).reverse() : list.slice(k).reverse();
   const row = ({ s }) => { const r = rate(s); return `<button class="uml-row" data-id="${s.id}">${logoHtml(svcOf(s))}<span style="min-width:0"><b>${esc(s.name)}</b><span class="small muted">${esc(useText(s))}</span></span><span class="pill ${r.key}">${esc(r.label)}</span></button>`; };
-  const card = (title, items, empty) => `<section class="card"><h3 style="margin:0 0 4px">${title}</h3>${items.map(row).join("") || `<p class="small muted" style="margin:4px 0 0">${empty}</p>`}</section>`;
-  return `<div class="uml">${card("What you use most", most, "Add how often you use your subscriptions to see this.")}${card("What you use least", least, n ? "Add another subscription with usage to compare." : "Add how often you use your subscriptions to see this.")}</div>
-    <p class="note" style="margin:-6px 0 14px">Ranked by use for the price, since each service is measured differently. Protection plans, insurance and services you tick off aren't included.</p>`;
+  const card = (title, items, empty, info) => `<section class="card"><h3 style="margin:0 0 4px">${title}${info ? infoBtn("uml", "How this is ranked") : ""}</h3>${info ? infoPanel("uml", "Ranked by use for the price, since each service is measured differently. Protection plans, insurance and services you tick off aren't included.") : ""}${items.map(row).join("") || `<p class="small muted" style="margin:4px 0 0">${empty}</p>`}</section>`;
+  return `<div class="uml">${card("What you use most", most, "Add how often you use your subscriptions to see this.", true)}${card("What you use least", least, n ? "Add another subscription with usage to compare." : "Add how often you use your subscriptions to see this.")}</div>`;
 }
 function trendHtml() {
   const c = profile().country, mine = new Set(state.subs.map(s => s.svc));
@@ -3973,7 +3984,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 196 · Standalone copy · Oct 26", VERSION_NUM = 198;
+const APP_VERSION = "Prototype · Version 196 · Standalone copy · Oct 26", VERSION_NUM = 199;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
