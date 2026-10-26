@@ -171,7 +171,7 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .w-bk-btns { display: flex; gap: 12px; justify-content: center; }
 .w-clear { padding-left: 0; padding-right: 0; margin-left: auto; color: var(--bad); }  /* v193 (Cuong) */
 .w-clear-ask { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; } .w-clear-ask[hidden] { display: none; }
-.ov-restart { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }  /* v196 */
+.ov-restart { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; text-align: center; gap: 6px 14px; }  /* v201: centered */  /* v196 */
 .ov-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; justify-content: center; }  /* v195: centered */  /* v192 (Cuong): Add subscriptions / Manage my list */
 .cat-item[data-have] { opacity: .55; cursor: default; }
 .mg-list { display: grid; gap: 0; padding-top: 6px; padding-bottom: 6px; }
@@ -2589,7 +2589,7 @@ function homeView() {
     ${renewHtml()}
     ${state.subs.length ? listBtns() : ""}
     ${persona === "me" ? `<div class="note ov-restart" style="margin:6px 0 0">${resetAsk ? `<span class="small">Remove all ${state.subs.length} subscriptions on your list and start over? This can't be undone.</span><button class="btn danger small" id="reset-yes">Reset</button><button class="btn ghost small" id="reset-no">Cancel</button>`
-      : `<button class="btn ghost small" id="restart">Go to Welcome Screen</button>${state.subs.length ? `<button class="btn ghost small" id="reset-ask" style="color:var(--bad)">Reset My Selections</button>` : ""}`}</div>` : ""}`);
+      : `<button class="btn ghost small" id="restart">Welcome Screen</button>${state.subs.length ? `<button class="btn ghost small" id="reset-ask" style="color:var(--bad)">Reset My Selections</button>` : ""}`}</div>` : ""}`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   wireListBtns(f);
   f.getElementById("cmp-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
@@ -3980,7 +3980,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 196 · Oct 26", VERSION_NUM = 200;
+const APP_VERSION = "Prototype · Version 196 · Oct 26", VERSION_NUM = 201;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.

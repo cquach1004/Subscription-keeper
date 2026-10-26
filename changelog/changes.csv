@@ -223,3 +223,4 @@ Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,No
 198,2026-10-26,"White cards get a light border across the app; on Overview, more space between widgets and a thin line under each widget title",Cuong,Overview / all pages,Design,Y,Current,From tester feedback that Overview was still busy
 199,2026-10-26,"Footnotes behind an ""i"" circle icon (reusable on any screen): Overview's averages and sources note opens from an i on ""You pay each month"" (the * after ""avg"" is gone), and the ranking note from an i next to ""What you use most""",Cuong,Overview,Design,Y,Current,
 200,2026-10-26,"Manage my list: removed the top ""Back to Overview"" link (the Back button at the bottom stays)",Cuong,Manage my list,Design,Y,Current,
+201,2026-10-26,"Overview: ""Go to Welcome Screen"" renamed ""Welcome Screen""; it and ""Reset My Selections"" are centered",Cuong,Overview,Design,Y,Current,
