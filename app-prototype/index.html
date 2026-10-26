@@ -273,13 +273,15 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 #ways { scroll-margin-top: 16px; }
 .summary.n2 { grid-template-columns: 1.4fr 1fr; } .summary.n1 { grid-template-columns: 1fr; }
 @media (max-width: 620px) { .summary.n2 { grid-template-columns: 1fr; } }
-.setup { display: grid; gap: 10px; margin-bottom: 14px; border: 2px solid var(--accent); }
+.setup { display: grid; gap: 10px; margin-bottom: 14px; border: 2px solid var(--accent); background: color-mix(in srgb, var(--accent) 13%, var(--surface)); }  /* v180: tinted so it stands out */
+.card.setup { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.setup input { background: var(--surface); }
 .su-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .su-bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; } .su-bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
 .su-sub { display: flex; align-items: center; gap: 10px; margin-top: 4px; } .su-sub b { font-size: 17px; }
 .su-l { font-weight: 600; font-size: 14px; display: block; } .su-l .small { display: block; margin-top: 2px; }
 .su-price { display: flex; align-items: center; gap: 8px; } .su-price input { width: 120px; }
-.su-btns { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.su-btns { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
 /* v113/v116 (Cuong): Let's get started (Yes shows top 6 to tap) and other-category pills on Overview. */
 .gq-list { display: grid; gap: 0; margin: 6px 0 4px; }
 .gq { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
@@ -3864,7 +3866,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 179 · Oct 26", VERSION_NUM = 179;
+const APP_VERSION = "Prototype · Version 180 · Oct 26", VERSION_NUM = 180;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
