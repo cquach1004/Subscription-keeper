@@ -163,7 +163,14 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .about-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
 .about-grid.about-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 620px; }
 .w-big { font-size: 16px; padding: 12px 18px; border-radius: 99px; white-space: nowrap; } #w-back.w-big { min-width: 84px; } #w-go.w-big { min-width: 120px; }
-.w-score { margin: 22px 0 0; padding: 16px 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); display: flex; align-items: baseline; gap: 12px; }  /* v184 (Cuong): selected count as its own card after section 3 */
+.w-pills { display: flex; flex-wrap: wrap; gap: 8px; }  /* v188 (Cuong): picker page categories, one open at a time */
+.w-pill { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 7px 14px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.w-pill[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.w-pill-n { background: var(--accent-soft); color: var(--accent); border-radius: 99px; font-size: 12px; font-weight: 700; padding: 1px 7px; } .w-pill[aria-pressed="true"] .w-pill-n { background: #fff; }
+.w-basket { position: sticky; bottom: 0; z-index: 5; background: var(--bg); border-top: 1px solid var(--line); margin-top: 18px; padding: 10px 0 calc(12px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 10px; }
+.w-bk-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; max-height: 40vh; overflow-y: auto; } .w-bk-head > b { font-size: 15px; white-space: nowrap; }
+.w-bk-chips { display: contents; } .w-bk-chips .own-item { padding: 3px 4px 3px 4px; gap: 6px; font-size: 14px; box-shadow: none; } .w-bk-chips .own-item .logo { width: 22px; height: 22px; font-size: 10px; border-radius: 6px; }
+.w-bk-btns { display: flex; gap: 12px; justify-content: center; }
 .w-score-n { font-size: 34px; font-weight: 700; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; } .w-score-l { font-size: 16px; font-weight: 600; }
 .age-opt { align-content: center; min-height: 92px; gap: 2px; } .age-opt b { font: 700 22px/1.15 var(--f-body); color: var(--accent); white-space: nowrap; } @media (max-width: 380px) { .age-opt b { font-size: 19px; } } .age-opt span { font-size: 13px; color: var(--muted); font-weight: 500; }
 .share-box { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; max-width: 620px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); cursor: pointer; }
@@ -215,7 +222,7 @@ table.tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
 .report .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .brand { flex-wrap: wrap; }
 /* Safari gives date inputs a wide built-in width that won't shrink; keep them inside their box. */
-#w-first, #w-last, #w-country, #w-state, #w-email, #w-own { background-color: #ffffff; color: #1d4ed8; font-size: 26px; padding: 8px 12px; }  /* v185-186 (Cuong): welcome boxes white, double-size blue text */
+#w-first, #w-last, #w-country, #w-state, #w-email, #w-q { background-color: #ffffff; color: #1d4ed8; font-size: 26px; padding: 8px 12px; }  /* v185-186 (Cuong): welcome boxes white, double-size blue text */
 input[type=date] { -webkit-appearance: none; appearance: none; min-width: 0; max-width: 100%; min-height: 40px; display: block; }
 .start-row { display: grid; gap: 8px; }
 .start-row label { max-width: 240px; }
@@ -1728,55 +1735,73 @@ function welcomeView() {
   const popular = POPULAR.map(id => CATALOG[id]).filter(v => v && availability(v.id, country) !== "no").slice(0, 12);
   const more = offered.slice().sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
   const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
-  const groups = [...new Set(more.map(v => v.category))], wcatDefault = groups.includes("ai") ? "ai" : groups[0];
-  // v115 (Cuong): each category shows its top 6 (svcRank order), then "See all".
-  // v178 (Cuong): numbered sections; categories sit under "2. Want to add more?" with Explore-style pills that narrow the list.
-  const f = el(`<h3 style="margin:18px 0 8px">1. Which subscriptions do you have?</h3>
-    <p class="small muted" style="margin:0 0 10px">Tap each one you pay for.</p>
-    <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
-    <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
-    <div class="w-score" style="margin-top:22px" role="status" aria-live="polite"><span class="w-score-n" id="w-count">0</span><span class="w-score-l">Subscriptions Selected</span></div>
-    <h3 style="margin:26px 0 8px">2. Want to add more?</h3>
-    <label class="w-cat-pick" style="display:block;margin:0 0 14px"><span class="small muted">Pick a category</span><select id="w-cat" aria-label="Category" style="margin-top:4px">${groups.map(c => `<option value="${c}" ${c === wcatDefault ? "selected" : ""}>${esc(catLabel(c))}</option>`).join("")}<option value="all">All categories</option></select></label>
-    ${groups.map(c => { const list = more.filter(v => v.category === c).sort(svcRank);
-      const hid = c === wcatDefault ? "" : " hidden";
-      return `<h4 class="w-h" style="margin:4px 0 8px" hidden>${esc(catLabel(c))}</h4><div class="catalog" data-open="0" data-cat="${c}"${hid}>${list.map((v, i) => i < 6 ? tile(v) : tile(v).replace('<button ', '<button hidden data-extra="1" ')).join("")}</div>${list.length > 6 ? `<button type="button" class="btn ghost small w-more"${hid}>See all ${list.length}</button>` : ""}`; }).join("")}
-    <p class="small muted" id="w-nores" hidden style="margin:4px 0 12px"></p>
-    <section class="w-own"><h3 style="margin:26px 0 4px">3. Don't see yours?</h3>
-      <p class="small muted" style="margin:0 0 8px">Add it yourself. You'll enter what you pay when you finish setting up.</p>
-      <div style="display:flex;gap:8px"><input id="w-own" placeholder="e.g. Hometown Gym" aria-label="Name of a service we don't list" style="flex:1;min-width:0"><button type="button" class="btn" id="w-own-add">Add</button></div>
-      <div class="own-list" id="w-own-list"></div></section>
-    <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;margin-top:18px;display:flex;gap:12px;justify-content:center;align-items:center;border-top:1px solid var(--line)">
-      <button type="button" class="btn w-big" id="w-back">Back</button>
-      <button class="btn primary w-big" id="w-go">Next</button></div>
-    <div class="w-alt" style="display:flex;flex-direction:column;gap:10px;align-items:center;margin:8px 0 24px">
+  const groups = [...new Set(more.map(v => v.category))].sort((x, y) => catLabel(x).localeCompare(catLabel(y)));
+  // v188 (Cuong): short page. Search on top (no match: add as your own), Popular, then category pills with one category open
+  // at a time, and a pinned "Your list" basket with name chips, Back and Next so nobody has to scroll to the bottom.
+  const byCat = c => more.filter(v => v.category === c).sort(svcRank);
+  let wcat = null, wcatAll = false, bkOpen = false;
+  const f = el(`<div id="w-pick"><h3 style="margin:18px 0 8px">1. Which subscriptions do you have?</h3>
+    <p class="small muted" style="margin:0 0 10px">Search, or tap each one you pay for.</p>
+    <input id="w-q" type="search" placeholder="e.g. Netflix, gym" aria-label="Search services" style="width:100%;margin-bottom:10px">
+    <p class="small muted" id="w-nores" hidden style="margin:0 0 12px"></p>
+    <div class="catalog" id="w-results" hidden></div>
+    <div id="w-browse">
+      <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
+      <h3 style="margin:22px 0 4px">2. Browse by category</h3>
+      <p class="small muted" style="margin:0 0 10px">Tap a category to see what's in it.</p>
+      <div class="w-pills" id="w-pills"></div>
+      <div id="w-catlist"></div>
+    </div>
+    <div class="w-basket" id="w-basket">
+      <div class="w-bk-head"><b>Your list (<span id="w-count">0</span>)</b><span class="w-bk-chips" id="w-bk-chips"></span></div>
+      <div class="w-bk-btns"><button type="button" class="btn w-big" id="w-back">Back</button><button class="btn primary w-big" id="w-go">Next</button></div>
+    </div>
+    <div class="w-alt" style="display:flex;flex-direction:column;gap:10px;align-items:center;margin:14px 0 24px">
       <button type="button" class="btn" id="w-later">Skip, I'll add them later</button>
-      <button type="button" class="btn" id="w-example">Just looking? Try it with example data</button></div>`);
+      <button type="button" class="btn" id="w-example">Just looking? Try it with example data</button></div></div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
-  const count = () => { const n = picks.size + own.length; $("w-count").textContent = n; };
-  const drawOwn = () => { $("w-own-list").innerHTML = own.map((n, i) => `<span class="own-item">${logoHtml({ color: "#6b7785", mark: n.slice(0, 2) })}<span>${esc(n)}</span><button type="button" data-own-x="${i}" aria-label="Remove ${esc(n)}">&times;</button></span>`).join("");
-    $("w-own-list").querySelectorAll("[data-own-x]").forEach(b => b.addEventListener("click", () => { own.splice(+b.dataset.ownX, 1); drawOwn(); count(); })); };
+  const press = root => root.querySelectorAll(".cat-item").forEach(b => b.setAttribute("aria-pressed", picks.has(b.dataset.svc)));
+  // The most common kinds first; the rest wait behind "More categories" (always shown once something in them is picked or open).
+  const COMMON = ["video", "music", "ai", "shopping", "storage", "mobile", "internet", "fitness", "food", "gaming", "news", "car_insurance"];
+  let allCats = false;
+  const drawPills = () => { const cnt = c => [...picks].filter(id => CATALOG[id]?.category === c).length;
+    const order = [...COMMON.filter(c => groups.includes(c)), ...groups.filter(c => !COMMON.includes(c))];
+    const shown = allCats ? order : order.filter(c => COMMON.includes(c) || cnt(c) || c === wcat), hidden = order.length - shown.length;
+    $("w-pills").innerHTML = shown.map(c => { const n = cnt(c);
+      return `<button type="button" class="w-pill" data-wcat="${c}" aria-pressed="${c === wcat}">${esc(catLabel(c))}${n ? ` <span class="w-pill-n">${n}</span>` : ""}</button>`; }).join("")
+      + (hidden ? `<button type="button" class="btn ghost small" id="w-allcats">More categories (${hidden})</button>` : allCats ? `<button type="button" class="btn ghost small" id="w-allcats">Fewer categories</button>` : ""); };
+  const drawCat = () => { const box = $("w-catlist"); if (!wcat) { box.innerHTML = ""; return; }
+    const list = byCat(wcat), shown = wcatAll ? list : list.slice(0, 6);
+    box.innerHTML = `<h4 class="w-h" style="margin:14px 0 8px">${esc(catLabel(wcat))}</h4><div class="catalog">${shown.map(tile).join("")}</div>
+      ${list.length > 6 ? `<button type="button" class="btn ghost small w-more" id="w-more" style="margin:-8px 0 12px;padding-left:0">${wcatAll ? "Show fewer" : `See all ${list.length}`}</button>` : ""}`;
+    press(box); };
+  const drawBasket = () => { const items = [...[...picks].map(id => ({ k: "s:" + id, name: CATALOG[id].name, v: CATALOG[id] })), ...own.map((n, i) => ({ k: "o:" + i, name: n, v: { color: "#6b7785", mark: n.slice(0, 2) } }))];
+    $("w-count").textContent = items.length;
+    const cut = bkOpen ? items.length : 3, extra = items.length - cut;
+    $("w-bk-chips").innerHTML = items.length ? items.slice(0, cut).map(x => `<span class="own-item">${logoHtml(x.v)}<span>${esc(baseName(x.name) || x.name)}</span><button type="button" data-bk-x="${x.k}" aria-label="Remove ${esc(x.name)}">&times;</button></span>`).join("")
+      + (extra > 0 ? `<button type="button" class="btn ghost small" id="w-bk-more">+${extra} more</button>` : bkOpen && items.length > 3 ? `<button type="button" class="btn ghost small" id="w-bk-more">Show less</button>` : "")
+      : `<span class="small muted">Nothing yet. Tap a service to add it.</span>`; };
+  const update = () => { press(f); press(document); drawPills(); drawBasket(); };
   const addOwn = name => { name = name.trim().replace(/\s+/g, " "); if (!name) return;
-    if (!own.some(n => n.toLowerCase() === name.toLowerCase())) own.push(name.slice(0, 60));
-    $("w-own").value = ""; drawOwn(); count(); };
-  $("w-own-add").addEventListener("click", () => addOwn($("w-own").value));
-  $("w-own").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); addOwn(e.target.value); } });
-  f.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => { const id = b.dataset.svc; picks.has(id) ? picks.delete(id) : picks.add(id);
-    document.querySelectorAll(`#view .cat-item[data-svc="${id}"]`).forEach(x => x.setAttribute("aria-pressed", picks.has(id))); count(); }));
-  f.querySelectorAll(".w-more").forEach(m => m.addEventListener("click", () => { const g = m.previousElementSibling, open = g.dataset.open !== "1";
-    g.dataset.open = open ? "1" : "0"; g.querySelectorAll("[data-extra]").forEach(b => b.hidden = !open); m.textContent = open ? "Show fewer" : `See all ${g.children.length}`; }));
-  // v179 (Cuong): one category at a time from a dropdown, AI Assistants first. Search still looks across every category.
-  let wcat = wcatDefault;
-  $("w-cat").addEventListener("change", e => { wcat = e.target.value; $("w-q").dispatchEvent(new Event("input")); });
-  $("w-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase();
-    document.querySelectorAll("#view .catalog").forEach((g, gi) => { let n = 0; const catOk = !g.dataset.cat || !!q || wcat === "all" || wcat === g.dataset.cat;
-      g.querySelectorAll(".cat-item").forEach(b => { b.hidden = !catOk || (q ? !b.dataset.text.includes(q) : (b.dataset.extra && g.dataset.open !== "1")); n += !b.hidden; });
-      if (gi === 0 && q) n = 0; g.hidden = !n; g.previousElementSibling.hidden = !n || (!q && wcat !== "all" && !!g.dataset.cat); const m = g.nextElementSibling; if (m?.classList.contains("w-more")) m.hidden = !!q || !n; });
-    // Nothing matches: offer to add it as their own (v153, Cuong: e.g. an insurer we don't list).
-    const none = q && ![...document.querySelectorAll("#view .catalog .cat-item")].some(b => !b.hidden), nr = $("w-nores"), raw = e.target.value.trim();
-    nr.hidden = !none;
-    if (none) { nr.innerHTML = `No match for "${esc(raw)}". <button type="button" class="btn ghost small" id="w-nores-add" style="padding:0">Add "${esc(raw)}" as your own</button>`;
-      $("w-nores-add").addEventListener("click", () => { addOwn(raw); e.target.value = ""; e.target.dispatchEvent(new Event("input")); }); } });
+    if (!own.some(n => n.toLowerCase() === name.toLowerCase())) own.push(name.slice(0, 60)); update(); };
+  const search = () => { const raw = $("w-q").value.trim(), q = raw.toLowerCase(), res = $("w-results"), nr = $("w-nores");
+    $("w-browse").hidden = !!q; res.hidden = !q; nr.hidden = !q;
+    if (!q) { res.innerHTML = ""; return; }
+    const hits = offered.filter(v => (v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase().includes(q)).sort(svcRank).slice(0, 30);
+    res.innerHTML = hits.map(tile).join(""); res.hidden = !hits.length; press(res);
+    nr.innerHTML = `${hits.length ? "Not listed?" : `No match for "${esc(raw)}".`} <button type="button" class="btn ghost small" id="w-nores-add" style="padding:0">Add "${esc(raw)}" as your own</button>`; };
+  // One click handler for the whole page, since tiles are redrawn as categories and searches change.
+  $("w-pick").addEventListener("click", e => { const t = e.target.closest("button"); if (!t) return;
+    if (t.classList.contains("cat-item")) { const id = t.dataset.svc; picks.has(id) ? picks.delete(id) : picks.add(id); update(); }
+    else if (t.dataset.wcat) { wcat = wcat === t.dataset.wcat ? null : t.dataset.wcat; wcatAll = false; drawPills(); drawCat(); }
+    else if (t.id === "w-more") { wcatAll = !wcatAll; drawCat(); }
+    else if (t.id === "w-allcats") { allCats = !allCats; drawPills(); }
+    else if (t.dataset.bkX) { const [k, v] = t.dataset.bkX.split(/:(.*)/); k === "s" ? picks.delete(v) : own.splice(+v, 1); update(); }
+    else if (t.id === "w-bk-more") { bkOpen = !bkOpen; drawBasket(); }
+    else if (t.id === "w-nores-add") { addOwn($("w-q").value); $("w-q").value = ""; search(); } });
+  $("w-q").addEventListener("input", search);
+  $("w-q").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); if (!$("w-results").children.length && e.target.value.trim()) { addOwn(e.target.value); e.target.value = ""; search(); } } });
+  drawPills(); drawBasket();
   const setLoc = () => {};  // v125: location is set on step 1
   $("w-back").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
   $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile;
@@ -3829,7 +3854,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 187 · Standalone copy · Oct 26", VERSION_NUM = 187;
+const APP_VERSION = "Prototype · Version 188 · Standalone copy · Oct 26", VERSION_NUM = 188;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
