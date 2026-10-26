@@ -2551,13 +2551,12 @@ function manageView() {
     return `<div class="mg-row${ask ? " ask" : ""}">${logoHtml(svcOf(s))}<button type="button" class="mg-name" data-open="${s.id}"><b>${esc(s.name)}</b><span class="small muted">${t ? `${money(t)} a month` : isFree(s) ? "Free" : "No price yet"}</span></button>
       ${ask ? `<span class="mg-ask"><span class="small">Remove it?</span><button type="button" class="btn danger small" data-rm="${s.id}">Remove</button><button type="button" class="btn ghost small" data-keep="1">Cancel</button></span>`
         : `<button type="button" class="btn small" data-ask="${s.id}" aria-label="Remove ${esc(s.name)}">Remove</button>`}</div>`; };
-  const f = el(`<button type="button" class="back-link" id="mg-back">&larr; Back to Overview</button>
-    <div class="section-head"><h2>Manage my list</h2><span class="small muted">${list.length} on your list. Tap a name to see or change it.</span></div>
+  const f = el(`<div class="section-head"><h2>Manage my list</h2><span class="small muted">${list.length} on your list. Tap a name to see or change it.</span></div>
     <section class="card mg-list">${list.map(row).join("") || `<p class="small muted" style="margin:0">Your list is empty.</p>`}</section>
     <div class="ov-actions" style="margin-top:14px"><button type="button" class="btn" id="mg-back2">&larr; Back</button><button type="button" class="btn primary" id="ov-add">+ Add subscriptions</button></div>`);
   const redraw = () => { const y = scrollY; render(); window.scrollTo(0, y); };
-  // v196 (Cuong): a Back button at the bottom too, beside Add.
-  ["mg-back", "mg-back2"].forEach(id => f.getElementById(id).addEventListener("click", () => { manageAsk = null; view = "home"; render(); window.scrollTo(0, 0); }));
+  // v196 (Cuong): Back button at the bottom, beside Add. v200: the top "Back to Overview" link is gone.
+  ["mg-back2"].forEach(id => f.getElementById(id).addEventListener("click", () => { manageAsk = null; view = "home"; render(); window.scrollTo(0, 0); }));
   f.querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.open)));
   f.querySelectorAll("[data-ask]").forEach(b => b.addEventListener("click", () => { manageAsk = b.dataset.ask; redraw(); }));
   f.querySelectorAll("[data-keep]").forEach(b => b.addEventListener("click", () => { manageAsk = null; redraw(); }));
@@ -3981,7 +3980,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 196 · Oct 26", VERSION_NUM = 199;
+const APP_VERSION = "Prototype · Version 196 · Oct 26", VERSION_NUM = 200;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
