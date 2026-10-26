@@ -159,6 +159,7 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .about-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
 .about-grid.about-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 620px; }
+.w-big { font-size: 16px; padding: 12px 18px; border-radius: 99px; white-space: nowrap; } #w-back.w-big { min-width: 84px; }
 .age-opt { align-content: center; min-height: 92px; gap: 2px; } .age-opt b { font: 700 22px/1.15 var(--f-body); color: var(--accent); white-space: nowrap; } @media (max-width: 380px) { .age-opt b { font-size: 19px; } } .age-opt span { font-size: 13px; color: var(--muted); font-weight: 500; }
 .share-box { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; max-width: 620px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); cursor: pointer; }
 .share-box input { margin-top: 3px; width: 18px; height: 18px; flex: none; } .share-box b { display: block; font-weight: 600; } .share-box .small { display: block; margin-top: 2px; }
@@ -1560,7 +1561,7 @@ function render() {
   if (view === "shelf" && !admin.shelf) view = "home";
   drawAvatar(document.getElementById("me-btn"));
   document.body.classList.toggle("short-band", view !== "home");
-  document.body.classList.toggle("intro-mode", view === "welcome" && welcomeStep <= 1);  // v171-173: big title, no header buttons on intro + about pages
+  document.body.classList.toggle("intro-mode", view === "welcome");  // v171-178: big title, no header buttons on all three welcome pages
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
   root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
@@ -1726,25 +1727,27 @@ function welcomeView() {
   const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
   const groups = [...new Set(more.map(v => v.category))];
   // v115 (Cuong): each category shows its top 6 (svcRank order), then "See all".
-  const f = el(`<button type="button" class="back-link" id="w-back">&larr; Back</button><div class="section-head"><h2>Welcome to Subscription Keeper</h2></div>
-    <h3 style="margin:8px 0">Which subscriptions do you have?</h3>
-    <p class="small muted" style="margin:0 0 10px">Tap each one you pay for. Don't see one? Add it yourself under "Don't see yours?" at the end of the list.</p>
+  // v178 (Cuong): numbered sections; categories sit under "2. Want to add more?" with Explore-style pills that narrow the list.
+  const f = el(`<h3 style="margin:18px 0 8px">1. Which subscriptions do you have?</h3>
+    <p class="small muted" style="margin:0 0 10px">Tap each one you pay for.</p>
     <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
     <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
+    <h3 style="margin:26px 0 8px">2. Want to add more?</h3>
+    <div class="chips w-cats" role="group" aria-label="Categories" style="margin:0 0 14px">${["all", ...groups].map(c => `<button type="button" class="chip x-cat" data-wcat="${c}" aria-pressed="${c === "all"}">${c === "all" ? "All" : esc(catLabel(c))}</button>`).join("")}</div>
     ${groups.map(c => { const list = more.filter(v => v.category === c).sort(svcRank);
-      return `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog" data-open="0">${list.map((v, i) => i < 6 ? tile(v) : tile(v).replace('<button ', '<button hidden data-extra="1" ')).join("")}</div>${list.length > 6 ? `<button type="button" class="btn ghost small w-more">See all ${list.length}</button>` : ""}`; }).join("")}
+      return `<h4 class="w-h" style="margin:4px 0 8px">${esc(catLabel(c))}</h4><div class="catalog" data-open="0" data-cat="${c}">${list.map((v, i) => i < 6 ? tile(v) : tile(v).replace('<button ', '<button hidden data-extra="1" ')).join("")}</div>${list.length > 6 ? `<button type="button" class="btn ghost small w-more">See all ${list.length}</button>` : ""}`; }).join("")}
     <p class="small muted" id="w-nores" hidden style="margin:4px 0 12px"></p>
-    <section class="w-own"><h4 class="w-h" style="margin:14px 0 4px">Don't see yours?</h4>
+    <section class="w-own"><h3 style="margin:26px 0 4px">3. Don't see yours?</h3>
       <p class="small muted" style="margin:0 0 8px">Add it yourself. You'll enter what you pay when you finish setting up.</p>
       <div style="display:flex;gap:8px"><input id="w-own" placeholder="Name, e.g. Hometown Gym" aria-label="Name of a service we don't list" style="flex:1;min-width:0"><button type="button" class="btn" id="w-own-add">Add</button></div>
       <div class="own-list" id="w-own-list"></div></section>
-    <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)">
-      <button class="btn primary" id="w-go">Start with 0 subscriptions</button>
-      <button class="btn ghost small" id="w-later">Skip, I'll add them later</button>
-      <button class="btn ghost small" id="w-example">Just looking? Try it with example data</button>
-      <span class="small muted" style="flex-basis:100%">By continuing you agree to our <button type="button" class="btn ghost small" data-legal="terms" style="padding:0">Terms of Use</button> and <button type="button" class="btn ghost small" data-legal="privacy" style="padding:0">Privacy</button> (prototype drafts).</span>${state.subs.length ? `<button class="btn ghost small" id="w-cancel">Keep my current list</button>` : ""}</div>`);
+    <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;margin-top:18px;display:flex;gap:12px;justify-content:center;align-items:center;border-top:1px solid var(--line)">
+      <button type="button" class="btn w-big" id="w-back">Back</button>
+      <button class="btn primary w-big" id="w-go">Start with 0 subscriptions</button></div>
+    <div class="w-alt" style="display:flex;flex-direction:column;gap:10px;align-items:center;margin:8px 0 24px">
+      <button type="button" class="btn" id="w-later">Skip, I'll add them later</button>
+      <button type="button" class="btn" id="w-example">Just looking? Try it with example data</button></div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
-  f.querySelectorAll("[data-legal]").forEach(b => b.addEventListener("click", () => { lastView = "welcome"; openLegal(b.dataset.legal); }));
   const count = () => { const n = picks.size + own.length; $("w-go").textContent = `Start with ${n} subscription${n === 1 ? "" : "s"}`; };
   const drawOwn = () => { $("w-own-list").innerHTML = own.map((n, i) => `<span class="own-item">${logoHtml({ color: "#6b7785", mark: n.slice(0, 2) })}<span>${esc(n)}</span><button type="button" data-own-x="${i}" aria-label="Remove ${esc(n)}">&times;</button></span>`).join("");
     $("w-own-list").querySelectorAll("[data-own-x]").forEach(b => b.addEventListener("click", () => { own.splice(+b.dataset.ownX, 1); drawOwn(); count(); })); };
@@ -1757,8 +1760,14 @@ function welcomeView() {
     document.querySelectorAll(`#view .cat-item[data-svc="${id}"]`).forEach(x => x.setAttribute("aria-pressed", picks.has(id))); count(); }));
   f.querySelectorAll(".w-more").forEach(m => m.addEventListener("click", () => { const g = m.previousElementSibling, open = g.dataset.open !== "1";
     g.dataset.open = open ? "1" : "0"; g.querySelectorAll("[data-extra]").forEach(b => b.hidden = !open); m.textContent = open ? "Show fewer" : `See all ${g.children.length}`; }));
+  const wcats = new Set();  // v178: picked category pills; none = all. Search looks across every category.
+  f.querySelectorAll("[data-wcat]").forEach(b => b.addEventListener("click", () => { const c = b.dataset.wcat;
+    if (c === "all") wcats.clear(); else wcats.has(c) ? wcats.delete(c) : wcats.add(c);
+    document.querySelectorAll("#view [data-wcat]").forEach(x => x.setAttribute("aria-pressed", x.dataset.wcat === "all" ? !wcats.size : wcats.has(x.dataset.wcat)));
+    $("w-q").dispatchEvent(new Event("input")); }));
   $("w-q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase();
-    document.querySelectorAll("#view .catalog").forEach((g, gi) => { let n = 0; g.querySelectorAll(".cat-item").forEach(b => { b.hidden = q ? !b.dataset.text.includes(q) : (b.dataset.extra && g.dataset.open !== "1"); n += !b.hidden; });
+    document.querySelectorAll("#view .catalog").forEach((g, gi) => { let n = 0; const catOk = !g.dataset.cat || !!q || !wcats.size || wcats.has(g.dataset.cat);
+      g.querySelectorAll(".cat-item").forEach(b => { b.hidden = !catOk || (q ? !b.dataset.text.includes(q) : (b.dataset.extra && g.dataset.open !== "1")); n += !b.hidden; });
       if (gi === 0 && q) n = 0; g.hidden = !n; g.previousElementSibling.hidden = !n; const m = g.nextElementSibling; if (m?.classList.contains("w-more")) m.hidden = !!q || !n; });
     // Nothing matches: offer to add it as their own (v153, Cuong: e.g. an insurer we don't list).
     const none = q && ![...document.querySelectorAll("#view .catalog .cat-item")].some(b => !b.hidden), nr = $("w-nores"), raw = e.target.value.trim();
@@ -1767,7 +1776,6 @@ function welcomeView() {
       $("w-nores-add").addEventListener("click", () => { addOwn(raw); e.target.value = ""; e.target.dispatchEvent(new Event("input")); }); } });
   const setLoc = () => {};  // v125: location is set on step 1
   $("w-back").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
-  $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
   $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile;
     state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) })) };
     own.forEach((name, i) => state.subs.push({ id: `custom-${Date.now()}-${i}`, svc: "custom", name, plan: null, used: [], cycle: "month", price: null, uses: 0, rate: 0, per: "month",
@@ -3857,7 +3865,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 177 · Oct 26", VERSION_NUM = 177;
+const APP_VERSION = "Prototype · Version 178 · Oct 26", VERSION_NUM = 178;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
