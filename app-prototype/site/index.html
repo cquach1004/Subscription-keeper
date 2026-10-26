@@ -169,7 +169,7 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .w-pill-n { background: var(--accent-soft); color: var(--accent); border-radius: 99px; font-size: 12px; font-weight: 700; padding: 1px 7px; } .w-pill[aria-pressed="true"] .w-pill-n { background: #fff; }
 .w-basket { position: sticky; bottom: 0; z-index: 5; background: var(--bg); border-top: 1px solid var(--line); margin-top: 18px; padding: 10px 0 calc(12px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 10px; }
 .w-bk-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; max-height: 40vh; overflow-y: auto; } .w-bk-head > b { font-size: 15px; white-space: nowrap; }
-.w-bk-chips { display: contents; } .w-bk-chips .own-item { padding: 3px 4px 3px 4px; gap: 6px; font-size: 14px; box-shadow: none; } .w-bk-chips .own-item .logo { width: 22px; height: 22px; font-size: 10px; border-radius: 6px; }
+.w-bk-chips { display: contents; } .w-bk-chips .own-item.bk-have { opacity: .7; padding-right: 10px; } .w-bk-chips .own-item { padding: 3px 4px 3px 4px; gap: 6px; font-size: 14px; box-shadow: none; } .w-bk-chips .own-item .logo { width: 22px; height: 22px; font-size: 10px; border-radius: 6px; }
 .w-bk-btns { display: flex; gap: 12px; justify-content: center; }
 .w-clear { padding-left: 0; padding-right: 0; margin-left: auto; color: var(--bad); }  /* v193 (Cuong) */
 .w-clear-ask { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; } .w-clear-ask[hidden] { display: none; }
@@ -1848,13 +1848,15 @@ function welcomeView() {
     box.innerHTML = `<h4 class="w-h" style="margin:14px 0 8px">${esc(catLabel(wcat))}</h4><div class="catalog">${shown.map(tile).join("")}</div>
       ${list.length > 6 ? `<button type="button" class="btn ghost small w-more" id="w-more" style="margin:-8px 0 12px;padding-left:0">${wcatAll ? "Show fewer" : `See all ${list.length}`}</button>` : ""}`;
     press(box); };
-  const drawBasket = () => { const items = [...[...picks].map(id => ({ k: "s:" + id, name: CATALOG[id].name, v: CATALOG[id] })), ...own.map((n, i) => ({ k: "o:" + i, name: n, v: { color: "#6b7785", mark: n.slice(0, 2) } }))];
-    $("w-count").textContent = items.length;
+  // v202 (Cuong): adding to a list counts what's already on it too. New picks come first with an x; ones already on the list follow, without one.
+  const drawBasket = () => { const fresh = [...[...picks].map(id => ({ k: "s:" + id, name: CATALOG[id].name, v: CATALOG[id] })), ...own.map((n, i) => ({ k: "o:" + i, name: n, v: { color: "#6b7785", mark: n.slice(0, 2) } }))];
+    const onList = addMode ? state.subs.map(s => ({ name: s.name, v: svcOf(s), have: true })) : [], all = [...fresh, ...onList], items = fresh;
+    $("w-count").textContent = all.length;
     $("w-clear").hidden = !items.length || clearAsk; $("w-clear-ask").hidden = !items.length || !clearAsk;
     $("w-clear-n").textContent = items.length === 1 ? "this selection" : `all ${items.length} selections`;
-    const cut = bkOpen ? items.length : 3, extra = items.length - cut;
-    $("w-bk-chips").innerHTML = items.length ? items.slice(0, cut).map(x => `<span class="own-item">${logoHtml(x.v)}<span>${esc(baseName(x.name) || x.name)}</span><button type="button" data-bk-x="${x.k}" aria-label="Remove ${esc(x.name)}">&times;</button></span>`).join("")
-      + (extra > 0 ? `<button type="button" class="btn ghost small" id="w-bk-more">+${extra} more</button>` : bkOpen && items.length > 3 ? `<button type="button" class="btn ghost small" id="w-bk-more">Show less</button>` : "")
+    const cut = bkOpen ? all.length : 3, extra = all.length - cut;
+    $("w-bk-chips").innerHTML = all.length ? all.slice(0, cut).map(x => `<span class="own-item${x.have ? " bk-have" : ""}"${x.have ? ' title="Already on your list"' : ""}>${logoHtml(x.v)}<span>${esc(baseName(x.name) || x.name)}</span>${x.have ? "" : `<button type="button" data-bk-x="${x.k}" aria-label="Remove ${esc(x.name)}">&times;</button>`}</span>`).join("")
+      + (extra > 0 ? `<button type="button" class="btn ghost small" id="w-bk-more">+${extra} more</button>` : bkOpen && all.length > 3 ? `<button type="button" class="btn ghost small" id="w-bk-more">Show less</button>` : "")
       : `<span class="small muted">Nothing yet. Tap a service to add it.</span>`; };
   let clearAsk = false;
   const update = () => { if (!addMode) { state.wDraft = { picks: [...picks], own: own.slice() }; save(); } press(f); press(document); drawPills(); drawBasket(); };
@@ -3983,7 +3985,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 196 · Standalone copy · Oct 26", VERSION_NUM = 201;
+const APP_VERSION = "Prototype · Version 196 · Standalone copy · Oct 26", VERSION_NUM = 202;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.

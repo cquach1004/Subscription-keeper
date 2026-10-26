@@ -224,3 +224,4 @@ Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,No
 199,2026-10-26,"Footnotes behind an ""i"" circle icon (reusable on any screen): Overview's averages and sources note opens from an i on ""You pay each month"" (the * after ""avg"" is gone), and the ranking note from an i next to ""What you use most""",Cuong,Overview,Design,Y,Current,
 200,2026-10-26,"Manage my list: removed the top ""Back to Overview"" link (the Back button at the bottom stays)",Cuong,Manage my list,Design,Y,Current,
 201,2026-10-26,"Overview: ""Go to Welcome Screen"" renamed ""Welcome Screen""; it and ""Reset My Selections"" are centered",Cuong,Overview,Design,Y,Current,
+202,2026-10-26,"Fix: ""+ Add subscriptions"" picker's Your list counted only new picks (showed 0). It now counts and shows what's already on your list (faded, no x) plus new picks",Cuong,Add subscriptions,Fix,Y,Current,
