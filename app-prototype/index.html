@@ -1756,6 +1756,9 @@ function introView() {
 const WELCOME_SKIP = new Set(["energy"]);
 // Welcome, step 3 (Cuong, v190): one subscription at a time, two questions each: which plan, then one usage number for the value
 // chart (the subscription's own measure). Next saves and moves on; "Finish later" goes to Overview, where Finish setting up picks up the rest.
+// v204 (Cuong): 1Password and other "doing its job" services were told they'd tick off what they *used*; they tick off what went wrong.
+const checksText = m => m.results ? `We rate this one on whether it does its job, plus price and service, not on how much you use it. Each month on the Usage tab you can tick anything that went wrong (${m.checks[0].name.charAt(0).toLowerCase() + m.checks[0].name.slice(1)}). Nothing ticked means it's working.`
+  : "You'll tick off what you used each month on the Usage tab.";
 function setupStepView() {
   const inBatch = x => !wsBatch || wsBatch.has(x.id), todo = setupTodo().filter(inBatch), all = state.subs.filter(x => x.setup && inBatch(x)).length, done = all - todo.length;
   const toHome = () => { view = "home"; welcomeStep = 1; addMode = false; wsBatch = null; save(); render(); window.scrollTo(0, 0); };
@@ -1767,7 +1770,7 @@ function setupStepView() {
     ? `<h3 class="ws-q">1. Which plan do you have?</h3><div class="ws-plans" role="radiogroup" aria-label="Plan">${plans.map(p => `<label class="ws-plan"><input type="radio" name="ws-plan" value="${p.id}" ${p.id === s.plan ? "checked" : ""}><span><b>${esc(p.name)}</b><span class="small muted">${planLine(p)}</span></span></label>`).join("")}</div>`
     : `<h3 class="ws-q">1. What do you pay?</h3><div class="su-price"><span>$</span><input id="ws-price" type="number" inputmode="decimal" min="0" step="0.01" value="${s.myTotal != null ? s.myTotal : ""}" placeholder="0.00"><span class="small muted">a month, with tax</span></div>`;
   const q2 = m.costOnly || m.checks || !m.max
-    ? `<h3 class="ws-q">2. How much you use it</h3><p class="small muted" style="margin:0">${m.checks ? "You'll tick off what you used each month on the Usage tab." : "We rate this one on price and service, not on how much you use it, so there's nothing to add."}</p>`
+    ? `<h3 class="ws-q">2. ${m.checks && !m.results ? "How much you use it" : "How we rate it"}</h3><p class="small muted" style="margin:0">${m.checks ? checksText(m) : "We rate this one on price and service, not on how much you use it, so there's nothing to add."}</p>`
     : `<h3 class="ws-q">2. ${esc(m.label)}</h3><p class="small muted" style="margin:0 0 6px">A rough guess is fine. This builds your value chart, and you can change it any time on the Usage tab.</p>${slider(m, s.needsUse ? 0 : s.rate || 0, `id="ws-use" aria-label="${esc(m.label)}"`)}`;
   const f = el(`<div class="ws"><div class="su-top"><h2 style="margin:0">Finish setting up</h2><span class="small muted">${done + 1} of ${all}</span></div>
     <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${all}" aria-valuenow="${done}"><i style="width:${(done / all * 100).toFixed(1)}%"></i></div>
@@ -2747,7 +2750,7 @@ const setupTodo = () => state.subs.filter(s => s.setup === "todo");
 function setupHtml() {
   const todo = setupTodo(); if (!todo.length) return "";
   const all = state.subs.filter(s => s.setup).length, done = all - todo.length, s = todo[0], m = measureOf(s), v = svcOf(s), t0 = total(s);
-  const use = m.costOnly || m.checks || !m.max ? `<p class="small muted" style="margin:0">${m.checks ? "You'll tick off what you used each month on the Usage tab." : "We don't rate this one on use, so the price is all we need."}</p>`
+  const use = m.costOnly || m.checks || !m.max ? `<p class="small muted" style="margin:0">${m.checks ? checksText(m) : "We don't rate this one on use, so the price is all we need."}</p>`
     : `<label class="su-l" for="su-use">${esc(m.label)}</label>${slider(m, s.needsUse ? 0 : s.rate || 0, `id="su-use" aria-label="${esc(m.label)}"`)}`;
   return `<section class="card setup"><div class="su-top"><h3 style="margin:0">Finish setting up</h3><span class="small muted">${done} of ${all} done</span></div>
     <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${all}" aria-valuenow="${done}"><i style="width:${(done / all * 100).toFixed(1)}%"></i></div>
@@ -3986,7 +3989,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 196 · Oct 26", VERSION_NUM = 203;
+const APP_VERSION = "Prototype · Version 196 · Oct 26", VERSION_NUM = 204;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
