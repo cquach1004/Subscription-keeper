@@ -162,7 +162,9 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .about-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
 .about-grid.about-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 620px; }
-.w-big { font-size: 16px; padding: 12px 18px; border-radius: 99px; white-space: nowrap; } #w-back.w-big { min-width: 84px; }
+.w-big { font-size: 16px; padding: 12px 18px; border-radius: 99px; white-space: nowrap; } #w-back.w-big { min-width: 84px; } #w-go.w-big { min-width: 120px; }
+.w-score { margin: 22px 0 0; padding: 16px 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); display: flex; align-items: baseline; gap: 12px; }  /* v184 (Cuong): selected count as its own card after section 3 */
+.w-score-n { font-size: 34px; font-weight: 700; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; } .w-score-l { font-size: 16px; font-weight: 600; }
 .age-opt { align-content: center; min-height: 92px; gap: 2px; } .age-opt b { font: 700 22px/1.15 var(--f-body); color: var(--accent); white-space: nowrap; } @media (max-width: 380px) { .age-opt b { font-size: 19px; } } .age-opt span { font-size: 13px; color: var(--muted); font-weight: 500; }
 .share-box { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; max-width: 620px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); cursor: pointer; }
 .share-box input { margin-top: 3px; width: 18px; height: 18px; flex: none; } .share-box b { display: block; font-weight: 600; } .share-box .small { display: block; margin-top: 2px; }
@@ -1748,14 +1750,15 @@ function welcomeView() {
       <p class="small muted" style="margin:0 0 8px">Add it yourself. You'll enter what you pay when you finish setting up.</p>
       <div style="display:flex;gap:8px"><input id="w-own" placeholder="Name, e.g. Hometown Gym" aria-label="Name of a service we don't list" style="flex:1;min-width:0"><button type="button" class="btn" id="w-own-add">Add</button></div>
       <div class="own-list" id="w-own-list"></div></section>
+    <div class="w-score" role="status" aria-live="polite"><span class="w-score-n" id="w-count">0</span><span class="w-score-l">Subscriptions Selected</span></div>
     <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;margin-top:18px;display:flex;gap:12px;justify-content:center;align-items:center;border-top:1px solid var(--line)">
       <button type="button" class="btn w-big" id="w-back">Back</button>
-      <button class="btn primary w-big" id="w-go">Subscriptions Selected: 0</button></div>
+      <button class="btn primary w-big" id="w-go">Next</button></div>
     <div class="w-alt" style="display:flex;flex-direction:column;gap:10px;align-items:center;margin:8px 0 24px">
       <button type="button" class="btn" id="w-later">Skip, I'll add them later</button>
       <button type="button" class="btn" id="w-example">Just looking? Try it with example data</button></div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
-  const count = () => { const n = picks.size + own.length; $("w-go").textContent = `Subscriptions Selected: ${n}`; };
+  const count = () => { const n = picks.size + own.length; $("w-count").textContent = n; };
   const drawOwn = () => { $("w-own-list").innerHTML = own.map((n, i) => `<span class="own-item">${logoHtml({ color: "#6b7785", mark: n.slice(0, 2) })}<span>${esc(n)}</span><button type="button" data-own-x="${i}" aria-label="Remove ${esc(n)}">&times;</button></span>`).join("");
     $("w-own-list").querySelectorAll("[data-own-x]").forEach(b => b.addEventListener("click", () => { own.splice(+b.dataset.ownX, 1); drawOwn(); count(); })); };
   const addOwn = name => { name = name.trim().replace(/\s+/g, " "); if (!name) return;
@@ -3872,7 +3875,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 183 · Standalone copy · Oct 26", VERSION_NUM = 183;
+const APP_VERSION = "Prototype · Version 184 · Standalone copy · Oct 26", VERSION_NUM = 184;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
