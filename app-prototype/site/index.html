@@ -1652,7 +1652,7 @@ function aboutView() {
   // v149 (Cuong): name under "Tell us about yourself", email after "Where do you live?". Optional; kept in this browser only.
   let saved = ""; try { saved = localStorage.getItem("sk-name") || ""; } catch {}
   const [sf, ...sl] = saved.trim().split(/\s+/), first = saved ? sf : p.first || "", last = saved ? sl.join(" ") : p.last || "";
-  const f = el(`<button type="button" class="back-link" id="w-intro">&larr; Back</button><div class="section-head"><h2 class="about-title">We&rsquo;re Glad You&rsquo;re Here!</h2></div>
+  const f = el(`<div class="section-head"><h2 class="about-title">We&rsquo;re Glad You&rsquo;re Here!</h2></div>
     <h3 style="margin:8px 0 2px">1. Tell us about yourself</h3>
     <div class="loc-row" style="margin:10px 0 16px"><label>First name<input id="w-first" autocomplete="given-name" value="${esc(first)}"></label>
       <label>Last name<input id="w-last" autocomplete="family-name" value="${esc(last)}"></label></div>
@@ -1668,10 +1668,9 @@ function aboutView() {
     <h3 style="margin:22px 0 8px">4. Your email address</h3>
     <label class="w-email" style="display:block;margin-bottom:6px"><input id="w-email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" value="${esc(p.email || "")}" aria-label="Email address"></label>
     <p class="small muted" id="w-email-msg" style="margin:0 0 18px">In this prototype it's saved only in this browser.</p>
-    <div class="w-bar" style="display:flex;flex-direction:column;gap:10px;align-items:center">
-      <button class="btn primary intro-next" id="w-next">Next</button>
-      <button class="btn ghost small" id="w-example">Just looking? Try it with example data</button>
-      ${state.subs.length ? `<button class="btn ghost small" id="w-cancel">Keep my current list</button>` : ""}</div>`);
+    <div class="w-bar" style="display:flex;gap:12px;justify-content:center;align-items:center">
+      <button type="button" class="btn intro-next" id="w-intro" style="min-width:130px">Back</button>
+      <button class="btn primary intro-next" id="w-next" style="min-width:130px">Next</button></div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
   const keep = () => { const c = $("w-country").value, first = $("w-first").value.trim(), last = $("w-last").value.trim();
     state.profile = { ...profile(), first, last, email: $("w-email").value.trim(), country: c, region: c === "US" ? ($("w-state")?.value || "") : "", about: [...about], age, group: groupFor([...about], age), shares: $("w-share").checked };
@@ -1688,8 +1687,7 @@ function aboutView() {
   $("w-country").addEventListener("change", () => { keep(); save(); render(); });
   $("w-next").addEventListener("click", () => { if (!emailOk()) { $("w-email").focus(); return; } keep(); save(); welcomeStep = 2; render(); window.scrollTo(0, 0); });
   $("w-intro").addEventListener("click", () => { keep(); save(); welcomeStep = 0; render(); window.scrollTo(0, 0); });
-  $("w-cancel")?.addEventListener("click", () => { view = "home"; render(); });
-  $("w-example").addEventListener("click", () => { keep(); const prof = state.profile; state = seed(); state.profile = prof;
+  $("w-example")?.addEventListener("click", () => { keep(); const prof = state.profile; state = seed(); state.profile = prof;
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
@@ -3862,7 +3860,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 174 · Standalone copy · Oct 25", VERSION_NUM = 174;
+const APP_VERSION = "Prototype · Version 175 · Standalone copy · Oct 26", VERSION_NUM = 175;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
