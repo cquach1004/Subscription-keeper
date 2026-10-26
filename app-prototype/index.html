@@ -169,6 +169,12 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .w-bk-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; max-height: 40vh; overflow-y: auto; } .w-bk-head > b { font-size: 15px; white-space: nowrap; }
 .w-bk-chips { display: contents; } .w-bk-chips .own-item { padding: 3px 4px 3px 4px; gap: 6px; font-size: 14px; box-shadow: none; } .w-bk-chips .own-item .logo { width: 22px; height: 22px; font-size: 10px; border-radius: 6px; }
 .w-bk-btns { display: flex; gap: 12px; justify-content: center; }
+.ov-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }  /* v192 (Cuong): Add subscriptions / Manage my list */
+.cat-item[data-have] { opacity: .55; cursor: default; }
+.mg-list { display: grid; gap: 0; padding-top: 6px; padding-bottom: 6px; }
+.mg-row { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); } .mg-row:first-child { border-top: 0; }
+.mg-name { display: grid; gap: 2px; text-align: left; background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; min-width: 0; } .mg-name b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mg-ask { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; } .mg-row.ask { grid-template-columns: auto 1fr; } .mg-row.ask .mg-ask { grid-column: 1 / -1; }
 .ws { display: grid; gap: 12px; margin-top: 14px; }  /* v190 (Cuong): welcome step 3, set up each subscription */
 .ws-sub b { font-size: 22px; } .ws-sub .logo { width: 44px; height: 44px; font-size: 16px; border-radius: 12px; }
 .ws-card { display: grid; gap: 8px; } .ws-q { margin: 0; font-size: 17px; }
@@ -1579,7 +1585,7 @@ function render() {
   document.body.classList.toggle("intro-mode", view === "welcome");  // v171-178: big title, no header buttons on all three welcome pages
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
-  root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
+  root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, manage: manageView, feedback: feedbackView, help: helpView, legal: legalView }[view]());
   personaBar(root);
 }
 
@@ -1613,6 +1619,8 @@ const FRESH = () => ({ subs: [], sampleV: 4, unitsV: 1, aaaV: 1, cardV: 1, evV: 
 // profile.about keeps the icon picks; profile.group (the spending average we compare with) follows: 55+ senior,
 // family (married or kids), else adult. v168 (Cuong): the student option was removed; age range covers it.
 let welcomeStep = 1;
+// v192 (Cuong): Overview "Add subscriptions" reuses the picker (addMode: adds to the list instead of starting over); wsBatch = ids the setup screen walks through.
+let addMode = false, wsBatch = null;
 // v169 (Cuong): an "adult" tile; it doesn't change the group (adult is the default), married or kids still mean family.
 const ABOUT = [["adult", "I am an adult", '<circle cx="12" cy="7.5" r="3.5"/><path d="M5 20c.6-4 3.4-6.5 7-6.5s6.4 2.5 7 6.5"/>'],
   ["married", "I am married", '<circle cx="9" cy="13" r="5"/><circle cx="15" cy="13" r="5"/><path d="M10 4l2 2 2-2"/>'],
@@ -1733,8 +1741,8 @@ const WELCOME_SKIP = new Set(["energy"]);
 // Welcome, step 3 (Cuong, v190): one subscription at a time, two questions each: which plan, then one usage number for the value
 // chart (the subscription's own measure). Next saves and moves on; "Finish later" goes to Overview, where Finish setting up picks up the rest.
 function setupStepView() {
-  const todo = setupTodo(), all = state.subs.filter(x => x.setup).length, done = all - todo.length;
-  const toHome = () => { view = "home"; welcomeStep = 1; save(); render(); window.scrollTo(0, 0); };
+  const inBatch = x => !wsBatch || wsBatch.has(x.id), todo = setupTodo().filter(inBatch), all = state.subs.filter(x => x.setup && inBatch(x)).length, done = all - todo.length;
+  const toHome = () => { view = "home"; welcomeStep = 1; addMode = false; wsBatch = null; save(); render(); window.scrollTo(0, 0); };
   if (!todo.length) { toHome(); return el(""); }
   const s = todo[0], v = svcOf(s), m = measureOf(s), plans = v.plans || [], showPrice = profile().country === catalogCountry();
   const planLine = p => { const mo = p.price_monthly, yr = p.price_annual;
@@ -1762,7 +1770,7 @@ function setupStepView() {
     if (inp && (moved || +inp.value > 0)) { const n = +inp.value, { cur } = periodKeys(s); setUse(s, n, m.per);
       ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(n * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you"; }
     s.setup = "done"; save();
-    if (setupTodo().length) { render(); window.scrollTo(0, 0); } else toHome(); });
+    if (todo.length > 1) { render(); window.scrollTo(0, 0); } else toHome(); });
   f.getElementById("ws-later").addEventListener("click", toHome);
   return f;
 }
@@ -1776,13 +1784,14 @@ function welcomeView() {
   // v114 (Cuong): "Popular" holds only the same 12 picks as the Overview card. v115: every service also sits in its category (picks stay in step).
   const popular = POPULAR.map(id => CATALOG[id]).filter(v => v && availability(v.id, country) !== "no").slice(0, 12);
   const more = offered.slice().sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
-  const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false" data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
+  const have = new Set(addMode ? state.subs.map(x => x.svc) : []);
+  const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false"${have.has(v.id) ? ' data-have="1" aria-disabled="true" title="Already on your list"' : ""} data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
   const groups = [...new Set(more.map(v => v.category))].sort((x, y) => catLabel(x).localeCompare(catLabel(y)));
   // v188 (Cuong): short page. Search on top (no match: add as your own), Popular, then category pills with one category open
   // at a time, and a pinned "Your list" basket with name chips, Back and Next so nobody has to scroll to the bottom.
   const byCat = c => more.filter(v => v.category === c).sort(svcRank);
   let wcat = null, wcatAll = false, bkOpen = false;
-  const f = el(`<div id="w-pick"><h3 style="margin:18px 0 8px">1. Which subscriptions do you have?</h3>
+  const f = el(`<div id="w-pick">${addMode ? `<h2 style="margin:18px 0 0">Add subscriptions</h2><p class="small muted" style="margin:2px 0 0">Ones already on your list are marked.</p>` : ""}<h3 style="margin:18px 0 8px">1. Which subscriptions do you have?</h3>
     <p class="small muted" style="margin:0 0 10px">Search, or tap each one you pay for.</p>
     <input id="w-q" type="search" placeholder="e.g. Netflix, gym" aria-label="Search services" style="width:100%;margin-bottom:10px">
     <p class="small muted" id="w-nores" hidden style="margin:0 0 12px"></p>
@@ -1798,11 +1807,11 @@ function welcomeView() {
       <div class="w-bk-head"><b>Your list (<span id="w-count">0</span>)</b><span class="w-bk-chips" id="w-bk-chips"></span></div>
       <div class="w-bk-btns"><button type="button" class="btn w-big" id="w-back">Back</button><button class="btn primary w-big" id="w-go">Next</button></div>
     </div>
-    <div class="w-alt" style="display:flex;flex-direction:column;gap:10px;align-items:center;margin:14px 0 24px">
+    <div class="w-alt" style="display:flex;flex-direction:column;gap:10px;align-items:center;margin:14px 0 24px"${addMode ? " hidden" : ""}>
       <button type="button" class="btn" id="w-later">Skip, I'll add them later</button>
       <button type="button" class="btn" id="w-example">Just looking? Try it with example data</button></div></div>`);
   const $ = id => f.getElementById(id) || document.getElementById(id);
-  const press = root => root.querySelectorAll(".cat-item").forEach(b => b.setAttribute("aria-pressed", picks.has(b.dataset.svc)));
+  const press = root => root.querySelectorAll(".cat-item").forEach(b => b.setAttribute("aria-pressed", picks.has(b.dataset.svc) || !!b.dataset.have));
   // The most common kinds first; the rest wait behind "More categories" (always shown once something in them is picked or open).
   const COMMON = ["video", "music", "ai", "shopping", "storage", "mobile", "internet", "fitness", "food", "gaming", "news", "car_insurance"];
   let allCats = false;
@@ -1834,7 +1843,7 @@ function welcomeView() {
     nr.innerHTML = `${hits.length ? "Not listed?" : `No match for "${esc(raw)}".`} <button type="button" class="btn ghost small" id="w-nores-add" style="padding:0">Add "${esc(raw)}" as your own</button>`; };
   // One click handler for the whole page, since tiles are redrawn as categories and searches change.
   $("w-pick").addEventListener("click", e => { const t = e.target.closest("button"); if (!t) return;
-    if (t.classList.contains("cat-item")) { const id = t.dataset.svc; picks.has(id) ? picks.delete(id) : picks.add(id); update(); }
+    if (t.classList.contains("cat-item")) { if (t.dataset.have) return; const id = t.dataset.svc; picks.has(id) ? picks.delete(id) : picks.add(id); update(); }
     else if (t.dataset.wcat) { wcat = wcat === t.dataset.wcat ? null : t.dataset.wcat; wcatAll = false; drawPills(); drawCat(); }
     else if (t.id === "w-more") { wcatAll = !wcatAll; drawCat(); }
     else if (t.id === "w-allcats") { allCats = !allCats; drawPills(); }
@@ -1845,14 +1854,16 @@ function welcomeView() {
   $("w-q").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); if (!$("w-results").children.length && e.target.value.trim()) { addOwn(e.target.value); e.target.value = ""; search(); } } });
   drawPills(); drawBasket();
   const setLoc = () => {};  // v125: location is set on step 1
-  $("w-back").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
-  $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile;
-    state = { ...FRESH(), profile: prof, subs: [...picks].map(id => newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) })) };
+  $("w-back").addEventListener("click", () => { if (addMode) { addMode = false; view = "home"; } else welcomeStep = 1; render(); window.scrollTo(0, 0); });
+  $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile, kept = addMode ? state.subs : [];
+    state = addMode ? state : { ...FRESH(), profile: prof };
+    state.subs = [...kept, ...[...picks].map(id => newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }))];
     own.forEach((name, i) => state.subs.push({ id: `custom-${Date.now()}-${i}`, svc: "custom", name, plan: null, used: [], cycle: "month", price: null, uses: 0, rate: 0, per: "month",
       needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }));
     if (picks.size || own.length) state.startDone = true;  // v118: picked here already, so go straight to Finish setting up
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save();
-    if (state.subs.length) welcomeStep = 3; else view = "home";  // v190: picked some, so set them up one at a time
+    const added = state.subs.filter(s => !kept.includes(s)); added.forEach(s => { s.measure = measuresOf(s)[0].id; }); save();
+    wsBatch = new Set(added.map(s => s.id));
+    if (added.length) welcomeStep = 3; else { view = "home"; addMode = false; }  // v190: picked some, so set them up one at a time
     render(); window.scrollTo(0, 0); });
   $("w-later").addEventListener("click", () => { const prof = state.profile; state = { ...FRESH(), profile: prof, plkShow: true }; save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
@@ -2491,6 +2502,33 @@ function hhHtml() {
     <p class="small muted" style="margin:0 0 4px">Phone, internet, insurance and other services for your home. Prices change at renewal, so these are worth checking every year.</p>
     ${rows.map(({ s, c }) => `<button class="uml-row hh-row" data-id="${s.id}">${logoHtml(svcOf(s))}<span style="min-width:0"><b>${esc(s.name)}</b><span class="small muted">${esc(c.text)}</span></span><span class="pill ${c.key}">${esc(c.tag)}</span></button>`).join("")}</section>`;
 }
+// Add subscriptions / Manage my list (Cuong, v192): Add opens the same picker as the welcome page and adds to the list;
+// Manage lists every subscription with Remove (asks first). Removing is also on each subscription's own page.
+const listBtns = () => `<div class="ov-actions"><button type="button" class="btn primary" id="ov-add">+ Add subscriptions</button>${state.subs.length ? `<button type="button" class="btn" id="ov-manage">Manage my list</button>` : ""}</div>`;
+function wireListBtns(f) {
+  f.getElementById("ov-add")?.addEventListener("click", () => { addMode = true; view = "welcome"; welcomeStep = 2; render(); window.scrollTo(0, 0); });
+  f.getElementById("ov-manage")?.addEventListener("click", () => { view = "manage"; render(); window.scrollTo(0, 0); });
+}
+let manageAsk = null;
+function manageView() {
+  const list = state.subs.slice().sort((a, b) => a.name.localeCompare(b.name));
+  const row = s => { const t = monthly(s), ask = manageAsk === s.id;
+    return `<div class="mg-row${ask ? " ask" : ""}">${logoHtml(svcOf(s))}<button type="button" class="mg-name" data-open="${s.id}"><b>${esc(s.name)}</b><span class="small muted">${t ? `${money(t)} a month` : isFree(s) ? "Free" : "No price yet"}</span></button>
+      ${ask ? `<span class="mg-ask"><span class="small">Remove it?</span><button type="button" class="btn danger small" data-rm="${s.id}">Remove</button><button type="button" class="btn ghost small" data-keep="1">Cancel</button></span>`
+        : `<button type="button" class="btn small" data-ask="${s.id}" aria-label="Remove ${esc(s.name)}">Remove</button>`}</div>`; };
+  const f = el(`<button type="button" class="back-link" id="mg-back">&larr; Back to Overview</button>
+    <div class="section-head"><h2>Manage my list</h2><span class="small muted">${list.length} on your list. Tap a name to see or change it.</span></div>
+    <section class="card mg-list">${list.map(row).join("") || `<p class="small muted" style="margin:0">Your list is empty.</p>`}</section>
+    <div class="ov-actions" style="margin-top:14px"><button type="button" class="btn primary" id="ov-add">+ Add subscriptions</button></div>`);
+  const redraw = () => { const y = scrollY; render(); window.scrollTo(0, y); };
+  f.getElementById("mg-back").addEventListener("click", () => { manageAsk = null; view = "home"; render(); window.scrollTo(0, 0); });
+  f.querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.open)));
+  f.querySelectorAll("[data-ask]").forEach(b => b.addEventListener("click", () => { manageAsk = b.dataset.ask; redraw(); }));
+  f.querySelectorAll("[data-keep]").forEach(b => b.addEventListener("click", () => { manageAsk = null; redraw(); }));
+  f.querySelectorAll("[data-rm]").forEach(b => b.addEventListener("click", () => { state.subs = state.subs.filter(s => s.id !== b.dataset.rm); manageAsk = null; save(); redraw(); }));
+  wireListBtns(f);
+  return f;
+}
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
@@ -2499,6 +2537,7 @@ function homeView() {
   const saveAmt = savingsTotal(savingsBySub()), cd = cmpData();
   const f = el(`
     <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
+    ${state.subs.length ? "" : listBtns()}
     ${state.subs.length ? `<section class="summary">
       <div class="stat lead"><div class="label">You pay each month</div><div class="value num">${money(total)}</div>${cmpLine(cd.allAmt, cd.avgAll, money, total)}</div>
       <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div>${cmpLine(cd.allAmt * 12, cd.avgAll && cd.avgAll * 12, money, total * 12)}</div>
@@ -2512,10 +2551,12 @@ function homeView() {
     ${saveAmt > 0 ? saveHtml(saveAmt) : ""}
     ${PHASE1 ? "" : upcomingHtml()}
     ${renewHtml()}
+    ${state.subs.length ? listBtns() : ""}
     ${factsHtml()}
     ${state.subs.length ? cmpNote(cd) : ""}
     ${persona === "me" ? `<p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start from the beginning</button></p>` : ""}`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
+  wireListBtns(f);
   f.getElementById("cmp-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   pieWire(f);
   wireFacts(f);
@@ -3899,7 +3940,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 191 · Oct 26", VERSION_NUM = 191;
+const APP_VERSION = "Prototype · Version 192 · Oct 26", VERSION_NUM = 192;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
