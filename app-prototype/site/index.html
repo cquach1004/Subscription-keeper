@@ -2566,14 +2566,12 @@ function homeView() {
     ${PHASE1 ? "" : upcomingHtml()}
     ${renewHtml()}
     ${state.subs.length ? listBtns() : ""}
-    ${factsHtml()}
     ${state.subs.length ? cmpNote(cd) : ""}
     ${persona === "me" ? `<p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start from the beginning</button></p>` : ""}`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   wireListBtns(f);
   f.getElementById("cmp-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   pieWire(f);
-  wireFacts(f);
   f.querySelector(".see-how")?.addEventListener("click", () => { view = "overlaps"; render(); document.getElementById("ways")?.scrollIntoView(); });
   wireNudge(f);
   f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
@@ -2982,7 +2980,8 @@ function addView() {
   const mine = new Set(state.subs.map(s => s.svc)), country = profile().country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no").sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" })), hidden = Object.keys(CATALOG).length - offered.length;
   const cats = [...new Set(offered.map(v => v.category))].sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
-  const f = el(`<div class="section-head"><h2>Explore and add</h2><span class="small muted">Browse by category or search. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span></div>
+  // v194 (Cuong): Did You Know? moved here from Overview, at the top of Explore.
+  const f = el(`${factsHtml()}<div class="section-head"><h2>Explore and add</h2><span class="small muted">Browse by category or search. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span></div>
     <h3 style="margin:4px 0 8px">1. Which subscription?</h3>
     <input id="a-q" type="search" placeholder="Search, e.g. Hulu, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:10px">
     <div class="chips a-cats" role="group" aria-label="Category">${["all", "mine-alts", "public", ...cats].map(c => `<button class="chip x-cat" data-cat="${c}" aria-pressed="${exploreCat === c}">${c === "all" ? "All" : c === "mine-alts" ? "Alternatives To Mine" : c === "public" ? "Free Public Services" : esc(catLabel(c))}</button>`).join("")}</div>
@@ -3080,6 +3079,7 @@ function addView() {
   });
   if (pendingPick) { const pk = pendingPick; pendingPick = null;
     setTimeout(() => { fill(pk.svc); const pl = planOf(CATALOG[pk.svc], pk.plan); $("f-plan").value = pl.id; $("f-cycle").value = defaultCycle(pl); syncPrice(); if (pk.price) $("f-price").value = (+pk.price).toFixed(2); }); }
+  wireFacts(f);
   return f;
 }
 
@@ -3954,7 +3954,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 193 · Standalone copy · Oct 26", VERSION_NUM = 193;
+const APP_VERSION = "Prototype · Version 194 · Standalone copy · Oct 26", VERSION_NUM = 194;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
