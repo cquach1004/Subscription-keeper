@@ -140,7 +140,7 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .intro-next { min-width: 200px; margin-top: 6px; }
 /* v171 (Cuong): the intro page shows only a big green title, no search, View as or profile buttons, and larger text. */
 body.intro-mode .top-btns { display: none; }
-body.intro-mode .brand { width: 100%; text-align: center; justify-content: center; }
+body.intro-mode .brand { width: 100%; text-align: left; justify-content: flex-start; }  /* v183 (Cuong): logo and name left-aligned on the welcome pages */
 body.intro-mode .brand h1 { font-size: clamp(30px, 10.4vw, 64px); line-height: 1.1; color: #4ade80; letter-spacing: -.01em; white-space: nowrap; }
 body.intro-mode .intro-h { font-size: 38px; } body.intro-mode .intro-p { font-size: 21px; }
 body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { font-size: 19px; padding: 14px 28px; min-width: 240px; }
@@ -514,7 +514,7 @@ button.me-item:hover { background: var(--accent-soft); }
 .me-item .me-v { color: var(--muted); font-size: 14px; text-align: right; }
 .me-item svg.ic { width: 20px; height: 20px; color: var(--accent); flex: none; }
 .me-item.chev::after { content: ""; width: 7px; height: 7px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(-45deg); flex: none; }
-header.top h1 { font: 600 17px var(--f-body); letter-spacing: 0; color: var(--hero-ink); }
+header.top h1 { font: 700 24px var(--f-body); letter-spacing: -.01em; color: var(--hero-ink); }  /* v183 (Cuong): bigger logo and name */
 .proto, .loc { background: var(--glass); border-color: transparent; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 .loc { padding: 6px 14px; }
 .hero { padding: 34px 0 26px; }
@@ -3869,7 +3869,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 182 · Oct 26", VERSION_NUM = 182;
+const APP_VERSION = "Prototype · Version 183 · Oct 26", VERSION_NUM = 183;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
