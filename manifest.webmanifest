@@ -1,6 +1,6 @@
 {
-  "name": "Subscription Keeper",
-  "short_name": "Sub Keeper",
+  "name": "MoSuBi",
+  "short_name": "MoSuBi",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

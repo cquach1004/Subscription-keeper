@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#081634"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="apple-mobile-web-app-title" content="Sub Keeper"></head><body>
-<title>Subscription Keeper</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#081634"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="apple-mobile-web-app-title" content="MoSuBi"></head><body>
+<title>MoSuBi</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Figtree:wght@300;400;500;600;700&display=swap">
@@ -47,6 +47,7 @@ button { cursor: pointer; }
 
 header.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
 .brand { display: flex; align-items: baseline; gap: 10px; }
+.brand h1 { display: inline-flex; align-items: center; gap: .35em; } .brand-mark { width: 1.25em; height: 1em; flex: none; }  /* v182: MoSuBi bundle logo */
 form.fields [hidden], form.fields[hidden], #a-hint[hidden], nav.tabs[hidden], .cat-item[hidden], .catalog[hidden], .w-h[hidden], .w-more[hidden] { display: none !important; }
 .w-more { margin: -2px 0 12px; padding-left: 0; color: var(--accent); }
 .proto { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 2px 8px; }
@@ -141,7 +142,7 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .intro-next { min-width: 200px; margin-top: 6px; }
 /* v171 (Cuong): the intro page shows only a big green title, no search, View as or profile buttons, and larger text. */
 body.intro-mode .top-btns { display: none; }
-body.intro-mode .brand { width: 100%; text-align: center; }
+body.intro-mode .brand { width: 100%; text-align: center; justify-content: center; }
 body.intro-mode .brand h1 { font-size: clamp(30px, 10.4vw, 64px); line-height: 1.1; color: #4ade80; letter-spacing: -.01em; white-space: nowrap; }
 body.intro-mode .intro-h { font-size: 38px; } body.intro-mode .intro-p { font-size: 21px; }
 body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { font-size: 19px; padding: 14px 28px; min-width: 240px; }
@@ -768,7 +769,7 @@ details.az[hidden] { display: none; }
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><h1>Subscription Keeper</h1></div>
+    <div class="brand"><h1><svg class="brand-mark" viewBox="96 124 320 256" aria-hidden="true"><rect x="128" y="138" width="256" height="150" rx="34" fill="var(--hero-ink)" fill-opacity=".3" transform="rotate(-7 256 213)"/><rect x="104" y="184" width="304" height="176" rx="40" fill="var(--hero-ink)"/><rect x="220" y="168" width="72" height="208" rx="14" fill="#4ade80"/></svg>MoSuBi</h1></div>
     <div class="top-btns"><div class="top-search" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><input id="tq" type="search" placeholder="Search subscriptions" aria-label="Search subscriptions" autocomplete="off" aria-controls="tq-res" aria-expanded="false"><div class="tq-res" id="tq-res" hidden></div></div><button class="avatar help-btn" id="persona-btn" aria-haspopup="dialog" aria-label="View as an example household" title="View as"></button><button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button></div>
     <nav class="tabs" role="tablist" aria-label="Screens">
       <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg>Overview</button>
@@ -1794,7 +1795,7 @@ function welcomeView() {
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
 let fbSent = false;
 function feedbackView() {
-  const f = el(`<button type="button" class="back-link" id="fb-back">&larr; Back to the app</button><div class="section-head"><h2>Give feedback</h2><span class="small muted">What's confusing, what's missing, what would make you use this? Only the people building Subscription Keeper read this.</span></div>
+  const f = el(`<button type="button" class="back-link" id="fb-back">&larr; Back to the app</button><div class="section-head"><h2>Give feedback</h2><span class="small muted">What's confusing, what's missing, what would make you use this? Only the people building MoSuBi read this.</span></div>
     <form id="fb-form" class="fields"><label class="full">Your feedback<textarea id="fb-text" rows="6" required maxlength="4000" style="width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)"></textarea></label>
       <div class="full" style="display:flex;gap:10px;align-items:center;justify-content:flex-end"><span class="small muted" id="fb-msg" role="status">${fbSent ? "Thanks, your feedback was sent." : ""}</span><button class="btn primary" type="submit" id="fb-send">Send feedback</button></div></form>
     <div id="fb-owner"></div>`);
@@ -1825,19 +1826,19 @@ let legalTab = "terms";
 const LEGAL_DATE = "October 25, 2026";
 const LEGAL = {
   terms: { title: "Terms of Use", sections: [
-    ["About this prototype", "Subscription Keeper is an early prototype shared for testing and feedback. Features, prices and these terms may change or be removed at any time, and the service may be unavailable without notice."],
-    ["What the app does", "Subscription Keeper helps you keep track of subscriptions you pay for, estimate the value you get from them, and compare plans and alternatives. It does not sign you up for, change, pay for or cancel any subscription. You stay responsible for managing your own accounts with each provider."],
+    ["About this prototype", "MoSuBi is an early prototype shared for testing and feedback. Features, prices and these terms may change or be removed at any time, and the service may be unavailable without notice."],
+    ["What the app does", "MoSuBi helps you keep track of subscriptions you pay for, estimate the value you get from them, and compare plans and alternatives. It does not sign you up for, change, pay for or cancel any subscription. You stay responsible for managing your own accounts with each provider."],
     ["Prices and information", "Prices, plans and features come from public sources such as official pricing pages, and some come from news or review sites. Prices change often, vary by location and may not include tax. We mark prices we couldn't confirm, but we can't guarantee that any information is accurate, complete or current. Always check with the provider before you buy or cancel."],
     ["Not financial advice", "Ratings, value estimates, savings figures and suggestions are general information to help you decide. They are not financial, legal or tax advice."],
     ["Sam, the AI assistant", "Sam uses artificial intelligence and can be wrong. Don't rely on Sam's answers for important decisions without checking them. Don't share passwords, card numbers or other sensitive details with Sam."],
     ["Your use", "Use the app only for lawful, personal purposes. Don't try to disrupt it, misuse the feedback or support forms, or copy the catalog for commercial use."],
-    ["Third parties", "Names and logos of other companies belong to their owners and are shown only to identify their services. Subscription Keeper isn't affiliated with or endorsed by them. Links to other sites are provided for convenience; their terms and privacy policies apply there."],
+    ["Third parties", "Names and logos of other companies belong to their owners and are shown only to identify their services. MoSuBi isn't affiliated with or endorsed by them. Links to other sites are provided for convenience; their terms and privacy policies apply there."],
     ["No warranty and limits", "The prototype is provided \"as is\" without warranties of any kind. To the extent the law allows, we aren't liable for losses arising from your use of the app or reliance on its information."],
     ["Changes and contact", "We may update these terms as the app develops; the date above shows the latest version. Questions? Use Give feedback or Report a problem in Help."]] },
   privacy: { title: "Privacy", sections: [
     ["The short version", "Your subscription list stays on your device. We don't sell your data, we don't show ads, and we never ask for your bank or card details."],
     ["What stays on your device", "Your subscriptions, prices, usage, dates, location, what you told us about yourself (such as your age range, married, kids or sharing plans) your name and email if you give them, and settings (such as style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
-    ["What you choose to send us", "When you send feedback or report a problem, we receive what you write, plus the app version, the screen you were on, your device type and how many subscriptions you track (not the list itself). If you add an email address to a ticket, we use it only to reply. In the Claude app version, these are linked to your Claude account so only the Subscription Keeper team can read them."],
+    ["What you choose to send us", "When you send feedback or report a problem, we receive what you write, plus the app version, the screen you were on, your device type and how many subscriptions you track (not the list itself). If you add an email address to a ticket, we use it only to reply. In the Claude app version, these are linked to your Claude account so only the MoSuBi team can read them."],
     ["Sam, the AI assistant", "When you ask Sam a question in the Claude app, your question, your recent chat, your subscription list (names, prices, usage and renewal dates) and related catalog details are sent to Claude, Anthropic's AI, to write the answer, using your own Claude account. On the public website, Sam answers from the catalog on your device and nothing is sent."],
     ["Usage exports", "If you load a ChatGPT, Claude, Netflix or Spotify file to count your usage, the file is read on your device. Only the monthly counts are kept, and the file isn't uploaded."],
     ["Location", "We use the country and state you choose to show the right services and prices. We don't track your device's location."],
@@ -1906,7 +1907,7 @@ Catalog entries related to the question:
 ${[...extra.values()].slice(0, 30).map(svcLine).join("\n") || "- none matched"}
 Categories we cover: ${[...new Set(Object.values(CATALOG).map(v => catLabel(v.category)))].join(", ")}.`;
 }
-const SAM_RULES = `You are Sam, the friendly assistant inside Subscription Keeper, an app that helps everyday people track subscriptions, see what they actually use, and find cheaper options.
+const SAM_RULES = `You are Sam, the friendly assistant inside MoSuBi, an app that helps everyday people track subscriptions, see what they actually use, and find cheaper options.
 Rules:
 - Answer questions about the person's subscriptions, prices, plans and alternatives (including free public options like libraries). Keep answers short: a few sentences or a short list.
 - Use only the data provided below for prices and plans. Never invent a price. Say "unconfirmed" when the data marks a price that way. If the data doesn't have it, say so.
@@ -3871,7 +3872,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 181 · Standalone copy · Oct 26", VERSION_NUM = 181;
+const APP_VERSION = "Prototype · Version 182 · Standalone copy · Oct 26", VERSION_NUM = 182;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.

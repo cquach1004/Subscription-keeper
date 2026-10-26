@@ -1,4 +1,4 @@
-# Subscription Keeper (prototype)
+# MoSuBi (prototype, formerly Subscription Keeper)
 
 A clickable prototype that helps people track their subscriptions, see what they actually use, and find cheaper options.
 
