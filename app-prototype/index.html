@@ -780,7 +780,7 @@ details.az[hidden] { display: none; }
 <div class="wrap">
   <header class="top">
     <div class="brand"><h1><svg class="brand-mark" viewBox="96 124 320 256" aria-hidden="true"><rect x="128" y="138" width="256" height="150" rx="34" fill="var(--hero-ink)" fill-opacity=".3" transform="rotate(-7 256 213)"/><rect x="104" y="184" width="304" height="176" rx="40" fill="var(--hero-ink)"/><rect x="220" y="168" width="72" height="208" rx="14" fill="#4ade80"/></svg>MoSuBi</h1></div>
-    <div class="top-btns"><div class="top-search" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><input id="tq" type="search" placeholder="Search subscriptions" aria-label="Search subscriptions" autocomplete="off" aria-controls="tq-res" aria-expanded="false"><div class="tq-res" id="tq-res" hidden></div></div><button class="avatar help-btn" id="persona-btn" aria-haspopup="dialog" aria-label="View as an example household" title="View as"></button><button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button></div>
+    <div class="top-btns"><div class="top-search" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><input id="tq" type="search" placeholder="Search subscriptions" aria-label="Search subscriptions" autocomplete="off" aria-controls="tq-res" aria-expanded="false"><div class="tq-res" id="tq-res" hidden></div></div><button class="avatar help-btn" id="persona-btn" aria-haspopup="dialog" aria-label="View as an example household" title="Demo Data - View As"></button><button class="avatar" id="me-btn" aria-haspopup="dialog" aria-label="Your profile and settings"></button></div>
     <nav class="tabs" role="tablist" aria-label="Screens">
       <button role="tab" id="tab-home" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></svg>Overview</button>
       <button role="tab" id="tab-usage" data-view="usage" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3.5 16.5a8.5 8.5 0 1 1 17 0"/><path d="M12 16.5l4.2-5.2"/></svg>Usage</button>
@@ -983,7 +983,7 @@ function openPersonas() {
   const root = document.getElementById("sheet-root");
   root.replaceChildren(el(`<div class="scrim" id="scrim"></div>
     <aside class="sheet me-sheet enter" role="dialog" aria-modal="true" aria-labelledby="pp-title">
-      <div class="me-head"><span class="avatar">${PERSONA_ICON}</span><div style="flex:1;min-width:0"><h2 id="pp-title">View as</h2><div class="small muted">See the app through different households' eyes</div></div>
+      <div class="me-head"><span class="avatar">${PERSONA_ICON}</span><div style="flex:1;min-width:0"><h2 id="pp-title">Demo Data - View As</h2><div class="small muted">See the app through different households' eyes</div></div>
         <button class="btn" id="pp-close">Close</button></div>
       <div class="pp-list">${Object.entries(PERSONAS).map(([k, p]) => `<button class="pp-opt" data-persona="${k}" aria-pressed="${k === persona}"><span class="pp-pic">${PERSONA_PICS[k] || PERSONA_ICON}</span><span class="pp-txt">
         <b>${esc(k === "me" ? "Me" : `${p.name}`)}</b><span class="small muted">${esc(k === "me" ? "Your own list" : `${p.label}. ${p.desc}`)}</span></span>${k === persona ? '<span class="pp-on">Viewing</span>' : ""}</button>`).join("")}</div>
@@ -3899,7 +3899,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 190 · Oct 26", VERSION_NUM = 190;
+const APP_VERSION = "Prototype · Version 191 · Oct 26", VERSION_NUM = 191;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
