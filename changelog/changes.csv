@@ -88,7 +88,7 @@ Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,No
 90,2026-10-23,Lawn and pest services rated on results and fair price,Cuong,Value rating,Feature,Y,Current,
 91,2026-10-23,Insurance rated on a matching quote plus service ratings,Cuong,Value rating,Feature,Y,Current,
 92,2026-10-23,Unused for 12 months = Costly; 31-day grace for new subscriptions; usage reminder,Cuong,Value rating / Overview,Feature,Y,Current,
-93,2026-10-23,"Every subscription rated on job done, price and service; cheaper or better comparable = Costly",Cuong,Value rating,Feature,Y,Current,Admin doc of rules: https://claude.ai/artifact/AuoR8FkSD7FDj6ipG5w1xn
+93,2026-10-23,"Every subscription rated on job done, price and service; cheaper or better comparable = Costly",Cuong,Value rating,Feature,Y,Changed in v211 (password managers),Admin doc of rules: https://claude.ai/artifact/AuoR8FkSD7FDj6ipG5w1xn
 94,2026-10-23,Only slider subscriptions listed under This month so far,Cuong,Usage,Design,Y,Current,
 95,2026-10-23,24 Great Lakes regional providers,Cuong (approved),Explore,Data,Y,Current,
 96,2026-10-23,Adobe Creative Cloud added to the catalog (10 plans),Cuong,Price catalog / Explore,Data,Y,Current,
@@ -234,3 +234,4 @@ Version,Date (UTC),Change,Requested by,Area / Page,Type,On public site,Status,No
 208,2026-10-26,"Welcome Back: intro text changed to ""We noticed some information is missing. Completing this makes your ratings and savings more accurate.""; the first sentence is larger and gold",Cuong,Welcome Back,Design,Y,Current,
 209,2026-10-26,"Regional providers: Mountain region added (CO, UT, WY, MT, ID, NV): 21 providers (6 internet, 6 news, 4 fitness, 2 car wash, Rocky Mountain Power Blue Sky, Union Wireless, a farm box), shown only to people in the states they serve",Cuong,Explore / regional,Data,Y,Current,"174 regional providers in total; 9 plans not confirmed, 18 with no published price"
 210,2026-10-26,"Finish setting up (Overview card and setup page): pick how often you pay (a month, every 3 months, every 6 months, a year) and how usage is counted (a day, a week, a month, a year, where it fits the measure); card restyled to match the welcome screens (page background, white question cards, larger text)",Cuong,Finish setting up,Feature,Y,Current,Prices paid every 3 or 6 months are stored as a monthly amount
+211,2026-10-26,"Password managers (1Password and others) now track usage: ""Logins filled a day"" slider, rated Great value or Costly per login instead of on doing its job",Cuong,Usage / Value rating,Feature,Y,Current,"$0.05 a login filled is our estimate; a $3.99 plan is Great at about 8 a day, Costly under about 3"

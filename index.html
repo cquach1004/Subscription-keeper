@@ -837,7 +837,7 @@ const SAMPLE = [
   ["wsj", 3, ["articles"], 27], ["cnbc", 1, ["live"], 3], ["aaa", 0, [], 10], ["southwest_card", 40, ["bag"], 6],
   ["mcafee", 3, ["antivirus"], 18], ["cloaked", 6, ["aliases"], 25],
   // v75 (Cuong): Amazon Prime, Progressive car insurance and 1Password with a past year of data.
-  ["amazon_prime", 6, ["shipping","video","nfl"], 14], ["progressive_auto", 0, ["coverage"], 9], ["onepassword", 0, ["vault","watchtower"], 21],
+  ["amazon_prime", 6, ["shipping","video","nfl"], 14], ["progressive_auto", 0, ["coverage"], 9], ["onepassword", 15, ["vault","watchtower"], 21],
   // v77 (Cuong): one per category for the demo, plus the free park classes.
   ["park_fitness_classes", 4, ["classes","outdoor"], 1], ["costco", 3, ["bulk"], 11], ["applecare", 0, ["accidental","battery"], 16],
   ["orkin", 0, ["general_pest","revisits"], 5], ["natural_lawn_america", 0, ["fertilization"], 7], ["state_farm_home", 0, ["coverage"], 2],
@@ -1297,7 +1297,11 @@ const USAGE_BY_CAT = {
   books: U("uses", "Books read or listened to this month", "book", "books", "month", 30, { worth: 6 }),
   // Protection plans and essentials are judged as plans, not by how often they're used. Insurance premiums are personal, so users enter theirs.
   car_insurance: { ...COST_ONLY, insure: "car" }, home_insurance: { ...COST_ONLY, insure: "home" },
-  privacy: COST_ONLY, home_security: COST_ONLY, home: COST_ONLY, tech_support: COST_ONLY, lawn_pest: COST_ONLY, internet: COST_ONLY, mobile: COST_ONLY, energy: COST_ONLY, pets: COST_ONLY, beauty: COST_ONLY, passwords: COST_ONLY,
+  privacy: COST_ONLY, home_security: COST_ONLY, home: COST_ONLY, tech_support: COST_ONLY, lawn_pest: COST_ONLY, internet: COST_ONLY, mobile: COST_ONLY, energy: COST_ONLY, pets: COST_ONLY, beauty: COST_ONLY,
+  // v211 (Cuong): password managers are rated on use, not on "doing its job". $0.05 a login filled is our estimate,
+  // so a $3.99 plan is Great value at about 8 logins a day and Costly under about 3.
+  passwords: U("logins", "Logins filled a day", "login filled", "logins filled", "day", 50, { per1: "login", worth: 0.05, useRated: true,
+    note: "Each time it fills a password, passkey or code for you. Count everyone on the account together." }),
 };
 // Lawn and pest control are judged on results (Cuong, v90): no pests or weeds at a fair market price is what you paid for.
 // Each month you tick anything that went wrong; nothing ticked means no problems. A problem that isn't fixed, or callbacks
@@ -1307,7 +1311,7 @@ const isPest = v => /pest|mosquito|termite|bug|exterminat|orkin|terminix|aptive/
 // is it doing its job, and is the price and service as good as a comparable option? What "doing its job" means, per category:
 const PROBLEM_TEXT = { privacy: "A virus, scam or data leak got through, or it slowed things down", home_security: "Missed motion alerts, or cameras glitched or went offline",
   internet: "Outages or slow speeds", mobile: "Dropped calls, slow data or poor coverage", tech_support: "A repair or claim didn't go well",
-  passwords: "Sync, autofill or login problems", home: "A repair or claim didn't go well", pets: "A claim or delivery went wrong", beauty: "An order went wrong or arrived late" };
+  home: "A repair or claim didn't go well", pets: "A claim or delivery went wrong", beauty: "An order went wrong or arrived late" };
 const RESULTS_CATS = new Set(["lawn_pest", ...Object.keys(PROBLEM_TEXT)]);
 const RESULTS = v => { const pest = isPest(v), lawn = v.category === "lawn_pest";
   return U("problems", "Anything go wrong this month?", "problem", "problems", "month", 3, { per1: "problem", results: true, pest, lawn, checks: [
@@ -1399,7 +1403,7 @@ function measuresOf(s) {
   const m = typeof o === "function" ? o(s) : o?.id ? o : { ...cat, ...(o || {}) }, ratio = b ? b.good_at_or_below / b.poor_at_or_above : 1 / 3;
   const listWorth = m.fixed ? (ALTERNATIVES[m.job]?.[s.alt || 0] || ALTERNATIVES[m.job]?.[0])?.monthly ?? null : m.worth ?? (m.id === "uses" && b ? b.poor_at_or_above : null);
   const own = s.worth?.[m.id], worth = own ?? listWorth, on = (m.parts || []).filter(p => (s.used || []).includes(p.feature)), parts = on.filter(p => !(p.within && on.some(q => q.feature === p.within)));
-  return [{ ...m, rated: !m.costOnly && (v.value_model === "usage" || v.value_model === "storage" || !!m.fixed), bench: !m.fixed && m.worth == null && listWorth != null, own: own != null, worth, good: worth == null ? null : worth * ratio,
+  return [{ ...m, rated: !m.costOnly && (v.value_model === "usage" || v.value_model === "storage" || !!m.fixed || !!m.useRated), bench: !m.fixed && m.worth == null && listWorth != null, own: own != null, worth, good: worth == null ? null : worth * ratio,
     ...(m.bundle ? { counted: parts, included: on.filter(p => !parts.includes(p)), fixedAdd: parts.reduce((a, p) => a + p.monthly * (p.months ? p.months.length / 12 : 1), 0) } : {}) }];
 }
 const measureOf = s => measuresOf(s)[0];
@@ -1644,7 +1648,7 @@ function upcomingHtml() {
 
 // First visit: each person picks their own subscriptions (Cuong shares the prototype for feedback, 2026-10-19).
 // Nothing is shared between viewers: lists live in this browser only.
-const FRESH = () => ({ subs: [], sampleV: 4, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
+const FRESH = () => ({ subs: [], sampleV: 4, pwV: 1, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
 // Welcome, step 1 (Cuong, v125): "Tell us about yourself" with icon choices, then where you live. Step 2 is picking subscriptions.
 // v126 (Cuong): single adult and senior became an age range (profile.age, one choice), and a "share plans" box (profile.shares).
 // profile.about keeps the icon picks; profile.group (the spending average we compare with) follows: 55+ senior,
@@ -1740,7 +1744,7 @@ function aboutView() {
   $("w-next").addEventListener("click", () => { if (!emailOk()) { $("w-email").focus(); return; } keep(); save(); welcomeStep = 2; render(); window.scrollTo(0, 0); });
   $("w-intro").addEventListener("click", () => { keep(); save(); welcomeStep = 0; render(); window.scrollTo(0, 0); });
   $("w-example")?.addEventListener("click", () => { keep(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = state.pwV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Intro page (Cuong, v132): what the app is, before the welcome questions. Shown only to new visitors (welcomeStep 0).
@@ -2025,7 +2029,7 @@ function welcomeView() {
     render(); window.scrollTo(0, 0); });
   $("w-later").addEventListener("click", () => { const prof = state.profile; state = { ...FRESH(), profile: prof, plkShow: true }; save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = state.pwV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
@@ -4108,7 +4112,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 210 · Standalone copy · Oct 26", VERSION_NUM = 210;
+const APP_VERSION = "Prototype · Version 211 · Standalone copy · Oct 26", VERSION_NUM = 211;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4274,6 +4278,7 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   // Subscriptions added recently with no usage entered yet wait for the user's input before any rating (one-time check).
   if (!state.needsV) { state.subs.filter(s => !s.example && !s.uses && !s.hist && s.start && dayDiff(s.start, today()) <= 45).forEach(s => s.needsUse = true); state.needsV = 1; }
   if (!state.unitsV) { state.subs.forEach(migrateUse); state.unitsV = 1; }
+  if (!state.pwV) { state.subs.filter(s => svcOf(s).category === "passwords").forEach(migrateUse); state.pwV = 1; }
   if (!state.evV) { state.subs.filter(s => s.svc === "evernote").forEach(migrateUse); state.evV = 1; }
   if (!state.cardV) { state.subs.filter(s => svcOf(s).category === "travel").forEach(s => { const w = s.needsUse; setUse(s, Math.round(s.uses * 10) / 10, "month"); if (w) s.needsUse = true; }); state.cardV = 1; }
   if (!state.aaaV) { state.subs.filter(s => s.svc === "aaa").forEach(s => { s.measure = measureOf(s).id; setUse(s, 0, "month"); }); state.aaaV = 1; }
