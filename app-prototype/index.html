@@ -171,6 +171,7 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .w-bk-btns { display: flex; gap: 12px; justify-content: center; }
 .w-clear { padding-left: 0; padding-right: 0; margin-left: auto; color: var(--bad); }  /* v193 (Cuong) */
 .w-clear-ask { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; } .w-clear-ask[hidden] { display: none; }
+.ov-restart { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }  /* v196 */
 .ov-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; justify-content: center; }  /* v195: centered */  /* v192 (Cuong): Add subscriptions / Manage my list */
 .cat-item[data-have] { opacity: .55; cursor: default; }
 .mg-list { display: grid; gap: 0; padding-top: 6px; padding-bottom: 6px; }
@@ -1866,10 +1867,15 @@ function welcomeView() {
   press(f); drawPills(); drawBasket();
   const setLoc = () => {};  // v125: location is set on step 1
   $("w-back").addEventListener("click", () => { if (addMode) { addMode = false; view = "home"; } else welcomeStep = 1; render(); window.scrollTo(0, 0); });
-  $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile, kept = addMode ? state.subs : [];
-    state = addMode ? state : { ...FRESH(), profile: prof };
-    state.subs = [...kept, ...[...picks].map(id => newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }))];
-    own.forEach((name, i) => state.subs.push({ id: `custom-${Date.now()}-${i}`, svc: "custom", name, plan: null, used: [], cycle: "month", price: null, uses: 0, rate: 0, per: "month",
+  $("w-go").addEventListener("click", () => { setLoc(); const prof = state.profile;
+    // v196 (Cuong): coming back through the welcome screen keeps what's already on the list (with its usage and prices);
+    // only ones unticked here are dropped, and only new picks are added and set up.
+    const ownLc = own.map(n => n.toLowerCase());
+    const kept = addMode ? state.subs : state.subs.filter(s => s.svc === "custom" ? ownLc.includes(s.name.toLowerCase()) : picks.has(s.svc));
+    const keptSvc = new Set(kept.map(s => s.svc)), keptOwn = new Set(kept.filter(s => s.svc === "custom").map(s => s.name.toLowerCase()));
+    state = addMode || state.subs.length ? state : { ...FRESH(), profile: prof }; delete state.wDraft;
+    state.subs = [...kept, ...[...picks].filter(id => !keptSvc.has(id)).map(id => newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }))];
+    own.filter(n => !keptOwn.has(n.toLowerCase())).forEach((name, i) => state.subs.push({ id: `custom-${Date.now()}-${i}`, svc: "custom", name, plan: null, used: [], cycle: "month", price: null, uses: 0, rate: 0, per: "month",
       needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }));
     if (picks.size || own.length) state.startDone = true;  // v118: picked here already, so go straight to Finish setting up
     const added = state.subs.filter(s => !kept.includes(s)); added.forEach(s => { s.measure = measuresOf(s)[0].id; }); save();
@@ -2530,9 +2536,10 @@ function manageView() {
   const f = el(`<button type="button" class="back-link" id="mg-back">&larr; Back to Overview</button>
     <div class="section-head"><h2>Manage my list</h2><span class="small muted">${list.length} on your list. Tap a name to see or change it.</span></div>
     <section class="card mg-list">${list.map(row).join("") || `<p class="small muted" style="margin:0">Your list is empty.</p>`}</section>
-    <div class="ov-actions" style="margin-top:14px"><button type="button" class="btn primary" id="ov-add">+ Add subscriptions</button></div>`);
+    <div class="ov-actions" style="margin-top:14px"><button type="button" class="btn" id="mg-back2">&larr; Back</button><button type="button" class="btn primary" id="ov-add">+ Add subscriptions</button></div>`);
   const redraw = () => { const y = scrollY; render(); window.scrollTo(0, y); };
-  f.getElementById("mg-back").addEventListener("click", () => { manageAsk = null; view = "home"; render(); window.scrollTo(0, 0); });
+  // v196 (Cuong): a Back button at the bottom too, beside Add.
+  ["mg-back", "mg-back2"].forEach(id => f.getElementById(id).addEventListener("click", () => { manageAsk = null; view = "home"; render(); window.scrollTo(0, 0); }));
   f.querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.open)));
   f.querySelectorAll("[data-ask]").forEach(b => b.addEventListener("click", () => { manageAsk = b.dataset.ask; redraw(); }));
   f.querySelectorAll("[data-keep]").forEach(b => b.addEventListener("click", () => { manageAsk = null; redraw(); }));
@@ -2540,6 +2547,7 @@ function manageView() {
   wireListBtns(f);
   return f;
 }
+let resetAsk = false;
 function homeView() {
   const total = state.subs.reduce((a, s) => a + monthly(s), 0);
   const subs = state.subs.slice().sort((a, b) => monthly(b) - monthly(a));
@@ -2564,7 +2572,8 @@ function homeView() {
     ${renewHtml()}
     ${state.subs.length ? listBtns() : ""}
     ${state.subs.length ? cmpNote(cd) : ""}
-    ${persona === "me" ? `<p class="note" style="margin:6px 0 0"><button class="btn ghost small" id="restart">Start from the beginning</button></p>` : ""}`);
+    ${persona === "me" ? `<div class="note ov-restart" style="margin:6px 0 0">${resetAsk ? `<span class="small">Remove all ${state.subs.length} subscriptions on your list and start over? This can't be undone.</span><button class="btn danger small" id="reset-yes">Reset</button><button class="btn ghost small" id="reset-no">Cancel</button>`
+      : `<button class="btn ghost small" id="restart">Go to Welcome Screen</button>${state.subs.length ? `<button class="btn ghost small" id="reset-ask" style="color:var(--bad)">Reset My Selections</button>` : ""}`}</div>` : ""}`);
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   wireListBtns(f);
   f.getElementById("cmp-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
@@ -2585,7 +2594,12 @@ function homeView() {
   f.querySelectorAll("[data-tier]").forEach(b => b.addEventListener("click", () => { svTierOpen = svTierOpen === b.dataset.tier ? null : b.dataset.tier; const y = scrollY; render(); window.scrollTo(0, y); }));
   f.querySelectorAll("[data-svid]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.svid)));
   f.querySelectorAll("[data-mix]").forEach(b => b.addEventListener("click", () => { view = "usage"; render(); window.scrollTo(0, 0); }));
-  f.getElementById("restart")?.addEventListener("click", () => { view = "welcome"; welcomeStep = 0; render(); window.scrollTo(0, 0); });
+  // v196 (Cuong): Go to Welcome Screen keeps everything (the picker opens with the current list ticked); Reset My Selections asks, then clears the list.
+  f.getElementById("restart")?.addEventListener("click", () => { state.wDraft = { picks: [...new Set(state.subs.filter(s => s.svc !== "custom").map(s => s.svc))], own: state.subs.filter(s => s.svc === "custom").map(s => s.name) };
+    view = "welcome"; welcomeStep = 0; render(); window.scrollTo(0, 0); });
+  f.getElementById("reset-ask")?.addEventListener("click", () => { resetAsk = true; const y = scrollY; render(); window.scrollTo(0, y); });
+  f.getElementById("reset-no")?.addEventListener("click", () => { resetAsk = false; const y = scrollY; render(); window.scrollTo(0, y); });
+  f.getElementById("reset-yes")?.addEventListener("click", () => { resetAsk = false; state = { ...FRESH(), profile: state.profile }; save(); view = "welcome"; welcomeStep = 2; render(); window.scrollTo(0, 0); });
   return f;
 }
 function rowHtml(s) {
@@ -3951,7 +3965,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 195 · Oct 26", VERSION_NUM = 195;
+const APP_VERSION = "Prototype · Version 196 · Oct 26", VERSION_NUM = 196;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
