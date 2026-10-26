@@ -288,12 +288,6 @@ details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-wi
 .su-l { font-weight: 600; font-size: 14px; display: block; } .su-l .small { display: block; margin-top: 2px; }
 .su-price { display: flex; align-items: center; gap: 8px; } .su-price input { width: 120px; }
 .su-btns { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
-/* v113/v116 (Cuong): Let's get started (Yes shows top 6 to tap) and other-category pills on Overview. */
-.gq-list { display: grid; gap: 0; margin: 6px 0 4px; }
-.gq { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
-.gq:first-child { border-top: 0; } .gq .small { display: block; }
-.gq .seg button { min-width: 44px; }
-.gq .seg { flex-wrap: nowrap; } .gq .pop-grid, .gq .gq-more { grid-column: 1 / -1; } .gq .pop-grid { margin-top: 0; } .gq .gq-more { justify-self: start; padding-left: 0; margin-top: -4px; }
 .pop[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 .pop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 6px; }
 .pop { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); font: inherit; text-align: left; cursor: pointer; min-width: 0; }
@@ -1641,7 +1635,7 @@ function plkFor(age, about) {
   return { gen, share, items, total: items.reduce((a, x) => a + (x.plan?.effective_monthly || 0), 0) };
 }
 function plkHtml() {
-  if (!state.plkShow || !startShown()) return "";  // set by "Skip, I'll add them later"; goes with Let's get started
+  if (!state.plkShow || state.startDone || state.subs.length >= 10) return "";  // set by "Skip, I'll add them later"; until 10 subs (v187: Let's get started removed)
   const have = new Set(state.subs.map(s => s.svc));
   const p = profile(), about = p.about || [], age = p.age || "", r = plkFor(age, about), us = p.country === catalogCountry(), b = benchFor(p.country, "adult");
   const who = [age ? AGES.find(a => a[0] === age)?.[1] : "", ...about.map(k => ({ adult: "Adult", married: "Married", kids: "Kids" })[k]).filter(Boolean), p.shares ? "Open to sharing" : ""].filter(Boolean);
@@ -2444,10 +2438,8 @@ function homeView() {
     ${setupTodo().length ? "" : usageNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
     ${hhHtml()}
-    ${startHtml()}
     ${useRanked().length ? useMostHtml() : ""}
     ${saveAmt > 0 ? saveHtml(saveAmt) : ""}
-    ${moreCatsHtml()}
     ${PHASE1 ? "" : upcomingHtml()}
     ${renewHtml()}
     ${factsHtml()}
@@ -2460,14 +2452,6 @@ function homeView() {
   f.querySelector(".see-how")?.addEventListener("click", () => { view = "overlaps"; render(); document.getElementById("ways")?.scrollIntoView(); });
   wireNudge(f);
   f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
-  f.querySelectorAll("[data-gq]").forEach(b => b.addEventListener("click", () => { (state.guess ||= {})[b.dataset.gq] = +b.dataset.n; save(); const y = scrollY; render(); window.scrollTo(0, y); }));
-  f.querySelectorAll("[data-pop]").forEach(b => b.addEventListener("click", () => { const id = b.dataset.pop, had = state.subs.find(s => s.svc === id);
-    if (had) { if (!had.needsUse) return; state.subs = state.subs.filter(s => s !== had); }
-    else { const s = newSub(id, { needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }); s.measure = measuresOf(s)[0].id; state.subs.push(s); }
-    save(); const y = scrollY; render(); window.scrollTo(0, y); }));
-  f.querySelectorAll("[data-xcat]").forEach(b => b.addEventListener("click", () => { exploreOpen = null; exploreCat = b.dataset.xcat; view = "add"; render(); window.scrollTo(0, 0); }));
-  f.querySelectorAll("[data-reg]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.reg; startReg.has(k) ? startReg.delete(k) : startReg.add(k); const y = scrollY; render(); window.scrollTo(0, y); }));
-  f.getElementById("start-done")?.addEventListener("click", () => { state.startDone = true; save(); render(); window.scrollTo(0, 0); });
   wireSetup(f);
   f.getElementById("plk-edit")?.addEventListener("click", () => { view = "welcome"; welcomeStep = 1; render(); window.scrollTo(0, 0); });
   f.querySelectorAll("[data-plk]").forEach(b => b.addEventListener("click", () => { const v = CATALOG[b.dataset.plk], plan = planOf(v, b.dataset.plan), had = state.subs.find(s => s.svc === v.id);
@@ -2602,10 +2586,10 @@ const TRENDS = [
 const TREND_KIND = { up: ["Price up", "poor"], down: ["Price down", "great"], new: ["New plan", "ok"], news: ["News", "ok"], popular: ["Popular", "great"] };
 // Finish setting up (Cuong, v118): after picking, walk the new subscriptions one at a time: confirm the price (list price filled in)
 // and set how much it's used. s.setup is "todo" for ones picked on the welcome screen or Let's get started, "done" or "skip" after.
-// Shown once picking is finished (Let's get started hidden). Skipped ones are picked up later by the "Add your usage" reminder.
+// Shown whenever some are still to do (v187). Skipped ones are picked up later by the "Add your usage" reminder.
 const setupTodo = () => state.subs.filter(s => s.setup === "todo");
 function setupHtml() {
-  const todo = setupTodo(); if (!todo.length || startShown()) return "";
+  const todo = setupTodo(); if (!todo.length) return "";
   const all = state.subs.filter(s => s.setup).length, done = all - todo.length, s = todo[0], m = measureOf(s), v = svcOf(s), t0 = total(s);
   const use = m.costOnly || m.checks || !m.max ? `<p class="small muted" style="margin:0">${m.checks ? "You'll tick off what you used each month on the Usage tab." : "We don't rate this one on use, so the price is all we need."}</p>`
     : `<label class="su-l" for="su-use">${esc(m.label)}</label>${slider(m, s.needsUse ? 0 : s.rate || 0, `id="su-use" aria-label="${esc(m.label)}"`)}`;
@@ -2630,43 +2614,12 @@ function wireSetup(f) {
     s.example = false; s.setup = "done"; next(); };
   f.getElementById("su-skip").onclick = () => { s.setup = "skip"; next(); };
 }
-// Let's get started (Cuong, v116; was Guess my total in v113): a Yes/No per common kind of service. Yes shows that category's
-// top 6 right underneath; one tap adds it (tap again to take it back off while no usage is entered). Shown until "I'm done" or 10 subs.
-const START = [["video", "Video streaming"], ["music", "Music streaming"], ["shopping", "Shopping memberships"], ["storage", "Cloud storage"], ["ai", "AI assistants"],
-  ["gaming", "Gaming"], ["fitness", "Gym and fitness"], ["news", "News and magazines"], ["food", "Food delivery"]];
+// v187 (Cuong): Let's get started and Explore other categories cards removed from Overview (leftovers from the old start flow).
 // "Top" order (v115): our popular picks, then national services (known logos first), then regional, then free public options. Not sales data.
 const POPULAR = ["netflix", "spotify", "amazon_prime", "youtube_premium", "disney_plus", "hulu", "hbo_max", "apple_music", "peacock", "paramount_plus", "icloud", "google_one",
   "chatgpt", "m365", "xbox_game_pass", "playstation_plus", "planet_fitness", "doordash_dashpass", "uber_one", "walmart_plus", "costco", "audible", "duolingo", "nyt"];
 const svcRankKey = v => (POPULAR.includes(v.id) ? 0 : v.provider_type ? 6 : v.service_states || v.region_group ? 4 : 2) + (LOGOS[v.id] ? 0 : 1);
 const svcRank = (a, b) => svcRankKey(a) - svcRankKey(b) || a.name.localeCompare(b.name);
-// v117 (Cuong): Yes lists every option in the category offered here; regional ones (only in the user's state) wait behind "See regional providers".
-const isRegional = v => !!(v.service_states || v.region_group);
-const inCat = cat => { const c = profile().country; return Object.values(CATALOG).filter(v => v.category === cat && availability(v.id, c) !== "no" && servesHere(v)).sort(svcRank); };
-const startReg = new Set();
-const startShown = () => !state.startDone && state.subs.length < 10;
-function startHtml() {
-  if (!startShown()) return "";
-  const g = state.guess || {}, have = new Set(state.subs.map(s => s.svc)), mineCats = new Set(state.subs.map(s => svcOf(s).category));
-  const tile = v => { const mine = have.has(v.id); return `<button class="pop" data-pop="${v.id}" aria-pressed="${mine}" aria-label="${mine ? "On your list" : "Add"}: ${esc(v.name)}" title="${esc(v.name)}">${logoHtml(v)}<b>${esc(baseName(v.name) || v.name)}</b><span class="plus" aria-hidden="true">${mine ? "&#10003;" : "+"}</span></button>`; };
-  const row = ([k, label]) => { const on = g[k] != null ? g[k] === 1 : mineCats.has(k), all = on ? inCat(k) : [], list = all.filter(v => !isRegional(v)), reg = all.filter(isRegional), open = startReg.has(k);
-    return `<div class="gq"><b style="font-weight:500">${esc(label)}</b><div class="seg" role="group" aria-label="${esc(label)}">${[0, 1].map(n => `<button type="button" data-gq="${k}" data-n="${n}" aria-pressed="${on === !!n}">${n ? "Yes" : "No"}</button>`).join("")}</div>
-      ${list.length ? `<div class="pop-grid">${list.map(tile).join("")}</div>` : ""}
-      ${reg.length ? `${open ? `<div class="pop-grid">${reg.map(tile).join("")}</div>` : ""}<button type="button" class="btn ghost small gq-more" data-reg="${k}">${open ? "Hide regional providers" : `See regional providers (${reg.length})`}</button>` : ""}</div>`; };
-  return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Let's get started</h3>
-    <p class="small muted" style="margin:2px 0 0">Do you pay for any of these? Tap Yes to see your options, then tap the ones you have to add them to your list.</p>
-    <div class="gq-list">${START.map(row).join("")}</div>
-    ${state.subs.length ? `<button type="button" class="btn ${setupTodo().length ? "primary" : "ghost small"}" id="start-done" style="${setupTodo().length ? "margin-top:10px" : "padding-left:0"}">${setupTodo().length ? `Done picking, set up ${setupTodo().length === 1 ? "this one" : `these ${setupTodo().length}`}` : "I'm done, hide this"}</button>` : ""}</section>`;
-}
-// Other categories (v116, in place of Popular subscriptions): pills like the Explore tab; each opens Explore on that category.
-function moreCatsHtml() {
-  if (!startShown()) return "";
-  const c = profile().country, skip = new Set(START.map(r => r[0]));
-  const cats = [...new Set(Object.values(CATALOG).filter(v => availability(v.id, c) !== "no").map(v => v.category))].filter(k => !skip.has(k)).sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
-  return `<section class="card" style="margin-bottom:14px"><h3 style="margin:0">Explore other categories</h3>
-    <p class="small muted" style="margin:2px 0 8px">Pay for something else, like internet, a phone plan or insurance? Pick a category to find it.</p>
-    <div class="chips">${cats.map(k => `<button type="button" class="chip" data-xcat="${k}">${esc(catLabel(k))}</button>`).join("")}</div>
-    <button type="button" class="btn ghost small" data-xcat="all" style="padding-left:0;margin-top:6px;justify-self:start;display:block">See everything in Explore</button></section>`;
-}
 // What you use most / least (Cuong, v105, in place of What's trending). Units differ by service, so each one is ranked by
 // how far its usage goes past what it takes to be worth the price: uses x value per use / monthly cost (2 = twice its price).
 // Only paid, usage-tracked ones count; checkbox, cost-only, paused and not-yet-entered ones are left out.
@@ -3876,7 +3829,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 186 · Standalone copy · Oct 26", VERSION_NUM = 186;
+const APP_VERSION = "Prototype · Version 187 · Standalone copy · Oct 26", VERSION_NUM = 187;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
