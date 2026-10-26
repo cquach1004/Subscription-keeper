@@ -169,6 +169,14 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .w-bk-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; max-height: 40vh; overflow-y: auto; } .w-bk-head > b { font-size: 15px; white-space: nowrap; }
 .w-bk-chips { display: contents; } .w-bk-chips .own-item { padding: 3px 4px 3px 4px; gap: 6px; font-size: 14px; box-shadow: none; } .w-bk-chips .own-item .logo { width: 22px; height: 22px; font-size: 10px; border-radius: 6px; }
 .w-bk-btns { display: flex; gap: 12px; justify-content: center; }
+.ws { display: grid; gap: 12px; margin-top: 14px; }  /* v190 (Cuong): welcome step 3, set up each subscription */
+.ws-sub b { font-size: 22px; } .ws-sub .logo { width: 44px; height: 44px; font-size: 16px; border-radius: 12px; }
+.ws-card { display: grid; gap: 8px; } .ws-q { margin: 0; font-size: 17px; }
+.ws-plans { display: grid; gap: 8px; }
+.ws-plan { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); cursor: pointer; }
+.ws-plan input { width: 20px; height: 20px; flex: none; accent-color: var(--accent); }
+.ws-plan > span { display: grid; gap: 2px; min-width: 0; } .ws-plan:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); background: var(--surface); }
+.ws .w-basket { margin-top: 6px; }
 .w-score-n { font-size: 34px; font-weight: 700; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; } .w-score-l { font-size: 16px; font-weight: 600; }
 .age-opt { align-content: center; min-height: 92px; gap: 2px; } .age-opt b { font: 700 22px/1.15 var(--f-body); color: var(--accent); white-space: nowrap; } @media (max-width: 380px) { .age-opt b { font-size: 19px; } } .age-opt span { font-size: 13px; color: var(--muted); font-weight: 500; }
 .share-box { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; max-width: 620px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); cursor: pointer; }
@@ -1722,9 +1730,46 @@ function introView() {
   return f;
 }
 const WELCOME_SKIP = new Set(["energy"]);
+// Welcome, step 3 (Cuong, v190): one subscription at a time, two questions each: which plan, then one usage number for the value
+// chart (the subscription's own measure). Next saves and moves on; "Finish later" goes to Overview, where Finish setting up picks up the rest.
+function setupStepView() {
+  const todo = setupTodo(), all = state.subs.filter(x => x.setup).length, done = all - todo.length;
+  const toHome = () => { view = "home"; welcomeStep = 1; save(); render(); window.scrollTo(0, 0); };
+  if (!todo.length) { toHome(); return el(""); }
+  const s = todo[0], v = svcOf(s), m = measureOf(s), plans = v.plans || [], showPrice = profile().country === catalogCountry();
+  const planLine = p => { const mo = p.price_monthly, yr = p.price_annual;
+    return !showPrice ? "" : mo != null ? `${money(mo)} a month` : yr != null ? `${money(yr)} a year` : p.effective_monthly != null ? `about ${money(p.effective_monthly)} a month` : ""; };
+  const q1 = plans.length
+    ? `<h3 class="ws-q">1. Which plan do you have?</h3><div class="ws-plans" role="radiogroup" aria-label="Plan">${plans.map(p => `<label class="ws-plan"><input type="radio" name="ws-plan" value="${p.id}" ${p.id === s.plan ? "checked" : ""}><span><b>${esc(p.name)}</b><span class="small muted">${planLine(p)}</span></span></label>`).join("")}</div>`
+    : `<h3 class="ws-q">1. What do you pay?</h3><div class="su-price"><span>$</span><input id="ws-price" type="number" inputmode="decimal" min="0" step="0.01" value="${s.myTotal != null ? s.myTotal : ""}" placeholder="0.00"><span class="small muted">a month, with tax</span></div>`;
+  const q2 = m.costOnly || m.checks || !m.max
+    ? `<h3 class="ws-q">2. How much you use it</h3><p class="small muted" style="margin:0">${m.checks ? "You'll tick off what you used each month on the Usage tab." : "We rate this one on price and service, not on how much you use it, so there's nothing to add."}</p>`
+    : `<h3 class="ws-q">2. ${esc(m.label)}</h3><p class="small muted" style="margin:0 0 6px">A rough guess is fine. This builds your value chart, and you can change it any time on the Usage tab.</p>${slider(m, s.needsUse ? 0 : s.rate || 0, `id="ws-use" aria-label="${esc(m.label)}"`)}`;
+  const f = el(`<div class="ws"><div class="su-top"><h2 style="margin:0">Finish setting up</h2><span class="small muted">${done + 1} of ${all}</span></div>
+    <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${all}" aria-valuenow="${done}"><i style="width:${(done / all * 100).toFixed(1)}%"></i></div>
+    <div class="su-sub ws-sub">${logoHtml(v)}<b>${esc(s.name)}</b></div>
+    <section class="card ws-card">${q1}</section>
+    <section class="card ws-card">${q2}</section>
+    <div class="w-basket"><div class="w-bk-btns"><button type="button" class="btn w-big" id="ws-later">Finish later</button><button type="button" class="btn primary w-big" id="ws-next">${todo.length > 1 ? "Next" : "Done"}</button></div></div></div>`);
+  let moved = false;
+  const inp = f.getElementById("ws-use");
+  if (inp) inp.oninput = () => { moved = true; inp.nextElementSibling.textContent = slideText(m, +inp.value); };
+  // Changing the plan can change the price and, for a few services, the usage question, so redraw with it.
+  f.querySelectorAll('input[name="ws-plan"]').forEach(r => r.addEventListener("change", () => { const p = planOf(v, r.value);
+    s.plan = p.id; s.cycle = defaultCycle(p); s.price = priceFor(p, s.cycle); save(); const y = scrollY; render(); window.scrollTo(0, y); }));
+  f.getElementById("ws-next").addEventListener("click", () => {
+    const pr = document.getElementById("ws-price"); if (pr && pr.value !== "") { const val = parseFloat(pr.value); if (!isNaN(val)) { s.myTotal = Math.max(0, val); s.priceMine = true; s.cycle = "month"; } }
+    if (inp && (moved || +inp.value > 0)) { const n = +inp.value, { cur } = periodKeys(s); setUse(s, n, m.per);
+      ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(n * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you"; }
+    s.setup = "done"; save();
+    if (setupTodo().length) { render(); window.scrollTo(0, 0); } else toHome(); });
+  f.getElementById("ws-later").addEventListener("click", toHome);
+  return f;
+}
 function welcomeView() {
   if (welcomeStep === 0) return introView();
   if (welcomeStep === 1) return aboutView();
+  if (welcomeStep === 3) return setupStepView();
   const p = profile(), picks = new Set(), own = [], country = p.country;  // own: names of services we don't list (v153)
   // v157 (Cuong): electricity and gas aren't subscriptions people pick here; they're in Explore only.
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no" && !WELCOME_SKIP.has(v.category));
@@ -1806,7 +1851,9 @@ function welcomeView() {
     own.forEach((name, i) => state.subs.push({ id: `custom-${Date.now()}-${i}`, svc: "custom", name, plan: null, used: [], cycle: "month", price: null, uses: 0, rate: 0, per: "month",
       needsUse: true, setup: "todo", start: today(), day: +today().slice(8) }));
     if (picks.size || own.length) state.startDone = true;  // v118: picked here already, so go straight to Finish setting up
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; }); save();
+    if (state.subs.length) welcomeStep = 3; else view = "home";  // v190: picked some, so set them up one at a time
+    render(); window.scrollTo(0, 0); });
   $("w-later").addEventListener("click", () => { const prof = state.profile; state = { ...FRESH(), profile: prof, plkShow: true }; save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
@@ -3852,7 +3899,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 189 · Oct 26", VERSION_NUM = 189;
+const APP_VERSION = "Prototype · Version 190 · Oct 26", VERSION_NUM = 190;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
