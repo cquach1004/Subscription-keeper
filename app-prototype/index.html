@@ -213,7 +213,7 @@ table.tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
 .report .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .brand { flex-wrap: wrap; }
 /* Safari gives date inputs a wide built-in width that won't shrink; keep them inside their box. */
-#w-first, #w-last { background: #ffffff; color: #1d4ed8; font-size: 26px; padding: 8px 12px; }  /* v185 (Cuong): name boxes white, double-size blue text */
+#w-first, #w-last, #w-country, #w-state, #w-email, #w-own { background-color: #ffffff; color: #1d4ed8; font-size: 26px; padding: 8px 12px; }  /* v185-186 (Cuong): welcome boxes white, double-size blue text */
 input[type=date] { -webkit-appearance: none; appearance: none; min-width: 0; max-width: 100%; min-height: 40px; display: block; }
 .start-row { display: grid; gap: 8px; }
 .start-row label { max-width: 240px; }
@@ -228,7 +228,7 @@ input[type=date] { -webkit-appearance: none; appearance: none; min-width: 0; max
 .x-add { justify-self: start; margin-top: 4px; }
 .loc-row { display: flex; flex-wrap: wrap; gap: 10px; }
 .loc-row label { display: grid; gap: 4px; flex: 1 1 160px; min-width: 0; }
-.loc-row select, .loc-row input { width: 100%; } .w-email input { width: 100%; max-width: 420px; }
+.loc-row select, .loc-row input { width: 100%; } .loc-row label:has(#w-country), .loc-row label:has(#w-state) { flex-basis: 100%; }  /* v186: big text needs full width */ .w-email input { width: 100%; max-width: 420px; }
 .x-top { display: flex; align-items: center; gap: 10px; }
 .x-price .num { font-size: 18px; }
 .tabs .short { display: none; }
@@ -1738,6 +1738,7 @@ function welcomeView() {
     <p class="small muted" style="margin:0 0 10px">Tap each one you pay for.</p>
     <input id="w-q" type="search" placeholder="Search, e.g. Netflix, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:12px">
     <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
+    <div class="w-score" style="margin-top:22px" role="status" aria-live="polite"><span class="w-score-n" id="w-count">0</span><span class="w-score-l">Subscriptions Selected</span></div>
     <h3 style="margin:26px 0 8px">2. Want to add more?</h3>
     <label class="w-cat-pick" style="display:block;margin:0 0 14px"><span class="small muted">Pick a category</span><select id="w-cat" aria-label="Category" style="margin-top:4px">${groups.map(c => `<option value="${c}" ${c === wcatDefault ? "selected" : ""}>${esc(catLabel(c))}</option>`).join("")}<option value="all">All categories</option></select></label>
     ${groups.map(c => { const list = more.filter(v => v.category === c).sort(svcRank);
@@ -1746,9 +1747,8 @@ function welcomeView() {
     <p class="small muted" id="w-nores" hidden style="margin:4px 0 12px"></p>
     <section class="w-own"><h3 style="margin:26px 0 4px">3. Don't see yours?</h3>
       <p class="small muted" style="margin:0 0 8px">Add it yourself. You'll enter what you pay when you finish setting up.</p>
-      <div style="display:flex;gap:8px"><input id="w-own" placeholder="Name, e.g. Hometown Gym" aria-label="Name of a service we don't list" style="flex:1;min-width:0"><button type="button" class="btn" id="w-own-add">Add</button></div>
+      <div style="display:flex;gap:8px"><input id="w-own" placeholder="e.g. Hometown Gym" aria-label="Name of a service we don't list" style="flex:1;min-width:0"><button type="button" class="btn" id="w-own-add">Add</button></div>
       <div class="own-list" id="w-own-list"></div></section>
-    <div class="w-score" role="status" aria-live="polite"><span class="w-score-n" id="w-count">0</span><span class="w-score-l">Subscriptions Selected</span></div>
     <div class="w-bar" style="position:sticky;bottom:0;background:var(--bg);padding:12px 0;margin-top:18px;display:flex;gap:12px;justify-content:center;align-items:center;border-top:1px solid var(--line)">
       <button type="button" class="btn w-big" id="w-back">Back</button>
       <button class="btn primary w-big" id="w-go">Next</button></div>
@@ -3873,7 +3873,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 185 · Oct 26", VERSION_NUM = 185;
+const APP_VERSION = "Prototype · Version 186 · Oct 26", VERSION_NUM = 186;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
