@@ -357,7 +357,7 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .stat.lead { position: relative; } .stat.lead > .info-btn { position: absolute; top: 14px; right: 14px; margin: 0; color: rgba(255,255,255,.85); }
 .stat.lead > .info-btn.on { background: #fff; border-color: #fff; color: #142f73; }
 .info-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; margin: 10px 0 14px; }
-.info-panel .cmp-note, .card .info-panel { margin: 0; } .card .info-panel { font-size: 12px; color: var(--muted); }
+.info-panel .cmp-note, .card .info-panel { margin: 0; } .cmp-row { font-size: 13px; padding: 0 0 8px; margin: 0 0 8px; border-bottom: 1px solid var(--line); } .cmp-row .cmp { margin-top: 2px; font-size: 13px; } .card .info-panel { font-size: 12px; color: var(--muted); }
 .cmp-note { margin: 18px 0 6px; } .cmp-note a { color: var(--accent); } .cmp-note select.bench-grp { display: inline-block; width: auto; font-size: 12px; padding: 1px 4px; margin: 0 2px; }
 .bench-grp { font-size: 12px; padding: 2px 6px; border-radius: 8px; max-width: 100%; }
 /* v102 (Cuong): Overview tile with the share of subscriptions rated Great, Fair and Costly. */
@@ -2576,14 +2576,18 @@ function homeView() {
   const hasExamples = state.subs.some(s => s.example);
   // v124 (Cuong): Value mix moved to Shelf; Upcoming renewals is the last card. v118: no empty widgets on Overview. Where you can save shows once there's a saving, Value mix once something is rated.
   const saveAmt = savingsTotal(savingsBySub()), cd = cmpData();
+  // v203 (Cuong): the yearly and count tiles keep just their number; their average and % sit in the "i" panel with the note.
+  const cmpRow = (label, line) => line ? `<div class="cmp-row"><b>${label}</b>${line}</div>` : "";
+  const cmpRows = state.subs.length ? cmpRow("You pay each year", cmpLine(cd.allAmt * 12, cd.avgAll && cd.avgAll * 12, money, total * 12)) + cmpRow(cd.billN ? "Subscriptions & services" : "Subscriptions", cmpLine(state.subs.length, cd.avgAllN, x => x, state.subs.length)) : "";
+  const cmpInfo = cmpRows || cmpNote(cd) ? cmpRows + cmpNote(cd) : "";
   const f = el(`
     <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
     ${state.subs.length ? "" : listBtns()}
     ${state.subs.length ? `<section class="summary">
-      <div class="stat lead"><div class="label">You pay each month</div>${cmpNote(cd) ? infoBtn("cmp", "How we compare") : ""}<div class="value num">${money(total)}</div>${cmpLine(cd.allAmt, cd.avgAll, money, total)}</div>
-      <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div>${cmpLine(cd.allAmt * 12, cd.avgAll && cd.avgAll * 12, money, total * 12)}</div>
-      <div class="stat tint"><div class="label">${cd.billN ? "Subscriptions & services" : "Subscriptions"}</div><div class="value num">${state.subs.length}</div>${cmpLine(state.subs.length, cd.avgAllN, x => x, state.subs.length)}</div>
-    </section>${splitHtml(cd, total)}${infoPanel("cmp", cmpNote(cd))}` : ""}
+      <div class="stat lead"><div class="label">You pay each month</div>${cmpInfo ? infoBtn("cmp", "How we compare") : ""}<div class="value num">${money(total)}</div>${cmpLine(cd.allAmt, cd.avgAll, money, total)}</div>
+      <div class="stat tint"><div class="label">You pay each year</div><div class="value num">${money(total * 12)}</div></div>
+      <div class="stat tint"><div class="label">${cd.billN ? "Subscriptions & services" : "Subscriptions"}</div><div class="value num">${state.subs.length}</div></div>
+    </section>${splitHtml(cd, total)}${infoPanel("cmp", cmpInfo)}` : ""}
     ${plkHtml()}
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
@@ -3985,7 +3989,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 196 · Standalone copy · Oct 26", VERSION_NUM = 202;
+const APP_VERSION = "Prototype · Version 196 · Standalone copy · Oct 26", VERSION_NUM = 203;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
