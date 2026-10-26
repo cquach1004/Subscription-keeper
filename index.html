@@ -1259,18 +1259,19 @@ const fmtN = n => Number.isInteger(n) ? String(n) : n < 10 ? n.toFixed(1) : Stri
 const U = (id, label, one, short, per, max, x = {}) => ({ id, label, one, short, per1: one, per, max, step: max > 400 ? 10 : 1, ...x });
 const DAYS = U("uses", "Days used a month", "day", "days", "month", 31);
 const COST_ONLY = { id: "uses", costOnly: true, per: "month", one: "use", short: "uses", per1: "use" };
+// v197 (Cuong): slider tops cut to realistic amounts per type (most were 100+). The top still means "that much or more".
 const USAGE_BY_CAT = {
-  music: U("hours", "Listening hours a week", "listening hour", "listening hours", "week", 100, { per1: "hour", worth: 0.5, note: "Count everyone on the account together." }),
-  video: U("hours", "Hours watched a week", "hour watched", "hours watched", "week", 100, { per1: "hour", worth: 1.5, note: "Count everyone on the account together." }),
-  live_tv: U("hours", "Hours watched a week", "hour watched", "hours watched", "week", 100, { per1: "hour", worth: 1.5, note: "Count everyone at home together." }),
-  ai: U("prompts", "Prompts a day", "prompt", "prompts", "day", 100, { worth: 0.1, note: "A prompt is one message you send." }),
-  news: U("uses", "Articles read a week", "article", "articles", "week", 100, { worth: 2 }),
+  music: U("hours", "Listening hours a week", "listening hour", "listening hours", "week", 40, { per1: "hour", worth: 0.5, note: "Count everyone on the account together." }),
+  video: U("hours", "Hours watched a week", "hour watched", "hours watched", "week", 40, { per1: "hour", worth: 1.5, note: "Count everyone on the account together." }),
+  live_tv: U("hours", "Hours watched a week", "hour watched", "hours watched", "week", 60, { per1: "hour", worth: 1.5, note: "Count everyone at home together." }),
+  ai: U("prompts", "Prompts a day", "prompt", "prompts", "day", 50, { worth: 0.1, note: "A prompt is one message you send." }),
+  news: U("uses", "Articles read a week", "article", "articles", "week", 30, { worth: 2 }),
   productivity: DAYS, bundle: DAYS, finance: DAYS, small_business: DAYS, dating: DAYS, default: DAYS,
   storage: U("uses", "GB stored", "GB", "GB", "month", 2000, { amount: true, worth: 0.015, note: "Everyone sharing the plan together." }),
-  shopping: U("uses", "Orders a month", "order", "orders", "month", 100), food: U("uses", "Orders a month", "order", "orders", "month", 100),
+  shopping: U("uses", "Orders a month", "order", "orders", "month", 30), food: U("uses", "Orders a month", "order", "orders", "month", 30),
   fitness: U("uses", "Visits a month", "visit", "visits", "month", 31),
-  gaming: U("hours", "Hours played a week", "hour played", "hours played", "week", 100, { per1: "hour" }),
-  education: U("hours", "Hours of learning a week", "hour", "hours", "week", 100),
+  gaming: U("hours", "Hours played a week", "hour played", "hours played", "week", 40, { per1: "hour" }),
+  education: U("hours", "Hours of learning a week", "hour", "hours", "week", 20),
   child_care: U("uses", "Days of care a month", "day", "days", "month", 31), elder_care: U("uses", "Days of care a month", "day", "days", "month", 31),
   auto: U("uses", "Roadside calls a year", "roadside call", "roadside calls", "year", 10, { per1: "call" }),
   travel: U("uses", "Perks used this month, in dollars", "dollar of perks", "dollars of perks", "month", 100, { per1: "dollar", worth: 1 }),  // credit cards (Cuong, v69)
@@ -1345,17 +1346,17 @@ const BAND_RANK = { below: 0, avg: 1, above: 2 };
 const USAGE_BY_SVC = {
   youtube_premium: { worth: 0.5 },
   // Pro articles (Pro plan only) are worth what an article is at WSJ's "poor" benchmark ($2), the same scale the catalog uses for WSJ.
-  cnbc: s => s.plan === "pro" ? U("articles", "Pro articles read a week", "Pro article", "Pro articles", "week", 100, { per1: "article", worth: 2 }) : U("uses", "Hours watched a week", "hour watched", "hours watched", "week", 100, { per1: "hour" }),
+  cnbc: s => s.plan === "pro" ? U("articles", "Pro articles read a week", "Pro article", "Pro articles", "week", 30, { per1: "article", worth: 2 }) : U("uses", "Hours watched a week", "hour watched", "hours watched", "week", 20, { per1: "hour" }),
   // Prime: what you'd pay without it. Shipping fee per order under $35 (non-Prime orders of $35+ ship free, more slowly),
   // plus standalone prices for parts you care about. $6.99 and $35 from news reports (KAAL Nov 2025, NBC); Prime Video only is a catalog plan.
-  amazon_prime: U("saves", "Orders under $35 a month", "order under $35", "orders under $35", "month", 100, { per1: "order", bundle: true, worth: 6.99,
+  amazon_prime: U("saves", "Orders under $35 a month", "order under $35", "orders under $35", "month", 20, { per1: "order", bundle: true, worth: 6.99,
     note: "Count orders by anyone in your household. Orders of $35 or more ship free without Prime, so leave them out.",
     // Thursday Night Football streams on Prime Video, so it's worth Prime Video on its own during the season (Sep to Dec), and nothing extra when video already counts.
     parts: [{ feature: "video", name: "Prime Video on its own", monthly: 8.99 }, { feature: "nfl", name: "Thursday Night Football", monthly: 8.99, months: [9, 10, 11, 12], within: "video" }] }),
-  cloaked: U("replace", "Listings removed a month", "listing removed", "listings removed", "month", 100, { per1: "removal", fixed: true, job: "data_removal", jobName: "data broker removal" }),
-  uber_one: U("uses", "Trips a month", "trip", "trips", "month", 100),
+  cloaked: U("replace", "Listings removed a month", "listing removed", "listings removed", "month", 50, { per1: "removal", fixed: true, job: "data_removal", jobName: "data broker removal" }),
+  uber_one: U("uses", "Trips a month", "trip", "trips", "month", 40),
   // Evernote (Cuong, v70). $0.50 a note is our estimate, so the plan pays off at about one note a day.
-  evernote: U("notes", "Notes created or retrieved this month", "note", "notes", "month", 100, { worth: 0.5, note: "Count each note you write, or open to look something up." }),
+  evernote: U("notes", "Notes created or retrieved this month", "note", "notes", "month", 60, { worth: 0.5, note: "Count each note you write, or open to look something up." }),
   // AAA (Cuong, v68): tick what you used each month, nothing ticked by default. A year with at least one roadside call counts as worth it.
   aaa: U("uses", "Services used this month", "roadside call", "roadside calls", "month", 10, { per1: "call", checks: [
     { id: "roadside", name: "Roadside call (tow, jump start, flat tire, fuel, lockout)", short: "Roadside call" },
@@ -3968,7 +3969,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 196 · Standalone copy · Oct 26", VERSION_NUM = 196;
+const APP_VERSION = "Prototype · Version 196 · Standalone copy · Oct 26", VERSION_NUM = 197;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
