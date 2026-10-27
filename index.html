@@ -846,7 +846,7 @@ const SAMPLE = [
   // v75 (Cuong): Amazon Prime, Progressive car insurance and 1Password with a past year of data.
   ["amazon_prime", 6, ["shipping","video","nfl"], 14], ["progressive_auto", 0, ["coverage"], 9], ["onepassword", 15, ["vault","watchtower"], 21],
   // v77 (Cuong): one per category for the demo, plus the free park classes.
-  ["park_fitness_classes", 4, ["classes","outdoor"], 1], ["costco", 3, ["bulk"], 11], ["applecare", 0, ["accidental","battery"], 16],
+  ["park_fitness_classes", 4, ["classes","outdoor"], 1], ["costco", 250, ["bulk"], 11], ["applecare", 0, ["accidental","battery"], 16],
   ["orkin", 0, ["general_pest","revisits"], 5], ["natural_lawn_america", 0, ["fertilization"], 7], ["state_farm_home", 0, ["coverage"], 2],
   ["tinder", 6, ["unlimited_likes","see_likes"], 13], ["audible", 1, ["audio","keep"], 17], ["duolingo", 2, ["lessons"], 20],
   ["la_fitness", 9, ["equipment","classes"], 3], ["doordash_dashpass", 4, ["zero_delivery","lower_service"], 24], ["verizon_fios", 0, ["router","price_guarantee"], 8],
@@ -965,7 +965,7 @@ const PERSONAS = {
   family: { label: "Married couple, 40s, with kids", name: "Sam & Alex Chen", short: "Sam & Alex", desc: "Two parents and two kids",
     profile: { about: ["married", "kids"], age: "45", shares: true },
     subs: [["netflix", 12, ["ad_free", "hd"], 4, "standard", 70], ["disney_plus", 9, [], 11, "trio_ads", 26], ["spotify", 22, ["ad_free", "offline"], 14, "family", 48],
-      ["amazon_prime", 9, ["shipping", "video"], 6, "monthly", 90], ["costco", 3, ["bulk"], 20, null, 60], ["m365", 14, ["apps", "onedrive"], 27, "family", 36],
+      ["amazon_prime", 9, ["shipping", "video"], 6, "monthly", 90], ["costco", 250, ["bulk"], 20, null, 60], ["m365", 14, ["apps", "onedrive"], 27, "family", 36],
       ["icloud", 1100, [], 2, "2tb", 40], ["xbox_game_pass", 7, [], 23, null, 15], ["ixl", 2, [], 8, null, 12], ["doordash_dashpass", 6, [], 16, null, 14],
       ["state_farm_auto", 0, ["coverage"], 10, null, 72, 212], ["state_farm_home", 0, ["coverage"], 10, null, 72, 168], ["verizon_wireless", 0, [], 22, null, 84, 185, { rose: { from: 165, to: 185, on: isoIn(-20) } }],
       ["xfinity_internet", 0, [], 18, null, 50, 85], ["ring_home", 0, [], 3, null, 30], ["chewy_plus", 2, [], 12, null, 9]] },
@@ -1388,6 +1388,8 @@ const USAGE_BY_SVC = {
     parts: [{ feature: "video", name: "Prime Video on its own", monthly: 8.99 }, { feature: "nfl", name: "Thursday Night Football", monthly: 8.99, months: [9, 10, 11, 12], within: "video" }] }),
   cloaked: U("replace", "Listings removed a month", "listing removed", "listings removed", "month", 50, { per1: "removal", fixed: true, job: "data_removal", jobName: "data broker removal" }),
   uber_one: U("uses", "Trips a month", "trip", "trips", "month", 40),
+  // Warehouse clubs (Cuong, v217): value is what you save, so it's measured by what you spend there, not by orders.
+  costco: s => clubMeasure(s, s.plan === "executive"), sams_club_plus: s => clubMeasure(s, s.plan === "plus"),
   // Evernote (Cuong, v70). $0.50 a note is our estimate, so the plan pays off at about one note a day.
   evernote: U("notes", "Notes created or retrieved this month", "note", "notes", "month", 60, { worth: 0.5, note: "Count each note you write, or open to look something up." }),
   // AAA (Cuong, v68): tick what you used each month, nothing ticked by default. A year with at least one roadside call counts as worth it.
@@ -1398,6 +1400,16 @@ const USAGE_BY_SVC = {
     { id: "home_lockout", name: "Home lockout reimbursement", short: "Home lockout", plans: ["premier"] },
     { id: "other", name: "Something else from your club", short: "Other service" }] }),
 };
+// Warehouse clubs (v217). 15 cents saved per dollar spent is our estimate: Consumer Reports found Costco and BJ's about 21% below
+// Walmart in late summer 2025, and we allow for bulk buys you wouldn't otherwise make. Executive and Plus add about 2% back
+// (Costco caps it at $1,250 a year, Sam's Cash at $750). Gas isn't in the spend: each gallon bought there counts as 20 cents saved,
+// what an oil price analyst (OPIS) said Costco typically charges below the market average (CNN, 2021).
+const CLUB_SAVE = 0.15, CLUB_REWARD = 0.02, GAS_SAVE = 0.20;
+const CLUB_SRC = [{ label: "Consumer Reports grocery price study (via IBTimes, Mar 2026)", url: "https://www.ibtimes.com/trader-joes-246-more-expensive-walmart-aldi-costco-named-among-cheapest-us-supermarkets-3798885" },
+  { label: "Warehouse club gas prices (CNN via WRAL, 2021)", url: "https://www.wral.com/costco-walmart-and-bjs-secret-weapon-cheap-gas-prices/19992621/" }];
+const clubMeasure = (s, reward) => U("spend", "Spent there a month, not counting gas", "dollar spent", "dollars spent", "month", 1500, { per1: "dollar", club: true, reward,
+  worth: +(CLUB_SAVE + (reward ? CLUB_REWARD : 0)).toFixed(2), fixedAdd: (s.gas || 0) * GAS_SAVE,
+  note: "Count everyone in your household. Leave gas out; add it below." });
 // Replacement cost: when someone keeps a service for one job, it's worth what that job costs on its own.
 // Prices from review sites (security.org), checked 2026-10-18, not yet confirmed on the official pages.
 const ALTERNATIVES = {
@@ -1414,7 +1426,7 @@ function measuresOf(s) {
   const m = typeof o === "function" ? o(s) : o?.id ? o : { ...cat, ...(o || {}) }, ratio = b ? b.good_at_or_below / b.poor_at_or_above : 1 / 3;
   const listWorth = m.fixed ? (ALTERNATIVES[m.job]?.[s.alt || 0] || ALTERNATIVES[m.job]?.[0])?.monthly ?? null : m.worth ?? (m.id === "uses" && b ? b.poor_at_or_above : null);
   const own = s.worth?.[m.id], worth = own ?? listWorth, on = (m.parts || []).filter(p => (s.used || []).includes(p.feature)), parts = on.filter(p => !(p.within && on.some(q => q.feature === p.within)));
-  return [{ ...m, rated: !m.costOnly && (v.value_model === "usage" || v.value_model === "storage" || !!m.fixed || !!m.useRated), bench: !m.fixed && m.worth == null && listWorth != null, own: own != null, worth, good: worth == null ? null : worth * ratio,
+  return [{ ...m, rated: !m.costOnly && (v.value_model === "usage" || v.value_model === "storage" || !!m.fixed || !!m.useRated || !!m.club), bench: !m.fixed && m.worth == null && listWorth != null, own: own != null, worth, good: worth == null ? null : worth * ratio,
     ...(m.bundle ? { counted: parts, included: on.filter(p => !parts.includes(p)), fixedAdd: parts.reduce((a, p) => a + p.monthly * (p.months ? p.months.length / 12 : 1), 0) } : {}) }];
 }
 const measureOf = s => measuresOf(s)[0];
@@ -1423,6 +1435,7 @@ const useText = s => { const m = measureOf(s);
   if (m.insure) { const q = quoteMonthly(s.quote); return q == null ? "No quote to compare yet" : `Best quote ${money(q)}/mo`; }
   if (m.costOnly) return "Not measured by use";
   if (m.checks) { const k = periodKeys(s).cur, on = checkedIn(s, m, k); if (!on.length && isGreat(s, k)) return "Everything's going great this month"; return on.length ? on.map(id => m.checks.find(c => c.id === id)?.short || id).join(", ") + " this month" : m.results ? "No problems this month" : "Nothing used this month"; }
+  if (m.club) return `${money(s.rate)} spent a month${s.gas ? `, ${fmtN(s.gas)} gallons of gas` : ""}`;
   if (m.per1 === "dollar") return `${money(s.rate)} of perks a ${m.per}`;
   return m.amount ? `${fmtN(s.rate)} ${m.short}` : `${fmtN(s.rate)} ${unitOf(m, s.rate)} a ${m.per}`; };
 // The usage slider runs from 0 to the measure's top ("100+": the top means that much or more).
@@ -1515,6 +1528,11 @@ function rateRaw(s) {
     return w == null ? { key: "ok", label: "Add a comparison", cpu: null, fixed: true }
       : mo <= w ? { key: "great", label: "Great value", cpu: null, fixed: true } : mo <= w * 1.3 ? { key: "ok", label: "Fair value", cpu: null, fixed: true }
       : { key: "poor", label: `Costs more than ${m.jobName} alone`, cpu: null, fixed: true }; }
+  // Warehouse clubs (v217): worth it when what you save covers the fee, the same bar as Prime and perks cards.
+  if (m.club) { const val = s.uses * m.worth + m.fixedAdd, mo = monthly(s);
+    if (!val) { const y = usedInYear(s); return { key: "unused", label: y.months >= 12 && !y.used ? "Not used in 12 months" : "Unused", cpu: null }; }
+    const ratio = val / Math.max(0.01, mo);
+    return { key: ratio >= 1.2 ? "great" : ratio >= 0.9 ? "ok" : "poor", label: ratio >= 1.2 ? "Great value" : ratio >= 0.9 ? "Fair value" : "Saves less than it costs", cpu: null, club: true, val }; }
   if (s.uses === 0) { const y = usedInYear(s); return { key: "unused", label: y.months >= 12 && !y.used ? "Not used in 12 months" : "Unused", cpu: null }; }
   const cpu = monthly(s) / s.uses;
   if (m.worth == null) return { key: "ok", label: "Fair value", cpu };
@@ -1659,7 +1677,7 @@ function upcomingHtml() {
 
 // First visit: each person picks their own subscriptions (Cuong shares the prototype for feedback, 2026-10-19).
 // Nothing is shared between viewers: lists live in this browser only.
-const FRESH = () => ({ subs: [], sampleV: 4, pwV: 1, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
+const FRESH = () => ({ subs: [], sampleV: 4, pwV: 1, clubV: 1, unitsV: 1, aaaV: 1, cardV: 1, evV: 1, histV: 2, chatgptFixed: true, nflV: 1, cloakedV: 1, profile: state?.profile });
 // Welcome, step 1 (Cuong, v125): "Tell us about yourself" with icon choices, then where you live. Step 2 is picking subscriptions.
 // v126 (Cuong): single adult and senior became an age range (profile.age, one choice), and a "share plans" box (profile.shares).
 // profile.about keeps the icon picks; profile.group (the spending average we compare with) follows: 55+ senior,
@@ -1755,7 +1773,7 @@ function aboutView() {
   $("w-next").addEventListener("click", () => { if (!emailOk()) { $("w-email").focus(); return; } keep(); save(); welcomeStep = 2; render(); window.scrollTo(0, 0); });
   $("w-intro").addEventListener("click", () => { keep(); save(); welcomeStep = 0; render(); window.scrollTo(0, 0); });
   $("w-example")?.addEventListener("click", () => { keep(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = state.pwV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = state.pwV = state.clubV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Intro page (Cuong, v132): what the app is, before the welcome questions. Shown only to new visitors (welcomeStep 0).
@@ -2062,7 +2080,7 @@ function welcomeView() {
     render(); window.scrollTo(0, 0); });
   $("w-later").addEventListener("click", () => { const prof = state.profile; state = { ...FRESH(), profile: prof, plkShow: true }; save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
-    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = state.pwV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
+    state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = state.pwV = state.clubV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
 }
 // Feedback goes to a shared store only the prototype's owner can read (db rules: feedback/{self}).
@@ -3615,7 +3633,7 @@ function valueSeries(s) {
     let c = pz ? (pz.fee || 0) * f : (intro ? (s.intro.kind === "trial" ? 0 : monthlyOf(s, s.intro.price)) : reg) * f;
     c += (s.pauses || []).reduce((x, p) => x + (p.to && p.to >= a && p.to < z ? p.restartFee || 0 : 0), 0);
     const key = a.slice(0, 7), hv = s.hist?.[m.id]?.[key], uses = pz ? 0 : (hv ?? s.uses) * f;
-    cost += c; value += worth == null ? 0 : m.fixed ? (pz ? 0 : worth * f) : m.bundle ? (pz ? 0 : uses * worth + m.counted.reduce((a, p) => a + (!p.months || p.months.includes(+mid.slice(5, 7)) ? p.monthly : 0), 0) * f) : uses * worth;
+    cost += c; value += worth == null ? 0 : m.fixed ? (pz ? 0 : worth * f) : m.bundle ? (pz ? 0 : uses * worth + m.counted.reduce((a, p) => a + (!p.months || p.months.includes(+mid.slice(5, 7)) ? p.monthly : 0), 0) * f) : uses * worth + (m.club && !pz ? m.fixedAdd * f : 0);
     rows.push({ d: z, from: a, key, cost, value, uses, spent: c, paused: !!pz, intro, flag: s.flags?.[key]?.why, src: hv == null ? "rate" : s.histSrc?.[m.id]?.[key] || (s.histTest ? "test" : "you") });
   }
   // Breakeven: the last time value caught up with cost and stayed ahead to today.
@@ -3658,6 +3676,8 @@ function valueChart(s) {
        ${recentHtml}`
     : !vs.worth
     ? `<span>You've paid <b>${money(vs.cost)}</b> ${since}.</span><span class="small muted">${MODEL_LABEL[v.value_model] ? esc(MODEL_LABEL[v.value_model]) + "s" : "Plans like this"} aren't measured by how often you use them, so this shows cost only.</span>`
+    : m.club ? `<span>It pays for itself when you spend about <b>${money(Math.ceil(vs.need))} a month</b> there${m.fixedAdd ? `, counting ${money(m.fixedAdd)} saved on gas` : ""}. ${vs.usualAvg != null ? `In a usual month you spend <b>${money(vs.usualAvg)}</b>` : `You've averaged <b>${money(vs.avg)} a month</b>`}.</span>
+       ${recentHtml}`
     : m.amount ? `<span>It pays for itself with about <b>${fmtN(Math.round(vs.need * 10) / 10)} ${Math.round(vs.need * 10) === 10 ? m.per1 : unit}</b>. You have <b>${fmtN(s.rate)}</b>.</span>
        ${recentHtml}`
     : `<span>It pays for itself at about <b>${pp(vs.need)} ${unit} a ${m.per}</b>. ${vs.usualAvg != null ? `In a usual month you average <b>${pp(vs.usualAvg)} a ${m.per}</b>, or ${pp(vs.avg)} counting the ${vs.flagged} flagged month${vs.flagged === 1 ? "" : "s"}` : s.hist?.[m.id] ? `You averaged <b>${pp(vs.avg)} a ${m.per}</b> over this period` : `You're at <b>${pausedNow(s) ? 0 : fmtN(s.rate)} a ${m.per}</b>${pausedNow(s) ? " while paused" : ""}`}.</span>
@@ -4051,7 +4071,7 @@ function openSheet(id) {
           <button class="btn" id="close" aria-label="Close">Close</button></div>
         <div class="kv">
           <div class="stat"><div class="label">${introActive(s) ? (s.intro.kind === "trial" ? "Free trial" : "Intro price") : s.priceMine ? "You pay" : "Price"}</div><div class="value num">${money(total(s))}</div><div class="small muted">per ${s.cycle}${s.cycle === "year" ? ` (${money(monthly(s))}/mo)` : ""}${hh && (s.members || 1) > 1 && total(s) != null ? `<br>${s.members} people, ${money(monthly(s) / s.members)}/mo each` : ""}</div></div>
-          ${m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.insure || (m.results && !fairPrice(s)) ? (b => `<div class="stat"><div class="label">Service rating</div><div class="value" style="font-size:20px">${b ? BAND_LABEL[b] : "—"}</div><div class="small muted">${s.service && s.service !== "none" && s.service !== "ok" ? "from your own experience" : b ? "from published ratings" : "not rated yet"}</div></div>`)(serviceOf(s)) : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
+          ${m.club ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, our estimate</div></div>` : m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.insure || (m.results && !fairPrice(s)) ? (b => `<div class="stat"><div class="label">Service rating</div><div class="value" style="font-size:20px">${b ? BAND_LABEL[b] : "—"}</div><div class="small muted">${s.service && s.service !== "none" && s.service !== "ok" ? "from your own experience" : b ? "from published ratings" : "not rated yet"}</div></div>`)(serviceOf(s)) : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
         </div>
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
         ${syncHtml(s)}
@@ -4062,7 +4082,10 @@ function openSheet(id) {
         ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Tick \u201cEverything's going great!\u201d or leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${needHtml(s)}${insureHtml(s)}</div>` : ""}`
         : m.costOnly ? energyFuel(s) ? energyHtml(s) : `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
           ${slider(m, s.rate, 'id="s-rate"')}
-          ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>`}`}
+          ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>
+          ${m.club ? `<div class="mine-worth"><label for="s-gas" style="display:inline;color:var(--ink)">Gallons of gas you buy there a month</label>
+            <input id="s-gas" type="number" inputmode="decimal" min="0" step="1" value="${s.gas || ""}" placeholder="0"></div>
+            <p class="note" style="margin:-6px 0 0">Our estimates: you save about ${Math.round(CLUB_SAVE * 100)} cents per dollar spent${m.reward ? `, plus about ${Math.round(CLUB_REWARD * 100)}% back on ${esc(planOf(v, s.plan)?.name || "this plan")}` : ""}, and about ${Math.round(GAS_SAVE * 100)} cents per gallon of gas. Sources: ${CLUB_SRC.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.label)}</a>`).join("; ")}.</p>` : ""}`}`}
         ${m.fixed ? `<label>Compare with<select id="s-alt">${(ALTERNATIVES[m.job] || []).map((a, i) => `<option value="${i}" ${(s.alt || 0) === i && !m.own ? "selected" : ""}>${esc(a.name)} · ${money(a.monthly)}/mo</option>`).join("")}${m.own ? `<option selected>Your own price · ${money(m.worth)}/mo</option>` : ""}</select></label>
           <div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Or enter what ${esc(m.jobName)} alone would cost you</label>
           <input id="s-worth" type="number" min="0" step="0.01" value="${m.worth == null ? "" : (+m.worth).toFixed(2)}"><span class="small muted">${currency()}/mo</span>${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use the list</button>` : ""}</div>
@@ -4143,6 +4166,7 @@ function openSheet(id) {
     const use = (rate, per = s.per) => { setUse(s, rate, per); s.example = false; save(); setTimeout(draw); };
     const sr = root.querySelector("#s-rate");
     if (sr) { sr.oninput = () => sr.nextElementSibling.textContent = slideText(m, +sr.value); sr.onchange = () => use(+sr.value, m.per); }
+    const sg = root.querySelector("#s-gas"); if (sg) sg.onchange = () => { const g = Math.max(0, parseFloat(sg.value) || 0); if (g) s.gas = g; else delete s.gas; s.example = false; save(); setTimeout(draw); };
     wireChecks(root, () => setTimeout(draw));
     wireInsure(root, s, () => setTimeout(draw));
     wireNeed(root, s, () => setTimeout(draw));
@@ -4213,7 +4237,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 216 · Standalone copy · Oct 27", VERSION_NUM = 216;
+const APP_VERSION = "Prototype · Version 217 · Standalone copy · Oct 27", VERSION_NUM = 217;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4379,6 +4403,7 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   // Subscriptions added recently with no usage entered yet wait for the user's input before any rating (one-time check).
   if (!state.needsV) { state.subs.filter(s => !s.example && !s.uses && !s.hist && s.start && dayDiff(s.start, today()) <= 45).forEach(s => s.needsUse = true); state.needsV = 1; }
   if (!state.unitsV) { state.subs.forEach(migrateUse); state.unitsV = 1; }
+  if (!state.clubV) { state.subs.filter(s => s.svc === "costco" || s.svc === "sams_club_plus").forEach(migrateUse); state.clubV = 1; }
   if (!state.pwV) { state.subs.filter(s => svcOf(s).category === "passwords").forEach(migrateUse); state.pwV = 1; }
   if (!state.evV) { state.subs.filter(s => s.svc === "evernote").forEach(migrateUse); state.evV = 1; }
   if (!state.cardV) { state.subs.filter(s => svcOf(s).category === "travel").forEach(s => { const w = s.needsUse; setUse(s, Math.round(s.uses * 10) / 10, "month"); if (w) s.needsUse = true; }); state.cardV = 1; }
