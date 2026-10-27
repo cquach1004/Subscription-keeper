@@ -800,6 +800,8 @@ details.az[hidden] { display: none; }
 @media (max-width: 620px) { :root nav.tabs, :root[data-style] nav.tabs { background: var(--surface); } }
 .sync { display: grid; gap: 8px; border: 2px solid var(--accent); background: var(--accent-soft); } .sync[open] .sync-how { display: none; } .sync-tag { justify-self: start; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
 .u-promo { border: 2px solid var(--accent); background: var(--accent-soft); display: grid; gap: 8px; margin: 0 0 12px; } .u-promo .chips { display: flex; flex-wrap: wrap; gap: 6px; } .u-promo .chip { background: var(--surface); color: inherit; cursor: pointer; }
+.u-promo-top { display: flex; justify-content: space-between; align-items: center; } .u-promo .info-panel { margin: 0; }
+.u-prog { display: grid; gap: 8px; margin: 0 0 12px; } .u-prog-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; } .u-prog-top b { font-size: 16px; }
 .u-sync { font-size: 12px; color: var(--accent); font-weight: 600; background: none; border: 0; padding: 0; cursor: pointer; justify-self: start; text-align: left; }
 .unr { display: grid; gap: 10px; margin-top: 14px; } .unr h3 { margin: 0; font-size: 15px; } .unr-g { display: grid; gap: 4px; } .unr-g .vb-other { margin-top: 2px; } .sync summary { cursor: pointer; display: grid; gap: 2px; } .sync:not([open]) summary ~ * { display: none; }
 .sync-steps { margin: 0; padding-left: 20px; display: grid; gap: 2px; }
@@ -2490,8 +2492,9 @@ function unratedHtml(list, monthName) {
 function syncPromoHtml() {
   const can = state.subs.filter(s => SYNC[s.svc] && !s.syncInfo);
   if (!can.length) return "";
-  return `<div class="card u-promo"><span class="sync-tag">Real usage</span><b>Stop guessing: use your real history</b>
-    <span class="small">${esc(Object.values(SYNC).map(c => c.name).join(", ").replace(/, ([^,]*)$/, " and $1"))} let you download your own history. Choose the file here and we fill in your usage month by month, so your ratings and savings tips are based on what you really did. The file is read on your device and only monthly totals are kept.</span>
+  // v215 (Cuong): one line here; the how-it-works text is behind the "i".
+  return `<div class="card u-promo"><div class="u-promo-top"><span class="sync-tag">Real usage</span>${infoBtn("u-sync", "How real usage works")}</div><b>Skip the guessing: use your real history</b>
+    ${infoPanel("u-sync", `${esc(Object.values(SYNC).map(c => c.name).join(", ").replace(/, ([^,]*)$/, " and $1"))} let you download your own history. Choose the file here and we fill in your usage month by month, so your ratings and savings tips are based on what you really did. The file is read on your device and only monthly totals are kept.`)}
     <div class="chips">${can.map(s => `<button class="chip" data-sync="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div></div>`;
 }
 function openSync(id) { openSheet(id); const d = document.querySelector("#sheet-root details.sync"); if (d) { d.open = true; d.scrollIntoView({ block: "start" }); } }
@@ -2505,19 +2508,26 @@ function usageView() {
   const row = s => { const m = measureOf(s), { cur } = periodKeys(s), h = s.hist?.[m.id]?.[cur], n = s.needsUse ? 0 : h != null ? Math.round(h / PER[m.per].f * 10) / 10 : s.rate, r = rate(s);
     return `<div class="u-row" data-sub="${s.id}">${logoHtml(svcOf(s))}<div class="u-nm"><button class="u-open" data-id="${s.id}">${esc(s.name)}</button><span class="small muted">${esc(m.label)}</span>${SYNC[s.svc] ? `<button class="u-sync" data-sync="${s.id}">${s.syncInfo ? `From your ${esc(SYNC[s.svc].file)}, ${esc(fmtDate(s.syncInfo.at))}` : "Use my real usage"}</button>` : ""}</div>
       <span class="pill ${r.key}">${esc(r.label)}</span>${m.checks ? checksHtml(s, m, cur) : slider(m, n, `data-u="${s.id}" aria-label="${esc(m.label)}, ${esc(s.name)}"`)}</div>`; };
-  const f = el(`<div class="section-head"><h2>Usage</h2><span class="small muted">How last month went, and what you're using this month.</span></div>
-    <h3 style="margin:4px 0 10px">${esc(prevName)}: what your money bought</h3>
-    ${last.length ? `<div class="u-pies">${Object.keys(BUCKETS).map(k => bucketDonut(k, by(k), total)).join("")}</div>
-      <p class="note" style="margin:8px 0 0">Each ring is that group's share of the ${money(total)} you paid last month for rated subscriptions.${last.some(x => x.free) ? " Free services count as Great value but add nothing to the rings." : ""}</p>`
-      : `<p class="muted">Nothing to show for last month yet. Once a month ends with your usage set, it shows here.</p>`}
-    ${unrated.length ? unratedHtml(unrated, prevName) : ""}
-    <div class="section-head u-cur" style="margin-top:26px"><h2 style="font-size:20px">${esc(curName)} so far</h2>${state.subs.length ? checkinLink() : ""}</div>
+  // v215 (Cuong): a new user with a few subscriptions sees only what has data. Last month's rings, the not-rated list and the
+  // spending chart wait until there's something to show; explanations sit behind "i" buttons; a progress bar counts sliders set.
+  const howRate = `Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}`;
+  const todo = live.filter(s => s.needsUse && !pausedNow(s)).length, setN = live.length - todo;
+  const spendMonths = state.subs.length ? new Set(state.subs.flatMap(s => (valueSeries(s)?.rows || []).filter(r => r.from && r.spent > 0).map(r => r.key))).size : 0;
+  const progress = live.length && (todo || !last.length) ? `<div class="card u-prog"><div class="u-prog-top"><b>${todo ? `Usage set for ${setN} of ${live.length}` : `All ${live.length} set. Nice work!`}</b><span class="small muted">${todo ? "A rough guess is fine" : `Ratings update as you slide`}</span></div>
+      <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${live.length}" aria-valuenow="${setN}"><i style="width:${(setN / live.length * 100).toFixed(1)}%"></i></div></div>` : "";
+  const f = el(`<div class="section-head"><h2>Usage ${infoBtn("u-head", "About this page")}</h2></div>
+    ${infoPanel("u-head", `How last month went, and what you're using this month. ${howRate}`)}
+    ${last.length ? `<h3 style="margin:4px 0 10px">${esc(prevName)}: what your money bought ${infoBtn("u-rings", "About the rings")}</h3>
+      ${infoPanel("u-rings", `Each ring is that group's share of the ${money(total)} you paid last month for rated subscriptions.${last.some(x => x.free) ? " Free services count as Great value but add nothing to the rings." : ""}`)}
+      <div class="u-pies">${Object.keys(BUCKETS).map(k => bucketDonut(k, by(k), total)).join("")}</div>
+      ${unrated.length ? unratedHtml(unrated, prevName) : ""}` : ""}
+    <div class="section-head u-cur" style="margin-top:${last.length ? 26 : 4}px"><h2 style="font-size:20px">${esc(curName)} so far ${infoBtn("u-cur", "How the sliders work")}</h2>${state.subs.length && last.length ? checkinLink() : ""}</div>
+    ${infoPanel("u-cur", `Slide to match how you're using each one, or skip the guessing and use your real history where the service allows it. Whatever a slider shows when the month ends is saved as that month's usage.${last.length ? "" : ` Your first ${esc(curName)} ratings show at the top of this page once the month ends.`}`)}
     ${state.subs.length && checkinOpen ? checkinHtml() : ""}
-    <p class="small muted" style="margin:-4px 0 10px">Slide to match how you're using each one, or skip the guessing and use your real history where the service allows it. Whatever a slider shows when the month ends is saved as that month's usage.</p>
+    ${progress}
     ${syncPromoHtml()}
     ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Explore tab.</p>`}
-    <details class="note home-how u-how" style="margin-top:12px"><summary>How we rate value</summary>Value compares what you pay each month with how much you use it, in each service's own measure (listening hours, prompts, trips and so on), against a typical range for that kind of service. Protection plans and essentials aren't rated on use. ${profile().country === catalogCountry() ? `Prices are US list prices checked ${DATA.generated_at}${taxRate() ? `, with your ${+profile().tax}% sales tax added` : ""}.` : `Our catalog has US prices only, so enter what you pay in ${currency()}.`}</details>
-    <div class="charts u-month" style="margin-top:22px">${monthBarsHtml()}</div>`);
+    ${spendMonths >= 2 ? `<div class="charts u-month" style="margin-top:22px">${monthBarsHtml()}</div>` : ""}`);
   f.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   f.querySelectorAll("[data-sync]").forEach(b => b.addEventListener("click", () => openSync(b.dataset.sync)));
   wireCheckin(f);
@@ -2528,7 +2538,8 @@ function usageView() {
       ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(n * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you";
       const r = rate(s), pill = inp.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; };
     inp.oninput = () => { inp.nextElementSibling.textContent = slideText(m, +inp.value); apply(); };
-    inp.onchange = () => { apply(); save(); }; });
+    const was = !!s.needsUse;  // v215: the first value set moves the progress bar
+    inp.onchange = () => { apply(); save(); if (was && document.querySelector("#view .u-prog")) { const y = scrollY; render(); scrollTo(0, y); } }; });
   return f;
 }
 // Months that ended since the last visit, with no entry of their own, keep the usage that was set when they ended.
@@ -4140,7 +4151,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 214 · Oct 27", VERSION_NUM = 214;
+const APP_VERSION = "Prototype · Version 215 · Oct 27", VERSION_NUM = 215;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
