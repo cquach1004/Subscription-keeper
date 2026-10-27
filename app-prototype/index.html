@@ -1391,6 +1391,10 @@ const USAGE_BY_SVC = {
     parts: [{ feature: "video", name: "Prime Video on its own", monthly: 8.99 }, { feature: "nfl", name: "Thursday Night Football", monthly: 8.99, months: [9, 10, 11, 12], within: "video" }] }),
   cloaked: U("replace", "Listings removed a month", "listing removed", "listings removed", "month", 50, { per1: "removal", fixed: true, job: "data_removal", jobName: "data broker removal" }),
   uber_one: U("uses", "Trips a month", "trip", "trips", "month", 40),
+  // DashPass (Cuong, v221): DoorDash says members save $4 to $5 per eligible order (no delivery fee, lower service fee), so $4.50 is our estimate.
+  // Like other savings memberships, Great value once savings beat the fee by 20% (3+ orders on $9.99), Costly when each order costs more than it saves.
+  // Sources: ShopBack, Oct 2026 (https://www.shopback.com/blog/savings/dashpass-worth); RideSharingDriver, Jun 2026.
+  doordash_dashpass: U("uses", "DashPass orders a month", "order", "orders", "month", 30, { worth: 4.5, goodRatio: 1 / 1.2, note: "Count orders over $12 from stores with the DashPass logo, by anyone on the account. About $4.50 saved per order is our estimate from DoorDash's own $4 to $5 average." }),
   // Warehouse clubs (Cuong, v217): value is what you save, so it's measured by what you spend there, not by orders.
   costco: s => clubMeasure(s, s.plan === "executive"), sams_club_plus: s => clubMeasure(s, s.plan === "plus"),
   // Evernote (Cuong, v70). $0.50 a note is our estimate, so the plan pays off at about one note a day.
@@ -1429,7 +1433,7 @@ function measuresOf(s) {
   const m = typeof o === "function" ? o(s) : o?.id ? o : { ...cat, ...(o || {}) }, ratio = b ? b.good_at_or_below / b.poor_at_or_above : 1 / 3;
   const listWorth = m.fixed ? (ALTERNATIVES[m.job]?.[s.alt || 0] || ALTERNATIVES[m.job]?.[0])?.monthly ?? null : m.worth ?? (m.id === "uses" && b ? b.poor_at_or_above : null);
   const own = s.worth?.[m.id], worth = own ?? listWorth, on = (m.parts || []).filter(p => (s.used || []).includes(p.feature)), parts = on.filter(p => !(p.within && on.some(q => q.feature === p.within)));
-  return [{ ...m, rated: !m.costOnly && (v.value_model === "usage" || v.value_model === "storage" || !!m.fixed || !!m.useRated || !!m.club), bench: !m.fixed && m.worth == null && listWorth != null, own: own != null, worth, good: worth == null ? null : worth * ratio,
+  return [{ ...m, rated: !m.costOnly && (v.value_model === "usage" || v.value_model === "storage" || !!m.fixed || !!m.useRated || !!m.club), bench: !m.fixed && m.worth == null && listWorth != null, own: own != null, worth, good: worth == null ? null : worth * (m.goodRatio || ratio),
     ...(m.bundle ? { counted: parts, included: on.filter(p => !parts.includes(p)), fixedAdd: parts.reduce((a, p) => a + p.monthly * (p.months ? p.months.length / 12 : 1), 0) } : {}) }];
 }
 const measureOf = s => measuresOf(s)[0];
@@ -4339,7 +4343,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 220 · Oct 27", VERSION_NUM = 220;
+const APP_VERSION = "Prototype · Version 221 · Oct 27", VERSION_NUM = 221;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
