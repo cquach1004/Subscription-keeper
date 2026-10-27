@@ -1,0 +1,1165 @@
+[
+ {
+  "id": "wyyerd_fiber",
+  "name": "Wyyerd Fiber (Home Internet)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ"
+  ],
+  "service_area_note": "Fiber in Tucson, Sahuarita, Gilbert/Chandler, Surprise and other Arizona communities (also building in California)",
+  "official_url": "https://www.wyyerd.com/",
+  "plans": [
+   {
+    "id": "gig1",
+    "name": "1 Gig Fiber",
+    "price_monthly": 95,
+    "price_annual": null,
+    "effective_monthly": 95,
+    "verified": false,
+    "note": "WhistleOut listing; official page lists plan but no price; says not an intro rate"
+   },
+   {
+    "id": "gig2",
+    "name": "2 Gig Fiber",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "No price published on official page"
+   },
+   {
+    "id": "gig5",
+    "name": "5 Gig Fiber",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "No price published on official page"
+   },
+   {
+    "id": "gig8",
+    "name": "8 Gig Fiber",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "No price published on official page"
+   }
+  ],
+  "default_plan": "gig1",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "no_contract",
+    "name": "No annual contract",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "no_data_caps",
+    "name": "No data caps",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical fiber speeds",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Arizona households in a Wyyerd build area wanting multi-gig symmetrical fiber.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Free installation and Wi-Fi router included per official page.",
+   "Zona Communications is the same company (Zona/Wyyerd)."
+  ],
+  "sources": [
+   {
+    "label": "Wyyerd Tucson plans",
+    "url": "https://www.wyyerd.com/arizona-tucson"
+   },
+   {
+    "label": "WhistleOut: Wyyerd 1 Gig",
+    "url": "https://www.whistleout.com/Internet/Providers/wyyerd/Fiber/GIG-Speed-Great-Price"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "kit_carson_internet",
+  "name": "Kit Carson Internet (Fiber)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NM"
+  ],
+  "service_area_note": "Electric co-op fiber in Taos, Colfax and Rio Arriba counties, northern New Mexico",
+  "official_url": "https://kitcarson.com/internet/",
+  "plans": [
+   {
+    "id": "fiber_base",
+    "name": "Direct-wired fiber (from 100 Mbps)",
+    "price_monthly": 50,
+    "price_annual": null,
+    "effective_monthly": 50,
+    "verified": true,
+    "note": "Official comparison grid: 'starts at $50/mo', locked in; no equipment or install fee"
+   },
+   {
+    "id": "fiber_1g",
+    "name": "Fiber up to 1 Gig",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not published per tier; check signup portal"
+   }
+  ],
+  "default_plan": "fiber_base",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "no_data_caps",
+    "name": "No data caps",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical upload",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Northern New Mexico co-op members wanting locked-price fiber.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Feb 2026 release mentions an entry package from $30/mo, conflicting with the $50 grid; confirm by address."
+  ],
+  "sources": [
+   {
+    "label": "Kit Carson fiber and phone comparison grid",
+    "url": "https://kitcarson.com/wp-content/uploads/2026/04/VoiceFiberDownloadable-6.pdf"
+   },
+   {
+    "label": "Kit Carson Internet press release Feb 2026",
+    "url": "https://kitcarson.com/wp-content/uploads/2026/02/Kit-Carson-Internet-02.27.26-2.pdf"
+   },
+   {
+    "label": "Kit Carson Internet",
+    "url": "https://kitcarson.com/internet/"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "plateau_internet",
+  "name": "Plateau (Fiber Internet)",
+  "category": "internet",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NM",
+   "TX"
+  ],
+  "service_area_note": "Fiber, DSL and fixed wireless in eastern New Mexico (Clovis, Portales area) and West Texas",
+  "official_url": "https://www.plateautel.com/",
+  "plans": [
+   {
+    "id": "true_100",
+    "name": "True-100 Fiber",
+    "price_monthly": 60,
+    "price_annual": null,
+    "effective_monthly": 60,
+    "verified": false,
+    "note": "ISPReports listing; base rate, excludes equipment/install"
+   },
+   {
+    "id": "true_500",
+    "name": "True-500 Fiber",
+    "price_monthly": 70,
+    "price_annual": null,
+    "effective_monthly": 70,
+    "verified": false,
+    "note": "ISPReports listing"
+   },
+   {
+    "id": "true_gig",
+    "name": "True-Gig Fiber",
+    "price_monthly": 80,
+    "price_annual": null,
+    "effective_monthly": 80,
+    "verified": false,
+    "note": "ISPReports listing"
+   },
+   {
+    "id": "basic_wireless",
+    "name": "Basic Fixed Wireless 10 Mbps",
+    "price_monthly": 39.95,
+    "price_annual": null,
+    "effective_monthly": 39.95,
+    "verified": false,
+    "note": "ISPReports listing"
+   }
+  ],
+  "default_plan": "true_100",
+  "features": [
+   {
+    "id": "home_internet",
+    "name": "Home internet",
+    "plans": "all",
+    "overlap_tag": "home_internet"
+   },
+   {
+    "id": "symmetrical_fiber",
+    "name": "Symmetrical fiber speeds",
+    "plans": [
+     "true_100",
+     "true_500",
+     "true_gig"
+    ],
+    "overlap_tag": "home_internet"
+   }
+  ],
+  "best_for": "Eastern New Mexico households wanting local fiber or rural fixed wireless.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Official site shows prices only in its shop by address."
+  ],
+  "sources": [
+   {
+    "label": "Plateau home page",
+    "url": "https://www.plateautel.com/"
+   },
+   {
+    "label": "ISPReports: Plateau plans",
+    "url": "https://ispreports.org/compare-internet-service-providers/plateau-vs-delcom/"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "mountainside_fitness",
+  "name": "Mountainside Fitness",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ"
+  ],
+  "service_area_note": "About 24 clubs across Arizona (Phoenix metro and beyond)",
+  "official_url": "https://mountainsidefitness.com/",
+  "plans": [
+   {
+    "id": "individual_12mo",
+    "name": "Individual, 12-month",
+    "price_monthly": 38.85,
+    "price_annual": null,
+    "effective_monthly": 38.85,
+    "verified": true,
+    "note": "Official; checking-account rate, $41.85 by credit card"
+   },
+   {
+    "id": "individual_m2m",
+    "name": "Individual, month-to-month",
+    "price_monthly": 46.85,
+    "price_annual": null,
+    "effective_monthly": 46.85,
+    "verified": true,
+    "note": "Official; $49.85 by credit card"
+   },
+   {
+    "id": "couple_12mo",
+    "name": "Couple, 12-month",
+    "price_monthly": 72.85,
+    "price_annual": null,
+    "effective_monthly": 72.85,
+    "verified": true,
+    "note": "Official; $76.85 by credit card"
+   },
+   {
+    "id": "family_12mo",
+    "name": "Family, 12-month",
+    "price_monthly": 92.85,
+    "price_annual": null,
+    "effective_monthly": 92.85,
+    "verified": true,
+    "note": "Official; $97.85 by credit card"
+   },
+   {
+    "id": "individual_pif",
+    "name": "Individual, paid in full",
+    "price_monthly": null,
+    "price_annual": 535,
+    "effective_monthly": 44.58,
+    "verified": true,
+    "note": "Official; one-year prepay"
+   },
+   {
+    "id": "medicare",
+    "name": "Medicare-eligible via health plan",
+    "price_monthly": 0,
+    "price_annual": null,
+    "effective_monthly": 0,
+    "verified": true,
+    "note": "Official; $0 through participating Medicare plans"
+   }
+  ],
+  "default_plan": "individual_12mo",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "group_classes",
+    "name": "Group classes",
+    "plans": "all",
+    "overlap_tag": "fitness_classes"
+   }
+  ],
+  "best_for": "Arizona gym-goers wanting a local full-service club chain.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "30-day money-back guarantee if you visit 5+ times in 30 days.",
+   "Cancel only by certified mail.",
+   "Pay by bank draft to save $3-5/mo."
+  ],
+  "sources": [
+   {
+    "label": "Mountainside membership pricing",
+    "url": "https://mountainsidefitness.com/membership-pricing"
+   },
+   {
+    "label": "Mountainside FAQ",
+    "url": "https://mountainsidefitness.com/faq/"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "defined_fitness",
+  "name": "Defined Fitness",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NM"
+  ],
+  "service_area_note": "8 clubs in Albuquerque, Rio Rancho, Santa Fe and Farmington",
+  "official_url": "https://defined.com/",
+  "plans": [
+   {
+    "id": "standard",
+    "name": "Standard membership",
+    "price_monthly": 49.99,
+    "price_annual": null,
+    "effective_monthly": 49.99,
+    "verified": true,
+    "note": "Official: 'Starting at $49.99/mo'"
+   },
+   {
+    "id": "all_inclusive",
+    "name": "All-inclusive (pool, sauna, childcare)",
+    "price_monthly": 54.99,
+    "price_annual": null,
+    "effective_monthly": 54.99,
+    "verified": false,
+    "note": "Third-party price guide; also cites ~$39.99 annual fee"
+   },
+   {
+    "id": "presbyterian",
+    "name": "Presbyterian Fitness Pass",
+    "price_monthly": 27.5,
+    "price_annual": null,
+    "effective_monthly": 27.5,
+    "verified": false,
+    "note": "Third-party price guide; for Presbyterian Health Plan members"
+   }
+  ],
+  "default_plan": "standard",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "group_classes",
+    "name": "Group classes",
+    "plans": "all",
+    "overlap_tag": "fitness_classes"
+   }
+  ],
+  "best_for": "New Mexico residents wanting a multi-club local gym with pools and childcare.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Defined Fitness",
+    "url": "https://defined.com/"
+   },
+   {
+    "label": "FitnessMembershipCost: Defined Fitness",
+    "url": "https://fitnessmembershipcost.com/?p=698"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "village_health_clubs",
+  "name": "Village Health Clubs & Spas",
+  "category": "fitness",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ"
+  ],
+  "service_area_note": "Upscale clubs in the Phoenix/Scottsdale area (DC Ranch, Ocotillo and others)",
+  "official_url": "https://villageclubs.com/",
+  "plans": [
+   {
+    "id": "young_professional",
+    "name": "Young Professional (ages 22-31, DC Ranch)",
+    "price_monthly": 199,
+    "price_annual": null,
+    "effective_monthly": 199,
+    "verified": true,
+    "note": "Official special rate; initiation fee not listed"
+   },
+   {
+    "id": "standard",
+    "name": "Standard membership",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "No price published"
+   }
+  ],
+  "default_plan": "standard",
+  "features": [
+   {
+    "id": "gym_access",
+    "name": "Gym access",
+    "plans": "all",
+    "overlap_tag": "gym"
+   },
+   {
+    "id": "group_classes",
+    "name": "Group classes",
+    "plans": "all",
+    "overlap_tag": "fitness_classes"
+   },
+   {
+    "id": "spa",
+    "name": "Spa and pools",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Phoenix-area families wanting a resort-style athletic club.",
+  "free_trial_days": 7,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Free 7-day VIP trial offered."
+  ],
+  "sources": [
+   {
+    "label": "Village DC Ranch Young Professional",
+    "url": "https://villageclubs.com/dc-ranch-young-professional-join/"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "albuquerque_journal",
+  "name": "Albuquerque Journal",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NM"
+  ],
+  "service_area_note": "Statewide New Mexico daily based in Albuquerque",
+  "official_url": "https://www.abqjournal.com/",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Standard Digital",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Official offers page lists $9.99 but does not state the billing period"
+   },
+   {
+    "id": "jrnl_plus",
+    "name": "jrnl+ App",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Official offers page lists $15.99, billing period not stated"
+   },
+   {
+    "id": "print_digital",
+    "name": "Print + app + digital",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "'Pick your days' pricing; no price shown"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Local news access",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "New Mexicans wanting the state's largest daily.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Offers are for new subscribers and auto-renew at the current rate."
+  ],
+  "sources": [
+   {
+    "label": "ABQ Journal subscription offers",
+    "url": "https://www.abqjournal.com/subscribe-offers"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "santa_fe_new_mexican",
+  "name": "Santa Fe New Mexican",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NM"
+  ],
+  "service_area_note": "Daily newspaper for Santa Fe and northern New Mexico",
+  "official_url": "https://www.santafenewmexican.com/",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital monthly",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Monthly plan exists; price not shown without checkout"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Local news access",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "Santa Fe and northern New Mexico readers.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Santa Fe New Mexican subscriber FAQ",
+    "url": "https://www.santafenewmexican.com/site/subscriber_faq.html"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "arizona_daily_star",
+  "name": "Arizona Daily Star (tucson.com)",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ"
+  ],
+  "service_area_note": "Tucson and southern Arizona daily",
+  "official_url": "https://tucson.com/",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital access",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "No price published on reachable pages"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Local news access",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "Tucson-area readers.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Arizona Daily Star subscriber benefits",
+    "url": "https://tucson.com/valuekit"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "arizona_republic",
+  "name": "The Arizona Republic (azcentral)",
+  "category": "news",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ"
+  ],
+  "service_area_note": "Phoenix-based statewide Arizona daily (Gannett)",
+  "official_url": "https://www.azcentral.com/",
+  "plans": [
+   {
+    "id": "digital",
+    "name": "Digital subscription",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Site blocked fetching; no price confirmed"
+   }
+  ],
+  "default_plan": "digital",
+  "features": [
+   {
+    "id": "news_access",
+    "name": "Local news access",
+    "plans": "all",
+    "overlap_tag": "news"
+   }
+  ],
+  "best_for": "Phoenix-area readers wanting statewide Arizona news.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Some Arizona libraries (e.g. Scottsdale) offer free access."
+  ],
+  "sources": [
+   {
+    "label": "Arizona Republic on PressReader",
+    "url": "https://www.pressreader.com/usa/the-arizona-republic"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "tucson_csa",
+  "name": "Tucson CSA",
+  "category": "food",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ"
+  ],
+  "service_area_note": "Weekly farm-share pickup in central Tucson",
+  "official_url": "https://www.tucsoncsa.org/",
+  "plans": [
+   {
+    "id": "veggie_share",
+    "name": "Seasonal veggie share (weekly)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": 112.67,
+    "verified": true,
+    "note": "Official $26/week, 6- or 12-week non-refundable terms; monthly figure derived from weekly price"
+   }
+  ],
+  "default_plan": "veggie_share",
+  "features": [
+   {
+    "id": "produce_box",
+    "name": "Local produce share",
+    "plans": "all",
+    "overlap_tag": "produce_box"
+   }
+  ],
+  "best_for": "Tucson households wanting a weekly local produce share.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [
+   "Add-on bread, goat cheese, mushrooms and more available."
+  ],
+  "sources": [
+   {
+    "label": "Tucson CSA",
+    "url": "https://www.tucsoncsa.org/"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "crooked_sky_farms_csa",
+  "name": "Crooked Sky Farms CSA",
+  "category": "food",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ"
+  ],
+  "service_area_note": "Farm-share pickups in Phoenix, Scottsdale, Gilbert, Tempe, Glendale and Tucson",
+  "official_url": "https://www.crookedskyfarms.com/",
+  "plans": [
+   {
+    "id": "weekly_share",
+    "name": "Weekly share (~12-week season)",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": 86.67,
+    "verified": false,
+    "note": "LocalHarvest listing (updated Jan 2025): $20/week paid per season in advance; monthly derived"
+   }
+  ],
+  "default_plan": "weekly_share",
+  "features": [
+   {
+    "id": "produce_box",
+    "name": "Local produce share",
+    "plans": "all",
+    "overlap_tag": "produce_box"
+   }
+  ],
+  "best_for": "Phoenix and Tucson households wanting an organic farm share.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "LocalHarvest: Crooked Sky Farms",
+    "url": "https://localharvest.org/crooked-sky-farms-M6590"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "la_montanita_coop",
+  "name": "La Montañita Co-op Membership",
+  "category": "food",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NM"
+  ],
+  "service_area_note": "Food co-op stores in Albuquerque, Santa Fe and Gallup",
+  "official_url": "https://lamontanita.coop/",
+  "plans": [
+   {
+    "id": "annual",
+    "name": "12-month membership",
+    "price_monthly": null,
+    "price_annual": 15,
+    "effective_monthly": 1.25,
+    "verified": true,
+    "note": "Official form: $15 plus tax, expires after 12 months"
+   },
+   {
+    "id": "lifetime",
+    "name": "Lifetime membership",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Official: one-time $200 plus tax, not recurring"
+   }
+  ],
+  "default_plan": "annual",
+  "features": [
+   {
+    "id": "member_discounts",
+    "name": "Member deals and patronage dividends",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "voting",
+    "name": "Member voting",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "New Mexico co-op shoppers wanting member pricing and dividends.",
+  "free_trial_days": null,
+  "varies_by_region": false,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "La Montañita membership agreement",
+    "url": "https://lamontanita.coop/wp-content/uploads/2025/01/Membership-Agreement-Form-2023.pdf"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "goettl_smart_sadie",
+  "name": "Goettl Smart Sadie Membership",
+  "category": "home",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ",
+   "NV",
+   "TX"
+  ],
+  "service_area_note": "HVAC and plumbing plan in Phoenix and Tucson (also Las Vegas, Reno, San Antonio, Austin)",
+  "official_url": "https://www.goettl.com/membership/",
+  "plans": [
+   {
+    "id": "connect",
+    "name": "Smart Sadie Connect",
+    "price_monthly": 12.95,
+    "price_annual": 155,
+    "effective_monthly": 12.95,
+    "verified": true,
+    "note": "Official; 1 HVAC system, +$10/mo per extra unit; 12-month minimum"
+   },
+   {
+    "id": "protect",
+    "name": "Smart Sadie Protect",
+    "price_monthly": 19.95,
+    "price_annual": 239,
+    "effective_monthly": 19.95,
+    "verified": true,
+    "note": "Official; adds smart sensors and leak detection"
+   }
+  ],
+  "default_plan": "connect",
+  "features": [
+   {
+    "id": "hvac_tuneups",
+    "name": "Annual HVAC and plumbing tune-ups",
+    "plans": "all",
+    "overlap_tag": "home_maintenance"
+   },
+   {
+    "id": "repair_discount",
+    "name": "10% off repairs",
+    "plans": "all",
+    "overlap_tag": null
+   },
+   {
+    "id": "leak_monitoring",
+    "name": "24/7 HVAC and leak monitoring",
+    "plans": [
+     "protect"
+    ],
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Arizona homeowners wanting yearly AC/heat and plumbing tune-ups.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "12-month minimum; cancellation fee $60 (Connect) or $120 (Protect).",
+   "Annual billing saves vs monthly."
+  ],
+  "sources": [
+   {
+    "label": "Goettl membership",
+    "url": "https://www.goettl.com/membership/"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "burns_pest_elimination",
+  "name": "Burns Pest Elimination",
+  "category": "lawn_pest",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ",
+   "NV"
+  ],
+  "service_area_note": "Pest and termite control in Phoenix and Tucson metro (also Las Vegas)",
+  "official_url": "https://www.burnspestelimination.com/",
+  "plans": [
+   {
+    "id": "residential_ipm",
+    "name": "Residential pest control program",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Official page: package 'starts at $399', frequency/term unclear; priced after inspection"
+   }
+  ],
+  "default_plan": "residential_ipm",
+  "features": [
+   {
+    "id": "pest_control",
+    "name": "Recurring pest control",
+    "plans": "all",
+    "overlap_tag": "pest_control"
+   },
+   {
+    "id": "scorpions",
+    "name": "Scorpion treatment",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Arizona homeowners dealing with scorpions and desert pests.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Burns Tucson pest control",
+    "url": "https://www.burnspestelimination.com/pest-control-tucson-az/"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "super_star_car_wash",
+  "name": "Super Star Car Wash Unlimited",
+  "category": "auto",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ",
+   "CA",
+   "CO",
+   "TX"
+  ],
+  "service_area_note": "115+ express washes across Arizona (also California, Colorado, Texas)",
+  "official_url": "https://www.superstarcarwashaz.com/",
+  "plans": [
+   {
+    "id": "clean",
+    "name": "Clean Unlimited",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price loads per location; not shown"
+   },
+   {
+    "id": "super_shine",
+    "name": "Super Shine Unlimited",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not shown"
+   },
+   {
+    "id": "super_protect",
+    "name": "Super Protect Unlimited",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not shown"
+   }
+  ],
+  "default_plan": "super_shine",
+  "features": [
+   {
+    "id": "unlimited_washes",
+    "name": "Unlimited washes",
+    "plans": "all",
+    "overlap_tag": "car_wash"
+   },
+   {
+    "id": "no_contract",
+    "name": "No contract",
+    "plans": "all",
+    "overlap_tag": null
+   }
+  ],
+  "best_for": "Arizona drivers wanting an unlimited wash pass usable at many locations.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [
+   "Site advertises 50% off the first month."
+  ],
+  "sources": [
+   {
+    "label": "Super Star Car Wash",
+    "url": "https://www.superstarcarwashaz.com/"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "champion_xpress_carwash",
+  "name": "Champion Xpress Carwash MVP Unlimited",
+  "category": "auto",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "NM"
+  ],
+  "service_area_note": "Express washes in Albuquerque",
+  "official_url": "https://champxpress.com/",
+  "plans": [
+   {
+    "id": "wash",
+    "name": "#3 Wash",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not shown on site"
+   },
+   {
+    "id": "wash_wheels",
+    "name": "#2 Wash | Wheels",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not shown on site"
+   },
+   {
+    "id": "wash_wheels_wax",
+    "name": "#1 Wash | Wheels | Wax",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Price not shown on site"
+   }
+  ],
+  "default_plan": "wash_wheels",
+  "features": [
+   {
+    "id": "unlimited_washes",
+    "name": "Unlimited washes",
+    "plans": "all",
+    "overlap_tag": "car_wash"
+   }
+  ],
+  "best_for": "Albuquerque drivers who wash often.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "Champion Xpress MVP Unlimited",
+    "url": "https://champxpress.com/"
+   },
+   {
+    "label": "Poyst listing",
+    "url": "https://www.poyst.com/business/champion-xpress-carwash-5"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ },
+ {
+  "id": "sunrise_preschools",
+  "name": "Sunrise Preschools",
+  "category": "child_care",
+  "alternative_to": [],
+  "kind": "direct",
+  "service_states": [
+   "AZ"
+  ],
+  "service_area_note": "About 31 child care centers across the Phoenix area",
+  "official_url": "https://www.sunrisepreschools.com/",
+  "plans": [
+   {
+    "id": "full_time",
+    "name": "Full-time tuition",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Tuition not published; varies by age and center"
+   },
+   {
+    "id": "part_time",
+    "name": "Part-time tuition",
+    "price_monthly": null,
+    "price_annual": null,
+    "effective_monthly": null,
+    "verified": true,
+    "note": "Tuition not published"
+   }
+  ],
+  "default_plan": "full_time",
+  "features": [
+   {
+    "id": "child_care",
+    "name": "Infant to school-age care",
+    "plans": "all",
+    "overlap_tag": "child_care"
+   }
+  ],
+  "best_for": "Phoenix-area families needing care from 6 weeks to age 12.",
+  "free_trial_days": null,
+  "varies_by_region": true,
+  "regions": "US only",
+  "tips": [],
+  "sources": [
+   {
+    "label": "ABC15 sponsored profile",
+    "url": "https://www.abc15.com/lifestyle/sonoran-living/sl-sponsors/sunrise-preschools-opens-new-locations-serving-all-valley-families"
+   }
+  ],
+  "checked_at": "2026-10-27"
+ }
+]
