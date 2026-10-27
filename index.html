@@ -166,6 +166,8 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wb-gold { color: #fbbf24; } }
 :root[data-theme="dark"] .wb-gold { color: #fbbf24; }
 .wb-card { gap: 12px; margin-bottom: 4px; } .wb-card .su-btns { margin-top: 6px; }
+.wb-list { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 16px; } .wb-tip { margin-bottom: 14px; }
+.wb-menu { grid-template-columns: 1fr 1fr; } .wb-menu .about-opt { font-size: 15px; }
 .w-big { font-size: 16px; padding: 12px 18px; border-radius: 99px; white-space: nowrap; } #w-back.w-big { min-width: 84px; } #w-go.w-big { min-width: 120px; }
 .w-pills { display: flex; flex-wrap: wrap; gap: 8px; }  /* v188 (Cuong): picker page categories, one open at a time */
 .w-pill { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 7px 14px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
@@ -1849,7 +1851,8 @@ function setupStepView() {
 // Welcome Back (Cuong, v207): a returning visitor with missing info is walked through it one item at a time (a subscription's
 // price or usage, then name, age group and state), with Skip and "Come back later" on every step. Once nothing is missing,
 // a Costly subscription gets an offer to review cheaper options. Shown once per visit (sessionStorage sk-wb).
-let wbSkip = new Set(), wbDone = 0;
+// v214 (Cuong): shown on every return, asks before starting the steps, and ends with "what can we help with" options.
+let wbSkip = new Set(), wbDone = 0, wbStage = "ask";
 function backItems() {
   const p = profile(), out = [];
   state.subs.filter(s => !s.example && !pausedNow(s) && !wbSkip.has(s.id)).forEach(s => { const m = measureOf(s);
@@ -1864,17 +1867,38 @@ const costlyOf = () => state.subs.filter(s => !pausedNow(s) && rate(s).key === "
 function backView() {
   const items = backItems(), name = firstName(), later = () => { view = "home"; render(); window.scrollTo(0, 0); };
   const head = `<div class="section-head"><h2 class="about-title">Welcome Back${name ? `, ${esc(name)}` : ""}!</h2></div>`;
-  if (!items.length) {
-    const c = costlyOf()[0];
-    if (!c) { later(); return el(""); }
-    const opts = cheaperOptions(c), best = opts.length ? Math.max(...opts.map(o => o.save)) : 0;
-    const f = el(`${head}<section class="card wb-card">
-      <p class="small muted" style="margin:0">${wbSkip.size ? "That's all for now." : wbDone ? "Thanks, your list is up to date." : "Your list is up to date."}</p>
-      <h3 style="margin:0">Would you like to lower what you pay?</h3>
-      <div class="su-sub">${logoHtml(svcOf(c))}<b>${esc(c.name)}</b><span class="pill poor">${esc(rate(c).label)}</span></div>
-      <p style="margin:0">You pay ${money(monthly(c))} a month for ${esc(c.name)}, and it's rated Costly. ${best > 0 ? `We found ${opts.length} cheaper option${opts.length === 1 ? "" : "s"} that could save up to ${money(best)} a month.` : "Take a look at other ways to get the same thing for less."}</p>
-      <div class="su-btns"><button class="btn primary w-big" id="wb-alts">Review options</button><button class="btn w-big" id="wb-later">Not now</button></div></section>`);
-    f.getElementById("wb-alts").addEventListener("click", () => { later(); openSheet(c.id); });
+  // v214 (Cuong): ask before starting. Missing details are listed and the steps begin only if the user says yes.
+  if (items.length && wbStage === "ask") {
+    const what = it => it.s ? `${esc(it.s.name)}: ${it.price && it.use ? "price and usage" : it.price ? "what you pay" : "how much you use it"}`
+      : { name: "Your name", age: "Your age group", state: "Your state" }[it.k];
+    const shown = items.slice(0, 4), more = items.length - shown.length;
+    const f = el(`${head}<p class="wb-lead"><span class="wb-gold">A few details are still missing.</span> <span class="small muted">Filling them in makes your ratings and savings more accurate.</span></p>
+      <section class="card wb-card"><h3 style="margin:0">Want to finish setting up now?</h3>
+        <ul class="wb-list">${shown.map(it => `<li>${what(it)}</li>`).join("")}${more ? `<li class="muted">and ${more} more</li>` : ""}</ul>
+        <p class="small muted" style="margin:0">${items.length === 1 ? "It's one quick question." : `It's ${items.length} quick questions, one at a time.`} You can skip any of them or stop whenever you like.</p>
+        <div class="su-btns"><button class="btn primary w-big" id="wb-yes">Yes, let's finish</button><button class="btn w-big" id="wb-no">Not now</button></div></section>`);
+    f.getElementById("wb-yes").addEventListener("click", () => { wbStage = "steps"; render(); window.scrollTo(0, 0); });
+    f.getElementById("wb-no").addEventListener("click", () => { wbStage = "menu"; render(); window.scrollTo(0, 0); });
+    return f;
+  }
+  // v214 (Cuong): when nothing is missing (or they said not now), say so and offer what they can do next.
+  if (!items.length || wbStage === "menu") {
+    const c = costlyOf()[0], opts = c ? cheaperOptions(c) : [], best = opts.length ? Math.max(...opts.map(o => o.save)) : 0;
+    const lead = items.length ? "No problem, we'll ask another time." : wbDone ? "Thanks, you're all up to date!" : wbSkip.size ? "That's all for now." : "You're all up to date!";
+    const tiles = [["add", "Add a subscription", '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'],
+      ["remove", "Remove a subscription", '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>'],
+      ["review", "Review my subscriptions", '<path d="M4 6h16M4 12h16M4 18h10"/>'],
+      ["alts", "Explore cheaper options", '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>']];
+    const f = el(`${head}<p class="wb-lead"><span class="wb-gold">${lead}</span> <span class="small muted">Is there anything we can help you with today?</span></p>
+      ${c ? `<section class="card wb-card wb-tip"><div class="su-sub">${logoHtml(svcOf(c))}<b>${esc(c.name)}</b><span class="pill poor">${esc(rate(c).label)}</span></div>
+        <p style="margin:0">You pay ${money(monthly(c))} a month for ${esc(c.name)}, and it's rated Costly. ${best > 0 ? `We found ${opts.length} cheaper option${opts.length === 1 ? "" : "s"} that could save up to ${money(best)} a month.` : "There may be a way to get the same thing for less."}</p>
+        <div><button class="btn primary" id="wb-alts">Review options for ${esc(c.name)}</button></div></section>` : ""}
+      <div class="about-grid wb-menu">${tiles.map(([k, l, d]) => `<button type="button" class="about-opt" data-wb="${k}"><svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>${l}</button>`).join("")}</div>
+      <div style="text-align:center;margin:16px 0 24px"><button type="button" class="btn w-big" id="wb-later">Go to my Overview</button></div>`);
+    const go = v => { view = v; render(); window.scrollTo(0, 0); };
+    f.getElementById("wb-alts")?.addEventListener("click", () => { later(); openSheet(c.id); });
+    f.querySelectorAll("[data-wb]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.wb;
+      if (k === "add") { addMode = true; welcomeStep = 2; go("welcome"); } else go({ remove: "manage", review: "usage", alts: "overlaps" }[k]); }));
     f.getElementById("wb-later").addEventListener("click", later);
     return f;
   }
@@ -4119,7 +4143,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 213 · Standalone copy · Oct 26", VERSION_NUM = 213;
+const APP_VERSION = "Prototype · Version 214 · Standalone copy · Oct 27", VERSION_NUM = 214;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4302,9 +4326,9 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   if (!state.cloakedV) { state.subs.filter(s => s.svc === "cloaked").forEach(s => { s.measure = "replace"; if (!s.hist?.replace) genHistory(s); s.used = ["data_removal"]; }); state.cloakedV = 1; }
   // v207: subscriptions on a plan with no published price were saved at $0; they need the user's price instead.
   state.subs.forEach(x => { if (x.price === 0 && !x.priceMine && x.myTotal == null && CATALOG[x.svc]?.plans?.length && unpricedPlan(planOf(CATALOG[x.svc], x.plan))) x.price = null; });
-  // v207 (Cuong): returning visitors with missing info, or a Costly subscription, start on Welcome Back once per visit.
+  // v207, v214 (Cuong): returning visitors start on Welcome Back once per visit (missing info first, else what we can help with).
   if (persona === "me" && saved?.subs?.length && view === "home") { let seen = false; try { seen = sessionStorage.getItem("sk-wb") === "1"; sessionStorage.setItem("sk-wb", "1"); } catch {}
-    if (!seen && (backItems().length || costlyOf().length)) view = "back"; }
+    if (!seen) view = "back"; }
   save();
   render();
 }).catch(() => { document.getElementById("view").innerHTML = `<p class="muted">Service prices didn't load. Reload the page to try again.</p>`; });
