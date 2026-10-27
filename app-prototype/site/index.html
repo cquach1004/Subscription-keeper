@@ -804,6 +804,8 @@ details.az[hidden] { display: none; }
 .u-promo { border: 2px solid var(--accent); background: var(--accent-soft); display: grid; gap: 8px; margin: 0 0 12px; } .u-promo .chips { display: flex; flex-wrap: wrap; gap: 6px; } .u-promo .chip { background: var(--surface); color: inherit; cursor: pointer; }
 .u-promo-top { display: flex; justify-content: space-between; align-items: center; } .u-promo .info-panel { margin: 0; }
 .u-prog { display: grid; gap: 8px; margin: 0 0 12px; } .u-prog-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; } .u-prog-top b { font-size: 16px; }
+.wk-card { display: grid; gap: 12px; margin: 0 0 12px; border: 2px solid var(--accent); } .wk-ask { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; } .wk-ask .su-btns, .wk-nudge .su-btns { margin: 0; }
+.wk-nudge { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 .u-sync { font-size: 12px; color: var(--accent); font-weight: 600; background: none; border: 0; padding: 0; cursor: pointer; justify-self: start; text-align: left; }
 .unr { display: grid; gap: 10px; margin-top: 14px; } .unr h3 { margin: 0; font-size: 15px; } .unr-g { display: grid; gap: 4px; } .unr-g .vb-other { margin-top: 2px; } .sync summary { cursor: pointer; display: grid; gap: 2px; } .sync:not([open]) summary ~ * { display: none; }
 .sync-steps { margin: 0; padding-left: 20px; display: grid; gap: 2px; }
@@ -2501,6 +2503,61 @@ function syncPromoHtml() {
     <div class="chips">${can.map(s => `<button class="chip" data-sync="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div></div>`;
 }
 function openSync(id) { openSheet(id); const d = document.querySelector("#sheet-root details.sync"); if (d) { d.open = true; d.scrollIntoView({ block: "start" }); } }
+// Weekly check-in (Cuong, v216): about 30 seconds, one subscription at a time, sliders start where they were.
+// Due 7 days after the last one (state.weekly), once at least one slider subscription has usage set. "Later" on Overview hides
+// the reminder until tomorrow (state.wkLater). Answers go into this month's usage, the same as moving the Usage sliders.
+let wkOpen = false, wkIdx = 0, wkDone = false, wkMoved = 0;
+const wkList = () => state.subs.filter(s => { const m = measureOf(s); return !m.costOnly && !m.checks && m.max && !pausedNow(s); }).sort((a, b) => (monthly(b) || 0) - (monthly(a) || 0));
+const wkNext = () => state.weekly ? iso(new Date(new Date(state.weekly + "T12:00:00").getTime() + 7 * 864e5)) : null;
+const weeklyDue = () => wkList().some(s => !s.needsUse) && (!state.weekly || wkNext() <= today());
+function weeklyNudgeHtml() {
+  if (!weeklyDue() || (state.wkLater && state.wkLater > today())) return "";
+  const n = wkList().length;
+  return `<div class="card wk-nudge"><div><h3>Your weekly check-in is ready</h3><p class="small muted" style="margin:2px 0 0">${n} quick question${n === 1 ? "" : "s"}, about 30 seconds. It keeps your ratings and savings tips right.</p></div>
+    <div class="su-btns"><button class="btn primary" id="wk-go">Start check-in</button><button class="btn ghost small" id="wk-later">Later</button></div></div>`;
+}
+function wireWeeklyNudge(f) {
+  f.getElementById("wk-go")?.addEventListener("click", () => { wkOpen = true; wkIdx = 0; wkDone = false; wkMoved = 0; view = "usage"; render(); window.scrollTo(0, 0); });
+  f.getElementById("wk-later")?.addEventListener("click", () => { state.wkLater = iso(new Date(Date.now() + 864e5)); save(); render(); });
+}
+function weeklyHtml() {
+  const list = wkList();
+  if (wkDone) return `<section class="card wk-card wk-end"><h3 style="margin:0">All done. Thanks!</h3>
+    <p style="margin:0">${wkMoved ? `You updated ${wkMoved} subscription${wkMoved === 1 ? "" : "s"}; the ratings below are up to date.` : "Same as before for everything, so your ratings stay as they were."} Your next check-in is ${esc(fmtDate(wkNext()))}.</p>
+    <div><button class="btn" id="wk-close">Close</button></div></section>`;
+  if (!wkOpen) return weeklyDue() ? `<section class="card wk-card wk-ask"><div><h3 style="margin:0">How did this week go?</h3><p class="small muted" style="margin:2px 0 0">Your weekly check-in: ${list.length} quick question${list.length === 1 ? "" : "s"}, about 30 seconds.</p></div>
+    <div class="su-btns"><button class="btn primary" id="wk-start">Start</button><button class="btn ghost small" id="wk-skip">Skip this week</button></div></section>` : "";
+  const s = list[Math.min(wkIdx, list.length - 1)], m = measureOf(s), { cur } = periodKeys(s), h = s.hist?.[m.id]?.[cur];
+  const n = s.needsUse ? 0 : h != null ? Math.round(h / PER[m.per].f * 10) / 10 : s.rate, r = rate(s);
+  return `<section class="card wk-card"><div class="su-top"><h3 style="margin:0">Weekly check-in</h3><span class="small muted">${wkIdx + 1} of ${list.length}</span></div>
+    <div class="su-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${list.length}" aria-valuenow="${wkIdx}"><i style="width:${(wkIdx / list.length * 100).toFixed(1)}%"></i></div>
+    <div class="su-sub">${logoHtml(svcOf(s))}<b>${esc(s.name)}</b><span class="pill ${r.key}" id="wk-pill">${esc(r.label)}</span></div>
+    <label class="su-l" for="wk-use">${s.needsUse ? "About how much do you use it?" : "Still about right?"} <span class="small muted" style="font-weight:400">${esc(m.label)}</span></label>
+    ${slider(m, n, `id="wk-use" aria-label="${esc(m.label)}, ${esc(s.name)}"`)}
+    <div class="su-btns"><button class="btn primary w-big" id="wk-next">${wkIdx + 1 < list.length ? "Next" : "Finish"}</button>${s.needsUse ? "" : `<button class="btn w-big" id="wk-same">Same as before</button>`}</div>
+    <div style="text-align:center"><button type="button" class="btn ghost small" id="wk-stop">Stop for now</button></div></section>`;
+}
+function wireWeekly(f) {
+  const $ = id => f.getElementById(id) || document.getElementById(id), redraw = () => { const y = scrollY; render(); scrollTo(0, y); };
+  const finish = () => { state.weekly = today(); delete state.wkLater; wkOpen = false; wkDone = true; save(); redraw(); };
+  $("wk-close")?.addEventListener("click", () => { wkDone = false; redraw(); });
+  $("wk-start")?.addEventListener("click", () => { wkOpen = true; wkIdx = 0; wkMoved = 0; redraw(); });
+  $("wk-skip")?.addEventListener("click", () => { state.weekly = today(); save(); redraw(); });
+  $("wk-stop")?.addEventListener("click", () => { wkOpen = false; redraw(); });
+  const inp = $("wk-use"); if (!inp) return;
+  const list = wkList(), s = list[Math.min(wkIdx, list.length - 1)], m = measureOf(s); let moved = false;
+  inp.oninput = () => { moved = true; inp.nextElementSibling.textContent = slideText(m, +inp.value);
+    const r = rateWith(s, +inp.value), pill = $("wk-pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; };
+  const step = () => { wkIdx++; if (wkIdx >= list.length) finish(); else { save(); redraw(); } };
+  $("wk-next").addEventListener("click", () => {
+    if (moved || s.needsUse) { const v = +inp.value, { cur } = periodKeys(s); setUse(s, v, m.per); s.example = false;
+      ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(v * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you"; wkMoved++; }
+    step(); });
+  $("wk-same")?.addEventListener("click", step);
+}
+// The rating a subscription would get at a slider value, without saving it.
+function rateWith(s, v) { const keep = { needsUse: s.needsUse, rate: s.rate, per: s.per, uses: s.uses, usage: s.usage && { ...s.usage } };
+  setUse(s, v, measureOf(s).per); const r = rate(s); Object.assign(s, keep); if (keep.needsUse === undefined) delete s.needsUse; if (keep.usage === undefined) delete s.usage; return r; }
 function usageView() {
   const last = state.subs.map(lastMonthOf).filter(Boolean), total = last.reduce((a, x) => a + x.cost, 0);
   const by = k => last.filter(x => x.bucket === k).sort((a, b) => b.cost - a.cost);
@@ -2527,13 +2584,14 @@ function usageView() {
     <div class="section-head u-cur" style="margin-top:${last.length ? 26 : 4}px"><h2 style="font-size:20px">${esc(curName)} so far ${infoBtn("u-cur", "How the sliders work")}</h2>${state.subs.length && last.length ? checkinLink() : ""}</div>
     ${infoPanel("u-cur", `Slide to match how you're using each one, or skip the guessing and use your real history where the service allows it. Whatever a slider shows when the month ends is saved as that month's usage.${last.length ? "" : ` Your first ${esc(curName)} ratings show at the top of this page once the month ends.`}`)}
     ${state.subs.length && checkinOpen ? checkinHtml() : ""}
-    ${progress}
-    ${syncPromoHtml()}
+    ${weeklyHtml()}
+    ${wkOpen ? "" : progress}
+    ${wkOpen ? "" : syncPromoHtml()}
     ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Explore tab.</p>`}
     ${spendMonths >= 2 ? `<div class="charts u-month" style="margin-top:22px">${monthBarsHtml()}</div>` : ""}`);
   f.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   f.querySelectorAll("[data-sync]").forEach(b => b.addEventListener("click", () => openSync(b.dataset.sync)));
-  wireCheckin(f);
+  wireCheckin(f); wireWeekly(f);
   wireChecks(f, (s, box) => { const r = rate(s), pill = box.closest(".u-row").querySelector(".pill"); pill.className = `pill ${r.key}`; pill.textContent = r.label; });
   f.querySelectorAll("[data-u]").forEach(inp => { const s = state.subs.find(x => x.id === inp.dataset.u), m = measureOf(s);
     // v181 (Cuong): the Great / Fair / Costly pill follows the slider while it moves; the value is saved on release.
@@ -2761,6 +2819,7 @@ function homeView() {
     ${plkHtml()}
     ${setupHtml()}
     ${setupTodo().length ? "" : usageNudgeHtml()}
+    ${setupTodo().length ? "" : weeklyNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
     ${useRanked().length ? useMostHtml() : ""}
     ${saveAmt > 0 ? saveHtml(saveAmt) : ""}
@@ -2774,7 +2833,7 @@ function homeView() {
   f.getElementById("cmp-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   pieWire(f);
   f.querySelector(".see-how")?.addEventListener("click", () => { view = "overlaps"; render(); document.getElementById("ways")?.scrollIntoView(); });
-  wireNudge(f);
+  wireNudge(f); wireWeeklyNudge(f);
   f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   wireSetup(f);
   f.getElementById("plk-edit")?.addEventListener("click", () => { view = "welcome"; welcomeStep = 1; render(); window.scrollTo(0, 0); });
@@ -4154,7 +4213,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 215 · Standalone copy · Oct 27", VERSION_NUM = 215;
+const APP_VERSION = "Prototype · Version 216 · Standalone copy · Oct 27", VERSION_NUM = 216;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
