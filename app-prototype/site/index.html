@@ -389,7 +389,11 @@ details.home-how:not([open]) > summary { margin-bottom: 0; }
 .pie-mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; }
 .pie-mid b { font-size: 24px; letter-spacing: -.02em; } .pie-mid span { font-size: 12px; color: var(--muted); }
 .pie-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-.pie-legend li { display: grid; grid-template-columns: 12px 1fr auto 38px; gap: 10px; align-items: center; padding: 3px 6px; border-radius: 8px; font-size: 14px; cursor: default; }
+.pie-legend li { display: grid; grid-template-columns: 12px 1fr auto 38px; gap: 10px; align-items: center; padding: 3px 6px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+.pie-legend li[data-i]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cat-card { display: grid; gap: 10px; } .cat-donut { display: grid; justify-items: center; padding: 4px 0 6px; } .cat-donut .pie-box path { cursor: default; }
+.cat-row { grid-template-columns: auto auto 1fr auto !important; } .cat-row .sw { width: 10px; height: 10px; border-radius: 3px; }
+.cat-row:not(:has(.sw)) { grid-template-columns: auto 1fr auto !important; } .cat-row .pill { display: inline-block; margin-top: 4px; white-space: normal; line-height: 1.25; } .cat-row > b.num { align-self: start; }
 .pie-legend li.on { background: var(--accent-soft); }
 .pie-legend .sw { width: 12px; height: 12px; border-radius: 4px; }
 .pie-legend .pct { color: var(--muted); font-size: 12px; text-align: right; }
@@ -3016,9 +3020,9 @@ function overlapsView() {
 function spendByCat() {
   const m = {};
   state.subs.forEach(s => { const amt = monthly(s) || 0; if (amt <= 0) return; const c = svcOf(s).category || "other";
-    (m[c] ||= { label: catLabel(c), amt: 0, subs: [], hh: isHousehold(s) }); m[c].amt += amt; m[c].subs.push(s.name); });
+    (m[c] ||= { label: catLabel(c), cat: c, amt: 0, subs: [], ids: [], hh: isHousehold(s) }); m[c].amt += amt; m[c].subs.push(s.name); m[c].ids.push(s.id); });
   const all = Object.values(m).sort((a, b) => b.amt - a.amt), S = all.filter(r => !r.hh), H = all.filter(r => r.hh);
-  const fold = (rows, n, label, hh) => rows.length <= n ? rows : rows.length === n + 1 ? [...rows.slice(0, n), { ...rows[n], other: true }] : [...rows.slice(0, n), { label, amt: rows.slice(n).reduce((a, r) => a + r.amt, 0), subs: rows.slice(n).flatMap(r => r.subs), other: true, hh }];
+  const fold = (rows, n, label, hh) => rows.length <= n ? rows : rows.length === n + 1 ? [...rows.slice(0, n), { ...rows[n], other: true }] : [...rows.slice(0, n), { label, amt: rows.slice(n).reduce((a, r) => a + r.amt, 0), subs: rows.slice(n).flatMap(r => r.subs), ids: rows.slice(n).flatMap(r => r.ids), other: true, hh }];
   let out;
   if (S.length + H.length <= 8) out = [...S, ...H];
   else if (!H.length || !S.length) out = fold(all, 7, H.length ? "Other household services" : "Everything else", !!H.length);
@@ -3101,7 +3105,7 @@ function trendHtml() {
 let pieRows = [];
 function pieHtml() {
   const rows = spendByCat(), tot = rows.reduce((a, r) => a + r.amt, 0);
-  pieRows = rows.map(r => ({ l: r.label, a: r.amt, s: r.subs, p: Math.round(r.amt / tot * 100) || "<1" }));
+  pieRows = rows.map(r => ({ l: r.label, a: r.amt, s: r.subs, ids: r.ids, cat: r.other && r.ids.length > 1 ? null : r.cat, col: r.col, tot, p: Math.round(r.amt / tot * 100) || "<1" }));
   if (rows.length < 2 || !tot) return "";
   const C = 95, R = 92, R0 = 60, pt = (a, r) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`;
   let a0 = -Math.PI / 2;
@@ -3110,10 +3114,10 @@ function pieHtml() {
     return `<path d="${d}" data-i="${i}" fill="var(--pie-${r.col})"/>`; }).join("");
   const pct = r => Math.round(r.amt / tot * 100) || "<1";
   const grouped = rows.some(r => r.hh) && rows.some(r => !r.hh), sub = hh => rows.filter(r => !!r.hh === hh).reduce((a, r) => a + r.amt, 0);
-  return `<section class="card pie-card"><h3 style="margin:0">Spending by category</h3>
+  return `<section class="card pie-card"><h3 style="margin:0">Spending by category</h3><p class="small muted" style="margin:2px 0 0">Tap a category to see what's in it.</p>
     <div class="pie-wrap"><div class="pie-box"><svg viewBox="0 0 190 190" role="img" aria-label="Monthly spending by category">${paths}</svg>
       <div class="pie-mid"><b class="num">${money(tot)}</b><span>a month</span></div><div class="ctip" role="status"></div></div>
-      <ul class="pie-legend">${rows.map((r, i) => `${grouped && (i === 0 || r.hh !== rows[i - 1].hh) ? `<li class="pie-grp"><b>${r.hh ? "Household Services" : "Subscriptions"}</b><b class="num">${money(sub(r.hh))}</b></li>` : ""}<li data-i="${i}"><span class="sw" style="background:var(--pie-${r.col})"></span>
+      <ul class="pie-legend">${rows.map((r, i) => `${grouped && (i === 0 || r.hh !== rows[i - 1].hh) ? `<li class="pie-grp"><b>${r.hh ? "Household Services" : "Subscriptions"}</b><b class="num">${money(sub(r.hh))}</b></li>` : ""}<li data-i="${i}" role="button" tabindex="0" aria-label="${esc(r.label)}, ${money(r.amt)} a month. Show subscriptions"><span class="sw" style="background:var(--pie-${r.col})"></span>
         <span>${esc(r.label)} <span class="n">(${r.subs.length})</span></span><b class="num">${money(r.amt)}</b><span class="pct num">${pct(r)}%</span></li>`).join("")}</ul></div></section>`;
 }
 function pieWire(f) {
@@ -3127,6 +3131,50 @@ function pieWire(f) {
     tip.style.left = Math.max(-20, Math.min(e.clientX - rc.left + 12, rc.width - tip.offsetWidth + 60)) + "px"; tip.style.top = (e.clientY - rc.top + 12) + "px"; };
   box.querySelectorAll("path").forEach(p => { p.addEventListener("pointermove", e => on(+p.dataset.i, e)); p.addEventListener("pointerleave", () => on(null)); });
   lis.forEach(l => { l.addEventListener("pointerenter", () => on(+l.dataset.i)); l.addEventListener("pointerleave", () => on(null)); });
+  // Clicking a slice or a legend row opens that category's own breakdown.
+  const go = i => { on(null); openCatSheet(rows[i]); };
+  box.querySelectorAll("path").forEach(p => p.addEventListener("click", () => go(+p.dataset.i)));
+  lis.forEach(l => { l.addEventListener("click", () => go(+l.dataset.i)); l.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(+l.dataset.i); } }); });
+}
+// Category breakdown sheet: its subscriptions as their own donut, share of total spend, and a list that opens each subscription.
+function openCatSheet(row) {
+  const root = document.getElementById("sheet-root");
+  const subs = row.ids.map(id => state.subs.find(x => x.id === id)).filter(Boolean).sort((a, b) => monthly(b) - monthly(a));
+  if (!subs.length) return;
+  const amt = subs.reduce((a, s) => a + monthly(s), 0), fold = subs.length > 8, slot = i => fold && i >= 7 ? "other" : i + 1;
+  const pctOf = (x, t) => Math.round(x / t * 100) || "<1";
+  let donut = "";
+  if (subs.length > 1) {
+    const C = 95, R = 92, R0 = 60, pt = (a, r) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`;
+    let a0 = -Math.PI / 2;
+    // More than 8: the 7 biggest get their own color and the rest share one gray slice.
+    const parts = fold ? [...subs.slice(0, 7).map(s => ({ name: s.name, m: monthly(s) })), { name: `${subs.length - 7} others`, m: subs.slice(7).reduce((a, s) => a + monthly(s), 0) }] : subs.map(s => ({ name: s.name, m: monthly(s) }));
+    const paths = parts.map((s, i) => { const a1 = a0 + s.m / amt * 2 * Math.PI, big = a1 - a0 > Math.PI ? 1 : 0;
+      const d = `M${pt(a0, R)} A${R} ${R} 0 ${big} 1 ${pt(a1, R)} L${pt(a1, R0)} A${R0} ${R0} 0 ${big} 0 ${pt(a0, R0)}Z`; a0 = a1;
+      return `<path d="${d}" data-i="${i}" fill="var(--pie-${slot(i)})"><title>${esc(s.name)}: ${money(s.m)}/mo, ${pctOf(s.m, amt)}%</title></path>`; }).join("");
+    donut = `<div class="pie-box"><svg viewBox="0 0 190 190" role="img" aria-label="${esc(row.l)} spending by subscription">${paths}</svg><div class="pie-mid"><b class="num">${money(amt)}</b><span>a month</span></div></div>`;
+  }
+  const list = subs.map((s, i) => { const r = rate(s); return `<button class="uml-row cat-row" data-id="${s.id}">${subs.length > 1 ? `<span class="sw" style="background:var(--pie-${slot(i)})"></span>` : ""}${logoHtml(svcOf(s))}<span style="min-width:0"><b>${esc(s.name)}</b><span class="small muted">${row.cat ? "" : `${esc(catLabel(svcOf(s).category))} · `}${[s.cycle === "year" ? `${money(total(s))}/year` : "", subs.length > 1 ? `${pctOf(monthly(s), amt)}% of this category` : "", s.cycle !== "year" && subs.length < 2 ? "billed monthly" : ""].filter(Boolean).join(" · ")}</span><span class="pill ${r.key}">${esc(r.label)}</span></span><b class="num">${money(monthly(s))}/mo</b></button>`; }).join("");
+  const costly = subs.filter(s => rate(s).key === "poor");
+  root.replaceChildren(el(`<div class="scrim" id="scrim"></div>
+    <aside class="sheet enter" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="sheet-head"><span class="logo" style="background:var(--pie-${row.col})" aria-hidden="true"></span>
+        <div><h2 id="sheet-title">${esc(row.l)}</h2><div class="small muted">${subs.length} subscription${subs.length === 1 ? "" : "s"}</div></div>
+        <button class="btn" id="close" aria-label="Close">Close</button></div>
+      <div class="kv">
+        <div class="stat"><div class="label">Per month</div><div class="value num">${money(amt)}</div><div class="small muted">${money(amt * 12)} a year</div></div>
+        <div class="stat"><div class="label">Share of your spend</div><div class="value num">${pctOf(amt, row.tot)}%</div><div class="small muted">of ${money(row.tot)} a month</div></div>
+      </div>
+      ${costly.length ? `<div class="verdict poor"><span class="pill poor" style="justify-self:start">${costly.length} costly</span><span>${esc(costly.map(s => s.name).join(", "))} ${costly.length === 1 ? "costs" : "cost"} more than ${costly.length === 1 ? "it's" : "they're"} worth to you. Tap ${costly.length === 1 ? "it" : "one"} to see why.</span></div>` : ""}
+      <section class="card cat-card">${donut ? `<div class="cat-donut">${donut}</div>` : ""}<div>${list}</div></section>
+      ${row.cat && CATEGORY_LABEL[row.cat] ? `<button class="btn ghost" id="cat-explore" style="justify-self:start">Explore other ${esc(catLabel(row.cat))} options</button>` : ""}
+    </aside>`));
+  const close = () => { root.replaceChildren(); render(); };
+  root.querySelector("#scrim").onclick = close; root.querySelector("#close").onclick = close;
+  root.querySelector(".sheet").addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  root.querySelectorAll(".cat-row").forEach(b => b.onclick = () => openSheet(b.dataset.id));
+  const ex = root.querySelector("#cat-explore"); if (ex) ex.onclick = () => { exploreCat = row.cat; exploreOpen = null; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); };
+  root.querySelector("#close").focus();
 }
 
 // Explore: browse the catalog before subscribing. Plans, features, trials and discounts all come from services.json.
@@ -4294,7 +4342,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 219 · Standalone copy · Oct 27", VERSION_NUM = 219;
+const APP_VERSION = "Prototype · Version 220 · Standalone copy · Oct 27", VERSION_NUM = 220;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
