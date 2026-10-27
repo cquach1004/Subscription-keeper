@@ -283,6 +283,7 @@ details.sec > summary .sec-meta { flex: 1; min-width: 0; display: flex; justify-
 details.sec > summary::after { content: ""; flex: none; width: 8px; height: 8px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg) translate(-2px, -2px); transition: transform .15s; }
 details.sec[open] > summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
 details.sec > .sec-body { padding: 0 14px 14px; display: grid; gap: 12px; min-width: 0; }
+details.sec > .sec-body { grid-template-columns: minmax(0, 1fr); } details.sec > .sec-body > * { min-width: 0; } .q-row select { max-width: 100%; text-overflow: ellipsis; }
 .sec .fresh { border: 0; padding: 0; border-radius: 0; }
 .sec .fresh > .head { display: none; }
 /* Usage vs cost chart. Series colors are checked for color-blind separation in both themes. */
@@ -804,6 +805,7 @@ details.az[hidden] { display: none; }
 .u-promo { border: 2px solid var(--accent); background: var(--accent-soft); display: grid; gap: 8px; margin: 0 0 12px; } .u-promo .chips { display: flex; flex-wrap: wrap; gap: 6px; } .u-promo .chip { background: var(--surface); color: inherit; cursor: pointer; }
 .u-promo-top { display: flex; justify-content: space-between; align-items: center; } .u-promo .info-panel { margin: 0; }
 .u-prog { display: grid; gap: 8px; margin: 0 0 12px; } .u-prog-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; } .u-prog-top b { font-size: 16px; }
+.crowd { display: grid; gap: 8px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 12px; } .crowd-q { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .wk-card { display: grid; gap: 12px; margin: 0 0 12px; border: 2px solid var(--accent); } .wk-ask { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; } .wk-ask .su-btns, .wk-nudge .su-btns { margin: 0; }
 .wk-nudge { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 .u-sync { font-size: 12px; color: var(--accent); font-weight: 600; background: none; border: 0; padding: 0; cursor: pointer; justify-self: start; text-align: left; }
@@ -1820,7 +1822,7 @@ function readPrice(id, s) { const inp = document.getElementById(id), every = doc
   if (!inp || inp.value === "") return; const val = parseFloat(inp.value); if (isNaN(val)) return;
   if (every === payEveryOf(s) && total(s) != null && Math.abs(val - +paidAmount(s, total(s))) < 0.005) return;
   if (every === "year") { s.cycle = "year"; s.myTotal = Math.max(0, val); } else { s.cycle = "month"; s.myTotal = Math.round(Math.max(0, val) / PAY_EVERY[every][1] * 100) / 100; }
-  s.payEvery = every; s.priceMine = true; }
+  s.payEvery = every; s.priceMine = true; sharePrice(s); }
 const USE_PERS = { day: ["day", "week", "month"], week: ["day", "week", "month"], month: ["week", "month", "year"], year: ["month", "year"] };
 const PER_RX = /\s+(a|per|this)\s+(day|week|month|year)$/i;
 const usePersFor = m => PER_RX.test(m.label) && !m.amount ? USE_PERS[m.per] || [] : [];
@@ -1956,7 +1958,7 @@ function backView() {
   $("wb-save").addEventListener("click", () => {
     if (it.s) { const s = it.s, m = measureOf(s);
       if (it.price) { const val = parseFloat($("wb-price").value); if (isNaN(val)) { msg("Enter what you pay, or tap Skip."); $("wb-price").focus(); return; }
-        s.myTotal = Math.max(0, val); s.priceMine = true; s.cycle = "month"; }
+        s.myTotal = Math.max(0, val); s.priceMine = true; s.cycle = "month"; sharePrice(s); }
       if (it.use) { if (!moved) { msg("Move the slider to about how much you use it, or tap Skip."); return; }
         const v = +inp.value, { cur } = periodKeys(s); setUse(s, v, m.per);
         ((s.hist ||= {})[m.id] ||= {})[cur] = Math.round(v * PER[m.per].f * 10) / 10; ((s.histSrc ||= {})[m.id] ||= {})[cur] = "you"; }
@@ -1971,6 +1973,54 @@ function backView() {
   $("wb-later").addEventListener("click", later);
   return f;
 }
+// Shared price reports (Cuong, v219): for plans whose price we couldn't confirm (or that publish none), what members pay is
+// shared without their name, with plan and state, in the artifact's db (prices/<viewer id>, each viewer writes only their own).
+// 3 or more reports within 15% of each other in one state show as a typical price. Members can also say a price is right or not;
+// Admin lists the most disputed first. Needs the Claude app (db); the public site has no shared storage, so these stay hidden there.
+const PR_MIN = 3, PR_BAND = 0.15;
+let PRICE_POOL = null, myPrices = null;
+const prPlace = () => { const p = profile(); return [p.country || "US", p.region || ""]; };
+const prKey = (svc, plan, c, r) => [svc, plan || "-", c, r || "-"].join("~");
+function unconfirmedPrice(s) { const v = CATALOG[s.svc]; if (!v?.plans?.length) return false; const pl = planOf(v, s.plan);
+  return !pl || pl.verified === false || unpricedPlan(pl) || listBase(s)?.basis === "estimate"; }
+const median = xs => { const a = xs.slice().sort((x, y) => x - y), n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : null; };
+function poolOf(s) { if (!PRICE_POOL) return null; const [c, rg] = prPlace(); return PRICE_POOL[prKey(s.svc, s.plan, c, rg)] || null; }
+// Typical price: the middle of the largest group of reports within 15% of one another.
+function typicalPrice(g) { if (!g || g.prices.length < PR_MIN) return null; let best = [];
+  g.prices.forEach(x => { const near = g.prices.filter(y => Math.abs(y - x) <= x * PR_BAND); if (near.length > best.length) best = near; });
+  return best.length >= PR_MIN ? { price: median(best), n: best.length } : null; }
+async function prDb() { try { if (typeof claude === "undefined") return null; const db = await claude.use("db"), user = await claude.use("user"); return db && user ? { db, user } : null; } catch { return null; } }
+async function loadPricePool() { const x = await prDb(); if (!x) return;
+  try { const snap = await x.db.collection("prices").get(), pool = {};
+    snap.docs.forEach(d => Object.entries(d.data()?.r || {}).forEach(([k, e]) => { const g = (pool[k] ||= { prices: [], right: 0, diff: 0, svc: e.svc, plan: e.plan, country: e.country, region: e.region, last: "" });
+      if (typeof e.price === "number" && e.price > 0) g.prices.push(e.price); if (e.vote === "right") g.right++; if (e.vote === "different") g.diff++; if (e.at > g.last) g.last = e.at; }));
+    PRICE_POOL = pool; const me = await x.db.doc("prices/" + await x.user.id()).get(); myPrices = me?.exists ? (me.data()?.r || {}) : {};
+    if (view === "admin") render(); } catch {} }
+// Saves this viewer's report for one subscription (their price, a vote, or both). One write, on a user action only.
+async function sharePrice(s, vote) { if (!unconfirmedPrice(s)) return; const x = await prDb(); if (!x) return;
+  const [c, rg] = prPlace(), k = prKey(s.svc, s.plan, c, rg), price = s.priceMine && s.myTotal != null ? +monthlyOf(s, preTax(s, s.myTotal)).toFixed(2) : null;
+  // A price of their own also answers "is the list price right?": within 5% of it counts as right, otherwise different.
+  const lt = listTotal(s), lm = lt == null ? null : monthlyOf(s, lt);
+  if (!vote && price && lm) vote = Math.abs(price - lm) <= lm * 0.05 ? "right" : "different";
+  const e = { svc: s.svc, plan: s.plan || "", country: c, region: rg, at: today(), ...(price ? { price } : {}), ...(vote ? { vote } : myPrices?.[k]?.vote ? { vote: myPrices[k].vote } : {}) };
+  if (!price && !e.vote) return;
+  try { const ref = x.db.doc("prices/" + await x.user.id()), cur = await ref.get(), all = { ...(cur?.exists ? cur.data()?.r || {} : {}), [k]: e };
+    await ref.set({ r: all }); myPrices = all; await loadPricePool(); } catch {} }
+function crowdHtml(s) {
+  if (!unconfirmedPrice(s) || typeof claude === "undefined") return "";
+  const g = poolOf(s), tp = typicalPrice(g), [, rg] = prPlace(), where = US_STATES[rg] || regionName() || countryName(profile().country);
+  const mine = myPrices?.[prKey(s.svc, s.plan, ...prPlace())], t = total(s);
+  return `<div class="crowd" id="crowd">
+    ${tp ? `<div class="small"><b>Typical price from MoSuBi members in ${esc(where)}: ${money(tp.price)}/mo</b> before tax (${tp.n} reports).${needsPrice(s) || !s.priceMine ? ` <button class="btn ghost small" id="crowd-use">Use ${money(tp.price)}</button>` : ""}</div>`
+      : `<div class="small muted">Not enough member reports for ${esc(where)} yet${g?.prices.length ? ` (${g.prices.length} of ${PR_MIN})` : ""}.</div>`}
+    ${t != null && !needsPrice(s) ? mine?.vote ? `<div class="small">Thanks, you said ${mine.vote === "right" ? "this price is right" : "your price is different"}.</div>`
+      : `<div class="crowd-q"><span class="small"><b>Is ${money(monthly(s))}/mo right for you?</b></span><button class="btn small" data-crowd="right">&#10003; This is right</button><button class="btn ghost small" data-crowd="different">My price is different</button></div>` : ""}
+    <p class="note" style="margin:0">What you pay here is shared with other members without your name, so prices we couldn't confirm get checked.</p></div>`; }
+function wireCrowd(root, s, redraw) {
+  root.querySelector("#crowd-use")?.addEventListener("click", () => { const tp = typicalPrice(poolOf(s)); if (!tp) return; s.cycle = "month"; s.myTotal = +(tp.price * (taxed(s) ? 1 + taxRate() : 1)).toFixed(2); s.priceMine = true; s.example = false; save(); redraw(); });
+  root.querySelectorAll("[data-crowd]").forEach(b => b.addEventListener("click", async () => { const v = b.dataset.crowd;
+    if (v === "different") { const i = root.querySelector("#s-mine"); i?.focus(); i?.select?.(); b.closest(".crowd-q").innerHTML = `<span class="small">Enter what you pay in <b>What you actually pay</b> just above.</span>`; }
+    await sharePrice(s, v); if (v === "right") redraw(); })); }
 function welcomeView() {
   if (welcomeStep === 0) return introView();
   if (welcomeStep === 1) return aboutView();
@@ -2131,6 +2181,7 @@ const LEGAL = {
     ["What stays on your device", "Your subscriptions, prices, usage, dates, location, what you told us about yourself (such as your age range, married, kids or sharing plans) your name and email if you give them, and settings (such as style and dark mode) are saved in your browser's storage on this device. We don't receive them. Clearing your browser data, or using another device or browser, starts you fresh."],
     ["What you choose to send us", "When you send feedback or report a problem, we receive what you write, plus the app version, the screen you were on, your device type and how many subscriptions you track (not the list itself). If you add an email address to a ticket, we use it only to reply. In the Claude app version, these are linked to your Claude account so only the MoSuBi team can read them."],
     ["Sam, the AI assistant", "When you ask Sam a question in the Claude app, your question, your recent chat, your subscription list (names, prices, usage and renewal dates) and related catalog details are sent to Claude, Anthropic's AI, to write the answer, using your own Claude account. On the public website, Sam answers from the catalog on your device and nothing is sent."],
+    ["Prices you share", "When you enter what you pay for a plan whose price we couldn't confirm, or tap whether a price is right, we keep that amount (before tax), the plan, your country and state. Other members see only a typical price once at least 3 people report about the same amount; they never see who shared it. Only in the Claude app."],
     ["Usage exports", "If you load a ChatGPT, Claude, Netflix or Spotify file to count your usage, the file is read on your device. Only the monthly counts are kept, and the file isn't uploaded."],
     ["Location", "We use the country and state you choose to show the right services and prices. We don't track your device's location."],
     ["Cookies and tracking", "The prototype doesn't use advertising or analytics trackers. It uses browser storage only to remember your list and settings."],
@@ -3458,6 +3509,10 @@ function adminView() {
   const label = { yes: "Offered", no: "Not offered", unknown: "Not checked" };
   const f = el(`<div class="section-head"><h2>Admin</h2><span class="small muted">Catalog management. End users never see this.</span></div>
     <p class="admin-note" style="margin:0 0 18px">Prototype: these changes are saved in this browser only. In the real app they live on the server, and each report would combine what many members entered.</p>
+    ${PRICE_POOL ? (() => { const rows = Object.values(PRICE_POOL).map(g => ({ g, tp: typicalPrice(g) })).sort((a, b) => b.g.diff - a.g.diff || b.g.prices.length - a.g.prices.length);
+      return `<div class="section-head"><h3>Shared price reports</h3><span class="small muted">${rows.length} plan${rows.length === 1 ? "" : "s"}, most disputed first</span></div>
+      <div class="tbl-wrap" style="margin-bottom:22px"><table class="tbl"><tr><th>Service and plan</th><th>Where</th><th>Reports</th><th>Typical</th><th>Right</th><th>Different</th><th>Latest</th></tr>
+      ${rows.map(({ g, tp }) => { const v = CATALOG[g.svc]; return `<tr><td>${esc(v?.name || g.svc)}${g.plan ? `, ${esc(planOf(v || { plans: [] }, g.plan)?.name || g.plan)}` : ""}</td><td>${esc(g.region || g.country)}</td><td class="num">${g.prices.length}</td><td class="num">${tp ? money(tp.price) : "—"}</td><td class="num">${g.right}</td><td class="num">${g.diff}</td><td>${esc(g.last)}</td></tr>`; }).join("") || `<tr><td colspan="7" class="muted">No member reports yet.</td></tr>`}</table></div>`; })() : ""}
     <div class="section-head"><h3>Price reports</h3><span class="small muted">${reports.length} to review</span></div>
     <div class="cards" style="margin-bottom:22px">${reports.map(({ s, lt, b }) => { const v = CATALOG[s.svc], n = s.members || 1, plan = planOf(v, s.plan);
       const canSave = variesByRegion(v) && p.country === "US" && p.region;
@@ -4129,7 +4184,7 @@ function openSheet(id) {
           return `<div class="fresh">
           <div class="head"><h3>Price check</h3><span class="pill ${b ? fr.key : "poor"}">${b ? fr.label : "Not in catalog"}</span></div>
           <div class="small">${basisText}
-            ${v.official_url ? `<a href="${esc(v.official_url)}" target="_blank" rel="noopener">Official pricing page</a>` : ""}${v.sources?.length ? `${v.official_url ? ". Also checked: " : "Source: "}${v.sources.map(u => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(host(u))}</a>`).join(", ")}` : ""}</div>
+            ${v.official_url ? `<a href="${esc(v.official_url)}" target="_blank" rel="noopener">Official pricing page</a>` : ""}${v.sources?.length ? `${v.official_url ? ". Also checked: " : "Source: "}${v.sources.map(u => (x => `<a href="${esc(x)}" target="_blank" rel="noopener">${esc(host(x))}</a>`)(typeof u === "string" ? u : u.url || "")).join(", ")}` : ""}</div>
           ${b && addonCost(s) ? `<div class="small num">${esc(planOf(v, s.plan).name)} ${money(b.price)}${addonList(s).map(o => ` + ${o.n} ${o.n === 1 ? ADDONS[s.svc].name.toLowerCase() : ADDONS[s.svc].names.toLowerCase()} (${o.name.toLowerCase()}) × ${money(s.cycle === "year" ? o.price * 12 : o.price)}`).join("")} = <b>${money(lt)}</b>/${per}</div>` : ""}
           ${b && hh && !hh.free ? `<div class="small num">${esc(planOf(v, s.plan).name)} ${money(b.price)} + ${n - 1} extra × ${money(s.memberFee ?? hh.fee)} = <b>${money(lt)}</b>/${per} for ${n} ${n === 1 ? "person" : "people"}${b.basis === "estimate" ? " (estimate)" : ""}</div>` : ""}
           <div class="mine"><label for="s-mine" style="display:inline;color:var(--ink)">What you actually pay${hh && n > 1 ? `, all ${n} people` : ""}</label>
@@ -4137,6 +4192,7 @@ function openSheet(id) {
             ${s.priceMine && b ? `<button class="btn ghost small" id="s-list">Use list price</button>` : ""}</div>
           <label class="disc small" style="color:var(--ink)"><input type="checkbox" id="s-tax" ${s.noTax ? "" : "checked"} ${taxRate() ? "" : "disabled"}> Sales tax is charged on this${taxRate() ? ` (${+profile().tax}%)` : `. Set your tax rate with the Location button to compare before tax.`}</label>
           ${s.priceMine && taxed(s) ? `<div class="note">Before tax you pay ${money(preTax(s, s.myTotal))}/${per}, plus ${money(s.myTotal - preTax(s, s.myTotal))} tax.</div>` : !s.priceMine && taxed(s) && lt != null ? `<div class="note">With ${+profile().tax}% tax you pay ${money(regularTotal(s))}/${per}.</div>` : ""}
+          ${crowdHtml(s)}
           ${s.priceMine ? `<div class="note">Using your price${b && b.basis !== "estimate" && Math.abs(diff) > 0.005 ? `, ${money(Math.abs(diff))} ${diff > 0 ? "above" : "below"} the list price for ${n === 1 ? "one person" : `${n} people`}${taxed(s) ? ", before tax" : ""}` : b && b.basis !== "estimate" && taxed(s) ? ". Before tax it matches the list price" : !b || b.basis === "estimate" ? `. It goes to our team for review so we can add ${esc(b ? where : countryName(profile().country))} prices` : ""}.</div>` : ""}
         </div>`; })() : ""}
         `)}
@@ -4218,7 +4274,8 @@ function openSheet(id) {
     if (mine) mine.onchange = e => { const val = parseFloat(e.target.value), was = monthly(s);
       if (isNaN(val)) { s.priceMine = false; } else { s.myTotal = Math.max(0, val); s.priceMine = true; }
       const now = monthly(s); if (negoKind(s) && was > 0 && now - was >= 1) s.rose = { from: was, to: now, on: today() }; else if (now < was) delete s.rose;  // v164
-      s.example = false; save(); setTimeout(draw); };
+      s.example = false; save(); setTimeout(draw); if (s.priceMine) sharePrice(s); };
+    wireCrowd(root, s, () => setTimeout(draw));
     root.querySelector("#nego-copy")?.addEventListener("click", () => navigator.clipboard?.writeText(root.querySelector("#nego-text").textContent).then(() => { root.querySelector("#nego-msg").textContent = "Copied"; }, () => {}));
     const lp = root.querySelector("#s-list");
     if (lp) lp.onclick = () => { s.priceMine = false; save(); draw(); };
@@ -4237,7 +4294,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 218 · Standalone copy · Oct 27", VERSION_NUM = 218;
+const APP_VERSION = "Prototype · Version 219 · Standalone copy · Oct 27", VERSION_NUM = 219;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4426,6 +4483,7 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
     if (!seen) view = "back"; }
   save();
   render();
+  loadPricePool();  // v219: shared price reports (Claude app only)
 }).catch(() => { document.getElementById("view").innerHTML = `<p class="muted">Service prices didn't load. Reload the page to try again.</p>`; });
 </script>
 
