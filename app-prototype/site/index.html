@@ -1394,6 +1394,30 @@ const INSURER_SERVICE = {
 const ratingKind = s => measureOf(s).insure || (INSURER_SERVICE[svcOf(s).category] ? svcOf(s).category : null);
 const SERVICE_EXP = { good: "Good", ok: "OK", poor: "Poor", none: "No claims yet" };
 const QUOTE_PER = { month: ["a month", 1], half: ["every 6 months", 6], year: ["a year", 12] };
+// Car insurance price per car vs drivers like you (Cuong, v230). s.car = { cars, age, cover, rec }. Typical: members' median for the
+// same state, age band, coverage and record once 3+ share; until then Insurify's average monthly quotes by state (Oct 2026), times
+// our age and record factors from Insurify's national averages. All published figures are estimates. Alaska isn't in the table,
+// so it uses the national average. A same-coverage quote 15% or more below what you pay means you're overpaying.
+const CAR_AVG = { AL: [142, 66], AZ: [162, 91], AR: [150, 73], CA: [203, 98], CO: [217, 97], CT: [225, 162], DE: [262, 166], FL: [236, 142], GA: [259, 157], HI: [126, 62], ID: [107, 64], IL: [162, 84], IN: [128, 64], IA: [111, 56], KS: [157, 79], KY: [194, 121], LA: [209, 106], ME: [139, 74], MD: [302, 191], MA: [137, 103], MI: [229, 130], MN: [182, 93], MS: [186, 89], MO: [180, 92], MT: [139, 62], NE: [134, 69], NV: [260, 164], NH: [85, 52], NJ: [257, 181], NM: [133, 65], NY: [218, 145], NC: [113, 69], ND: [114, 66], OH: [117, 65], OK: [169, 83], OR: [156, 91], PA: [162, 90], RI: [298, 177], SC: [255, 160], SD: [152, 62], TN: [132, 60], TX: [204, 110], UT: [146, 92], VT: [140, 57], VA: [207, 118], WA: [184, 95], DC: [237, 136], WV: [156, 83], WI: [125, 57], WY: [94, 50] };
+const CAR_NATIONAL = [187, 98];
+const CAR_AGE = { u25: ["Under 25", 1.71], mid: ["25 to 64", 1.05], senior: ["65 or older", 0.88] };
+const CAR_COVER = { full: ["Full coverage", 0], liability: ["Liability only", 1] };
+const CAR_REC = { clean: ["Clean", 1], ticket: ["Speeding ticket", 1.29], accident: ["At-fault accident", 1.34], dui: ["DUI", 1.43] };
+const CAR_SRC = [{ label: "Insurify, car insurance rates by state (Oct 2026)", url: "https://insurify.com/blog/car-insurance/car-insurance-rates-by-state" },
+  { label: "Insurify, rates by age (Oct 2026)", url: "https://insurify.com/car-insurance/cheap-car-insurance/age/" },
+  { label: "Insurify, rates by driving record (Oct 2026)", url: "https://insurify.com/car-insurance/cheap-car-insurance/driving-record/bad-driving-record/" }];
+const QUOTE_OVER = 0.15;
+let CAR_POOL = null;
+const carKey = c => [profile().region || "", c.age, c.cover, c.rec].join("~");
+// Price per car vs drivers like you, in %, or null when we don't know enough (no profile, no price, outside the US).
+function carPriceVs(s) {
+  const c = s.car; if (measureOf(s).insure !== "car" || !c?.age || !c.cover || !c.rec || profile().country !== "US" || pausedNow(s) || needsPrice(s)) return null;
+  const mo = monthly(s); if (!(mo > 0)) return null;
+  const cars = Math.max(1, c.cars || 1), mine = mo / cars, crowd = CAR_POOL?.[carKey(c)];
+  let typ, members = false, n = 0;
+  if (crowd && crowd.length >= PR_MIN) { typ = median(crowd); members = true; n = crowd.length; }
+  else { const base = (CAR_AVG[profile().region] || CAR_NATIONAL)[CAR_COVER[c.cover][1]]; typ = base * CAR_AGE[c.age][1] * CAR_REC[c.rec][1]; }
+  return { pct: Math.round((mine - typ) / typ * 100), mine, typ, members, n, cars, where: US_STATES[profile().region] && CAR_AVG[profile().region] ? US_STATES[profile().region] : "the US" }; }
 // Published service band for an insurer in the catalog: above, avg, below, or null when it isn't rated.
 const serviceBand = (svc, kind) => { const t = INSURER_SERVICE[kind], n = t?.scores[svc]; return n == null ? null : n >= t.hi ? "above" : n <= t.lo ? "below" : "avg"; };
 const BAND_LABEL = { above: "Above average", avg: "About average", below: "Below average" };
@@ -1528,13 +1552,18 @@ function rateRaw(s) {
   if (protectKey(s) === "registrar" && s.inUse === false) return { key: "poor", label: "Domain not in use", cpu: null, dormant: true };  // v223 (Cuong)
   // No usage from the user yet (just added): no rating and no advice until they tell us (Cuong, 2026-10-20).
   const m = measureOf(s);
-  if (m.insure) { const q = quoteMonthly(s.quote), mo = monthly(s), mine = serviceOf(s), theirs = s.quote ? serviceBand(s.quote.by, m.insure) : null;
-    if (q == null) return { key: "ok", label: "Compare a quote", cpu: null, insure: true, mine };
+  if (m.insure) { const q = quoteMonthly(s.quote), mo = monthly(s), mine = serviceOf(s), theirs = s.quote ? serviceBand(s.quote.by, m.insure) : null, car = m.insure === "car", pv = car ? carPriceVs(s) : null;
+    if (q == null) { if (!pv) return { key: "ok", label: "Compare a quote", cpu: null, insure: true, mine };
+      const base = { cpu: null, insure: true, mine, pv };
+      if (pv.pct >= VALUE_RULE.costlyPrice) return { ...base, key: "poor", label: "Priced above similar drivers" };
+      if (mine === "below") return { ...base, key: "ok", label: "Good price, weak service" };
+      if (pv.pct <= VALUE_RULE.greatPrice) return { ...base, key: "great", label: "Priced well for drivers like you" };
+      return { ...base, key: "ok", label: "A bit above similar drivers" }; }
     const over = mo - q, better = mine && theirs && BAND_RANK[mine] > BAND_RANK[theirs];
-    if (over > Math.max(5, q * 0.05)) return better ? { key: "ok", label: "Costs more, better service", cpu: null, insure: true, quote: q, over, mine, theirs }
+    if (car ? over >= mo * QUOTE_OVER : over > Math.max(5, q * 0.05)) return better ? { key: "ok", label: "Costs more, better service", cpu: null, insure: true, quote: q, over, mine, theirs }
       : { key: "poor", label: "Costs more than a matching quote", cpu: null, insure: true, quote: q, over, mine, theirs };
-    if (mine === "below") return { key: "ok", label: "Good price, weak service", cpu: null, insure: true, quote: q, over, mine, theirs };
-    return { key: "great", label: "Great value", cpu: null, insure: true, quote: q, over, mine, theirs }; }
+    if (mine === "below") return { key: "ok", label: "Good price, weak service", cpu: null, insure: true, quote: q, over, mine, theirs, pv };
+    return { key: "great", label: "Great value", cpu: null, insure: true, quote: q, over, mine, theirs, pv }; }
   if (m.results) { const keys = (valueSeries(s)?.rows.slice(1) || []).slice(-3).map(r => r.key), ticks = (keys.length ? keys : [today().slice(0, 7)]).map(k => checkedIn(s, m, k));
     const calls = ticks.filter(t => t.includes("callback")).length, pricey = priceyFor(s), c = compareOf(s), base = { cpu: null, results: true, calls, cmp: c, quote: c?.q, over: c?.over };
     if (ticks.some(t => t.includes("unfixed"))) return { ...base, key: "poor", label: "Problem not fixed", unfixed: true };
@@ -2032,7 +2061,8 @@ async function loadPricePool() { const x = await prDb(); if (!x) return;
     snap.docs.forEach(d => Object.entries(d.data()?.r || {}).forEach(([k, e]) => { const g = (pool[k] ||= { prices: [], right: 0, diff: 0, svc: e.svc, plan: e.plan, country: e.country, region: e.region, last: "" });
       if (typeof e.price === "number" && e.price > 0) g.prices.push(e.price); if (e.vote === "right") g.right++; if (e.vote === "different") g.diff++; if (e.at > g.last) g.last = e.at; }));
     const up = {}; snap.docs.forEach(d => Object.entries(d.data()?.u || {}).forEach(([svc, e]) => { if (typeof e?.v === "number" && e.v >= 0 && e.m) ((up[svc] ||= {})[e.m] ||= []).push(e.v); }));
-    PRICE_POOL = pool; USE_POOL = up; const me = await x.db.doc("prices/" + await x.user.id()).get(); myPrices = me?.exists ? (me.data()?.r || {}) : {};
+    const cp = {}; snap.docs.forEach(d => { const c = d.data()?.car; if (c?.k && typeof c.v === "number" && c.v > 0) (cp[c.k] ||= []).push(c.v); });
+    PRICE_POOL = pool; USE_POOL = up; CAR_POOL = cp; const me = await x.db.doc("prices/" + await x.user.id()).get(); myPrices = me?.exists ? (me.data()?.r || {}) : {};
     if (view === "admin") render(); } catch {} }
 // Saves this viewer's report for one subscription (their price, a vote, or both). One write, on a user action only.
 async function sharePrice(s, vote) { if (!unconfirmedPrice(s)) return; const x = await prDb(); if (!x) return;
@@ -2102,6 +2132,7 @@ const planPaidMo = s => { const t = regularTotal(s); return t == null ? null : M
 // Price vs typical in %: the middle of comparable plans (in each catalog service of the same kind, the plan priced closest to yours),
 // or what members report for your own plan when 3+ have. Catalog prices are for the catalog's country, so elsewhere only member reports count.
 function priceVsTypical(s) {
+  if (measureOf(s).insure === "car") { const p = carPriceVs(s); return p && { pct: p.pct, mine: p.mine, typ: p.typ, n: p.n || 1, crowd: p.members, car: true }; }
   const v = svcOf(s), mine = planPaidMo(s); if (mine == null || !mine || isFree(s) || pausedNow(s) || !v.plans?.length) return null;
   const crowd = typicalPrice(poolOf(s));
   const lb = listBase(s), own = crowd ? crowd.price : lb?.price != null ? monthlyOf(s, lb.price) : null;
@@ -2130,9 +2161,11 @@ let useShareT = null, useShared = "";
 function shareUsage() { if (typeof claude === "undefined") return; clearTimeout(useShareT); useShareT = setTimeout(async () => {
   const u = {}; state.subs.forEach(s => { if (s.example || !CATALOG[s.svc]) return; const mu = monthlyUse(s); if (!mu) return;
     u[s.svc] = { m: mu.m, v: +mu.v.toFixed(3), at: today() }; });
-  const sig = JSON.stringify(Object.entries(u).map(([k, e]) => [k, e.m, e.v]).sort()); if (sig === useShared) return;
+  // Car insurance price per car, by state, age band, coverage and record (v230), for members' typical prices.
+  const cs = state.subs.find(s => !s.example && carPriceVs(s)), car = cs ? { k: carKey(cs.car), v: +carPriceVs(cs).mine.toFixed(2), at: today() } : null;
+  const sig = JSON.stringify([Object.entries(u).map(([k, e]) => [k, e.m, e.v]).sort(), car && [car.k, car.v]]); if (sig === useShared) return;
   const x = await prDb(); if (!x) return;
-  try { const ref = x.db.doc("prices/" + await x.user.id()), cur = await ref.get(); await ref.set({ ...(cur?.exists ? cur.data() : {}), u }); useShared = sig; } catch {} }, 4000); }
+  try { const ref = x.db.doc("prices/" + await x.user.id()), cur = await ref.get(); const d = { ...(cur?.exists ? cur.data() : {}), u }; if (car) d.car = car; else delete d.car; await ref.set(d); useShared = sig; } catch {} }, 4000); }
 function crowdHtml(s) {
   if (!unconfirmedPrice(s) || typeof claude === "undefined") return "";
   const g = poolOf(s), tp = typicalPrice(g), [, rg] = prPlace(), where = US_STATES[rg] || regionName() || countryName(profile().country);
@@ -2955,7 +2988,7 @@ function hhCheck(s) {
   const ec = energyChoice(s);
   if (ec) return { key: "unused", tag: "Compare suppliers", text: `You can choose your ${energyFuel(s) === "e" ? "electricity" : "gas"} supplier in ${regionName()}. Compare offers on ${ec[0]}.` };
   if (c && !s.need) return { key: "unused", tag: "Check your plan", text: c.kind === "mobile" ? "Tell us how much data you use to see if a cheaper plan fits." : "Tell us who's at home to see if you're paying for more speed than you need." };
-  if (ins && !s.quote) return { key: "unused", tag: "Compare quotes", text: r ? `Renews ${fmtDate(r)}. Shop quotes a month before.` : "Add your best quote for the same coverage, and your renewal date for a reminder." };
+  if (ins && (!s.quote || s.quote.date < addMonths(-12))) return { key: "unused", tag: s.quote ? "Yearly quote check" : "Compare quotes", text: `${s.quote ? "Your last quote is over a year old. " : ""}${r ? `Renews ${fmtDate(r)}. Shop quotes a month before.` : "Add your best quote for the same coverage, and your renewal date for a reminder."}` };
   if (c && c.more) return { key: "ok", tag: "More than you need", text: "Your plan is well above what you use, but we didn't find a cheaper fit." };
   return { key: "great", tag: "Looks fine", text: r ? `Renews ${fmtDate(r)}.` : "Nothing to do right now." };
 }
@@ -3216,7 +3249,7 @@ function vsBars(rows, key, lim, cls) { const cut = rows.length > 10, hide = i =>
 const protect = s => !!protectKey(s);
 function vsTip(s, x) { const pk = protectKey(s), m = pk ? PROTECT_USE[pk] : measureOf(s), out = [s.name], f = pk && m.per ? PER[m.per].f : 1, per = pk && m.per ? m.per : "month";
   if (x.u) out.push(`Usage ${sgn(x.u.pct)}: ${fmtN(Math.round(x.u.mine / f * 100) / 100)} ${unitOf(m, x.u.mine / f)} a ${per} vs typical ${fmtN(Math.round(x.u.typ.mo / f * 100) / 100)}${x.u.typ.members ? ` (${x.u.typ.n} members)` : ""}`);
-  if (x.p) out.push(`Price ${sgn(x.p.pct)}: ${money(x.p.mine)}/mo before tax vs typical ${money(x.p.typ)}`);
+  if (x.p) out.push(x.p.car ? `Price ${sgn(x.p.pct)}: ${money(x.p.mine)}/mo per car vs about ${money(x.p.typ)} for similar drivers${x.p.crowd ? ` (${x.p.n} members)` : " (estimate)"}` : `Price ${sgn(x.p.pct)}: ${money(x.p.mine)}/mo before tax vs typical ${money(x.p.typ)}`);
   out.push(rate(s).label); if (x.u?.protect && x.u.pct < 0 && PROTECT_USE[x.u.protect].low) out.push(PROTECT_USE[x.u.protect].low); return out.join("\n"); }
 function vsChartsHtml() {
   const all = vsRows(), U = all.filter(x => x.u).sort((a, b) => b.u.pct - a.u.pct), P = all.filter(x => x.p).sort((a, b) => a.p.pct - b.p.pct), M = all.filter(x => x.u && x.p);
@@ -3224,7 +3257,7 @@ function vsChartsHtml() {
   const shown = [...new Set(U.map(x => typicalKey(x.s)))].map(k => TYPICAL_USE[k] && !U.find(x => typicalKey(x.s) === k)?.u.typ.members ? `<li>${esc(catLabel(k))}: ${esc(TYPICAL_USE[k].text)}. <a href="${esc(TYPICAL_USE[k].url)}" target="_blank" rel="noopener">${esc(TYPICAL_USE[k].src)}</a>${TYPICAL_USE[k].est ? " (estimate)" : ""}</li>` : "").join("");
   const notU = all.filter(x => !x.u && !isFree(x.s) && !pausedNow(x.s)).map(x => x.s.name), R = VALUE_RULE;
   const info = `<p style="margin:0 0 6px">Compares how much you use each subscription with a typical subscriber of the same kind of service. Most used at the top. Tap a bar to open it.</p><p style="margin:0 0 6px">Typical usage is the middle MoSuBi member once 3 or more report for a service. Until then it comes from published averages:</p><ul style="margin:0 0 6px;padding-left:18px">${shown || "<li>None shown yet.</li>"}</ul>
-    <p style="margin:0 0 6px">Typical price is the middle of comparable plans: for each service of the same kind, the plan priced closest to yours. Prices are before tax and leave out extra members.</p>
+    <p style="margin:0 0 6px">Typical price is the middle of comparable plans: for each service of the same kind, the plan priced closest to yours. Prices are before tax and leave out extra members. Car insurance compares your price per car with drivers like you (same state, age band, coverage and record), from published averages until 3 or more members like you share.</p>
     <p style="margin:0">Great value: usage no more than ${-R.greatUse}% below typical and price no more than ${R.greatPrice}% above. Costly: usage ${-R.costlyUse}% or more below typical, or price ${R.costlyPrice}% or more above.${notU.length ? ` Not compared yet: ${esc(notU.slice(0, 8).join(", "))}${notU.length > 8 ? ` and ${notU.length - 8} more` : ""}.` : ""}</p>`;
   return `<div class="vs">
     ${U.length ? `<section class="card vs-card"><h3 style="margin:0">Your usage vs typical${infoBtn("vs", "How typical is worked out")}</h3>${infoPanel("vs", info)}
@@ -3844,12 +3877,19 @@ function verdictText(s, r) {
       : `You pay ${money(d)}/mo more than ${m.jobName} alone would cost${a ? ` at ${a.name.split(",")[0]}` : ""}. ${mine.length ? `That buys the extras you care about: ${mine.join(", ")}.` : `If you don't need the extras (${extras.slice(0, 3).map(f => f.name.toLowerCase()).join(", ")}${extras.length > 3 ? " and more" : ""}), switching would save ${money(d * 12)} a year.`}`; }
   if (r.insure) { const q = s.quote, by = q && (CATALOG[q.by]?.name.replace(/ \((Car|Home)\)$/, "") || q.name || "another insurer"), old = q?.date && q.date < addMonths(-12);
     const svc = r.mine === "below" ? (s.service === "poor" ? "you rated its claims and support as poor" : "its published service rating is below average") : r.mine === "above" ? (s.service === "good" ? "you rated its claims and support as good" : "its published service rating is above average") : "";
-    if (!q || r.quote == null) return `Value here means the best price for the same coverage and terms, with good service. Get two or three quotes for exactly your coverage (same limits, deductibles and drivers or home) and enter the best one under How it compares.`;
+    const get = `Get two or three quotes for exactly your coverage (same limits, deductibles and drivers${measureOf(s).insure === "car" ? "" : " or home"}) and enter the best one under How it compares.`;
+    if ((!q || r.quote == null) && r.pv) { const p = r.pv, who = `similar drivers in ${p.where}`, per = p.cars > 1 ? " per car" : "";
+      const cmp = `You pay ${money(p.mine)} a month${per}; ${who} pay about ${money(p.typ)}${per}${p.members ? ` (${p.n} MoSuBi members)` : " (our estimate)"}`;
+      if (r.key === "poor") return `${cmp}, ${p.pct}% more. A quote for the same coverage is the real test: ${get} If one comes in 15% or more lower, ask ${esc(s.name.replace(/ \((Car|Home)\)$/, ""))} to match it or switch at renewal. Don't drop coverage you need.`;
+      if (r.key === "great") return `${cmp}${p.pct < 0 ? `, ${-p.pct}% less` : ""}. That looks like a good price${svc ? `, and ${svc}` : ""}. Check it with a quote once a year before renewal.`;
+      return `${cmp}, ${p.pct > 0 ? `${p.pct}% more` : p.pct < 0 ? `${-p.pct}% less` : "about the same"}${r.mine === "below" ? `, but ${svc}` : ""}. ${get}`; }
+    if (!q || r.quote == null) return `Value here means the best price for the same coverage and terms, with good service. ${get}`;
     const stale = old ? ` Your quote is over a year old, so get a fresh one.` : "";
     if (r.key === "poor") return `You pay ${money(r.over)} a month (${money(r.over * 12)} a year) more than ${esc(by)} quoted for the same coverage${r.theirs === "below" ? `, though ${esc(by)}'s service rating is below average` : ""}. Ask ${esc(s.name.replace(/ \((Car|Home)\)$/, ""))} to match it, or switch at renewal.${stale}`;
-    if (r.key === "ok" && r.over > 0) return `You pay ${money(r.over)} a month more than ${esc(by)}'s quote, but ${svc || "your insurer's service is rated better"}, and ${esc(by)}'s is ${BAND_LABEL[r.theirs]?.toLowerCase() || "lower"}. Paying a little more for claims that go smoothly can be worth it.${stale}`;
-    if (r.key === "ok") return `Your price is as good as or better than ${esc(by)}'s quote, but ${svc}. Cheap isn't great value if a claim goes badly, so compare a quote from an insurer with better service.${stale}`;
-    return `Your price is as good as or better than ${esc(by)}'s quote for the same coverage${svc ? `, and ${svc}` : ""}. That's great value.${stale}`; }
+    const near = r.over > 0 ? `Your price is within ${Math.round(QUOTE_OVER * 100)}% of ${esc(by)}'s quote (${money(r.over)} a month more), close enough to count as a match` : `Your price is as good as or better than ${esc(by)}'s quote`;
+    if (r.label === "Costs more, better service") return `You pay ${money(r.over)} a month more than ${esc(by)}'s quote, but ${svc || "your insurer's service is rated better"}, and ${esc(by)}'s is ${BAND_LABEL[r.theirs]?.toLowerCase() || "lower"}. Paying a little more for claims that go smoothly can be worth it.${stale}`;
+    if (r.key === "ok") return `${near}, but ${svc}. Cheap isn't great value if a claim goes badly, so compare a quote from an insurer with better service.${stale}`;
+    return `${near}${r.over > 0 ? "" : " for the same coverage"}${svc ? `, and ${svc}` : ""}. That's great value.${stale}`; }
   if (r.results) { const m = measureOf(s), fp = fairPrice(s), thing = m.lawn ? (m.pest ? "pests" : "weeds or lawn problems") : "problems", range = fp ? `${money(fp.lo)} to ${money(fp.hi)}` : "";
     const c = r.cmp, by = c && (CATALOG[s.quote.by]?.name || "the option you found"), svc = serviceOf(s);
     if (r.unfixed) return m.lawn ? `You reported a problem that still isn't fixed. Ask ${esc(s.name)} for a free re-treatment (most plans include one). If it isn't sorted out, it's not giving you what you pay for, so get quotes from other companies.`
@@ -4255,12 +4295,35 @@ function hookChart(root, s) {
   svg.addEventListener("pointermove", show); svg.addEventListener("pointerdown", show); svg.addEventListener("pointerleave", hide);
 }
 
+// Price per car vs drivers like you, and the yearly quote check (v230).
+function carHtml(s) {
+  const c = s.car || {}, p = carPriceVs(s), r = renewsOn(s), d = r ? daysUntil(r) : null, old = !s.quote || s.quote.date < addMonths(-12);
+  const opt = (o, cur) => Object.entries(o).map(([k, [l]]) => `<option value="${k}" ${cur === k ? "selected" : ""}>${l}</option>`).join("");
+  const us = profile().country === "US";
+  return `<div class="need" style="display:grid;gap:8px"><b style="font-size:14px">Compared with drivers like you</b>
+    ${us ? `<div class="q-row"><label class="small">Cars on the policy<input id="car-n" type="number" min="1" max="10" step="1" value="${c.cars || 1}"></label>
+      <label class="small">Main driver's age<select id="car-age"><option value="">Choose…</option>${opt(CAR_AGE, c.age)}</select></label>
+      <label class="small">Coverage<select id="car-cover"><option value="">Choose…</option>${opt(CAR_COVER, c.cover)}</select></label>
+      <label class="small">Driving record, last 3 years<select id="car-rec"><option value="">Choose…</option>${opt(CAR_REC, c.rec)}</select></label></div>
+    ${p ? `<p class="small" style="margin:0">You pay <b>${money(p.mine)}</b> a month${p.cars > 1 ? " per car" : ""}. Similar drivers in ${esc(p.where)} pay about <b>${money(p.typ)}</b>${p.cars > 1 ? " per car" : ""}${p.members ? `, from ${p.n} MoSuBi members` : ""}: <b>${p.pct > 0 ? `${p.pct}% more` : p.pct < 0 ? `${-p.pct}% less` : "about the same"}</b>.</p>`
+      : `<p class="small muted" style="margin:0">${profile().region ? "Fill these in" : "Set your state with the Location button and fill these in"} to compare your price per car with drivers like you.</p>`}
+    ${p && !p.members ? `<span class="note">Our estimate: average monthly quotes for your state and coverage, adjusted for age and record. Your car, ZIP code, credit and discounts also change the price, so a real quote is the better test. Sources: ${CAR_SRC.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.label)}</a>`).join("; ")}.</span>` : ""}`
+    : `<p class="small muted" style="margin:0">We only have typical car insurance prices for the US so far. A quote for the same coverage is the best test.</p>`}
+    ${old ? `<p class="small" style="margin:0"><b>${d != null && d <= 60 ? `Yearly quote check: your policy renews ${fmtDate(r)}.` : "Yearly quote check."}</b> Get two or three quotes for the same coverage ${d != null && d <= 60 ? "now" : "about a month before renewal"} and enter the best one below. If one is 15% or more lower, you're overpaying.</p>` : ""}
+  </div>`;
+}
+function wireCar(root, s, redraw) {
+  const g = id => root.querySelector("#" + id); if (!g("car-age")) return;
+  const upd = () => { s.car = { cars: Math.max(1, Math.round(+g("car-n").value || 1)), age: g("car-age").value || undefined, cover: g("car-cover").value || undefined, rec: g("car-rec").value || undefined }; save(); redraw(); };
+  ["car-n", "car-age", "car-cover", "car-rec"].forEach(id => g(id).onchange = upd);
+}
 function insureHtml(s) {
   const m = measureOf(s), kind = ratingKind(s), t = INSURER_SERVICE[kind], q = s.quote || {}, v = svcOf(s), n = t?.scores[s.svc], band = serviceBand(s.svc, kind), ins = !!m.insure;
   const from = x => { const ps = x.plans.map(p => p.effective_monthly).filter(n => n != null); return ps.length ? ` (from ${money(Math.min(...ps))}/mo)` : ""; };
   const rivals = Object.values(CATALOG).filter(x => x.category === v.category && x.id !== s.svc).sort((a, b) => a.name.localeCompare(b.name));
   return `${ins ? `<p class="small muted" style="margin:0">Rated on price and service: the best price for the same coverage and terms is great value, as long as claims and support are good.</p>` : ""}
     <div class="small"><b>Published service rating:</b> ${n == null ? `not in our ratings yet${t ? "" : " for this kind of service"}.` : `${BAND_LABEL[band]}, ${n}${t.unit} ${t.what} (average ${t.avg}${t.unit}). Source: <a href="${t.url}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(t.src)}</a>.`}</div>
+    ${m.insure === "car" ? carHtml(s) : ""}
     <div style="display:grid;gap:6px"><b style="font-size:14px">Your ${ins ? "claims and support" : "service and support"} experience</b>
       <div class="seg" role="group" aria-label="Your service experience">${Object.entries(SERVICE_EXP).map(([k, l]) => `<button type="button" data-svcx="${k}" aria-pressed="${(s.service || "") === k}">${l}</button>`).join("")}</div></div>
     <div style="display:grid;gap:6px"><b style="font-size:14px">${ins ? "Best quote for the same coverage and terms" : "Cheapest comparable option you've found"}</b>
@@ -4498,6 +4561,7 @@ function openSheet(id) {
     const sg = root.querySelector("#s-gas"); if (sg) sg.onchange = () => { const g = Math.max(0, parseFloat(sg.value) || 0); if (g) s.gas = g; else delete s.gas; s.example = false; save(); setTimeout(draw); };
     wireChecks(root, () => setTimeout(draw));
     wireInsure(root, s, () => setTimeout(draw));
+    wireCar(root, s, () => setTimeout(draw));
     wireNeed(root, s, () => setTimeout(draw));
     const puv = root.querySelector("#pu-v"); if (puv) puv.onchange = () => { const v = parseFloat(puv.value); if (isFinite(v) && v >= 0) s.puse = { v, at: today() }; else delete s.puse; save(); setTimeout(draw); };
     root.querySelector("#pu-yes")?.addEventListener("click", () => { s.inUse = true; save(); setTimeout(draw); });
@@ -4578,7 +4642,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 229 · Standalone copy · Oct 28", VERSION_NUM = 229;
+const APP_VERSION = "Prototype · Version 230 · Standalone copy · Oct 28", VERSION_NUM = 230;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
