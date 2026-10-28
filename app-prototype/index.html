@@ -2820,9 +2820,9 @@ function usageView() {
     ${state.subs.length && checkinOpen ? checkinHtml() : ""}
     ${weeklyHtml()}
     ${wkOpen ? "" : progress}
-    ${wkOpen ? "" : syncPromoHtml()}
     ${live.length ? `<div class="card u-list">${live.map(row).join("")}</div>` : `<p class="muted">No subscriptions to measure yet. Add one from the Explore tab.</p>`}
-    ${spendMonths >= 2 ? `<div class="charts u-month" style="margin-top:22px">${monthBarsHtml()}</div>` : ""}`);
+    ${spendMonths >= 2 ? `<div class="charts u-month" style="margin-top:22px">${monthBarsHtml()}</div>` : ""}
+    ${wkOpen ? "" : `<div style="margin-top:22px">${syncPromoHtml()}</div>`}`);  // v233 (Cuong): real usage is for advanced users, so it sits at the bottom
   f.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   f.querySelectorAll("[data-sync]").forEach(b => b.addEventListener("click", () => openSync(b.dataset.sync)));
   wireCheckin(f); wireWeekly(f);
@@ -4490,7 +4490,6 @@ function openSheet(id) {
           ${m.club ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, our estimate</div></div>` : m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.insure || (m.results && !fairPrice(s)) ? (b => `<div class="stat"><div class="label">Service rating</div><div class="value" style="font-size:20px">${b ? BAND_LABEL[b] : "—"}</div><div class="small muted">${s.service && s.service !== "none" && s.service !== "ok" ? "from your own experience" : b ? "from published ratings" : "not rated yet"}</div></div>`)(serviceOf(s)) : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
         </div>
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
-        ${syncHtml(s)}
         ${negoHtml(s) ? sec("nego", "Ask for a lower rate", `<span class="pill poor">Price going up</span>`, negoHtml(s)) : ""}
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
         ${protectKey(s) ? (pk => { const pu = PROTECT_USE[pk], u = useVsTypical(s);
@@ -4582,6 +4581,7 @@ function openSheet(id) {
           // Features only on other plans, so people can see what upgrading would add (e.g. CNBC Pro articles on CNBC+).
           + (() => { const other = v.features.filter(f => !feats.includes(f)); return other.length ? `<p class="small muted" style="margin:4px 0 0">On other plans: ${other.map(f => `${esc(f.name)} (${esc(v.plans.filter(p => f.plans === "all" || f.plans.includes(p.id)).map(p => p.name).join(", "))})`).join("; ")}. Change your plan under Plan and price to check these.</p>` : ""; })()) : ""}
         ${v.tips?.length ? sec("tips", "Ways to pay less", `${v.tips.length} tip${v.tips.length === 1 ? "" : "s"}`, v.tips.map(t => `<p class="small" style="margin:0">${esc(t)}</p>`).join("")) : ""}
+        ${syncHtml(s)}
         <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
           <button class="btn danger" id="remove">Remove from my list</button>
           ${s.example ? `<span class="note">Usage shown is an example.</span>` : ""}</div>
@@ -4678,7 +4678,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 232 · Oct 28", VERSION_NUM = 232;
+const APP_VERSION = "Prototype · Version 233 · Oct 28", VERSION_NUM = 233;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
