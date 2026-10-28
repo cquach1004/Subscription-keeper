@@ -4469,6 +4469,11 @@ function openSheet(id) {
         </div>
         ${pauseHtml(s)}
         `)}
+        ${PHASE1 && !m.insure && !(m.checks && m.results) ? sec("renew", "Next renewal", pausedNow(s) ? `<span class="pill poor">Paused</span>` : nextRenewal(s) ? fmtDate(nextRenewal(s)) : "Add a date", `
+        <div class="start-row">
+          <label>Next renewal<input id="s-next" type="date" value="${pausedNow(s) ? "" : nextRenewal(s) || ""}" min="${today()}" ${pausedNow(s) ? "disabled" : ""}></label>
+          <div class="small muted">${pausedNow(s) ? "This subscription is paused, so it has no renewal date right now." : `Pick the date of your next bill. Later renewals follow every ${s.cycle === "year" ? "year" : "month"} from there.`}</div>
+        </div>`) : ""}
         ${PHASE1 ? "" : sec("deals", "Trials and discounts", dealsMeta, dealHtml(s, v))}
         ${feats.length ? sec("features", "Features that matter to me", `${s.used.length} of ${feats.length}`, `<p class="small muted" style="margin:0">Check what you care about. Features you leave unchecked never lower the rating; we only use them to point out a cheaper plan or service that covers what you checked.</p>` + feats.map(ft => `<label class="feature" style="color:var(--ink);font-weight:500"><input type="checkbox" id="feat-${ft.id}" data-f="${ft.id}" ${s.used.includes(ft.id) ? "checked" : ""}>${esc(ft.name)}</label>`).join("")
           // Features only on other plans, so people can see what upgrading would add (e.g. CNBC Pro articles on CNBC+).
@@ -4522,6 +4527,14 @@ function openSheet(id) {
     root.querySelectorAll("[data-pz]").forEach(inp => inp.onchange = () => { const pz = s.pauses[+inp.dataset.i], k = inp.dataset.pz;
       pz[k] = k === "fee" || k === "restartFee" ? Math.max(0, parseFloat(inp.value) || 0) : (inp.value || null); s.example = false; save(); setTimeout(draw); });
     root.querySelectorAll("[data-pz-del]").forEach(b => b.onclick = () => { s.pauses.splice(+b.dataset.pzDel, 1); save(); draw(); });
+    // Next renewal (v228): move the billing schedule so the next bill lands on the chosen date, keeping how long it's been running.
+    const sn = root.querySelector("#s-next");
+    if (sn) sn.onchange = () => { const d = sn.value; if (!d || d < today()) return;
+      const sp = spans(s), from = sp.length ? sp[sp.length - 1][0] : today(), pz = (s.pauses || []).find(p => p.to && p.to === from && from !== s.start);
+      let k = 1; while (stepDate(d, s.cycle, -k) > from && k < 1200) k++;
+      const anchor = stepDate(d, s.cycle, -k);
+      if (pz) pz.to = anchor > pz.from ? anchor : stepDate(d, s.cycle, -1); else s.start = anchor;
+      s.day = +d.slice(8); s.example = false; save(); setTimeout(draw); };
     const st = root.querySelector("#s-start");
     if (st) st.onchange = () => { s.start = st.value || null; s.example = false; save(); setTimeout(draw); };
     const ib = root.querySelector("#d-intro");
@@ -4561,7 +4574,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 227 · Standalone copy · Oct 28", VERSION_NUM = 227;
+const APP_VERSION = "Prototype · Version 228 · Standalone copy · Oct 28", VERSION_NUM = 228;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
