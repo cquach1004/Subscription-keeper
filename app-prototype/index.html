@@ -297,6 +297,25 @@ details.sec > .sec-body { grid-template-columns: minmax(0, 1fr); } details.sec >
 .chart .ax { fill: var(--muted); font-size: 11px; }
 .chart .lbl { fill: var(--ink); font-size: 12px; font-weight: 600; }
 .ctip { position: absolute; top: 0; pointer-events: none; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 10px; padding: 8px 10px; font-size: 12px; min-width: 150px; display: none; z-index: 2; }
+/* Usage / price vs typical and the value map (v222). */
+.vr-form { display: grid; gap: 10px; } .vr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.vr-grid label { display: grid; gap: 4px; } .vr-in { display: flex; align-items: center; gap: 8px; } .vr-in input { width: 90px; }
+.vs { display: grid; gap: 14px; margin-bottom: 14px; } .vs > .card { margin: 0; gap: 8px; min-width: 0; }
+.vs-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; } .vs-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.vs-legend .sw { width: 10px; height: 10px; border-radius: 3px; display: inline-block; } .vs-legend .sw.dot { border-radius: 50%; }
+.vs-axis, .vs-row { display: grid; grid-template-columns: minmax(0, 38%) minmax(0, 1fr) 64px; gap: 8px; align-items: center; }
+.vs-axis { font-size: 11px; color: var(--muted); padding: 0 6px; margin: 0 -6px; } .vs-ticks { display: flex; justify-content: space-between; } .vs-ticks i { font-style: normal; }
+.vs-row { width: 100%; border: 0; background: none; padding: 4px 6px; margin: 0 -6px; width: calc(100% + 12px); border-radius: 8px; font: inherit; color: var(--ink); text-align: left; cursor: pointer; }
+.vs-row:hover, .vs-row:focus-visible { background: var(--accent-soft); outline: none; }
+.vs-name { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .vs-prot { color: var(--muted); font-size: 11px; }
+.vs-track { position: relative; height: 16px; } .vs-zero { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 1.5px; background: var(--muted); opacity: .6; }
+.vs-bar { position: absolute; top: 2px; height: 12px; border-radius: 4px; } .vs-dot { position: absolute; left: calc(50% - 4px); top: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.vs-bar.more { background: var(--pie-1); } .vs-bar.less { background: var(--pie-2); } .vs-bar.cheap { background: var(--good); } .vs-bar.dear { background: var(--bad); }
+.vs-val { font-size: 13px; text-align: right; white-space: nowrap; } .vs-row[hidden] { display: none; }
+.vs-map { width: 100%; overflow: hidden; } .vs-map svg { display: block; max-width: 100%; height: auto; }
+.vm-t { fill: var(--muted); font-size: 11px; font-family: var(--f-body); } .vm-q { fill: var(--ink); font-size: 12px; font-weight: 600; font-family: var(--f-body); }
+.vm-l { fill: var(--ink); font-size: 12px; font-family: var(--f-body); } .vm-pt { cursor: pointer; } .vm-pt:focus-visible { outline: 2px solid var(--accent); }
+@media (max-width: 480px) { .vs-axis, .vs-row { grid-template-columns: minmax(0, 34%) minmax(0, 1fr) 60px; } .vs-name { font-size: 13px; } }
 /* Spending donut (Home) and overlap bars. Categorical slots are the validated dataviz default, light and dark. */
 :root { --pie-1: #2a78d6; --pie-2: #eb6834; --pie-3: #1baf7a; --pie-4: #eda100; --pie-5: #e87ba4; --pie-6: #008300; --pie-7: #6250d6; --pie-8: #e34948; --pie-other: #8a8f98; }
 :root[data-mode="dark"] { --pie-1: #3987e5; --pie-2: #d95926; --pie-3: #199e70; --pie-4: #c98500; --pie-5: #d55181; --pie-6: #008300; --pie-7: #9085e9; --pie-8: #e66767; --pie-other: #6f7480; }
@@ -953,7 +972,7 @@ function seedSub([id, uses, used, day]) {
     setUse(sub, uses, measureOf(sub).per); return sub; }
 }
 function load() { try { return JSON.parse(localStorage.getItem(storeKey())); } catch (e) { return null; } }
-function save() { try { localStorage.setItem(storeKey(), JSON.stringify(state)); } catch (e) {} }
+function save() { try { localStorage.setItem(storeKey(), JSON.stringify(state)); } catch (e) {} shareUsage(); }
 // Personas (Cuong, v145): switch the whole app to an example household to show how it plays out for different people.
 // "Me" is your own list. Each example keeps its own saved copy in this browser (sk-proto-v2-<id>), so changes made while
 // viewing as someone stay with that example until it's reset. Rows: [service, usage, features, billing day, plan, months ago, your price].
@@ -1541,6 +1560,7 @@ function rateRaw(s) {
     const ratio = val / Math.max(0.01, mo);
     return { key: ratio >= 1.2 ? "great" : ratio >= 0.9 ? "ok" : "poor", label: ratio >= 1.2 ? "Great value" : ratio >= 0.9 ? "Fair value" : "Saves less than it costs", cpu: null, club: true, val }; }
   if (s.uses === 0) { const y = usedInYear(s); return { key: "unused", label: y.months >= 12 && !y.used ? "Not used in 12 months" : "Unused", cpu: null }; }
+  const vt = rateVsTypical(s); if (vt) return { ...vt, cpu: monthly(s) / s.uses };  // v222: usage and price vs typical
   const cpu = monthly(s) / s.uses;
   if (m.worth == null) return { key: "ok", label: "Fair value", cpu };
   if (cpu <= m.good) return { key: "great", label: "Great value", cpu };
@@ -1999,7 +2019,8 @@ async function loadPricePool() { const x = await prDb(); if (!x) return;
   try { const snap = await x.db.collection("prices").get(), pool = {};
     snap.docs.forEach(d => Object.entries(d.data()?.r || {}).forEach(([k, e]) => { const g = (pool[k] ||= { prices: [], right: 0, diff: 0, svc: e.svc, plan: e.plan, country: e.country, region: e.region, last: "" });
       if (typeof e.price === "number" && e.price > 0) g.prices.push(e.price); if (e.vote === "right") g.right++; if (e.vote === "different") g.diff++; if (e.at > g.last) g.last = e.at; }));
-    PRICE_POOL = pool; const me = await x.db.doc("prices/" + await x.user.id()).get(); myPrices = me?.exists ? (me.data()?.r || {}) : {};
+    const up = {}; snap.docs.forEach(d => Object.entries(d.data()?.u || {}).forEach(([svc, e]) => { if (typeof e?.v === "number" && e.v >= 0 && e.m) ((up[svc] ||= {})[e.m] ||= []).push(e.v); }));
+    PRICE_POOL = pool; USE_POOL = up; const me = await x.db.doc("prices/" + await x.user.id()).get(); myPrices = me?.exists ? (me.data()?.r || {}) : {};
     if (view === "admin") render(); } catch {} }
 // Saves this viewer's report for one subscription (their price, a vote, or both). One write, on a user action only.
 async function sharePrice(s, vote) { if (!unconfirmedPrice(s)) return; const x = await prDb(); if (!x) return;
@@ -2010,7 +2031,69 @@ async function sharePrice(s, vote) { if (!unconfirmedPrice(s)) return; const x =
   const e = { svc: s.svc, plan: s.plan || "", country: c, region: rg, at: today(), ...(price ? { price } : {}), ...(vote ? { vote } : myPrices?.[k]?.vote ? { vote: myPrices[k].vote } : {}) };
   if (!price && !e.vote) return;
   try { const ref = x.db.doc("prices/" + await x.user.id()), cur = await ref.get(), all = { ...(cur?.exists ? cur.data()?.r || {} : {}), [k]: e };
-    await ref.set({ r: all }); myPrices = all; await loadPricePool(); } catch {} }
+    await ref.set({ ...(cur?.exists ? cur.data() : {}), r: all }); myPrices = all; await loadPricePool(); } catch {} }
+
+// Usage and price vs typical (Cuong, v222). Usage is compared with a typical subscriber of the same kind of service, price with what
+// comparable plans cost. Value comes from both, with four percentages the admin can change (saved for everyone in the db, settings/value).
+// Typical usage starts from published averages (estimates, sources below) and switches to the MoSuBi members' median once 3 or more report.
+const VALUE_RULE_DEF = { greatUse: -10, greatPrice: 10, costlyUse: -50, costlyPrice: 25 };
+let VALUE_RULE = { ...VALUE_RULE_DEF }, USE_POOL = null;
+// Per month, in the measure's own units (s.uses is a monthly total). m = the measure id it applies to.
+const TYPICAL_USE = {
+  video: { m: "hours", mo: 1.4 * 30.4, text: "1.4 hours a day", src: "Nielsen via MoffettNathanson: Netflix's US subscribers, first half of 2025", url: "https://www.mediapost.com/publications/article/407615/" },
+  music: { m: "hours", mo: 20.7 * 4.35, text: "20.7 hours a week", src: "IFPI Engaging with Music 2023: all music listening, not only one app", url: "https://www.ifpi.org/ifpis-global-study-finds-were-listening-to-more-music-in-more-ways-than-ever" },
+  ai: { m: "prompts", mo: 3.7 * 30.4, text: "3.7 prompts a day", src: "OpenAI and NBER study, 2025: 2.6 billion messages a day from 700 million weekly users (our math; includes free users)", url: "https://www.computing.co.uk/news/2025/ai/openai-reveals-what-chatgpt-users-look-for" },
+  fitness: { m: "uses", mo: 102 / 12, text: "102 visits a year", src: "IHRSA Health Club Consumer Report, 2010 (an older figure)", url: "https://www.ideafit.com/gym-membership-usage-in-the-united-states" },
+  gaming: { m: "hours", mo: 8.9 * 4.35, text: "8.9 hours a week", src: "Video Games Europe and EGDF, 2025: Europeans who play", url: "https://sqmagazine.co.uk/gamers-statistics/" },
+  books: { m: "uses", mo: 3.8 / 12, text: "3.8 books a year", src: "Audio Publishers Association 2026 survey: audiobook listeners", url: "https://ppc.land/audiobook-sales-hit-2-43-billion-in-2025-as-157-million-americans-tune-in/" },
+  food: { m: "uses", mo: 3, text: "3 orders a month", est: true, src: "Our estimate: Verasight survey, March 2026, most delivery app users order a few times a month or less", url: "https://data.verasight.io/money/most-americans-rarely-or-never-use-food-delivery-apps" },
+};
+const typicalKey = s => { const v = svcOf(s); return TYPICAL_USE[s.svc] ? s.svc : v.category; };
+// Typical monthly usage for this subscription's measure: members' median first (3+ reports), then the published figure.
+function typicalUse(s) { const m = measureOf(s), crowd = USE_POOL?.[s.svc]?.[m.id];
+  if (crowd && crowd.length >= PR_MIN) return { mo: median(crowd), n: crowd.length, members: true };
+  const t = TYPICAL_USE[typicalKey(s)]; return t && t.m === m.id ? { ...t } : null; }
+// Usage vs typical in %, or null when we can't compare (no usage yet, paused, free, protection plans for now, no typical figure).
+function useVsTypical(s) {
+  const m = measureOf(s); if (pausedNow(s) || isFree(s) || s.needsUse || m.costOnly || m.results || m.insure || m.checks || m.fixed || m.club || m.bundle || m.amount) return null;
+  const t = typicalUse(s); if (!t || !t.mo || s.uses == null) return null;
+  return { pct: Math.round((s.uses - t.mo) / t.mo * 100), mine: s.uses, typ: t }; }
+// Plan price per month before tax, without extra members or add-ons: what you pay for the plan itself.
+const planPaidMo = s => { const t = regularTotal(s); return t == null ? null : Math.max(0, monthlyOf(s, preTax(s, t)) - monthlyOf(s, extras(s))); };
+// Price vs typical in %: the middle of comparable plans (in each catalog service of the same kind, the plan priced closest to yours),
+// or what members report for your own plan when 3+ have. Catalog prices are for the catalog's country, so elsewhere only member reports count.
+function priceVsTypical(s) {
+  const v = svcOf(s), mine = planPaidMo(s); if (mine == null || !mine || isFree(s) || pausedNow(s) || !v.plans?.length) return null;
+  const crowd = typicalPrice(poolOf(s));
+  const lb = listBase(s), own = crowd ? crowd.price : lb?.price != null ? monthlyOf(s, lb.price) : null;
+  if (own == null) return null;
+  let typ = own, n = 1, others = [];
+  if (profile().country === catalogCountry()) {
+    others = Object.values(CATALOG).filter(o => o.id !== v.id && o.category === v.category && o.plans?.length && servesHere(o)).map(o => {
+      const ps = o.plans.map(pl => priceFor(pl, "month")).filter(x => x > 0); if (!ps.length) return null;
+      return ps.reduce((a, x) => Math.abs(x - own) < Math.abs(a - own) ? x : a); }).filter(x => x != null);
+    if (others.length >= 2) { typ = median([own, ...others]); n = others.length + 1; } }
+  if (!typ) return null;
+  return { pct: Math.round((mine - typ) / typ * 100), mine, typ, n, crowd: !!crowd }; }
+// The value rule. Returns null when usage or price can't be compared, so the older rules still rate it.
+function rateVsTypical(s) { const u = useVsTypical(s), p = priceVsTypical(s); if (!u || !p) return null; const R = VALUE_RULE;
+  const vt = { u: u.pct, p: p.pct, use: u, price: p };
+  if (p.pct >= R.costlyPrice) return { key: "poor", label: "Priced above typical", vt };
+  if (u.pct <= R.costlyUse) return { key: "poor", label: "Used far less than typical", vt };
+  if (u.pct >= R.greatUse && p.pct <= R.greatPrice) return { key: "great", label: "Great value", vt };
+  return { key: "ok", label: "Fair value", vt }; }
+async function loadValueRule() { const x = await prDb(); if (!x) return;
+  try { const d = await x.db.doc("settings/value").get(); if (d?.exists) { const r = d.data() || {}; Object.keys(VALUE_RULE_DEF).forEach(k => { if (typeof r[k] === "number") VALUE_RULE[k] = r[k]; }); render(); } } catch {} }
+async function saveValueRule(r) { VALUE_RULE = { ...r }; render(); const x = await prDb(); if (!x) return false;
+  try { await x.db.doc("settings/value").set({ ...r, at: today() }); return true; } catch { return false; } }
+// Shares this viewer's monthly usage per service (no name), so typical usage can come from members. Debounced, only when it changed.
+let useShareT = null, useShared = "";
+function shareUsage() { if (typeof claude === "undefined") return; clearTimeout(useShareT); useShareT = setTimeout(async () => {
+  const u = {}; state.subs.forEach(s => { if (s.example || s.needsUse || s.uses == null || !CATALOG[s.svc]) return; const m = measureOf(s); if (m.costOnly || m.results || m.insure || m.checks) return;
+    u[s.svc] = { m: m.id, v: +(+s.uses).toFixed(1), at: today() }; });
+  const sig = JSON.stringify(Object.entries(u).map(([k, e]) => [k, e.m, e.v]).sort()); if (sig === useShared) return;
+  const x = await prDb(); if (!x) return;
+  try { const ref = x.db.doc("prices/" + await x.user.id()), cur = await ref.get(); await ref.set({ ...(cur?.exists ? cur.data() : {}), u }); useShared = sig; } catch {} }, 4000); }
 function crowdHtml(s) {
   if (!unconfirmedPrice(s) || typeof claude === "undefined") return "";
   const g = poolOf(s), tp = typicalPrice(g), [, rg] = prPlace(), where = US_STATES[rg] || regionName() || countryName(profile().country);
@@ -2187,6 +2270,7 @@ const LEGAL = {
     ["What you choose to send us", "When you send feedback or report a problem, we receive what you write, plus the app version, the screen you were on, your device type and how many subscriptions you track (not the list itself). If you add an email address to a ticket, we use it only to reply. In the Claude app version, these are linked to your Claude account so only the MoSuBi team can read them."],
     ["Sam, the AI assistant", "When you ask Sam a question in the Claude app, your question, your recent chat, your subscription list (names, prices, usage and renewal dates) and related catalog details are sent to Claude, Anthropic's AI, to write the answer, using your own Claude account. On the public website, Sam answers from the catalog on your device and nothing is sent."],
     ["Prices you share", "When you enter what you pay for a plan whose price we couldn't confirm, or tap whether a price is right, we keep that amount (before tax), the plan, your country and state. Other members see only a typical price once at least 3 people report about the same amount; they never see who shared it. Only in the Claude app."],
+    ["Usage you share", "How much you use each subscription (for example hours a week) is kept as a monthly number per service, without your name, so we can show what a typical member uses once at least 3 people report. Example data is never shared. Only in the Claude app."],
     ["Usage exports", "If you load a ChatGPT, Claude, Netflix or Spotify file to count your usage, the file is read on your device. Only the monthly counts are kept, and the file isn't uploaded."],
     ["Location", "We use the country and state you choose to show the right services and prices. We don't track your device's location."],
     ["Cookies and tracking", "The prototype doesn't use advertising or analytics trackers. It uses browser storage only to remember your list and settings."],
@@ -2895,7 +2979,7 @@ function homeView() {
     ${setupTodo().length ? "" : usageNudgeHtml()}
     ${setupTodo().length ? "" : weeklyNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
-    ${useRanked().length ? useMostHtml() : ""}
+    ${vsChartsHtml()}
     ${saveAmt > 0 ? saveHtml(saveAmt) : ""}
     ${PHASE1 ? "" : upcomingHtml()}
     ${renewHtml()}
@@ -2905,7 +2989,7 @@ function homeView() {
   f.querySelectorAll(".row, .vb-item, .vb-other .chip").forEach(r => r.addEventListener("click", () => openSheet(r.dataset.id)));
   wireListBtns(f);
   f.getElementById("cmp-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
-  pieWire(f);
+  pieWire(f); vsWire(f);
   f.querySelector(".see-how")?.addEventListener("click", () => { view = "overlaps"; render(); document.getElementById("ways")?.scrollIntoView(); });
   wireNudge(f); wireWeeklyNudge(f);
   f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
@@ -3080,6 +3164,76 @@ const svcRank = (a, b) => svcRankKey(a) - svcRankKey(b) || a.name.localeCompare(
 // What you use most / least (Cuong, v105, in place of What's trending). Units differ by service, so each one is ranked by
 // how far its usage goes past what it takes to be worth the price: uses x value per use / monthly cost (2 = twice its price).
 // Only paid, usage-tracked ones count; checkbox, cost-only, paused and not-yet-entered ones are left out.
+// Overview (Cuong, v222): usage vs typical, price vs typical and the value map replace "What you use most / least".
+function vsRows() { return state.subs.map(s => ({ s, u: useVsTypical(s), p: priceVsTypical(s), r: rate(s) })); }
+const sgn = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v) + "%";
+// Long lists show both ends (4 each) with the middle behind "Show all", so the biggest gaps stay in view.
+function vsBars(rows, key, lim, cls) { const cut = rows.length > 10, hide = i => cut && i >= 4 && i < rows.length - 4;
+  return rows.map(({ s, ...x }, i) => { const v = x[key].pct, c = Math.max(-lim, Math.min(lim, v)), w = Math.abs(c) / lim * 50;
+    return `<button class="vs-row${hide(i) ? " vs-mid" : ""}" data-id="${s.id}" title="${esc(vsTip(s, x))}"${hide(i) ? " hidden" : ""}><span class="vs-name">${esc(s.name)}${protect(s) ? ` <span class="vs-prot" title="Protection">◇</span>` : ""}</span>
+      <span class="vs-track"><i class="vs-zero"></i>${w > 0.3 ? `<i class="vs-bar ${cls(v)}" style="${v >= 0 ? "left:50%" : `right:50%`};width:${w}%"></i>` : `<i class="vs-dot"></i>`}</span>
+      <b class="num vs-val">${Math.abs(v) > lim ? (v > 0 ? "> " : "< ") : ""}${sgn(v)}</b></button>`; }).join("")
+    + (cut ? `<button class="btn ghost small vs-all" type="button" style="justify-self:start;padding-left:0">Show all ${rows.length}</button>` : ""); }
+const protect = s => ["car_insurance", "home_insurance", "privacy", "home_security"].includes(svcOf(s).category);
+function vsTip(s, x) { const m = measureOf(s), out = [s.name];
+  if (x.u) out.push(`Usage ${sgn(x.u.pct)}: ${fmtN(x.u.mine)} ${unitOf(m, x.u.mine)} a month vs typical ${fmtN(Math.round(x.u.typ.mo * 10) / 10)}${x.u.typ.members ? ` (${x.u.typ.n} members)` : ""}`);
+  if (x.p) out.push(`Price ${sgn(x.p.pct)}: ${money(x.p.mine)}/mo before tax vs typical ${money(x.p.typ)}`);
+  out.push(rate(s).label); return out.join("\n"); }
+function vsChartsHtml() {
+  const all = vsRows(), U = all.filter(x => x.u).sort((a, b) => b.u.pct - a.u.pct), P = all.filter(x => x.p).sort((a, b) => a.p.pct - b.p.pct), M = all.filter(x => x.u && x.p);
+  if (!U.length && !P.length) return "";
+  const shown = [...new Set(U.map(x => typicalKey(x.s)))].map(k => TYPICAL_USE[k] && !U.find(x => typicalKey(x.s) === k)?.u.typ.members ? `<li>${esc(catLabel(k))}: ${esc(TYPICAL_USE[k].text)}. <a href="${esc(TYPICAL_USE[k].url)}" target="_blank" rel="noopener">${esc(TYPICAL_USE[k].src)}</a>${TYPICAL_USE[k].est ? " (estimate)" : ""}</li>` : "").join("");
+  const notU = all.filter(x => !x.u && !isFree(x.s) && !pausedNow(x.s)).map(x => x.s.name), R = VALUE_RULE;
+  const info = `<p style="margin:0 0 6px">Typical usage is the middle MoSuBi member once 3 or more report for a service. Until then it comes from published averages:</p><ul style="margin:0 0 6px;padding-left:18px">${shown || "<li>None shown yet.</li>"}</ul>
+    <p style="margin:0 0 6px">Typical price is the middle of comparable plans: for each service of the same kind, the plan priced closest to yours. Prices are before tax and leave out extra members.</p>
+    <p style="margin:0">Great value: usage no more than ${-R.greatUse}% below typical and price no more than ${R.greatPrice}% above. Costly: usage ${-R.costlyUse}% or more below typical, or price ${R.costlyPrice}% or more above.${notU.length ? ` Not compared yet: ${esc(notU.slice(0, 8).join(", "))}${notU.length > 8 ? ` and ${notU.length - 8} more` : ""}.` : ""}</p>`;
+  return `<div class="vs">
+    ${U.length ? `<section class="card vs-card"><h3 style="margin:0">Your usage vs typical${infoBtn("vs", "How typical is worked out")}</h3>${infoPanel("vs", info)}
+      <p class="small muted" style="margin:0">Compared with a typical subscriber. Most used at the top.</p>
+      <div class="vs-legend small muted"><span><i class="sw" style="background:var(--pie-1)"></i>Above typical</span><span><i class="sw" style="background:var(--pie-2)"></i>Below typical</span></div>
+      <div class="vs-axis"><span></span><span class="vs-ticks"><i>−100%</i><i>Typical</i><i>+100%</i></span><span></span></div>${vsBars(U, "u", 100, v => v >= 0 ? "more" : "less")}</section>` : ""}
+    ${P.length ? `<section class="card vs-card"><h3 style="margin:0">Your price vs typical</h3>
+      <p class="small muted" style="margin:0">What you pay compared with similar plans. Lowest at the top.</p>
+      <div class="vs-legend small muted"><span><i class="sw" style="background:var(--good)"></i>You pay less</span><span><i class="sw" style="background:var(--bad)"></i>You pay more</span></div>
+      <div class="vs-axis"><span></span><span class="vs-ticks"><i>−50%</i><i>Typical</i><i>+50%</i></span><span></span></div>${vsBars(P, "p", 50, v => v <= 0 ? "cheap" : "dear")}</section>` : ""}
+    ${M.length >= 2 ? `<section class="card vs-card vs-map-card"><h3 style="margin:0">Value map</h3>
+      <p class="small muted" style="margin:0">Usage across, price up and down. Bottom right is best: you use it a lot and pay less than most.</p>
+      <div class="vs-legend small muted"><span><i class="sw dot" style="background:var(--good)"></i>Great value</span><span><i class="sw dot" style="background:var(--accent)"></i>Fair value</span><span><i class="sw dot" style="background:var(--warn)"></i>Costly</span></div>
+      <div id="vs-map" class="vs-map"></div></section>` : ""}</div>`;
+}
+function vsMapDraw(el) {
+  const M = vsRows().filter(x => x.u && x.p); if (!el || !M.length) return;
+  const W = Math.max(280, el.clientWidth || 600), sm = W < 520, H = Math.round(Math.max(300, Math.min(420, W * 0.68))), L = 40, Rr = 22, T = sm ? 34 : 14, B = sm ? 54 : 34, xl = 100, yl = 50;
+  const X = v => L + (Math.max(-xl, Math.min(xl, v)) + xl) / (2 * xl) * (W - L - Rr), Y = v => T + (yl - Math.max(-yl, Math.min(yl, v))) / (2 * yl) * (H - T - B);
+  const q = (x, y, a, t) => `<text class="vm-q" x="${x}" y="${y}" text-anchor="${a}">${t}</text>`;
+  let g = `<rect x="${X(0)}" y="${Y(0)}" width="${X(xl) - X(0)}" height="${Y(-yl) - Y(0)}" fill="var(--good-soft)"/><rect x="${X(-xl)}" y="${Y(yl)}" width="${X(0) - X(-xl)}" height="${Y(0) - Y(yl)}" fill="var(--warn-soft)"/>`;
+  [-100, -50, 0, 50, 100].forEach(t => g += `<line x1="${X(t)}" x2="${X(t)}" y1="${T}" y2="${H - B}" stroke="${t ? "var(--line)" : "var(--muted)"}" stroke-width="1"/><text class="vm-t" x="${X(t)}" y="${H - B + 14}" text-anchor="middle">${t ? sgn(t) : "Typical"}</text>`);
+  [-50, -25, 0, 25, 50].forEach(t => g += `<line x1="${L}" x2="${W - Rr}" y1="${Y(t)}" y2="${Y(t)}" stroke="${t ? "var(--line)" : "var(--muted)"}" stroke-width="1"/><text class="vm-t" x="${L - 5}" y="${Y(t) + 4}" text-anchor="end">${t ? sgn(t) : "0"}</text>`);
+  g += sm ? q(X(-xl), T - 10, "start", "Cut or switch") + q(X(xl), T - 10, "end", "Find a cheaper plan") + q(X(-xl), H - B + 32, "start", "Watch it") + q(X(xl), H - B + 32, "end", "Keep")
+    : q(X(-xl) + 6, T + 14, "start", "Cut or switch") + q(X(xl) - 6, T + 14, "end", "Find a cheaper plan") + q(X(-xl) + 6, H - B - 8, "start", "Watch it") + q(X(xl) - 6, H - B - 8, "end", "Keep");
+  g += `<text class="vm-t" x="${(L + W - Rr) / 2}" y="${H - 4}" text-anchor="middle">Use less · Usage vs typical · Use more</text>`;
+  const col = k => k === "great" ? "var(--good)" : k === "poor" ? "var(--warn)" : "var(--accent)", nm = s => sm ? s.name.split(/[ (]/)[0] : s.name;
+  const boxes = sm ? [] : [[X(-xl), T, X(-xl) + 120, T + 20], [X(xl) - 140, T, X(xl), T + 20], [X(-xl), H - B - 22, X(-xl) + 80, H - B], [X(xl) - 60, H - B - 22, X(xl), H - B]];
+  const pts = M.map(x => ({ ...x, x: X(x.u.pct), y: Y(x.p.pct) })); pts.forEach(p => boxes.push([p.x - 7, p.y - 7, p.x + 7, p.y + 7]));
+  const hits = b => boxes.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
+  pts.forEach(p => { const w = nm(p.s).length * 6.3 + 2; let best = null;
+    for (const dy of [0, -12, 12, -24, 24, -36, 36]) { for (const side of [1, -1]) { const x0 = side > 0 ? p.x + 10 : p.x - 10 - w, y = p.y + 4 + dy, b = [x0, y - 10, x0 + w, y + 2];
+      if (x0 < L + 2 || x0 + w > W - Rr) continue; if (!hits(b)) { best = { lx: side > 0 ? x0 : x0 + w, ly: y, a: side > 0 ? "start" : "end", b }; break; } } if (best) break; }
+    best ||= { lx: p.x + 10, ly: p.y + 4, a: "start", b: [p.x + 10, p.y - 6, p.x + 10 + w, p.y + 6] }; boxes.push(best.b); Object.assign(p, best); });
+  g += pts.map(p => `<g class="vm-pt" data-id="${p.s.id}" tabindex="0" role="button" aria-label="${esc(vsTip(p.s, p).replace(/\n/g, ". "))}"><title>${esc(vsTip(p.s, p))}</title>${protect(p.s)
+    ? `<rect x="${p.x - 6.5}" y="${p.y - 6.5}" width="13" height="13" rx="3" fill="${col(p.r.key)}" stroke="var(--surface)" stroke-width="2"/>` : `<circle cx="${p.x}" cy="${p.y}" r="7" fill="${col(p.r.key)}" stroke="var(--surface)" stroke-width="2"/>`}
+    <text class="vm-l" x="${p.lx}" y="${p.ly}" text-anchor="${p.a}">${esc(nm(p.s))}</text><circle cx="${p.x}" cy="${p.y}" r="15" fill="transparent"/></g>`).join("");
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Value map: usage compared with typical across, price compared with typical up and down">${g}</svg>`;
+  el.querySelectorAll(".vm-pt").forEach(n => { n.addEventListener("click", () => openSheet(n.dataset.id)); n.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openSheet(n.dataset.id); } }); });
+}
+let vsResize = null;
+function vsWire(f) {
+  f.querySelectorAll(".vs-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
+  f.querySelectorAll(".vs-all").forEach(b => b.addEventListener("click", () => { const card = b.closest(".vs-card"), open = b.dataset.open !== "1";
+    card.querySelectorAll(".vs-mid").forEach(r => r.hidden = !open); b.dataset.open = open ? "1" : ""; b.textContent = open ? "Show fewer" : `Show all ${card.querySelectorAll(".vs-row").length}`; }));
+  requestAnimationFrame(() => vsMapDraw(document.getElementById("vs-map")));
+  if (!vsResize) { vsResize = () => { clearTimeout(vsResize.t); vsResize.t = setTimeout(() => vsMapDraw(document.getElementById("vs-map")), 150); }; addEventListener("resize", vsResize); }
+}
 function useRanked() {
   return state.subs.filter(s => { const m = measureOf(s); return !m.costOnly && !m.checks && !m.fixed && m.worth != null && !s.needsUse && !pausedNow(s) && !isFree(s) && monthly(s) > 0; })
     .map(s => ({ s, score: (s.uses || 0) * measureOf(s).worth / monthly(s) })).sort((a, b) => b.score - a.score || monthly(b.s) - monthly(a.s));
@@ -3558,6 +3712,12 @@ function adminView() {
   const label = { yes: "Offered", no: "Not offered", unknown: "Not checked" };
   const f = el(`<div class="section-head"><h2>Admin</h2><span class="small muted">Catalog management. End users never see this.</span></div>
     <p class="admin-note" style="margin:0 0 18px">Prototype: these changes are saved in this browser only. In the real app they live on the server, and each report would combine what many members entered.</p>
+    <div class="section-head"><h3>Value rule</h3><span class="small muted">Rates every subscription that has a typical usage and price to compare with</span></div>
+    <form class="card vr-form" id="vr-form" style="margin-bottom:22px">
+      <div class="vr-grid">${[["greatUse", "Great value: usage at least", "% vs typical"], ["greatPrice", "Great value: price at most", "% vs typical"], ["costlyUse", "Costly: usage at or below", "% vs typical"], ["costlyPrice", "Costly: price at or above", "% vs typical"]]
+        .map(([k, l, u]) => `<label class="small">${l}<span class="vr-in"><input id="vr-${k}" type="number" step="1" min="-100" max="300" value="${VALUE_RULE[k]}"><span class="muted">${u}</span></span></label>`).join("")}</div>
+      <p class="small muted" style="margin:0">Negative means below typical. Protection services turn Costly on price only. ${typeof claude === "undefined" ? "This copy of the app has no shared storage, so changes here last until the page reloads." : "Saved for everyone using the app."}</p>
+      <div class="actions"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" id="vr-reset">Reset to ${VALUE_RULE_DEF.greatUse}, ${VALUE_RULE_DEF.greatPrice}, ${VALUE_RULE_DEF.costlyUse}, ${VALUE_RULE_DEF.costlyPrice}</button><span class="small muted" id="vr-msg" role="status"></span></div></form>
     ${PRICE_POOL ? (() => { const rows = Object.values(PRICE_POOL).map(g => ({ g, tp: typicalPrice(g) })).sort((a, b) => b.g.diff - a.g.diff || b.g.prices.length - a.g.prices.length);
       return `<div class="section-head"><h3>Shared price reports</h3><span class="small muted">${rows.length} plan${rows.length === 1 ? "" : "s"}, most disputed first</span></div>
       <div class="tbl-wrap" style="margin-bottom:22px"><table class="tbl"><tr><th>Service and plan</th><th>Where</th><th>Reports</th><th>Typical</th><th>Right</th><th>Different</th><th>Latest</th></tr>
@@ -3610,6 +3770,13 @@ function adminView() {
   f.getElementById("plk-reset")?.addEventListener("click", () => { delete admin.plk; saveAdmin(); render(); });
   f.querySelectorAll("[data-avail]").forEach(sel => sel.addEventListener("change", () => {
     (admin.availability[sel.dataset.avail] ||= {})[adminCountry] = sel.value; saveAdmin(); }));
+  const vr = f.getElementById("vr-form") || document.getElementById("vr-form"), byId = id => f.getElementById(id) || document.getElementById(id);
+  if (vr) { vr.addEventListener("submit", async e => { e.preventDefault(); const r = {}; let bad = false;
+      Object.keys(VALUE_RULE_DEF).forEach(k => { const v = parseFloat(byId("vr-" + k).value); if (!isFinite(v)) bad = true; r[k] = v; });
+      if (bad) { byId("vr-msg").textContent = "Enter a number in each box."; return; }
+      if (r.costlyUse >= r.greatUse || r.costlyPrice <= r.greatPrice) { byId("vr-msg").textContent = "Costly needs lower usage and a higher price than Great value."; return; }
+      const ok = await saveValueRule(r); const m2 = document.getElementById("vr-msg"); if (m2) m2.textContent = ok ? "Saved for everyone." : "Saved in this copy until it reloads."; });
+    byId("vr-reset").addEventListener("click", async () => { await saveValueRule({ ...VALUE_RULE_DEF }); const m2 = document.getElementById("vr-msg"); if (m2) m2.textContent = "Back to the defaults."; }); }
   return f;
 }
 
@@ -4343,7 +4510,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 221 · Oct 27", VERSION_NUM = 221;
+const APP_VERSION = "Prototype · Version 222 · Oct 28", VERSION_NUM = 222;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4533,5 +4700,6 @@ fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return 
   save();
   render();
   loadPricePool();  // v219: shared price reports (Claude app only)
+  loadValueRule();  // v222: admin's value percentages
 }).catch(() => { document.getElementById("view").innerHTML = `<p class="muted">Service prices didn't load. Reload the page to try again.</p>`; });
 </script>
