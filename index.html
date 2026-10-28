@@ -158,7 +158,7 @@ body.intro-mode #view input::placeholder, body.intro-mode #view textarea::placeh
 #persona-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 6px 6px 6px 14px; border-radius: 14px; background: var(--accent-soft); border: 2px solid var(--accent); font-size: 14px; }
 .pp-txt { display: grid; gap: 2px; padding-right: 54px; } .pp-pic { flex: none; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: var(--accent); color: #fff; }
 .pp-pic svg { width: 100%; height: 100%; } .pp-pic:not(:has(rect)) svg { width: 26px; height: 26px; } .pp-pic.sm { width: 28px; height: 28px; } .pb-who { display: flex; align-items: center; gap: 8px; }
-.avatar.pic { padding: 0; overflow: hidden; } .avatar.pic svg { width: 100%; height: 100%; display: block; }
+.avatar.pic { padding: 0; } .avatar.pic svg { width: 100%; height: 100%; display: block; border-radius: 50%; }  /* v232: no overflow clip, so the Inbox badge sits on top */
 #persona-btn.on { box-shadow: 0 0 0 2px #fff; } .pp-list { display: grid; gap: 8px; } .pp-opt { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; position: relative; }
 .pp-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); } .pp-on { position: absolute; top: 12px; right: 14px; font-size: 12px; font-weight: 700; color: var(--accent); }
 .about-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-width: 860px; }
@@ -4681,7 +4681,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 231 · Standalone copy · Oct 28", VERSION_NUM = 231;
+const APP_VERSION = "Prototype · Version 232 · Standalone copy · Oct 28", VERSION_NUM = 232;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
