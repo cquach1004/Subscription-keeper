@@ -571,6 +571,7 @@ header.top nav.tabs { grid-column: 1 / -1; justify-self: start; }
 .badge { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; background: #e5484d; color: #fff;
   font: 700 11px/19px var(--f-body); text-align: center; border: 2px solid #fff; box-sizing: border-box; }
 .badge.inline { position: static; display: inline-block; height: auto; line-height: 18px; border: 0; padding: 0 8px; font-size: 12px; }
+.car-drivers { display: grid; gap: 6px; } .car-drv { display: flex; gap: 6px; align-items: center; } .car-drv select { flex: 1; min-width: 0; }
 .inbox-item { display: grid; gap: 10px; margin-bottom: 12px; } .inbox-item h3 { margin: 0; font-size: 16px; }
 .inbox-item .ib-top { display: flex; gap: 12px; align-items: flex-start; }
 .ib-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #e5484d; margin-right: 7px; vertical-align: 2px; }
@@ -1409,22 +1410,25 @@ const CAR_AVG = { AL: [142, 66], AZ: [162, 91], AR: [150, 73], CA: [203, 98], CO
 const CAR_NATIONAL = [187, 98];
 const CAR_AGE = { u25: ["Under 25", 1.71], mid: ["25 to 64", 1.05], senior: ["65 or older", 0.88] };
 const CAR_COVER = { full: ["Full coverage", 0], liability: ["Liability only", 1] };
-const CAR_REC = { clean: ["Clean", 1], ticket: ["Speeding ticket", 1.29], accident: ["At-fault accident", 1.34], dui: ["DUI", 1.43] };
+const CAR_REC = { clean: ["Clean record", 1], ticket: ["Ticket", 1.29], accident: ["Accident", 1.34], dui: ["DUI", 1.43] };
 const CAR_SRC = [{ label: "Insurify, car insurance rates by state (Oct 2026)", url: "https://insurify.com/blog/car-insurance/car-insurance-rates-by-state" },
   { label: "Insurify, rates by age (Oct 2026)", url: "https://insurify.com/car-insurance/cheap-car-insurance/age/" },
   { label: "Insurify, rates by driving record (Oct 2026)", url: "https://insurify.com/car-insurance/cheap-car-insurance/driving-record/bad-driving-record/" }];
 const QUOTE_OVER = 0.15;
 let CAR_POOL = null;
-const carKey = c => [profile().region || "", c.age, c.cover, c.rec].join("~");
+// v234 (Cuong): every household driver on the policy, s.car.drivers = [{ age, rec }]. Typical price per car uses the average of
+// the drivers' age and record adjustments (our estimate; insurers weigh drivers in their own ways).
+const carDrivers = c => c?.drivers || (c?.age || c?.rec ? [{ age: c.age, rec: c.rec }] : [{}]);
+const carKey = c => [profile().region || "", c.cover, carDrivers(c).map(d => d.age + "." + d.rec).sort().join("+")].join("~");
 // Price per car vs drivers like you, in %, or null when we don't know enough (no profile, no price, outside the US).
 function carPriceVs(s) {
-  const c = s.car; if (measureOf(s).insure !== "car" || !c?.age || !c.cover || !c.rec || profile().country !== "US" || pausedNow(s) || needsPrice(s)) return null;
+  const c = s.car, ds = carDrivers(c); if (measureOf(s).insure !== "car" || !c?.cover || !ds.every(d => d.age && d.rec) || profile().country !== "US" || pausedNow(s) || needsPrice(s)) return null;
   const mo = monthly(s); if (!(mo > 0)) return null;
   const cars = Math.max(1, c.cars || 1), mine = mo / cars, crowd = CAR_POOL?.[carKey(c)];
   let typ, members = false, n = 0;
   if (crowd && crowd.length >= PR_MIN) { typ = median(crowd); members = true; n = crowd.length; }
-  else { const base = (CAR_AVG[profile().region] || CAR_NATIONAL)[CAR_COVER[c.cover][1]]; typ = base * CAR_AGE[c.age][1] * CAR_REC[c.rec][1]; }
-  return { pct: Math.round((mine - typ) / typ * 100), mine, typ, members, n, cars, where: US_STATES[profile().region] && CAR_AVG[profile().region] ? US_STATES[profile().region] : "the US" }; }
+  else { const base = (CAR_AVG[profile().region] || CAR_NATIONAL)[CAR_COVER[c.cover][1]]; typ = base * ds.reduce((a, d) => a + CAR_AGE[d.age][1] * CAR_REC[d.rec][1], 0) / ds.length; }
+  return { pct: Math.round((mine - typ) / typ * 100), mine, typ, members, n, cars, drivers: ds.length, where: US_STATES[profile().region] && CAR_AVG[profile().region] ? US_STATES[profile().region] : "the US" }; }
 // Published service band for an insurer in the catalog: above, avg, below, or null when it isn't rated.
 const serviceBand = (svc, kind) => { const t = INSURER_SERVICE[kind], n = t?.scores[svc]; return n == null ? null : n >= t.hi ? "above" : n <= t.lo ? "below" : "avg"; };
 const BAND_LABEL = { above: "Above average", avg: "About average", below: "Below average" };
@@ -4341,37 +4345,52 @@ function carHtml(s) {
   const us = profile().country === "US";
   return `<div class="need" style="display:grid;gap:8px"><b style="font-size:14px">Compared with drivers like you</b>
     ${us ? `<div class="q-row"><label class="small">Cars on the policy<input id="car-n" type="number" min="1" max="10" step="1" value="${c.cars || 1}"></label>
-      <label class="small">Main driver's age<select id="car-age"><option value="">Choose…</option>${opt(CAR_AGE, c.age)}</select></label>
-      <label class="small">Coverage<select id="car-cover"><option value="">Choose…</option>${opt(CAR_COVER, c.cover)}</select></label>
-      <label class="small">Driving record, last 3 years<select id="car-rec"><option value="">Choose…</option>${opt(CAR_REC, c.rec)}</select></label></div>
-    ${p ? `<p class="small" style="margin:0">You pay <b>${money(p.mine)}</b> a month${p.cars > 1 ? " per car" : ""}. Similar drivers in ${esc(p.where)} pay about <b>${money(p.typ)}</b>${p.cars > 1 ? " per car" : ""}${p.members ? `, from ${p.n} MoSuBi members` : ""}: <b>${p.pct > 0 ? `${p.pct}% more` : p.pct < 0 ? `${-p.pct}% less` : "about the same"}</b>.</p>`
+      <label class="small">Coverage<select id="car-cover"><option value="">Choose…</option>${opt(CAR_COVER, c.cover)}</select></label></div>
+      <div class="car-drivers"><b class="small">Drivers on the policy</b><span class="note" style="margin:0">Age, and any speeding ticket, at-fault accident or DUI in the last 3 years.</span>${carDrivers(c).map((d, i) => `<div class="car-drv"><span class="small muted">${i + 1}</span>
+        <select data-drv-age="${i}" aria-label="Driver ${i + 1} age"><option value="">Age…</option>${opt(CAR_AGE, d.age)}</select>
+        <select data-drv-rec="${i}" aria-label="Driver ${i + 1} driving record, last 3 years"><option value="">Record…</option>${opt(CAR_REC, d.rec)}</select>
+        ${carDrivers(c).length > 1 ? `<button type="button" class="btn ghost small" data-drv-del="${i}" aria-label="Remove driver ${i + 1}">&times;</button>` : ""}</div>`).join("")}
+        ${carDrivers(c).length < 8 ? `<div><button type="button" class="btn ghost small" id="drv-add">+ Add a driver</button></div>` : ""}</div>
+    ${p ? `<p class="small" style="margin:0">You pay <b>${money(p.mine)}</b> a month${p.cars > 1 ? " per car" : ""}. ${p.drivers > 1 ? `Households with drivers like yours` : `Similar drivers`} in ${esc(p.where)} pay about <b>${money(p.typ)}</b>${p.cars > 1 ? " per car" : ""}${p.members ? `, from ${p.n} MoSuBi members` : ""}: <b>${p.pct > 0 ? `${p.pct}% more` : p.pct < 0 ? `${-p.pct}% less` : "about the same"}</b>.</p>`
       : `<p class="small muted" style="margin:0">${profile().region ? "Fill these in" : "Set your state with the Location button and fill these in"} to compare your price per car with drivers like you.</p>`}
-    ${p && !p.members ? `<span class="note">Our estimate: average monthly quotes for your state and coverage, adjusted for age and record. Your car, ZIP code, credit and discounts also change the price, so a real quote is the better test. Sources: ${CAR_SRC.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.label)}</a>`).join("; ")}.</span>` : ""}`
+    ${p && !p.members ? `<span class="note">Our estimate: average monthly quotes for your state and coverage, adjusted for each driver's age and record${carDrivers(s.car).length > 1 ? " (we average the drivers' adjustments)" : ""}. Your car, ZIP code, credit and discounts also change the price, so a real quote is the better test. Sources: ${CAR_SRC.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.label)}</a>`).join("; ")}.</span>` : ""}`
     : `<p class="small muted" style="margin:0">We only have typical car insurance prices for the US so far. A quote for the same coverage is the best test.</p>`}
     ${old ? `<p class="small" style="margin:0"><b>${d != null && d <= 60 ? `Yearly quote check: your policy renews ${fmtDate(r)}.` : "Yearly quote check."}</b> Get two or three quotes for the same coverage ${d != null && d <= 60 ? "now" : "about a month before renewal"} and enter the best one below. If one is 15% or more lower, you're overpaying.</p>` : ""}
   </div>`;
 }
 function wireCar(root, s, redraw) {
-  const g = id => root.querySelector("#" + id); if (!g("car-age")) return;
-  const upd = () => { s.car = { cars: Math.max(1, Math.round(+g("car-n").value || 1)), age: g("car-age").value || undefined, cover: g("car-cover").value || undefined, rec: g("car-rec").value || undefined }; save(); redraw(); };
-  ["car-n", "car-age", "car-cover", "car-rec"].forEach(id => g(id).onchange = upd);
+  const g = id => root.querySelector("#" + id); if (!g("car-cover")) return;
+  const cur = () => { const c = s.car || {}; s.car = { cars: c.cars || 1, cover: c.cover, drivers: carDrivers(c).map(d => ({ ...d })) }; return s.car; };
+  const done = () => { save(); redraw(); };
+  g("car-n").onchange = () => { cur().cars = Math.max(1, Math.round(+g("car-n").value || 1)); done(); };
+  g("car-cover").onchange = () => { cur().cover = g("car-cover").value || undefined; done(); };
+  root.querySelectorAll("[data-drv-age]").forEach(x => x.onchange = () => { cur().drivers[+x.dataset.drvAge].age = x.value || undefined; done(); });
+  root.querySelectorAll("[data-drv-rec]").forEach(x => x.onchange = () => { cur().drivers[+x.dataset.drvRec].rec = x.value || undefined; done(); });
+  root.querySelectorAll("[data-drv-del]").forEach(x => x.onclick = () => { cur().drivers.splice(+x.dataset.drvDel, 1); done(); });
+  g("drv-add")?.addEventListener("click", () => { cur().drivers.push({}); done(); });
 }
-function insureHtml(s) {
+// v234 (Cuong): for insurance the parts sit in their own sections: price ("How it compares"), "Claims and service" and
+// "Policy and renewal". Other services that use these blocks (internet, mobile, pest control) still show them together.
+function insureHtml(s, part = "all") {
   const m = measureOf(s), kind = ratingKind(s), t = INSURER_SERVICE[kind], q = s.quote || {}, v = svcOf(s), n = t?.scores[s.svc], band = serviceBand(s.svc, kind), ins = !!m.insure;
   const from = x => { const ps = x.plans.map(p => p.effective_monthly).filter(n => n != null); return ps.length ? ` (from ${money(Math.min(...ps))}/mo)` : ""; };
   const rivals = Object.values(CATALOG).filter(x => x.category === v.category && x.id !== s.svc).sort((a, b) => a.name.localeCompare(b.name));
-  return `${ins ? `<p class="small muted" style="margin:0">Rated on price and service: the best price for the same coverage and terms is great value, as long as claims and support are good.</p>` : ""}
-    <div class="small"><b>Published service rating:</b> ${n == null ? `not in our ratings yet${t ? "" : " for this kind of service"}.` : `${BAND_LABEL[band]}, ${n}${t.unit} ${t.what} (average ${t.avg}${t.unit}). Source: <a href="${t.url}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(t.src)}</a>.`}</div>
-    ${m.insure === "car" ? carHtml(s) : ""}
-    <div style="display:grid;gap:6px"><b style="font-size:14px">Your ${ins ? "claims and support" : "service and support"} experience</b>
-      <div class="seg" role="group" aria-label="Your service experience">${Object.entries(SERVICE_EXP).map(([k, l]) => `<button type="button" data-svcx="${k}" aria-pressed="${(s.service || "") === k}">${l}</button>`).join("")}</div></div>
-    <div style="display:grid;gap:6px"><b style="font-size:14px">${ins ? "Best quote for the same coverage and terms" : "Cheapest comparable option you've found"}</b>
-      <span class="small muted">${ins ? "Same limits, deductibles, drivers or home. Leave it blank if you haven't shopped around." : `Something that does the same job${["internet", "mobile"].includes(v.category) ? " (same speed or data)" : ""}. Leave it blank if you haven't compared.`}</span>
+  const intro = ins ? `<p class="small muted" style="margin:0">Rated on price and service: the best price for the same coverage and terms is great value, as long as claims and support are good.</p>` : "";
+  const rating = `<div class="small"><b>Published service rating:</b> ${n == null ? `not in our ratings yet${t ? "" : " for this kind of service"}.` : `${BAND_LABEL[band]}, ${n}${t.unit} ${t.what} (average ${t.avg}${t.unit}). Source: <a href="${t.url}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(t.src)}</a>.`}</div>`;
+  const exp = `<div style="display:grid;gap:6px"><b style="font-size:14px">Your ${ins ? "claims and support" : "service and support"} experience</b>
+      <div class="seg" role="group" aria-label="Your service experience">${Object.entries(SERVICE_EXP).map(([k, l]) => `<button type="button" data-svcx="${k}" aria-pressed="${(s.service || "") === k}">${l}</button>`).join("")}</div></div>`;
+  const renew = `<label class="small" style="max-width:260px">${ins ? "Policy renews" : "Contract or promo renews"} <span class="muted">(optional, for a reminder)</span><input id="q-renew" type="date" value="${s.renews || ""}"></label>`;
+  const quote = `<div style="display:grid;gap:6px"><b style="font-size:14px">${ins ? "Best quote for the same coverage and terms" : "Cheapest comparable option you've found"}</b>
+      <span class="small muted">${ins ? `Same limits, deductibles, ${m.insure === "car" ? "drivers and cars" : "home"}. Leave it blank if you haven't shopped around.` : `Something that does the same job${["internet", "mobile"].includes(v.category) ? " (same speed or data)" : ""}. Leave it blank if you haven't compared.`}</span>
       <div class="q-row"><select id="q-by" aria-label="Comparable option"><option value="">${ins ? "Insurer…" : "Provider…"}</option>${rivals.map(x => `<option value="${x.id}" ${q.by === x.id ? "selected" : ""}>${esc(x.name.replace(/ \((Car|Home)\)$/, ""))}${ins ? "" : from(x)}</option>`).join("")}<option value="other" ${q.by === "other" ? "selected" : ""}>${ins ? "Another insurer" : "Another provider"}</option></select>
         <input id="q-price" type="number" min="0" step="0.01" placeholder="Price" aria-label="Quoted price" value="${q.price ?? ""}">
         <select id="q-per" aria-label="Quote period">${Object.entries(QUOTE_PER).map(([k, [l]]) => `<option value="${k}" ${(q.per || "month") === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>
-      <label class="small" style="max-width:260px">${ins ? "Policy renews" : "Contract or promo renews"} <span class="muted">(optional, for a reminder)</span><input id="q-renew" type="date" value="${s.renews || ""}"></label>
+      ${part === "all" ? renew : ""}
       ${s.quote ? `<span class="note">${ins ? "Quoted" : "Checked"} ${fmtDate(q.date)}${q.by && q.by !== "other" && serviceBand(q.by, kind) ? `. ${esc(CATALOG[q.by].name.replace(/ \((Car|Home)\)$/, ""))}'s service rating: ${BAND_LABEL[serviceBand(q.by, kind)].toLowerCase()}` : ""}. <button class="btn ghost small" id="q-clear">Clear</button></span>` : ""}</div>`;
+  if (part === "compare") return intro + (m.insure === "car" ? carHtml(s) : "") + quote;
+  if (part === "service") return rating + exp;
+  if (part === "policy") { const r = renewsOn(s); return renew + `<p class="note" style="margin:0">${r ? `Next renewal ${fmtDate(r)}. ` : ""}We'll remind you in your Inbox two weeks before, so you can get quotes for the same coverage first.</p>`; }
+  return intro + rating + exp + quote;
 }
 // v156 (Cuong): electricity and gas are cost-only. Where the state lets homes pick a supplier, link its official comparison site.
 function energyHtml(s) {
@@ -4502,7 +4521,7 @@ function openSheet(id) {
               + (u ? `<p class="small muted" style="margin:0">${u.pct >= 0 ? `${u.pct}% more` : `${-u.pct}% less`} than typical (${u.typ.members ? `${u.typ.n} members` : esc(u.typ.text)}).${u.pct < 0 ? " " + esc(pu.low) : ""}</p>`
                 : pu.typ ? "" : `<p class="small muted" style="margin:0">We'll compare this with other members once 3 or more share theirs.</p>`)); })(protectKey(s)) : ""}
         ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
-        ${m.insure ? insureHtml(s) : `
+        ${m.insure ? insureHtml(s, "compare") : `
         ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Tick \u201cEverything's going great!\u201d or leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${needHtml(s)}${insureHtml(s)}</div>` : ""}`
         : m.costOnly ? energyFuel(s) ? energyHtml(s) : `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
           ${slider(m, s.rate, 'id="s-rate"')}
@@ -4523,6 +4542,8 @@ function openSheet(id) {
           ${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use our estimate</button>` : ""}</div>
           <p class="note" style="margin:-6px 0 0">${m.own ? "You set this value." : m.id === "people" ? `Our estimate: what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own.` : m.checks ? "What one roadside call is worth to you, about what you'd pay for it without a membership." : m.bench ? `From our benchmark: above this, each ${esc(m.per1)} costs more than it's worth.` : "Our estimate. Change it to what it's worth to you."} The chart and rating use it.</p>` : ""}
         `)}
+        ${m.insure ? sec("claims", "Claims and service", (b => b ? BAND_LABEL[b] : s.service ? SERVICE_EXP[s.service] : "Rate your experience")(s.service === "good" ? "above" : s.service === "poor" ? "below" : serviceBand(s.svc, ratingKind(s))), insureHtml(s, "service"))
+          + sec("policy", "Policy and renewal", renewsOn(s) ? `Renews ${fmtDate(renewsOn(s))}` : "Add your renewal date", insureHtml(s, "policy")) : ""}
         ${sec("switch", "How hard to switch?", SWITCH[switchOf(s)], `<p class="small muted" style="margin:0">If you've stored years of notes, passwords, photos or playlists here, moving to a cheaper service may not be worth the savings. Hard ones are left out of Could save and we suggest ways to pay less without switching.</p>
           <div class="seg" role="group" aria-label="How hard to switch">${Object.entries(SWITCH).map(([k, l]) => `<button type="button" data-switch="${k}" aria-pressed="${switchOf(s) === k}">${l}</button>`).join("")}</div>
           <p class="note" style="margin:0">${s.switch ? `You set this.${s.switch !== (SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy") ? ` <button class="btn ghost small" data-switch="">Use the default (${SWITCH[SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy"]})</button>` : ""}` : `Our default for ${esc(catLabel(svcOf(s).category))}. Change it if it's different for you.`}</p>`)}
@@ -4681,7 +4702,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 233 · Standalone copy · Oct 28", VERSION_NUM = 233;
+const APP_VERSION = "Prototype · Version 234 · Standalone copy · Oct 28", VERSION_NUM = 234;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
