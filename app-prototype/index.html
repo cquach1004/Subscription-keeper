@@ -3216,20 +3216,17 @@ function vsChartsHtml() {
   if (!U.length && !P.length) return "";
   const shown = [...new Set(U.map(x => typicalKey(x.s)))].map(k => TYPICAL_USE[k] && !U.find(x => typicalKey(x.s) === k)?.u.typ.members ? `<li>${esc(catLabel(k))}: ${esc(TYPICAL_USE[k].text)}. <a href="${esc(TYPICAL_USE[k].url)}" target="_blank" rel="noopener">${esc(TYPICAL_USE[k].src)}</a>${TYPICAL_USE[k].est ? " (estimate)" : ""}</li>` : "").join("");
   const notU = all.filter(x => !x.u && !isFree(x.s) && !pausedNow(x.s)).map(x => x.s.name), R = VALUE_RULE;
-  const info = `<p style="margin:0 0 6px">Typical usage is the middle MoSuBi member once 3 or more report for a service. Until then it comes from published averages:</p><ul style="margin:0 0 6px;padding-left:18px">${shown || "<li>None shown yet.</li>"}</ul>
+  const info = `<p style="margin:0 0 6px">Compares how much you use each subscription with a typical subscriber of the same kind of service. Most used at the top. Tap a bar to open it.</p><p style="margin:0 0 6px">Typical usage is the middle MoSuBi member once 3 or more report for a service. Until then it comes from published averages:</p><ul style="margin:0 0 6px;padding-left:18px">${shown || "<li>None shown yet.</li>"}</ul>
     <p style="margin:0 0 6px">Typical price is the middle of comparable plans: for each service of the same kind, the plan priced closest to yours. Prices are before tax and leave out extra members.</p>
     <p style="margin:0">Great value: usage no more than ${-R.greatUse}% below typical and price no more than ${R.greatPrice}% above. Costly: usage ${-R.costlyUse}% or more below typical, or price ${R.costlyPrice}% or more above.${notU.length ? ` Not compared yet: ${esc(notU.slice(0, 8).join(", "))}${notU.length > 8 ? ` and ${notU.length - 8} more` : ""}.` : ""}</p>`;
   return `<div class="vs">
     ${U.length ? `<section class="card vs-card"><h3 style="margin:0">Your usage vs typical${infoBtn("vs", "How typical is worked out")}</h3>${infoPanel("vs", info)}
-      <p class="small muted" style="margin:0">Compared with a typical subscriber. Most used at the top.</p>
       <div class="vs-legend small muted"><span><i class="sw" style="background:var(--pie-1)"></i>Above typical</span><span><i class="sw" style="background:var(--pie-2)"></i>Below typical</span></div>
       <div class="vs-axis"><span></span><span class="vs-ticks"><i>−100%</i><i>Typical</i><i>+100%</i></span><span></span></div>${vsBars(U, "u", 100, v => v >= 0 ? "more" : "less")}</section>` : ""}
-    ${P.length ? `<section class="card vs-card"><h3 style="margin:0">Your price vs typical</h3>
-      <p class="small muted" style="margin:0">What you pay compared with similar plans. Lowest at the top.</p>
+    ${P.length ? `<section class="card vs-card"><h3 style="margin:0">Your price vs typical${infoBtn("vsp", "About this chart")}</h3>${infoPanel("vsp", `<p style="margin:0">What you pay for each plan compared with similar plans, lowest at the top. Typical price is the middle of comparable plans: for each service of the same kind, the plan priced closest to yours, or what members report paying for your plan once 3 or more have. Prices are before tax and leave out extra members. Tap a bar to open it.</p>`)}
       <div class="vs-legend small muted"><span><i class="sw" style="background:var(--good)"></i>You pay less</span><span><i class="sw" style="background:var(--bad)"></i>You pay more</span></div>
       <div class="vs-axis"><span></span><span class="vs-ticks"><i>−50%</i><i>Typical</i><i>+50%</i></span><span></span></div>${vsBars(P, "p", 50, v => v <= 0 ? "cheap" : "dear")}</section>` : ""}
-    ${M.length >= 2 ? `<section class="card vs-card vs-map-card"><h3 style="margin:0">Value map</h3>
-      <p class="small muted" style="margin:0">Usage across, price up and down. Bottom right is best: you use it a lot and pay less than most.</p>
+    ${M.length >= 2 ? `<section class="card vs-card vs-map-card"><h3 style="margin:0">Value map${infoBtn("vsm", "How to read the value map")}</h3>${infoPanel("vsm", `<p style="margin:0">Usage across, price up and down. Bottom right is best: you use it a lot and pay less than most. Top left means you use it little and pay more, so it's worth cutting or switching. Squares are protection services, where low use is good news. Tap a dot to open it.</p>`)}
       <div class="vs-legend small muted"><span><i class="sw dot" style="background:var(--good)"></i>Great value</span><span><i class="sw dot" style="background:var(--accent)"></i>Fair value</span><span><i class="sw dot" style="background:var(--warn)"></i>Costly</span></div>
       <div id="vs-map" class="vs-map"></div></section>` : ""}</div>`;
 }
@@ -4554,7 +4551,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 224 · Oct 28", VERSION_NUM = 224;
+const APP_VERSION = "Prototype · Version 225 · Oct 28", VERSION_NUM = 225;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
