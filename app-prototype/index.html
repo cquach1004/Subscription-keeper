@@ -4490,7 +4490,7 @@ function wireInsure(root, s, redraw) {
 function openSheet(id) {
   const s = state.subs.find(x => x.id === id); if (!s) return;
   const root = document.getElementById("sheet-root");
-  let first = true;
+  let first = true, fixMonths = false;  // v235 (Cuong): Usage by month shows only when someone asks to correct a past month
   const draw = () => {
     const v = svcOf(s), r = rate(s), feats = featuresFor(v, s.plan), plan = planOf(v, s.plan), hh = HOUSEHOLD[s.svc];
     const next = new Date((nextRenewal(s) || today()) + "T12:00:00");
@@ -4509,43 +4509,8 @@ function openSheet(id) {
           ${m.club ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, our estimate</div></div>` : m.bundle ? `<div class="stat"><div class="label">Saves you</div><div class="value num">${money(s.uses * m.worth + m.fixedAdd)}</div><div class="small muted">a month, shipping${m.counted.length || m.included.length ? " and video" : ""}${m.counted.some(p => p.months) ? " (yearly average)" : ""}</div></div>` : m.fixed ? `<div class="stat"><div class="label">${esc(m.jobName[0].toUpperCase() + m.jobName.slice(1))} alone</div><div class="value num">${money(m.worth)}</div><div class="small muted">per month${altOf(s) ? `, ${esc(altOf(s).name)}` : ""}</div></div>` : m.insure || (m.results && !fairPrice(s)) ? (b => `<div class="stat"><div class="label">Service rating</div><div class="value" style="font-size:20px">${b ? BAND_LABEL[b] : "—"}</div><div class="small muted">${s.service && s.service !== "none" && s.service !== "ok" ? "from your own experience" : b ? "from published ratings" : "not rated yet"}</div></div>`)(serviceOf(s)) : m.results ? (fp => `<div class="stat"><div class="label">Typical price</div><div class="value num">${fp ? `$${fp.lo}–$${fp.hi}` : "—"}</div><div class="small muted">${fp ? `a month for ${fp.what}, our estimate` : "not known yet for this kind of service"}</div></div>`)(fairPrice(s)) : `<div class="stat"><div class="label">Cost per ${measureOf(s).per1}</div><div class="value num">${r.cpu == null ? "—" : money(r.cpu)}</div><div class="small muted">${r.model && r.cpu == null ? "not the main measure" : "based on your usage"}</div></div>`}
         </div>
         <div class="verdict ${r.key}"><span class="pill ${r.key}" style="justify-self:start">${r.label}</span><span>${verdictText(s, r)}</span></div>
-        ${negoHtml(s) ? sec("nego", "Ask for a lower rate", `<span class="pill poor">Price going up</span>`, negoHtml(s)) : ""}
-        ${sec("value", "Usage vs cost", vc.meta, vc.body)}
-        ${protectKey(s) ? (pk => { const pu = PROTECT_USE[pk], u = useVsTypical(s);
-          return sec("puse", pu.inUse ? "Is it in use?" : "How much you use it", pu.inUse ? (s.inUse === false ? "Not in use" : s.inUse ? "In use" : "Not answered") : s.puse?.v != null ? `${fmtN(s.puse.v)} ${unitOf(pu, s.puse.v)} a ${pu.per}` : "Not entered",
-            pu.inUse ? `<p class="small" style="margin:0">${pu.label}</p><div class="chips" role="group" aria-label="${esc(pu.label)}"><button class="chip" id="pu-yes" aria-pressed="${s.inUse === true}">Yes, it's in use</button><button class="chip" id="pu-no" aria-pressed="${s.inUse === false}">No, it's sitting unused</button></div>`
-            : `<label class="small">${pu.label}<input id="pu-v" type="number" min="0" step="1" inputmode="numeric" value="${s.puse?.v ?? ""}" placeholder="e.g. 0"></label>`
-              + (u ? `<p class="small muted" style="margin:0">${u.pct >= 0 ? `${u.pct}% more` : `${-u.pct}% less`} than typical (${u.typ.members ? `${u.typ.n} members` : esc(u.typ.text)}).${u.pct < 0 ? " " + esc(pu.low) : ""}</p>`
-                : pu.typ ? "" : `<p class="small muted" style="margin:0">We'll compare this with other members once 3 or more share theirs.</p>`)); })(protectKey(s)) : ""}
-        ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
-        ${m.insure ? insureHtml(s, "compare") : `
-        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Tick \u201cEverything's going great!\u201d or leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${needHtml(s)}${insureHtml(s)}</div>` : ""}`
-        : m.costOnly ? energyFuel(s) ? energyHtml(s) : `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
-          ${slider(m, s.rate, 'id="s-rate"')}
-          ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>
-          ${m.club ? `<div class="mine-worth"><label for="s-gas" style="display:inline;color:var(--ink)">Gallons of gas you buy there a month</label>
-            <input id="s-gas" type="number" inputmode="decimal" min="0" step="1" value="${s.gas || ""}" placeholder="0"></div>
-            <p class="note" style="margin:-6px 0 0">Our estimates: you save about ${Math.round(CLUB_SAVE * 100)} cents per dollar spent${m.reward ? `, plus about ${Math.round(CLUB_REWARD * 100)}% back on ${esc(planOf(v, s.plan)?.name || "this plan")}` : ""}, and about ${Math.round(GAS_SAVE * 100)} cents per gallon of gas. Sources: ${CLUB_SRC.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.label)}</a>`).join("; ")}.</p>` : ""}`}`}
-        ${m.fixed ? `<label>Compare with<select id="s-alt">${(ALTERNATIVES[m.job] || []).map((a, i) => `<option value="${i}" ${(s.alt || 0) === i && !m.own ? "selected" : ""}>${esc(a.name)} · ${money(a.monthly)}/mo</option>`).join("")}${m.own ? `<option selected>Your own price · ${money(m.worth)}/mo</option>` : ""}</select></label>
-          <div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Or enter what ${esc(m.jobName)} alone would cost you</label>
-          <input id="s-worth" type="number" min="0" step="0.01" value="${m.worth == null ? "" : (+m.worth).toFixed(2)}"><span class="small muted">${currency()}/mo</span>${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use the list</button>` : ""}</div>
-          <p class="note" style="margin:-6px 0 0">Prices from <a href="${esc(altOf(s)?.url || "#")}" target="_blank" rel="noopener" style="color:var(--accent)">security.org</a> reviews, checked Oct 18, 2026. Not yet confirmed on the services' own pages.</p>`
-        : m.bundle ? `<div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Shipping fee per order without ${esc(s.name)}</label>
-          <input id="s-worth" type="number" min="0" step="0.01" value="${(+m.worth).toFixed(2)}"><span class="small muted">${currency()}</span>${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use $6.99</button>` : ""}</div>
-          ${(m.parts || []).map(p => `<div class="small">${m.counted.some(c => c.feature === p.feature) ? `<b>Counted:</b> ${esc(p.name)}, ${money(p.monthly)}/mo${p.months ? " from September to December" : ""}, because it matters to you.` : m.included.some(c => c.feature === p.feature) ? `<b>Included:</b> ${esc(p.name)} comes with Prime Video, which is already counted.` : `<b>Not counted:</b> ${esc(p.name)} (${money(p.monthly)}/mo). Check it under Features that matter to me if you'd pay for it.`}</div>`).join("")}
-          <p class="note" style="margin:-6px 0 0">Amazon charges about $6.99 shipping on orders under $35 without Prime (news reports, Nov 2025; not yet confirmed on Amazon's site). Prime Video on its own is $8.99/mo.</p>`
-        : m.worth != null || m.rated ? `<div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Each ${esc(m.per1)} is worth</label>
-          <input id="s-worth" type="number" min="0" step="0.01" value="${m.worth == null ? "" : (+m.worth).toFixed(m.worth < 0.1 ? 3 : 2)}"><span class="small muted">${currency()} to you</span>
-          ${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use our estimate</button>` : ""}</div>
-          <p class="note" style="margin:-6px 0 0">${m.own ? "You set this value." : m.id === "people" ? `Our estimate: what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own.` : m.checks ? "What one roadside call is worth to you, about what you'd pay for it without a membership." : m.bench ? `From our benchmark: above this, each ${esc(m.per1)} costs more than it's worth.` : "Our estimate. Change it to what it's worth to you."} The chart and rating use it.</p>` : ""}
-        `)}
-        ${m.insure ? sec("claims", "Claims and service", (b => b ? BAND_LABEL[b] : s.service ? SERVICE_EXP[s.service] : "Rate your experience")(s.service === "good" ? "above" : s.service === "poor" ? "below" : serviceBand(s.svc, ratingKind(s))), insureHtml(s, "service"))
-          + sec("policy", "Policy and renewal", renewsOn(s) ? `Renews ${fmtDate(renewsOn(s))}` : "Add your renewal date", insureHtml(s, "policy")) : ""}
-        ${sec("switch", "How hard to switch?", SWITCH[switchOf(s)], `<p class="small muted" style="margin:0">If you've stored years of notes, passwords, photos or playlists here, moving to a cheaper service may not be worth the savings. Hard ones are left out of Could save and we suggest ways to pay less without switching.</p>
-          <div class="seg" role="group" aria-label="How hard to switch">${Object.entries(SWITCH).map(([k, l]) => `<button type="button" data-switch="${k}" aria-pressed="${switchOf(s) === k}">${l}</button>`).join("")}</div>
-          <p class="note" style="margin:0">${s.switch ? `You set this.${s.switch !== (SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy") ? ` <button class="btn ghost small" data-switch="">Use the default (${SWITCH[SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy"]})</button>` : ""}` : `Our default for ${esc(catLabel(svcOf(s).category))}. Change it if it's different for you.`}</p>`)}
-        ${m.costOnly ? "" : sec("months", "Usage by month", mo.meta, mo.body)}
-        ${sec("alts", "Alternatives", al.meta, al.body)}
+        ${sec("value", "Usage vs cost", vc.meta, vc.body + (m.costOnly ? "" : `<div><button type="button" class="btn ghost small" id="fix-months" aria-expanded="${fixMonths}">${fixMonths ? "Hide past months" : "Need to correct a past month?"}</button></div>`))}
+        ${!m.costOnly && fixMonths ? sec("months", "Usage by month", mo.meta, mo.body) : ""}
         ${sec("price", "Plan and price", priceMeta, `
         ${v.plans.length ? `<label>Your plan<select id="s-plan">${v.plans.map(p => `<option value="${p.id}" ${p.id === s.plan ? "selected" : ""}>${esc(p.name)} · ${money(p.effective_monthly)}/mo${p.verified ? "" : " (estimate)"}</option>`).join("")}</select></label>` : ""}
         ${hh ? `<div><h3>Household members</h3><p class="small muted" style="margin:2px 0 8px">${hh.who ? esc(hh.who) : `You plus up to ${hh.max - 1} people in your home`}.</p>
@@ -4583,6 +4548,45 @@ function openSheet(id) {
           ${s.priceMine ? `<div class="note">Using your price${b && b.basis !== "estimate" && Math.abs(diff) > 0.005 ? `, ${money(Math.abs(diff))} ${diff > 0 ? "above" : "below"} the list price for ${n === 1 ? "one person" : `${n} people`}${taxed(s) ? ", before tax" : ""}` : b && b.basis !== "estimate" && taxed(s) ? ". Before tax it matches the list price" : !b || b.basis === "estimate" ? `. It goes to our team for review so we can add ${esc(b ? where : countryName(profile().country))} prices` : ""}.</div>` : ""}
         </div>`; })() : ""}
         `)}
+        ${negoHtml(s) ? sec("nego", "Ask for a lower rate", `<span class="pill poor">Price going up</span>`, negoHtml(s)) : ""}
+        ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
+        ${m.insure ? insureHtml(s, "compare") : `
+        ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Tick \u201cEverything's going great!\u201d or leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${needHtml(s)}${insureHtml(s)}</div>` : ""}`
+        : m.costOnly ? energyFuel(s) ? energyHtml(s) : `<p class="small muted" style="margin:0">Plans like ${esc(s.name)} aren't judged by how often you use them, so there's nothing to enter here.</p>` : `<div><label for="s-rate" style="font-weight:600;color:var(--ink)">${esc(m.label)}</label>
+          ${slider(m, s.rate, 'id="s-rate"')}
+          ${m.note ? `<p class="note" style="margin:2px 0 0">${esc(m.note)}</p>` : ""}</div>
+          ${m.club ? `<div class="mine-worth"><label for="s-gas" style="display:inline;color:var(--ink)">Gallons of gas you buy there a month</label>
+            <input id="s-gas" type="number" inputmode="decimal" min="0" step="1" value="${s.gas || ""}" placeholder="0"></div>
+            <p class="note" style="margin:-6px 0 0">Our estimates: you save about ${Math.round(CLUB_SAVE * 100)} cents per dollar spent${m.reward ? `, plus about ${Math.round(CLUB_REWARD * 100)}% back on ${esc(planOf(v, s.plan)?.name || "this plan")}` : ""}, and about ${Math.round(GAS_SAVE * 100)} cents per gallon of gas. Sources: ${CLUB_SRC.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(x.label)}</a>`).join("; ")}.</p>` : ""}`}`}
+        ${m.fixed ? `<label>Compare with<select id="s-alt">${(ALTERNATIVES[m.job] || []).map((a, i) => `<option value="${i}" ${(s.alt || 0) === i && !m.own ? "selected" : ""}>${esc(a.name)} · ${money(a.monthly)}/mo</option>`).join("")}${m.own ? `<option selected>Your own price · ${money(m.worth)}/mo</option>` : ""}</select></label>
+          <div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Or enter what ${esc(m.jobName)} alone would cost you</label>
+          <input id="s-worth" type="number" min="0" step="0.01" value="${m.worth == null ? "" : (+m.worth).toFixed(2)}"><span class="small muted">${currency()}/mo</span>${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use the list</button>` : ""}</div>
+          <p class="note" style="margin:-6px 0 0">Prices from <a href="${esc(altOf(s)?.url || "#")}" target="_blank" rel="noopener" style="color:var(--accent)">security.org</a> reviews, checked Oct 18, 2026. Not yet confirmed on the services' own pages.</p>`
+        : m.bundle ? `<div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Shipping fee per order without ${esc(s.name)}</label>
+          <input id="s-worth" type="number" min="0" step="0.01" value="${(+m.worth).toFixed(2)}"><span class="small muted">${currency()}</span>${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use $6.99</button>` : ""}</div>
+          ${(m.parts || []).map(p => `<div class="small">${m.counted.some(c => c.feature === p.feature) ? `<b>Counted:</b> ${esc(p.name)}, ${money(p.monthly)}/mo${p.months ? " from September to December" : ""}, because it matters to you.` : m.included.some(c => c.feature === p.feature) ? `<b>Included:</b> ${esc(p.name)} comes with Prime Video, which is already counted.` : `<b>Not counted:</b> ${esc(p.name)} (${money(p.monthly)}/mo). Check it under Features that matter to me if you'd pay for it.`}</div>`).join("")}
+          <p class="note" style="margin:-6px 0 0">Amazon charges about $6.99 shipping on orders under $35 without Prime (news reports, Nov 2025; not yet confirmed on Amazon's site). Prime Video on its own is $8.99/mo.</p>`
+        : m.worth != null || m.rated ? `<div class="mine-worth"><label for="s-worth" style="display:inline;color:var(--ink)">Each ${esc(m.per1)} is worth</label>
+          <input id="s-worth" type="number" min="0" step="0.01" value="${m.worth == null ? "" : (+m.worth).toFixed(m.worth < 0.1 ? 3 : 2)}"><span class="small muted">${currency()} to you</span>
+          ${m.own ? `<button class="btn ghost small" id="s-worth-reset">Use our estimate</button>` : ""}</div>
+          <p class="note" style="margin:-6px 0 0">${m.own ? "You set this value." : m.id === "people" ? `Our estimate: what one person would pay for ${esc(planOf(v, m.plan)?.name || "a plan")} on their own.` : m.checks ? "What one roadside call is worth to you, about what you'd pay for it without a membership." : m.bench ? `From our benchmark: above this, each ${esc(m.per1)} costs more than it's worth.` : "Our estimate. Change it to what it's worth to you."} The chart and rating use it.</p>` : ""}
+        `)}
+        ${protectKey(s) ? (pk => { const pu = PROTECT_USE[pk], u = useVsTypical(s);
+          return sec("puse", pu.inUse ? "Is it in use?" : "How much you use it", pu.inUse ? (s.inUse === false ? "Not in use" : s.inUse ? "In use" : "Not answered") : s.puse?.v != null ? `${fmtN(s.puse.v)} ${unitOf(pu, s.puse.v)} a ${pu.per}` : "Not entered",
+            pu.inUse ? `<p class="small" style="margin:0">${pu.label}</p><div class="chips" role="group" aria-label="${esc(pu.label)}"><button class="chip" id="pu-yes" aria-pressed="${s.inUse === true}">Yes, it's in use</button><button class="chip" id="pu-no" aria-pressed="${s.inUse === false}">No, it's sitting unused</button></div>`
+            : `<label class="small">${pu.label}<input id="pu-v" type="number" min="0" step="1" inputmode="numeric" value="${s.puse?.v ?? ""}" placeholder="e.g. 0"></label>`
+              + (u ? `<p class="small muted" style="margin:0">${u.pct >= 0 ? `${u.pct}% more` : `${-u.pct}% less`} than typical (${u.typ.members ? `${u.typ.n} members` : esc(u.typ.text)}).${u.pct < 0 ? " " + esc(pu.low) : ""}</p>`
+                : pu.typ ? "" : `<p class="small muted" style="margin:0">We'll compare this with other members once 3 or more share theirs.</p>`)); })(protectKey(s)) : ""}
+        ${feats.length ? sec("features", "Features that matter to me", `${s.used.length} of ${feats.length}`, `<p class="small muted" style="margin:0">Check what you care about. Features you leave unchecked never lower the rating; we only use them to point out a cheaper plan or service that covers what you checked.</p>` + feats.map(ft => `<label class="feature" style="color:var(--ink);font-weight:500"><input type="checkbox" id="feat-${ft.id}" data-f="${ft.id}" ${s.used.includes(ft.id) ? "checked" : ""}>${esc(ft.name)}</label>`).join("")
+          // Features only on other plans, so people can see what upgrading would add (e.g. CNBC Pro articles on CNBC+).
+          + (() => { const other = v.features.filter(f => !feats.includes(f)); return other.length ? `<p class="small muted" style="margin:4px 0 0">On other plans: ${other.map(f => `${esc(f.name)} (${esc(v.plans.filter(p => f.plans === "all" || f.plans.includes(p.id)).map(p => p.name).join(", "))})`).join("; ")}. Change your plan under Plan and price to check these.</p>` : ""; })()) : ""}
+        ${m.insure ? sec("claims", "Claims and service", (b => b ? BAND_LABEL[b] : s.service ? SERVICE_EXP[s.service] : "Rate your experience")(s.service === "good" ? "above" : s.service === "poor" ? "below" : serviceBand(s.svc, ratingKind(s))), insureHtml(s, "service")) : ""}
+        ${m.insure ? sec("policy", "Policy and renewal", renewsOn(s) ? `Renews ${fmtDate(renewsOn(s))}` : "Add your renewal date", insureHtml(s, "policy")) : ""}
+        ${PHASE1 && !m.insure && !(m.checks && m.results) ? sec("renew", "Next renewal", pausedNow(s) ? `<span class="pill poor">Paused</span>` : nextRenewal(s) ? fmtDate(nextRenewal(s)) : "Add a date", `
+        <div class="start-row">
+          <label>Next renewal<input id="s-next" type="date" value="${pausedNow(s) ? "" : nextRenewal(s) || ""}" min="${today()}" ${pausedNow(s) ? "disabled" : ""}></label>
+          <div class="small muted">${pausedNow(s) ? "This subscription is paused, so it has no renewal date right now." : `Pick the date of your next bill. Later renewals follow every ${s.cycle === "year" ? "year" : "month"} from there.`}</div>
+        </div>`) : ""}
         ${PHASE1 ? "" : sec("dates", "Start date and pauses", datesMeta, `
         <div class="start-row">
           <label>Started on<input id="s-start" type="date" value="${s.start || ""}" max="${today()}"></label>
@@ -4592,15 +4596,11 @@ function openSheet(id) {
         </div>
         ${pauseHtml(s)}
         `)}
-        ${PHASE1 && !m.insure && !(m.checks && m.results) ? sec("renew", "Next renewal", pausedNow(s) ? `<span class="pill poor">Paused</span>` : nextRenewal(s) ? fmtDate(nextRenewal(s)) : "Add a date", `
-        <div class="start-row">
-          <label>Next renewal<input id="s-next" type="date" value="${pausedNow(s) ? "" : nextRenewal(s) || ""}" min="${today()}" ${pausedNow(s) ? "disabled" : ""}></label>
-          <div class="small muted">${pausedNow(s) ? "This subscription is paused, so it has no renewal date right now." : `Pick the date of your next bill. Later renewals follow every ${s.cycle === "year" ? "year" : "month"} from there.`}</div>
-        </div>`) : ""}
         ${PHASE1 ? "" : sec("deals", "Trials and discounts", dealsMeta, dealHtml(s, v))}
-        ${feats.length ? sec("features", "Features that matter to me", `${s.used.length} of ${feats.length}`, `<p class="small muted" style="margin:0">Check what you care about. Features you leave unchecked never lower the rating; we only use them to point out a cheaper plan or service that covers what you checked.</p>` + feats.map(ft => `<label class="feature" style="color:var(--ink);font-weight:500"><input type="checkbox" id="feat-${ft.id}" data-f="${ft.id}" ${s.used.includes(ft.id) ? "checked" : ""}>${esc(ft.name)}</label>`).join("")
-          // Features only on other plans, so people can see what upgrading would add (e.g. CNBC Pro articles on CNBC+).
-          + (() => { const other = v.features.filter(f => !feats.includes(f)); return other.length ? `<p class="small muted" style="margin:4px 0 0">On other plans: ${other.map(f => `${esc(f.name)} (${esc(v.plans.filter(p => f.plans === "all" || f.plans.includes(p.id)).map(p => p.name).join(", "))})`).join("; ")}. Change your plan under Plan and price to check these.</p>` : ""; })()) : ""}
+        ${sec("alts", "Alternatives", al.meta, al.body)}
+        ${sec("switch", "How hard to switch?", SWITCH[switchOf(s)], `<p class="small muted" style="margin:0">If you've stored years of notes, passwords, photos or playlists here, moving to a cheaper service may not be worth the savings. Hard ones are left out of Could save and we suggest ways to pay less without switching.</p>
+          <div class="seg" role="group" aria-label="How hard to switch">${Object.entries(SWITCH).map(([k, l]) => `<button type="button" data-switch="${k}" aria-pressed="${switchOf(s) === k}">${l}</button>`).join("")}</div>
+          <p class="note" style="margin:0">${s.switch ? `You set this.${s.switch !== (SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy") ? ` <button class="btn ghost small" data-switch="">Use the default (${SWITCH[SWITCH_BY_SVC[s.svc] || SWITCH_BY_CAT[svcOf(s).category] || "easy"]})</button>` : ""}` : `Our default for ${esc(catLabel(svcOf(s).category))}. Change it if it's different for you.`}</p>`)}
         ${v.tips?.length ? sec("tips", "Ways to pay less", `${v.tips.length} tip${v.tips.length === 1 ? "" : "s"}`, v.tips.map(t => `<p class="small" style="margin:0">${esc(t)}</p>`).join("")) : ""}
         ${syncHtml(s)}
         <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
@@ -4610,6 +4610,7 @@ function openSheet(id) {
     if (!first) root.querySelector(".sheet").scrollTop = keepScroll;
     root.querySelectorAll("details.sec").forEach(d => d.addEventListener("toggle", () => { secOpen[d.dataset.sec] = d.open; saveSec(); }));
     hookChart(root, s);
+    root.querySelector("#fix-months")?.addEventListener("click", () => { fixMonths = !fixMonths; if (fixMonths) { secOpen.months = true; saveSec(); } draw(); if (fixMonths) root.querySelector('[data-sec="months"]')?.scrollIntoView({ block: "start", behavior: "smooth" }); });
     const close = () => { root.replaceChildren(); render(); };
     root.querySelector("#scrim").onclick = close; root.querySelector("#close").onclick = close;
     const use = (rate, per = s.per) => { setUse(s, rate, per); s.example = false; save(); setTimeout(draw); };
@@ -4699,7 +4700,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 234 · Oct 28", VERSION_NUM = 234;
+const APP_VERSION = "Prototype · Version 235 · Oct 28", VERSION_NUM = 235;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
