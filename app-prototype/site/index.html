@@ -3229,23 +3229,28 @@ function vsChartsHtml() {
     ${P.length ? `<section class="card vs-card"><h3 style="margin:0">Your price vs typical${infoBtn("vsp", "About this chart")}</h3>${infoPanel("vsp", `<p style="margin:0">What you pay for each plan compared with similar plans, lowest at the top. Typical price is the middle of comparable plans: for each service of the same kind, the plan priced closest to yours, or what members report paying for your plan once 3 or more have. Prices are before tax and leave out extra members. Tap a bar to open it.</p>`)}
       <div class="vs-legend small muted"><span><i class="sw" style="background:var(--good)"></i>You pay less</span><span><i class="sw" style="background:var(--bad)"></i>You pay more</span></div>
       <div class="vs-axis"><span></span><span class="vs-ticks"><i>−50%</i><i>Typical</i><i>+50%</i></span><span></span></div>${vsBars(P, "p", 50, v => v <= 0 ? "cheap" : "dear")}</section>` : ""}
-    ${M.length >= 2 ? `<section class="card vs-card vs-map-card"><h3 style="margin:0">Value map${infoBtn("vsm", "How to read the value map")}</h3>${infoPanel("vsm", `<p style="margin:0">Usage across, price up and down. Bottom right is best: you use it a lot and pay less than most. Top left means you use it little and pay more, so it's worth cutting or switching. Squares are protection services, where low use is good news. Tap a dot to open it.</p>`)}
+    ${M.length >= 2 ? `<section class="card vs-card vs-map-card"><h3 style="margin:0">Value map${infoBtn("vsm", "How to read the value map")}</h3>${infoPanel("vsm", `<p style="margin:0">Usage across, price up and down. Bottom right is best: you use it a lot and pay less than most. Top left means you use it little and pay more, so it's worth cutting or switching. Squares are protection services, where low use is good news. Usage goes up to 5 times typical (+500%), with the high end squeezed so each doubling gets the same room. Tap a dot to open it.</p>`)}
       <div class="vs-legend small muted"><span><i class="sw dot" style="background:var(--good)"></i>Great value</span><span><i class="sw dot" style="background:var(--accent)"></i>Fair value</span><span><i class="sw dot" style="background:var(--warn)"></i>Costly</span></div>
       <div id="vs-map" class="vs-map"></div></section>` : ""}</div>`;
 }
 function vsMapDraw(el) {
   const M = vsRows().filter(x => x.u && x.p); if (!el || !M.length) return;
-  const W = Math.max(280, el.clientWidth || 600), sm = W < 520, H = Math.round(Math.max(300, Math.min(420, W * 0.68))), L = 40, Rr = 22, T = sm ? 34 : 14, B = sm ? 54 : 34, xl = 100, yl = 50;
-  const X = v => L + (Math.max(-xl, Math.min(xl, v)) + xl) / (2 * xl) * (W - L - Rr), Y = v => T + (yl - Math.max(-yl, Math.min(yl, v))) / (2 * yl) * (H - T - B);
+  const W = Math.max(280, el.clientWidth || 600), sm = W < 520, H = Math.round(Math.max(300, Math.min(420, W * 0.68))), L = 40, Rr = 22, T = sm ? 34 : 14, B = sm ? 54 : 34;
+  // v226: usage runs from −100% to +500% on a fixed scale that squeezes the high end (each doubling of use gets the same room),
+  // so heavy use (DoorDash at +167%) still moves the dot. Price stretches from ±50% up to ±200% to fit.
+  const xl = 100, xr = 500, ux = v => { v = Math.max(-xl, Math.min(xr, v)); return v < 0 ? v / 100 : Math.log2(1 + v / 100); }, u0 = ux(-xl), u1 = ux(xr);
+  const yl = Math.min(200, Math.max(50, Math.ceil(Math.max(...M.map(x => Math.abs(x.p.pct))) / 25) * 25));
+  const X = v => L + (ux(v) - u0) / (u1 - u0) * (W - L - Rr), Y = v => T + (yl - Math.max(-yl, Math.min(yl, v))) / (2 * yl) * (H - T - B);
+  const xt = sm ? [-100, 0, 100, 200, 500] : [-100, -50, 0, 100, 200, 300, 500], yt = [-yl, -yl / 2, 0, yl / 2, yl];
   const q = (x, y, a, t) => `<text class="vm-q" x="${x}" y="${y}" text-anchor="${a}">${t}</text>`;
-  let g = `<rect x="${X(0)}" y="${Y(0)}" width="${X(xl) - X(0)}" height="${Y(-yl) - Y(0)}" fill="var(--good-soft)"/><rect x="${X(-xl)}" y="${Y(yl)}" width="${X(0) - X(-xl)}" height="${Y(0) - Y(yl)}" fill="var(--warn-soft)"/>`;
-  [-100, -50, 0, 50, 100].forEach(t => g += `<line x1="${X(t)}" x2="${X(t)}" y1="${T}" y2="${H - B}" stroke="${t ? "var(--line)" : "var(--muted)"}" stroke-width="1"/><text class="vm-t" x="${X(t)}" y="${H - B + 14}" text-anchor="middle">${t ? sgn(t) : "Typical"}</text>`);
-  [-50, -25, 0, 25, 50].forEach(t => g += `<line x1="${L}" x2="${W - Rr}" y1="${Y(t)}" y2="${Y(t)}" stroke="${t ? "var(--line)" : "var(--muted)"}" stroke-width="1"/><text class="vm-t" x="${L - 5}" y="${Y(t) + 4}" text-anchor="end">${t ? sgn(t) : "0"}</text>`);
-  g += sm ? q(X(-xl), T - 10, "start", "Cut or switch") + q(X(xl), T - 10, "end", "Find a cheaper plan") + q(X(-xl), H - B + 32, "start", "Watch it") + q(X(xl), H - B + 32, "end", "Keep")
-    : q(X(-xl) + 6, T + 14, "start", "Cut or switch") + q(X(xl) - 6, T + 14, "end", "Find a cheaper plan") + q(X(-xl) + 6, H - B - 8, "start", "Watch it") + q(X(xl) - 6, H - B - 8, "end", "Keep");
+  let g = `<rect x="${X(0)}" y="${Y(0)}" width="${X(xr) - X(0)}" height="${Y(-yl) - Y(0)}" fill="var(--good-soft)"/><rect x="${X(-xl)}" y="${Y(yl)}" width="${X(0) - X(-xl)}" height="${Y(0) - Y(yl)}" fill="var(--warn-soft)"/>`;
+  xt.forEach(t => g += `<line x1="${X(t)}" x2="${X(t)}" y1="${T}" y2="${H - B}" stroke="${t ? "var(--line)" : "var(--muted)"}" stroke-width="1"/><text class="vm-t" x="${X(t)}" y="${H - B + 14}" text-anchor="middle">${t ? sgn(t) : "Typical"}</text>`);
+  yt.forEach(t => g += `<line x1="${L}" x2="${W - Rr}" y1="${Y(t)}" y2="${Y(t)}" stroke="${t ? "var(--line)" : "var(--muted)"}" stroke-width="1"/><text class="vm-t" x="${L - 5}" y="${Y(t) + 4}" text-anchor="end">${t ? sgn(t) : "0"}</text>`);
+  g += sm ? q(X(-xl), T - 10, "start", "Cut or switch") + q(X(xr), T - 10, "end", "Find a cheaper plan") + q(X(-xl), H - B + 32, "start", "Watch it") + q(X(xr), H - B + 32, "end", "Keep")
+    : q(X(-xl) + 6, T + 14, "start", "Cut or switch") + q(X(xr) - 6, T + 14, "end", "Find a cheaper plan") + q(X(-xl) + 6, H - B - 8, "start", "Watch it") + q(X(xr) - 6, H - B - 8, "end", "Keep");
   g += `<text class="vm-t" x="${(L + W - Rr) / 2}" y="${H - 4}" text-anchor="middle">Use less · Usage vs typical · Use more</text>`;
   const col = k => k === "great" ? "var(--good)" : k === "poor" ? "var(--warn)" : "var(--accent)", nm = s => sm ? s.name.split(/[ (]/)[0] : s.name;
-  const boxes = sm ? [] : [[X(-xl), T, X(-xl) + 120, T + 20], [X(xl) - 140, T, X(xl), T + 20], [X(-xl), H - B - 22, X(-xl) + 80, H - B], [X(xl) - 60, H - B - 22, X(xl), H - B]];
+  const boxes = sm ? [] : [[X(-xl), T, X(-xl) + 120, T + 20], [X(xr) - 140, T, X(xr), T + 20], [X(-xl), H - B - 22, X(-xl) + 80, H - B], [X(xr) - 60, H - B - 22, X(xr), H - B]];
   const pts = M.map(x => ({ ...x, x: X(x.u.pct), y: Y(x.p.pct) })); pts.forEach(p => boxes.push([p.x - 7, p.y - 7, p.x + 7, p.y + 7]));
   const hits = b => boxes.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
   pts.forEach(p => { const w = nm(p.s).length * 6.3 + 2; let best = null;
@@ -4554,7 +4559,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 225 · Standalone copy · Oct 28", VERSION_NUM = 225;
+const APP_VERSION = "Prototype · Version 226 · Standalone copy · Oct 28", VERSION_NUM = 226;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
