@@ -1514,6 +1514,7 @@ function rateRaw(s) {
   if (needsPrice(s)) return { key: "ok", label: "Add your price", cpu: null, needs: true };
   // Free services (library, parks, free tiers) are always great value: nothing paid, nothing to lose (Cuong, v76).
   if (isFree(s)) return { key: "great", label: "Free", cpu: null, free: true };
+  if (protectKey(s) === "registrar" && s.inUse === false) return { key: "poor", label: "Domain not in use", cpu: null, dormant: true };  // v223 (Cuong)
   // No usage from the user yet (just added): no rating and no advice until they tell us (Cuong, 2026-10-20).
   const m = measureOf(s);
   if (m.insure) { const q = quoteMonthly(s.quote), mo = monthly(s), mine = serviceOf(s), theirs = s.quote ? serviceBand(s.quote.by, m.insure) : null;
@@ -2048,6 +2049,29 @@ const TYPICAL_USE = {
   books: { m: "uses", mo: 3.8 / 12, text: "3.8 books a year", src: "Audio Publishers Association 2026 survey: audiobook listeners", url: "https://ppc.land/audiobook-sales-hit-2-43-billion-in-2025-as-157-million-americans-tune-in/" },
   food: { m: "uses", mo: 3, text: "3 orders a month", est: true, src: "Our estimate: Verasight survey, March 2026, most delivery app users order a few times a month or less", url: "https://data.verasight.io/money/most-americans-rarely-or-never-use-food-delivery-apps" },
 };
+// Protection and always-on services (Cuong, v223): usage measured their own way, alongside the older "doing its job" and quote ratings,
+// which still decide their rating. Low use is good news here: the advice is a better plan or price, never cancelling required cover.
+const INS_LOW = "Fewer claims than most is good news. Shop for a better plan or raise your deductible to lower the price";
+const PROTECT_USE = {
+  car_insurance: { id: "claims", label: "Claims filed in the last 12 months", one: "claim", short: "claims", per: "year", max: 6,
+    typ: { mo: 11.41 / 100 / 12, text: "about 0.11 claims a year per insured car", src: "ISO via Insurance Information Institute, 2024: claims per 100 car-years across liability, collision and comprehensive (our sum; one accident can bring more than one claim)", url: "https://www.iii.org/fact-statistic/facts-statistics-auto-insurance" },
+    low: INS_LOW + ". Don't cancel: car insurance is required by law." },
+  home_insurance: { id: "claims", label: "Claims filed in the last 12 months", one: "claim", short: "claims", per: "year", max: 6,
+    typ: { mo: 5.64 / 100 / 12, text: "5.6 claims a year per 100 insured homes", src: "ISO via Insurance Information Institute, 2019 to 2023 average", url: "https://www.iii.org/fact-statistic/facts-statistics-homeowners-and-renters-insurance" },
+    low: INS_LOW + ". Don't cancel: home insurance is usually required by your mortgage." },
+  privacy: { id: "alerts", label: "Alerts or threats it reported to you in the last 12 months", one: "alert", short: "alerts", per: "year", max: 100,
+    low: "Few alerts can simply mean you're well protected. Compare the price with similar services." },
+  home_security: { id: "alerts", label: "Alerts plus times you checked the cameras or app, a week", one: "alert or check", short: "alerts and checks", per: "week", max: 100,
+    low: "A quiet system can be good news. Compare the price with similar services." },
+  agent: { id: "mail", label: "Mail and legal papers forwarded in the last 12 months", one: "piece of mail", short: "pieces of mail", per: "year", max: 50,
+    low: "Little mail is normal for a quiet business. Compare the price with other registered agents." },
+  registrar: { id: "inuse", inUse: true, label: "Is this domain in use, with a live website or email?" },
+};
+const protectKey = s => { const v = svcOf(s); if (v.category === "domains") return v.features?.[0]?.overlap_tag === "registered_agent" ? "agent" : "registrar"; return PROTECT_USE[v.category] ? v.category : null; };
+// Monthly usage for sharing and comparing: { m: measure id, v: per month } or null.
+function monthlyUse(s) { const pk = protectKey(s);
+  if (pk) { const pu = PROTECT_USE[pk]; return pu.inUse || s.puse?.v == null ? null : { m: pu.id, v: s.puse.v * PER[pu.per].f }; }
+  const m = measureOf(s); if (s.needsUse || s.uses == null || m.costOnly || m.results || m.insure || m.checks) return null; return { m: m.id, v: s.uses }; }
 const typicalKey = s => { const v = svcOf(s); return TYPICAL_USE[s.svc] ? s.svc : v.category; };
 // Typical monthly usage for this subscription's measure: members' median first (3+ reports), then the published figure.
 function typicalUse(s) { const m = measureOf(s), crowd = USE_POOL?.[s.svc]?.[m.id];
@@ -2055,6 +2079,10 @@ function typicalUse(s) { const m = measureOf(s), crowd = USE_POOL?.[s.svc]?.[m.i
   const t = TYPICAL_USE[typicalKey(s)]; return t && t.m === m.id ? { ...t } : null; }
 // Usage vs typical in %, or null when we can't compare (no usage yet, paused, free, protection plans for now, no typical figure).
 function useVsTypical(s) {
+  const pk = protectKey(s);
+  if (pk) { const pu = PROTECT_USE[pk], mu = monthlyUse(s); if (!mu || pausedNow(s)) return null; const crowd = USE_POOL?.[s.svc]?.[pu.id];
+    const t = crowd && crowd.length >= PR_MIN ? { mo: median(crowd), n: crowd.length, members: true } : pu.typ ? { ...pu.typ } : null; if (!t || !t.mo) return null;
+    return { pct: Math.round((mu.v - t.mo) / t.mo * 100), mine: mu.v, typ: t, protect: pk }; }
   const m = measureOf(s); if (pausedNow(s) || isFree(s) || s.needsUse || m.costOnly || m.results || m.insure || m.checks || m.fixed || m.club || m.bundle || m.amount) return null;
   const t = typicalUse(s); if (!t || !t.mo || s.uses == null) return null;
   return { pct: Math.round((s.uses - t.mo) / t.mo * 100), mine: s.uses, typ: t }; }
@@ -2076,7 +2104,7 @@ function priceVsTypical(s) {
   if (!typ) return null;
   return { pct: Math.round((mine - typ) / typ * 100), mine, typ, n, crowd: !!crowd }; }
 // The value rule. Returns null when usage or price can't be compared, so the older rules still rate it.
-function rateVsTypical(s) { const u = useVsTypical(s), p = priceVsTypical(s); if (!u || !p) return null; const R = VALUE_RULE;
+function rateVsTypical(s) { if (protectKey(s)) return null; const u = useVsTypical(s), p = priceVsTypical(s); if (!u || !p) return null; const R = VALUE_RULE;
   const vt = { u: u.pct, p: p.pct, use: u, price: p };
   if (p.pct >= R.costlyPrice) return { key: "poor", label: "Priced above typical", vt };
   if (u.pct <= R.costlyUse) return { key: "poor", label: "Used far less than typical", vt };
@@ -2089,8 +2117,8 @@ async function saveValueRule(r) { VALUE_RULE = { ...r }; render(); const x = awa
 // Shares this viewer's monthly usage per service (no name), so typical usage can come from members. Debounced, only when it changed.
 let useShareT = null, useShared = "";
 function shareUsage() { if (typeof claude === "undefined") return; clearTimeout(useShareT); useShareT = setTimeout(async () => {
-  const u = {}; state.subs.forEach(s => { if (s.example || s.needsUse || s.uses == null || !CATALOG[s.svc]) return; const m = measureOf(s); if (m.costOnly || m.results || m.insure || m.checks) return;
-    u[s.svc] = { m: m.id, v: +(+s.uses).toFixed(1), at: today() }; });
+  const u = {}; state.subs.forEach(s => { if (s.example || !CATALOG[s.svc]) return; const mu = monthlyUse(s); if (!mu) return;
+    u[s.svc] = { m: mu.m, v: +mu.v.toFixed(3), at: today() }; });
   const sig = JSON.stringify(Object.entries(u).map(([k, e]) => [k, e.m, e.v]).sort()); if (sig === useShared) return;
   const x = await prDb(); if (!x) return;
   try { const ref = x.db.doc("prices/" + await x.user.id()), cur = await ref.get(); await ref.set({ ...(cur?.exists ? cur.data() : {}), u }); useShared = sig; } catch {} }, 4000); }
@@ -3174,11 +3202,11 @@ function vsBars(rows, key, lim, cls) { const cut = rows.length > 10, hide = i =>
       <span class="vs-track"><i class="vs-zero"></i>${w > 0.3 ? `<i class="vs-bar ${cls(v)}" style="${v >= 0 ? "left:50%" : `right:50%`};width:${w}%"></i>` : `<i class="vs-dot"></i>`}</span>
       <b class="num vs-val">${Math.abs(v) > lim ? (v > 0 ? "> " : "< ") : ""}${sgn(v)}</b></button>`; }).join("")
     + (cut ? `<button class="btn ghost small vs-all" type="button" style="justify-self:start;padding-left:0">Show all ${rows.length}</button>` : ""); }
-const protect = s => ["car_insurance", "home_insurance", "privacy", "home_security"].includes(svcOf(s).category);
-function vsTip(s, x) { const m = measureOf(s), out = [s.name];
-  if (x.u) out.push(`Usage ${sgn(x.u.pct)}: ${fmtN(x.u.mine)} ${unitOf(m, x.u.mine)} a month vs typical ${fmtN(Math.round(x.u.typ.mo * 10) / 10)}${x.u.typ.members ? ` (${x.u.typ.n} members)` : ""}`);
+const protect = s => !!protectKey(s);
+function vsTip(s, x) { const pk = protectKey(s), m = pk ? PROTECT_USE[pk] : measureOf(s), out = [s.name], f = pk && m.per ? PER[m.per].f : 1, per = pk && m.per ? m.per : "month";
+  if (x.u) out.push(`Usage ${sgn(x.u.pct)}: ${fmtN(Math.round(x.u.mine / f * 100) / 100)} ${unitOf(m, x.u.mine / f)} a ${per} vs typical ${fmtN(Math.round(x.u.typ.mo / f * 100) / 100)}${x.u.typ.members ? ` (${x.u.typ.n} members)` : ""}`);
   if (x.p) out.push(`Price ${sgn(x.p.pct)}: ${money(x.p.mine)}/mo before tax vs typical ${money(x.p.typ)}`);
-  out.push(rate(s).label); return out.join("\n"); }
+  out.push(rate(s).label); if (x.u?.protect && x.u.pct < 0 && PROTECT_USE[x.u.protect].low) out.push(PROTECT_USE[x.u.protect].low); return out.join("\n"); }
 function vsChartsHtml() {
   const all = vsRows(), U = all.filter(x => x.u).sort((a, b) => b.u.pct - a.u.pct), P = all.filter(x => x.p).sort((a, b) => a.p.pct - b.p.pct), M = all.filter(x => x.u && x.p);
   if (!U.length && !P.length) return "";
@@ -3786,6 +3814,9 @@ function verdictText(s, r) {
   if (introActive(s) && s.uses && regularTotal(s) != null) { const cpu = monthlyOf(s, regularTotal(s)) / s.uses;
     return `Good deal for now. When the ${s.intro.kind === "trial" ? "trial" : "intro price"} ends, each use will cost ${money(cpu)}. Decide before ${fmtDate(s.intro.ends)}.`; }
   if (r.needs) return `Enter what you pay in the price check below so we can rate this subscription.`;
+  if (r.dormant) return `You're renewing a domain with no website or email on it. Let it expire at renewal, or sell it, unless you're holding it for a plan.`;
+  if (r.vt) { const u = r.vt.u, p = r.vt.p, us = u >= 0 ? `you use it ${u}% more than a typical subscriber` : `you use it ${-u}% less than a typical subscriber`, ps = Math.abs(p) < 3 ? "pay about the typical price" : p > 0 ? `pay ${p}% more than similar plans` : `pay ${-p}% less than similar plans`;
+    return r.key === "great" ? `Keep it: ${us} and ${ps}.` : r.key === "poor" ? `${us[0].toUpperCase() + us.slice(1)} and ${ps}. ${p >= VALUE_RULE.costlyPrice ? "Look for a cheaper plan or service." : "Consider cancelling or switching to something cheaper."}` : `${us[0].toUpperCase() + us.slice(1)} and ${ps}.`; }
   if (r.free) return `It's free, so it's great value whenever you use it.`;
   if (r.waiting) return `Tell us how often you use it under How you use it below. Once we know, we'll tell you whether it's worth what you pay and suggest ways to save.`;
   const v = svcOf(s), feats = featuresFor(v, s.plan), plan = planOf(v, s.plan);
@@ -4348,6 +4379,12 @@ function openSheet(id) {
         ${syncHtml(s)}
         ${negoHtml(s) ? sec("nego", "Ask for a lower rate", `<span class="pill poor">Price going up</span>`, negoHtml(s)) : ""}
         ${sec("value", "Usage vs cost", vc.meta, vc.body)}
+        ${protectKey(s) ? (pk => { const pu = PROTECT_USE[pk], u = useVsTypical(s);
+          return sec("puse", pu.inUse ? "Is it in use?" : "How much you use it", pu.inUse ? (s.inUse === false ? "Not in use" : s.inUse ? "In use" : "Not answered") : s.puse?.v != null ? `${fmtN(s.puse.v)} ${unitOf(pu, s.puse.v)} a ${pu.per}` : "Not entered",
+            pu.inUse ? `<p class="small" style="margin:0">${pu.label}</p><div class="chips" role="group" aria-label="${esc(pu.label)}"><button class="chip" id="pu-yes" aria-pressed="${s.inUse === true}">Yes, it's in use</button><button class="chip" id="pu-no" aria-pressed="${s.inUse === false}">No, it's sitting unused</button></div>`
+            : `<label class="small">${pu.label}<input id="pu-v" type="number" min="0" step="1" inputmode="numeric" value="${s.puse?.v ?? ""}" placeholder="e.g. 0"></label>`
+              + (u ? `<p class="small muted" style="margin:0">${u.pct >= 0 ? `${u.pct}% more` : `${-u.pct}% less`} than typical (${u.typ.members ? `${u.typ.n} members` : esc(u.typ.text)}).${u.pct < 0 ? " " + esc(pu.low) : ""}</p>`
+                : pu.typ ? "" : `<p class="small muted" style="margin:0">We'll compare this with other members once 3 or more share theirs.</p>`)); })(protectKey(s)) : ""}
         ${sec("usage", m.insure ? "How it compares" : m.results ? "How it's going" : "How you use it", esc(useText(s)), `
         ${m.insure ? insureHtml(s) : `
         ${m.checks ? `<div><b style="font-size:14px">${esc(m.label)}</b>${checksHtml(s, m, periodKeys(s).cur)}<p class="note" style="margin:4px 0 0">${m.results ? "Tick \u201cEverything's going great!\u201d or leave it blank when everything's fine." : "Nothing is ticked until you use something."} Correct past months under Usage by month.</p></div>${m.results ? `<div style="display:grid;gap:12px;margin-top:12px">${needHtml(s)}${insureHtml(s)}</div>` : ""}`
@@ -4442,6 +4479,9 @@ function openSheet(id) {
     wireChecks(root, () => setTimeout(draw));
     wireInsure(root, s, () => setTimeout(draw));
     wireNeed(root, s, () => setTimeout(draw));
+    const puv = root.querySelector("#pu-v"); if (puv) puv.onchange = () => { const v = parseFloat(puv.value); if (isFinite(v) && v >= 0) s.puse = { v, at: today() }; else delete s.puse; save(); setTimeout(draw); };
+    root.querySelector("#pu-yes")?.addEventListener("click", () => { s.inUse = true; save(); setTimeout(draw); });
+    root.querySelector("#pu-no")?.addEventListener("click", () => { s.inUse = false; save(); setTimeout(draw); });
     root.querySelectorAll("[data-switch]").forEach(b => b.onclick = () => { if (b.dataset.switch) s.switch = b.dataset.switch; else delete s.switch; save(); setTimeout(draw); });
     root.querySelectorAll("[data-alt]").forEach(b => b.onclick = () => { exploreOpen = b.dataset.alt; view = "explore"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
     root.querySelector("[data-alt-all]")?.addEventListener("click", () => { exploreOpen = null; exploreCat = "mine-alts"; view = "add"; root.replaceChildren(); render(); window.scrollTo(0, 0); });
@@ -4510,7 +4550,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 222 · Oct 28", VERSION_NUM = 222;
+const APP_VERSION = "Prototype · Version 223 · Oct 28", VERSION_NUM = 223;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
