@@ -565,6 +565,13 @@ header.top nav.tabs { grid-column: 1 / -1; justify-self: start; }
 .avatar { width: 42px; height: 42px; border-radius: 50%; border: 2px solid rgba(255,255,255,.55); padding: 0; display: grid; place-items: center;
   font: 600 15px var(--f-body); color: #fff; background: linear-gradient(150deg, #4f6fd0, #1e3a8a); box-shadow: 0 4px 14px rgba(0,0,0,.25); }
 .avatar svg { width: 22px; height: 22px; }
+#me-btn { position: relative; }
+.badge { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; background: #e5484d; color: #fff;
+  font: 700 11px/19px var(--f-body); text-align: center; border: 2px solid #fff; box-sizing: border-box; }
+.badge.inline { position: static; display: inline-block; height: auto; line-height: 18px; border: 0; padding: 0 8px; font-size: 12px; }
+.inbox-item { display: grid; gap: 10px; margin-bottom: 12px; } .inbox-item h3 { margin: 0; font-size: 16px; }
+.inbox-item .ib-top { display: flex; gap: 12px; align-items: flex-start; }
+.ib-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #e5484d; margin-right: 7px; vertical-align: 2px; }
 .me-sheet { grid-auto-rows: max-content; grid-template-rows: none; align-content: start; }
 .me-item input.me-check { width: 20px; height: 20px; flex: none; accent-color: var(--accent); }
 .me-sheet .me-head { display: flex; align-items: center; gap: 14px; }
@@ -1707,12 +1714,12 @@ function render() {
   document.getElementById("tab-admin").hidden = !admin.show;
   document.getElementById("tab-shelf").hidden = !admin.shelf;
   if (view === "shelf" && !admin.shelf) view = "home";
-  drawAvatar(document.getElementById("me-btn"));
+  drawAvatar(document.getElementById("me-btn")); inboxBadge();
   document.body.classList.toggle("short-band", view !== "home");
   document.body.classList.toggle("intro-mode", view === "welcome");  // v171-178: big title, no header buttons on all three welcome pages
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
-  root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, manage: manageView, feedback: feedbackView, help: helpView, legal: legalView, back: backView }[view]());
+  root.append({ home: homeView, usage: usageView, overlaps: overlapsView, explore: exploreView, add: addView, settings: settingsView, admin: adminView, shelf: shelfView, welcome: welcomeView, manage: manageView, feedback: feedbackView, help: helpView, inbox: inboxView, legal: legalView, back: backView }[view]());
   personaBar(root);
   root.querySelectorAll("[data-info]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); const k = b.dataset.info;
     infoOpen.has(k) ? infoOpen.delete(k) : infoOpen.add(k); const y = scrollY; render(); window.scrollTo(0, y); }));
@@ -2903,6 +2910,41 @@ function wireCheckin(root) {
 }
 // Usage reminder on Overview (Cuong, v92): subscriptions added over a month ago with no usage entered yet. "Later" hides it for a week.
 const needsNudge = s => s.needsUse && !measureOf(s).costOnly && !!s.start && dayDiff(s.start, today()) >= NEW_DAYS && !pausedNow(s);
+// Inbox (Cuong, v231): alerts and messages live in the profile menu instead of on Overview. Each item has a key;
+// state.inboxSeen holds the keys already seen, and a red badge on the profile button counts the ones that aren't.
+function inboxItems() {
+  if (!state?.subs) return [];
+  const out = [], n = wkList().length, use = state.subs.filter(needsNudge);
+  if (weeklyDue() && !(state.wkLater && state.wkLater > today())) out.push({ key: "wk~" + (wkNext() || "first"), kind: "wk", title: "Your weekly check-in is ready",
+    text: `${n} quick question${n === 1 ? "" : "s"}, about 30 seconds. It keeps your ratings and savings tips right.` });
+  if (use.length && !(state.nudgeLater && state.nudgeLater > today())) out.push({ key: "use~" + use.map(s => s.id).sort().join(","), kind: "use", subs: use, title: "Add your usage",
+    text: `${use.length === 1 ? "This has" : "These have"} been on your list for over a month with no usage entered, so we can't tell if ${use.length === 1 ? "it's" : "they're"} worth it.` });
+  state.subs.filter(s => introActive(s) && daysUntil(s.intro.ends) <= 14).forEach(s => out.push({ key: "intro~" + s.id + "~" + s.intro.ends, kind: "sub", s, title: `${s.intro.kind === "trial" ? "Free trial" : "Promo price"} ending: ${s.name}`,
+    text: `Ends ${fmtDate(s.intro.ends)}, then ${money(monthlyOf(s, regularTotal(s)))} a month. Cancel or compare before then if it isn't worth it.` }));
+  state.subs.filter(s => !introActive(s) && !pausedNow(s)).forEach(s => { const r = s.cycle === "year" || s.renews ? renewsOn(s) || nextRenewal(s) : null, d = r ? daysUntil(r) : null;
+    if (d != null && d >= 0 && d <= 14) out.push({ key: "renew~" + s.id + "~" + r, kind: "sub", s, title: `Renews soon: ${s.name}`,
+      text: `${measureOf(s).insure ? "Policy renews" : "Yearly renewal on"} ${fmtDate(r)}${regularTotal(s) != null ? ` for ${money(regularTotal(s))}` : ""}. ${measureOf(s).insure ? "Get two or three quotes for the same coverage first." : "Decide now if you want to keep it."}` }); });
+  return out;
+}
+const inboxNew = () => { const seen = new Set(state?.inboxSeen || []); return inboxItems().filter(x => !seen.has(x.key)).length; };
+function inboxBadge() { const b = document.getElementById("me-btn"); if (!b) return; const n = view === "welcome" ? 0 : inboxNew();
+  b.querySelector(".badge")?.remove(); if (n) b.insertAdjacentHTML("beforeend", `<span class="badge" aria-hidden="true">${n > 9 ? "9+" : n}</span>`);
+  b.setAttribute("aria-label", `Your profile and settings${n ? `, ${n} new in your inbox` : ""}`); }
+function inboxView() {
+  const items = inboxItems(), seen = new Set(state.inboxSeen || []);
+  const f = el(`<div class="section-head"><h2>Inbox</h2></div>
+    ${items.length ? items.map(x => `<section class="card inbox-item${seen.has(x.key) ? "" : " new"}"><div class="ib-top">${x.s ? logoHtml(svcOf(x.s)) : ""}<div style="min-width:0"><h3>${seen.has(x.key) ? "" : `<span class="ib-dot" aria-label="New"></span>`}${esc(x.title)}</h3>
+        <p class="small muted" style="margin:2px 0 0">${esc(x.text)}</p></div></div>
+      ${x.kind === "wk" ? `<div class="su-btns"><button class="btn primary" id="wk-go">Start check-in</button><button class="btn ghost small" id="wk-later">Later</button></div>`
+        : x.kind === "use" ? `<div class="chips">${x.subs.map(s => `<button class="chip" data-nudge="${s.id}">${logoHtml(svcOf(s), "dot")}${esc(s.name)}</button>`).join("")}</div><div><button class="btn ghost small" id="nudge-later">Remind me later</button></div>`
+        : `<div><button class="btn small" data-ib-open="${x.s.id}">See details</button></div>`}</section>`).join("")
+      : `<section class="card"><h3 style="margin:0">You're all caught up</h3><p class="small muted" style="margin:4px 0 0">Your weekly check-in, renewals and other alerts show up here. We'll put a red badge on your profile button when something new arrives.</p></section>`}`);
+  wireNudge(f); wireWeeklyNudge(f);
+  f.querySelectorAll("[data-ib-open]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.ibOpen)));
+  // Opening the Inbox marks everything in it as seen (the "new" dots stay until you leave).
+  const keys = items.map(x => x.key); if (keys.some(k => !seen.has(k))) { state.inboxSeen = keys; save(); setTimeout(inboxBadge); }
+  return f;
+}
 function usageNudgeHtml() {
   const list = state.subs.filter(needsNudge);
   if (!list.length || (state.nudgeLater && state.nudgeLater > today())) return "";
@@ -3045,8 +3087,6 @@ function homeView() {
     </section>${infoPanel("cmp", cmpInfo)}` : ""}
     ${plkHtml()}
     ${setupHtml()}
-    ${setupTodo().length ? "" : usageNudgeHtml()}
-    ${setupTodo().length ? "" : weeklyNudgeHtml()}
     <div class="charts">${pieHtml()}</div>
     ${vsChartsHtml()}
     ${saveAmt > 0 ? saveHtml(saveAmt) : ""}
@@ -3060,7 +3100,6 @@ function homeView() {
   f.getElementById("cmp-grp")?.addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
   pieWire(f); vsWire(f);
   f.querySelector(".see-how")?.addEventListener("click", () => { view = "overlaps"; render(); document.getElementById("ways")?.scrollIntoView(); });
-  wireNudge(f); wireWeeklyNudge(f);
   f.querySelectorAll(".uml-row").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.id)));
   wireSetup(f);
   f.getElementById("plk-edit")?.addEventListener("click", () => { view = "welcome"; welcomeStep = 1; render(); window.scrollTo(0, 0); });
@@ -4639,7 +4678,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 230 · Oct 28", VERSION_NUM = 230;
+const APP_VERSION = "Prototype · Version 231 · Oct 28", VERSION_NUM = 231;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4694,6 +4733,7 @@ function openMe() {
         <div class="me-head"><span class="avatar" id="me-av"></span><div style="flex:1;min-width:0"><h2 id="me-title">${firstName() ? esc(firstName()) : "Your profile"}</h2><div class="small muted">Settings for this browser</div></div>
           <button class="btn" id="me-close">Close</button></div>
         <div class="me-list">
+          <button class="me-item chev" id="me-inbox">${IC('<path d="M3.5 13.5 6 5.5h12l2.5 8v5h-17z"/><path d="M3.5 13.5h5l1 2h5l1-2h5"/>')}<span class="me-l">Inbox</span><span class="me-v">${(() => { const n = inboxNew(), all = inboxItems().length; return n ? `<span class="badge inline">${n} new</span>` : all ? `${all}` : "Nothing new"; })()}</span></button>
           <label class="me-item" style="display:flex;color:var(--ink);font-size:15px">${IC('<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>')}<span class="me-l">First name</span>
             <input id="me-name" value="${esc(firstName())}" placeholder="For your greeting" autocomplete="given-name" style="width:150px;text-align:right"></label>
           <button class="me-item chev" id="me-loc">${IC('<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>')}<span class="me-l">Location</span><span class="me-v">${esc(locationLabel())}</span></button>
@@ -4730,6 +4770,7 @@ function openMe() {
     document.getElementById("me-grp").addEventListener("change", e => { state.profile = { ...profile(), group: e.target.value }; save(); render(); });
     root.querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { try { localStorage.setItem("sk-theme", b.dataset.t); } catch {} applyTheme(b.dataset.t); draw(false); }));
     document.getElementById("me-loc").addEventListener("click", () => { close(); view = "settings"; render(); window.scrollTo(0, 0); });
+    document.getElementById("me-inbox").addEventListener("click", () => { close(); if (view !== "inbox") lastView = view; view = "inbox"; render(); window.scrollTo(0, 0); });
     document.getElementById("me-help").addEventListener("click", () => { close(); if (!["help", "feedback"].includes(view)) lastView = view; view = "help"; render(); window.scrollTo(0, 0); });
     document.getElementById("me-legal").addEventListener("click", () => { close(); openLegal("terms"); });
     document.getElementById("me-fb").addEventListener("click", () => { close(); if (view !== "feedback") lastView = view; fbSent = false; view = "feedback"; render(); window.scrollTo(0, 0); });
