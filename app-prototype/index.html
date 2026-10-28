@@ -318,7 +318,7 @@ details.sec > .sec-body { grid-template-columns: minmax(0, 1fr); } details.sec >
 .vs-val { font-size: 13px; text-align: right; white-space: nowrap; } .vs-row[hidden] { display: none; }
 .vs-map { width: 100%; overflow: hidden; } .vs-map svg { display: block; max-width: 100%; height: auto; }
 .vm-t { fill: var(--muted); font-size: 11px; font-family: var(--f-body); } .vm-q { fill: var(--ink); font-size: 12px; font-weight: 600; font-family: var(--f-body); }
-.vm-l { fill: var(--ink); font-size: 12px; font-family: var(--f-body); } .vm-pt { cursor: pointer; } .vm-pt:focus-visible { outline: 2px solid var(--accent); }
+.vm-l { fill: var(--ink); font-size: 12px; font-family: var(--f-body); } .vm-ax { fill: var(--ink); font-size: 12px; font-weight: 600; font-family: var(--f-body); } .vm-pt { cursor: pointer; } .vm-pt:focus-visible { outline: 2px solid var(--accent); }
 @media (max-width: 480px) { .vs-axis, .vs-row { grid-template-columns: minmax(0, 34%) minmax(0, 1fr) 60px; } .vs-name { font-size: 13px; } }
 /* Spending donut (Home) and overlap bars. Categorical slots are the validated dataviz default, light and dark. */
 :root { --pie-1: #2a78d6; --pie-2: #eb6834; --pie-3: #1baf7a; --pie-4: #eda100; --pie-5: #e87ba4; --pie-6: #008300; --pie-7: #6250d6; --pie-8: #e34948; --pie-other: #8a8f98; }
@@ -3232,7 +3232,7 @@ function vsChartsHtml() {
 }
 function vsMapDraw(el) {
   const M = vsRows().filter(x => x.u && x.p); if (!el || !M.length) return;
-  const W = Math.max(280, el.clientWidth || 600), sm = W < 520, H = Math.round(Math.max(300, Math.min(420, W * 0.68))), L = 40, Rr = 22, T = sm ? 34 : 14, B = sm ? 54 : 34;
+  const W = Math.max(280, el.clientWidth || 600), sm = W < 520, H = Math.round(Math.max(300, Math.min(420, W * 0.68))), L = 58, Rr = 22, T = sm ? 34 : 14, B = sm ? 54 : 34;
   // v226: usage runs from −100% to +500% on a fixed scale that squeezes the high end (each doubling of use gets the same room),
   // so heavy use (DoorDash at +167%) still moves the dot. Price stretches from ±50% up to ±200% to fit.
   const xl = 100, xr = 500, ux = v => { v = Math.max(-xl, Math.min(xr, v)); return v < 0 ? v / 100 : Math.log2(1 + v / 100); }, u0 = ux(-xl), u1 = ux(xr);
@@ -3245,7 +3245,9 @@ function vsMapDraw(el) {
   yt.forEach(t => g += `<line x1="${L}" x2="${W - Rr}" y1="${Y(t)}" y2="${Y(t)}" stroke="${t ? "var(--line)" : "var(--muted)"}" stroke-width="1"/><text class="vm-t" x="${L - 5}" y="${Y(t) + 4}" text-anchor="end">${t ? sgn(t) : "0"}</text>`);
   g += sm ? q(X(-xl), T - 10, "start", "Cut or switch") + q(X(xr), T - 10, "end", "Find a cheaper plan") + q(X(-xl), H - B + 32, "start", "Watch it") + q(X(xr), H - B + 32, "end", "Keep")
     : q(X(-xl) + 6, T + 14, "start", "Cut or switch") + q(X(xr) - 6, T + 14, "end", "Find a cheaper plan") + q(X(-xl) + 6, H - B - 8, "start", "Watch it") + q(X(xr) - 6, H - B - 8, "end", "Keep");
-  g += `<text class="vm-t" x="${(L + W - Rr) / 2}" y="${H - 4}" text-anchor="middle">Use less · Usage vs typical · Use more</text>`;
+  // v227 (Cuong): named axes. Usage across the bottom, price up the left side.
+  g += `<text class="vm-ax" x="${(L + W - Rr) / 2}" y="${H - 4}" text-anchor="middle">Usage vs typical →</text>
+    <text class="vm-ax" x="13" y="${(T + H - B) / 2}" text-anchor="middle" transform="rotate(-90 13 ${(T + H - B) / 2})">Price vs typical →</text>`;
   const col = k => k === "great" ? "var(--good)" : k === "poor" ? "var(--warn)" : "var(--accent)", nm = s => sm ? s.name.split(/[ (]/)[0] : s.name;
   const boxes = sm ? [] : [[X(-xl), T, X(-xl) + 120, T + 20], [X(xr) - 140, T, X(xr), T + 20], [X(-xl), H - B - 22, X(-xl) + 80, H - B], [X(xr) - 60, H - B - 22, X(xr), H - B]];
   const pts = M.map(x => ({ ...x, x: X(x.u.pct), y: Y(x.p.pct) })); pts.forEach(p => boxes.push([p.x - 7, p.y - 7, p.x + 7, p.y + 7]));
@@ -4556,7 +4558,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 226 · Oct 28", VERSION_NUM = 226;
+const APP_VERSION = "Prototype · Version 227 · Oct 28", VERSION_NUM = 227;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
