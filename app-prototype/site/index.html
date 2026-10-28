@@ -919,8 +919,10 @@ function buildCatalog(d) {
   // v115 (Cuong): Apple One was the only "Bundles" entry, so it sits under Music (its core) and keeps a note saying what it bundles.
   if (CATALOG.apple_one?.category === "bundle") CATALOG.apple_one = { ...CATALOG.apple_one, category: "music", bundleNote: "Bundle: Apple Music, Apple TV, Apple Arcade and iCloud+ for one price" };
   // Features the app knows about before the catalog does (Cuong asked for NFL on Prime, 2026-10-19).
-  Object.entries(EXTRA_FEATURES).forEach(([id, fs]) => { const v = CATALOG[id]; if (v) fs.forEach(f => { if (f.replace) v.features = v.features.map(x => x.id === f.id ? f : x); else if (!v.features.some(x => x.id === f.id)) v.features = [...v.features, f]; }); });
+  addExtraFeatures();
 }
+// Runs again once the researched alternatives load, since some services (Costco) come from there.
+const addExtraFeatures = () => Object.entries(EXTRA_FEATURES).forEach(([id, fs]) => { const v = CATALOG[id]; if (v) fs.forEach(f => { if (f.replace) v.features = v.features.map(x => x.id === f.id ? f : x); else if (!v.features.some(x => x.id === f.id)) v.features = [...v.features, f]; }); });
 // Researched alternatives (alternatives.json) and new Explore categories (explore-extra.json), both app-side; the tracker's services.json is untouched. Researched 2026-10-19.
 // New services join the catalog flagged isAlt so they show in Explore; links add comparisons to services the catalog already has.
 const ALT_TAG = { shipping: "free_shipping", nfl: "live_sports" };
@@ -951,7 +953,9 @@ function homeLoc(v) {
 }
 const moneyIn = (n, cur) => n == null ? "—" : new Intl.NumberFormat(undefined, { style: "currency", currency: cur || currency() }).format(n);
 const locPlan = (l, p) => { const em = p.effective_monthly ?? p.price_monthly ?? (p.price_annual != null ? +(p.price_annual / 12).toFixed(2) : null); return { ...p, effective_monthly: em }; };
-const EXTRA_FEATURES = { amazon_prime: [{ id: "nfl", name: "Thursday Night Football (NFL)", plans: "all" }] };
+// Costco gas and Kirkland Signature (v229, Cuong): both come with every membership level.
+const EXTRA_FEATURES = { amazon_prime: [{ id: "nfl", name: "Thursday Night Football (NFL)", plans: "all" }],
+  costco: [{ id: "gas", name: "Cheaper gas at Costco gas stations", plans: "all" }, { id: "kirkland", name: "Kirkland Signature products", plans: "all" }] };
 const planOf = (svc, planId) => svc.plans.find(p => p.id === planId) || svc.plans.find(p => p.id === svc.default_plan) || svc.plans[0];
 // v207: a plan with no published price (insurers) gives null, not $0 (null * 12 was 0), so the app asks what you pay.
 const priceFor = (plan, cycle) => cycle === "year" ? (plan.price_annual ?? (plan.effective_monthly != null ? plan.effective_monthly * 12 : null)) : (plan.price_monthly ?? plan.effective_monthly);
@@ -4574,7 +4578,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 228 · Standalone copy · Oct 28", VERSION_NUM = 228;
+const APP_VERSION = "Prototype · Version 229 · Standalone copy · Oct 28", VERSION_NUM = 229;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4706,7 +4710,7 @@ document.getElementById("persona-btn").addEventListener("click", openPersonas);
 document.getElementById("view").innerHTML = `<p class="muted">Loading service prices…</p>`;
 fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
   .then(d => Promise.all(["alternatives.json", "explore-extra.json", "location-prices.json", "regional.json"].map(f => fetch(f).then(r => r.ok ? r.json() : {}).catch(() => ({})))).then(xs => [d, xs])).then(([d, xs]) => {
-  buildCatalog(d); xs.slice(0, 2).forEach(buildAlts); LOC_PRICES = xs[2]?.services || {}; buildAlts(xs[3] || {});
+  buildCatalog(d); xs.slice(0, 2).forEach(buildAlts); LOC_PRICES = xs[2]?.services || {}; buildAlts(xs[3] || {}); addExtraFeatures();
   const saved = load();
   // New visitors start on the welcome screen and pick their own subscriptions; returning visitors keep their list.
   state = saved?.subs ? saved : persona !== "me" ? personaState(persona) : FRESH(); if (!state.subs.length && persona === "me" && !saved?.subs) { view = "welcome"; welcomeStep = 0; }
