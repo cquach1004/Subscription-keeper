@@ -147,6 +147,10 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 .section-head h2.about-title { font-size: 30px; color: #a87a00; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .section-head h2.about-title { color: #fbbf24; } }
 :root[data-theme="dark"] .section-head h2.about-title { color: #fbbf24; }
+/* v224 (Cuong): every input on the welcome pages uses the age group tile text: bold 22px (19px on small phones) in the accent color. */
+body.intro-mode #view input:not([type=checkbox]):not([type=radio]):not([type=range]), body.intro-mode #view select, body.intro-mode #view textarea { font: 700 22px/1.15 var(--f-body); color: var(--accent); }
+body.intro-mode #view input::placeholder, body.intro-mode #view textarea::placeholder { font-weight: 500; color: var(--muted); opacity: 1; }
+@media (max-width: 380px) { body.intro-mode #view input:not([type=checkbox]):not([type=radio]):not([type=range]), body.intro-mode #view select, body.intro-mode #view textarea { font-size: 19px; } }
 @media (max-width: 520px) { body.intro-mode .intro-h { font-size: 31px; } body.intro-mode .intro-p { font-size: 20px; } body.intro-mode .intro-src { font-size: 15px; } }
 @media (max-width: 520px) { .intro-h { font-size: 25px; } .intro-p { font-size: 16px; } .intro-pillars { gap: 8px; } .intro-pill { padding: 12px 6px; gap: 4px; } .intro-pill b { font-size: 13px; } .intro-pill .small { font-size: 11.5px; line-height: 1.35; } .intro-pill svg { width: 26px; height: 26px; } }
 #persona-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 6px 6px 6px 14px; border-radius: 14px; background: var(--accent-soft); border: 2px solid var(--accent); font-size: 14px; }
@@ -4550,7 +4554,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 223 · Oct 28", VERSION_NUM = 223;
+const APP_VERSION = "Prototype · Version 224 · Oct 28", VERSION_NUM = 224;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
