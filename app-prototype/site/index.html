@@ -48,6 +48,7 @@ button { cursor: pointer; }
 header.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
 .brand { display: flex; align-items: baseline; gap: 10px; }
 .brand h1 { display: inline-flex; align-items: center; gap: .35em; } .brand-mark { width: 1.25em; height: 1em; flex: none; }  /* v182: MoSuBi bundle logo */
+header.top .brand h1 { color: #4ade80; }  /* v245 (Cuong): MoSuBi name in logo green on every page, not just the welcome pages */
 form.fields [hidden], form.fields[hidden], #a-hint[hidden], nav.tabs[hidden], .cat-item[hidden], .catalog[hidden], .w-h[hidden], .w-more[hidden] { display: none !important; }
 .w-more { margin: -2px 0 12px; padding-left: 0; color: var(--accent); }
 .proto { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 2px 8px; }
@@ -4757,7 +4758,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 244 · Standalone copy · Oct 30", VERSION_NUM = 244;
+const APP_VERSION = "Prototype · Version 245 · Standalone copy · Oct 30", VERSION_NUM = 245;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
