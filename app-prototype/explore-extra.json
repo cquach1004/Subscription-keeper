@@ -1,6 +1,6 @@
 {
  "generated_at": "2026-10-19",
- "note": "New Explore categories researched 2026-10-19. verified=false means the price came from a news or review site. Added 2026-10-23: books (Digital Books) and car_insurance / home_insurance (no list prices). Added 2026-10-23: Adobe Creative Cloud (productivity), prices from Adobe's US plans page. Added 2026-10-25: Erie Insurance car and home (regional, service_states). Added 2026-10-26: domains (Domain & Business Registration): 6 domain registrars (.com yearly price) and 4 registered agents; prices from comparison sites except ZenBusiness (official page). Added 2026-10-30: connected_car (Connected Car), driver_assist (Driver Assist & Self-Driving), satellite_radio (SiriusXM), 25 carmaker programs; verified=false prices come from news, review or owner sites.",
+ "note": "New Explore categories researched 2026-10-19. verified=false means the price came from a news or review site. Added 2026-10-23: books (Digital Books) and car_insurance / home_insurance (no list prices). Added 2026-10-23: Adobe Creative Cloud (productivity), prices from Adobe's US plans page. Added 2026-10-25: Erie Insurance car and home (regional, service_states). Added 2026-10-26: domains (Domain & Business Registration): 6 domain registrars (.com yearly price) and 4 registered agents; prices from comparison sites except ZenBusiness (official page). Added 2026-10-30: connected_car (Connected Car), driver_assist (Driver Assist & Self-Driving), satellite_radio (SiriusXM), 25 carmaker programs; verified=false prices come from news, review or owner sites. Added 2026-10-30: sports_streaming (11), sports_tickets (22 team passes, service_states) and theme_parks (17 season passes, service_states); verified=false prices come from news or review sites.",
  "services": [
   {
    "id": "duolingo",
@@ -17455,6 +17455,3579 @@
    "checked_at": "2026-10-30",
    "color": "#0000eb",
    "mark": "SX"
+  },
+  {
+   "id": "nfl_sunday_ticket",
+   "name": "NFL Sunday Ticket (YouTube)",
+   "category": "sports_streaming",
+   "alternative_to": [
+    "nfl_plus"
+   ],
+   "kind": "direct",
+   "official_url": "https://tv.youtube.com/nfl/",
+   "plans": [
+    {
+     "id": "youtube_tv_addon",
+     "name": "Sunday Ticket add-on for YouTube TV (returning)",
+     "price_monthly": null,
+     "price_annual": 378,
+     "effective_monthly": 31.5,
+     "verified": false,
+     "note": "2026-27 season price for returning customers, on top of the YouTube TV base plan; per 9to5Google (Sep 14, 2026). Billed per season (covers NFL regular season, Sept-Jan). New subscribers were offered up to 50% off ($240) through Sept 30."
+    },
+    {
+     "id": "primetime_channels",
+     "name": "Sunday Ticket on YouTube Primetime Channels (standalone)",
+     "price_monthly": null,
+     "price_annual": 480,
+     "effective_monthly": 40.0,
+     "verified": false,
+     "note": "2026-27 season price without YouTube TV; per 9to5Google (Sep 14, 2026), also payable in monthly installments (~$40/mo). Per-season billing; out-of-market Sunday afternoon games only."
+    },
+    {
+     "id": "new_sub_promo",
+     "name": "New-subscriber promo (2026 season)",
+     "price_monthly": null,
+     "price_annual": 240,
+     "effective_monthly": 20.0,
+     "verified": false,
+     "note": "Limited-time 2026 offer for first-time Sunday Ticket buyers (YouTube Premium members could get $204 in 8 non-cancellable payments of $25.50); per 9to5Google. Expired Sept 30, 2026; returning seasons are full price."
+    }
+   ],
+   "default_plan": "primetime_channels",
+   "features": [
+    {
+     "id": "out_of_market_sunday",
+     "name": "All out-of-market Sunday afternoon games",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "multiview",
+     "name": "Multiview (up to 4 games)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "redzone_addon",
+     "name": "NFL RedZone available as an extra-cost add-on",
+     "plans": "all",
+     "overlap_tag": "nfl_redzone"
+    }
+   ],
+   "best_for": "Fans who follow an out-of-market NFL team and want every Sunday afternoon game.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Local CBS/FOX games and national primetime games are not included (watch on broadcast TV).",
+    "Biggest discounts are early-bird offers before the season starts.",
+    "Season is non-cancellable once paid; installments are a commitment too."
+   ],
+   "sources": [
+    {
+     "label": "9to5Google: 2026 Sunday Ticket details",
+     "url": "https://9to5google.com/2026/09/10/youtube-nfl-sunday-ticket-2026-details/"
+    },
+    {
+     "label": "9to5Google: Sunday Ticket Premium discount",
+     "url": "https://9to5google.com/2026/09/14/nfl-sunday-ticket-youtube-premium-discount/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "NS"
+  },
+  {
+   "id": "nfl_plus",
+   "name": "NFL+",
+   "category": "sports_streaming",
+   "alternative_to": [
+    "nfl_sunday_ticket"
+   ],
+   "kind": "direct",
+   "official_url": "https://www.nfl.com/plus/",
+   "plans": [
+    {
+     "id": "nfl_plus",
+     "name": "NFL+",
+     "price_monthly": 6.99,
+     "price_annual": null,
+     "effective_monthly": 6.99,
+     "verified": false,
+     "note": "$6.99/mo; also $49.99/yr annual option. Live local and primetime games on mobile only, NFL Network. Per nflplayoffpass.com (updated Aug 2026); NFL.com pricing page not checked."
+    },
+    {
+     "id": "nfl_plus_annual",
+     "name": "NFL+ (annual)",
+     "price_monthly": null,
+     "price_annual": 49.99,
+     "effective_monthly": 4.17,
+     "verified": false,
+     "note": "Annual billing; per nflplayoffpass.com (Aug 2026)."
+    },
+    {
+     "id": "premium",
+     "name": "NFL+ Premium",
+     "price_monthly": 14.99,
+     "price_annual": null,
+     "effective_monthly": 14.99,
+     "verified": false,
+     "note": "$14.99/mo; adds NFL RedZone and full/condensed replays. Per nflplayoffpass.com (Aug 2026)."
+    },
+    {
+     "id": "premium_annual",
+     "name": "NFL+ Premium (annual)",
+     "price_monthly": null,
+     "price_annual": 99.99,
+     "effective_monthly": 8.33,
+     "verified": false,
+     "note": "Annual billing; promos (e.g. 20% off) run before the season. Per nflplayoffpass.com."
+    },
+    {
+     "id": "espn_unlimited_bundle",
+     "name": "ESPN Unlimited + NFL+ Premium bundle",
+     "price_monthly": 41.99,
+     "price_annual": null,
+     "effective_monthly": 41.99,
+     "verified": true,
+     "note": "Bundle price listed on ESPN's own plans page (Oct 2026), billed monthly."
+    }
+   ],
+   "default_plan": "premium",
+   "features": [
+    {
+     "id": "local_primetime_mobile",
+     "name": "Live local and primetime games (phone/tablet only)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "nfl_network",
+     "name": "NFL Network",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "redzone",
+     "name": "NFL RedZone",
+     "plans": [
+      "premium",
+      "premium_annual",
+      "espn_unlimited_bundle"
+     ],
+     "overlap_tag": "nfl_redzone"
+    },
+    {
+     "id": "replays",
+     "name": "Full and condensed game replays",
+     "plans": [
+      "premium",
+      "premium_annual",
+      "espn_unlimited_bundle"
+     ],
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "NFL fans who want RedZone, NFL Network and game replays without cable.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Live games are only on phones/tablets; TV viewing is for replays and NFL Network.",
+    "Annual plan is roughly half the cost of paying monthly for 12 months."
+   ],
+   "sources": [
+    {
+     "label": "nflplayoffpass.com NFL+ guide",
+     "url": "https://nflplayoffpass.com/nfl-plus/"
+    },
+    {
+     "label": "ESPN plans page",
+     "url": "https://plus.espn.com/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "NF"
+  },
+  {
+   "id": "nba_league_pass",
+   "name": "NBA League Pass",
+   "category": "sports_streaming",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.nba.com/watch/pricing",
+   "plans": [
+    {
+     "id": "league_pass_season",
+     "name": "League Pass (season)",
+     "price_monthly": null,
+     "price_annual": 109.99,
+     "effective_monthly": 9.17,
+     "verified": true,
+     "note": "2026-27 season price on NBA.com (prepay, season-long; auto-renews before next season). 1 device, with ads. Locally/nationally televised games blacked out live."
+    },
+    {
+     "id": "league_pass_monthly",
+     "name": "League Pass (monthly)",
+     "price_monthly": 16.99,
+     "price_annual": null,
+     "effective_monthly": 16.99,
+     "verified": false,
+     "note": "Monthly rate per CableTV.com/AmericanTV (Oct 2026); NBA.com shows a monthly option without a listed price in our check. Cancel anytime."
+    },
+    {
+     "id": "premium_season",
+     "name": "League Pass Premium (season)",
+     "price_monthly": null,
+     "price_annual": 159.99,
+     "effective_monthly": 13.33,
+     "verified": true,
+     "note": "2026-27 season price on NBA.com. No commercials (in-arena feed), 3 devices, offline downloads."
+    },
+    {
+     "id": "premium_monthly",
+     "name": "League Pass Premium (monthly)",
+     "price_monthly": 24.99,
+     "price_annual": null,
+     "effective_monthly": 24.99,
+     "verified": false,
+     "note": "Monthly rate per CableTV.com/AmericanTV (Oct 2026)."
+    },
+    {
+     "id": "team_pass",
+     "name": "NBA Team Pass (one team)",
+     "price_monthly": 13.99,
+     "price_annual": null,
+     "effective_monthly": 13.99,
+     "verified": false,
+     "note": "Monthly only; one out-of-market team. Per CableTV.com/AmericanTV (Oct 2026)."
+    },
+    {
+     "id": "nba_tv",
+     "name": "NBA TV",
+     "price_monthly": 8.99,
+     "price_annual": null,
+     "effective_monthly": 8.99,
+     "verified": false,
+     "note": "Monthly only; per AmericanTV (Oct 2026)."
+    }
+   ],
+   "default_plan": "league_pass_season",
+   "features": [
+    {
+     "id": "out_of_market",
+     "name": "Live out-of-market NBA games",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "multiview",
+     "name": "Multiview up to 4 games",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "no_ads",
+     "name": "In-arena feed instead of commercials",
+     "plans": [
+      "premium_season",
+      "premium_monthly"
+     ],
+     "overlap_tag": null
+    },
+    {
+     "id": "downloads",
+     "name": "Offline downloads",
+     "plans": [
+      "premium_season",
+      "premium_monthly"
+     ],
+     "overlap_tag": null
+    },
+    {
+     "id": "radio",
+     "name": "Live radio broadcasts of all games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "NBA fans who follow teams outside their local market.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Local-team games are blacked out live (available 3 days later); national ESPN/ABC/NBC/Peacock/Prime games are blacked out until the next morning.",
+    "Season prices often drop as the season goes on; student plans are over 40% off."
+   ],
+   "sources": [
+    {
+     "label": "NBA.com League Pass pricing",
+     "url": "https://www.nba.com/watch/pricing"
+    },
+    {
+     "label": "CableTV.com NBA League Pass plans",
+     "url": "https://www.cabletv.com/sports/nba-league-pass-plans-pricing"
+    },
+    {
+     "label": "AmericanTV NBA League Pass 2026-27",
+     "url": "https://www.americantv.com/nba-league-pass-plans-prices.php"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "NL"
+  },
+  {
+   "id": "mlb_tv",
+   "name": "MLB.TV (via ESPN)",
+   "category": "sports_streaming",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://plus.espn.com/mlbtv",
+   "plans": [
+    {
+     "id": "seasonal",
+     "name": "MLB.TV Seasonal",
+     "price_monthly": null,
+     "price_annual": 149.99,
+     "effective_monthly": 12.5,
+     "verified": true,
+     "note": "Full-season price on ESPN (renews each season around March); price drops in-season (was $29.99 rest-of-season in late Oct 2026). Covers the MLB regular season; requires an ESPN Unlimited account to buy (can cancel ESPN after). Out-of-market only."
+    },
+    {
+     "id": "monthly",
+     "name": "MLB.TV Monthly",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": true,
+     "note": "Billed monthly through October, then renews around March 1. Cancel anytime. Out-of-market games only."
+    },
+    {
+     "id": "mlb_network_at_bat",
+     "name": "MLB Network + At Bat (yearly)",
+     "price_monthly": null,
+     "price_annual": 69.99,
+     "effective_monthly": 5.83,
+     "verified": true,
+     "note": "MLB.com plan: MLB Network stream plus app features, no out-of-market game package; also $6.99/mo."
+    }
+   ],
+   "default_plan": "seasonal",
+   "features": [
+    {
+     "id": "out_of_market",
+     "name": "Live out-of-market regular season games (home and away feeds)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "mlb_network",
+     "name": "MLB Network (US)",
+     "plans": [
+      "seasonal",
+      "monthly",
+      "mlb_network_at_bat"
+     ],
+     "overlap_tag": null
+    },
+    {
+     "id": "big_inning",
+     "name": "MLB Big Inning",
+     "plans": [
+      "seasonal",
+      "monthly"
+     ],
+     "overlap_tag": null
+    },
+    {
+     "id": "audio",
+     "name": "Radio feeds for all 30 teams",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Baseball fans who follow a team outside their home market.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Home-territory teams are blacked out (check your ZIP on MLB.com); in-market streaming is sold separately by teams.",
+    "Buy seasonal after Opening Day sales or late-season for big discounts.",
+    "New buyers get 1 month of ESPN Unlimited free, which then renews at $31.99/mo unless cancelled."
+   ],
+   "sources": [
+    {
+     "label": "ESPN MLB.TV page",
+     "url": "https://plus.espn.com/es-us/mlbtv"
+    },
+    {
+     "label": "MLB.com subscribe page",
+     "url": "https://www.mlb.com/twins/live-stream-games/subscribe"
+    },
+    {
+     "label": "Cord Cutters News: ESPN home of MLB.TV",
+     "url": "https://cordcuttersnews.com/espn-is-now-the-home-of-mlb-tv-pricing-plans-what-fans-need-to-know/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "MV"
+  },
+  {
+   "id": "espn",
+   "name": "ESPN (Select / Unlimited)",
+   "category": "sports_streaming",
+   "alternative_to": [
+    "fubo"
+   ],
+   "kind": "direct",
+   "official_url": "https://plus.espn.com/",
+   "plans": [
+    {
+     "id": "select",
+     "name": "ESPN Select (formerly ESPN+)",
+     "price_monthly": 13.99,
+     "price_annual": null,
+     "effective_monthly": 13.99,
+     "verified": false,
+     "note": "Raised from $12.99 on Sept 17, 2026 per NewscastStudio/The Wrap; ESPN's page did not show a Select price in our check. Monthly; includes NHL Power Play, PGA TOUR LIVE, UFC Fight Nights etc."
+    },
+    {
+     "id": "select_annual",
+     "name": "ESPN Select (annual)",
+     "price_monthly": null,
+     "price_annual": 139.99,
+     "effective_monthly": 11.67,
+     "verified": false,
+     "note": "Per NewscastStudio (Aug 2026 price increase)."
+    },
+    {
+     "id": "unlimited",
+     "name": "ESPN Unlimited",
+     "price_monthly": 31.99,
+     "price_annual": null,
+     "effective_monthly": 31.99,
+     "verified": true,
+     "note": "Listed on ESPN plans page (Oct 2026). ESPN, ESPN2, ESPNU, SEC/ACC Network etc. plus everything in Select. Free with some pay-TV logins."
+    },
+    {
+     "id": "unlimited_annual",
+     "name": "ESPN Unlimited (annual)",
+     "price_monthly": null,
+     "price_annual": 319.99,
+     "effective_monthly": 26.67,
+     "verified": false,
+     "note": "Per NewscastStudio (Aug 2026)."
+    },
+    {
+     "id": "disney_hulu_unlimited",
+     "name": "Disney+, Hulu, ESPN Unlimited bundle",
+     "price_monthly": 35.99,
+     "price_annual": null,
+     "effective_monthly": 35.99,
+     "verified": true,
+     "note": "Starting price on ESPN plans page (with ads)."
+    }
+   ],
+   "default_plan": "unlimited",
+   "features": [
+    {
+     "id": "espn_select_content",
+     "name": "ESPN Select streaming catalog (~32,000 events/yr)",
+     "plans": "all",
+     "overlap_tag": "espn_plus"
+    },
+    {
+     "id": "nhl_power_play",
+     "name": "NHL Power Play out-of-market games",
+     "plans": "all",
+     "overlap_tag": "nhl_out_of_market"
+    },
+    {
+     "id": "linear_networks",
+     "name": "ESPN linear networks (ESPN, ESPN2, ESPNU, SEC Network, ACC Network...)",
+     "plans": [
+      "unlimited",
+      "unlimited_annual",
+      "disney_hulu_unlimited"
+     ],
+     "overlap_tag": null
+    },
+    {
+     "id": "disney_hulu",
+     "name": "Disney+ and Hulu",
+     "plans": [
+      "disney_hulu_unlimited"
+     ],
+     "overlap_tag": "disney_bundle"
+    }
+   ],
+   "best_for": "Cord-cutters who want ESPN channels, college sports and out-of-market NHL.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Check if your TV provider already gives you ESPN Unlimited free in the app.",
+    "The Disney+/Hulu bundle costs only a few dollars more than Unlimited alone.",
+    "Annual plans save about two months versus monthly."
+   ],
+   "sources": [
+    {
+     "label": "ESPN plans page",
+     "url": "https://plus.espn.com/"
+    },
+    {
+     "label": "NewscastStudio: ESPN price hike",
+     "url": "https://www.newscaststudio.com/2026/08/24/espn-dtc-streaming-price-hike-826/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "ES"
+  },
+  {
+   "id": "nhl_power_play",
+   "name": "NHL Power Play on ESPN",
+   "category": "sports_streaming",
+   "alternative_to": [
+    "espn"
+   ],
+   "kind": "direct",
+   "official_url": "https://plus.espn.com/",
+   "plans": [
+    {
+     "id": "via_espn_select",
+     "name": "Included with ESPN Select",
+     "price_monthly": 13.99,
+     "price_annual": null,
+     "effective_monthly": 13.99,
+     "verified": false,
+     "note": "Not sold separately: the NHL out-of-market package comes with ESPN Select ($13.99/mo) or ESPN Unlimited. Price per RSINC/NewscastStudio (Oct 2026). Covers the NHL regular season (Oct-Apr)."
+    },
+    {
+     "id": "via_espn_select_annual",
+     "name": "Included with ESPN Select (annual)",
+     "price_monthly": null,
+     "price_annual": 139.99,
+     "effective_monthly": 11.67,
+     "verified": false,
+     "note": "ESPN Select annual price per RSINC (Oct 2026)."
+    }
+   ],
+   "default_plan": "via_espn_select",
+   "features": [
+    {
+     "id": "out_of_market",
+     "name": "Out-of-market NHL regular season games",
+     "plans": "all",
+     "overlap_tag": "nhl_out_of_market"
+    }
+   ],
+   "best_for": "Hockey fans who follow an out-of-market NHL team.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Your local team's games stay on its regional network and are blacked out.",
+    "Already have ESPN Select or Unlimited? You already have Power Play.",
+    "NHL Center Ice (cable/satellite only) is the alternative; DIRECTV listed $79.98 for 2026-27."
+   ],
+   "sources": [
+    {
+     "label": "RSINC: NHL Center Ice vs ESPN Power Play",
+     "url": "https://www.rsinc.com/nhl-center-ice-vs-espn-power-play.php"
+    },
+    {
+     "label": "Awful Announcing: NHL Power Play rebrand",
+     "url": "https://awfulannouncing.com/espn/espn-is-rebranding-the-nhl-out-of-market-package-as-nhl-power-play-on-espn.html"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "NP"
+  },
+  {
+   "id": "wnba_league_pass",
+   "name": "WNBA League Pass",
+   "category": "sports_streaming",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.wnba.com/league-pass",
+   "plans": [
+    {
+     "id": "season",
+     "name": "WNBA League Pass (season)",
+     "price_monthly": null,
+     "price_annual": 39.99,
+     "effective_monthly": 3.33,
+     "verified": false,
+     "note": "Per CableTV.com (Apr 2026) and App Store in-app price list (Jun 2026). Covers the WNBA season (May-Sept regular season, playoffs to Oct). Also sold via Prime Video Channels."
+    },
+    {
+     "id": "monthly",
+     "name": "WNBA League Pass (monthly)",
+     "price_monthly": 14.99,
+     "price_annual": null,
+     "effective_monthly": 14.99,
+     "verified": false,
+     "note": "Per CableTV.com (Apr 2026) and App Store in-app price list."
+    }
+   ],
+   "default_plan": "season",
+   "features": [
+    {
+     "id": "out_of_market",
+     "name": "Live out-of-market WNBA games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "WNBA fans who follow teams outside their local market.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Local and national broadcasts are blacked out live.",
+    "The season plan costs less than three months of the monthly plan."
+   ],
+   "sources": [
+    {
+     "label": "CableTV.com: How to watch the WNBA",
+     "url": "https://www.cabletv.com/blog/how-to-watch-wnba"
+    },
+    {
+     "label": "App Pricing Lab: WNBA app in-app purchases",
+     "url": "https://apppricinglab.com/iap/apple/641992398"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "WL"
+  },
+  {
+   "id": "dazn",
+   "name": "DAZN",
+   "category": "sports_streaming",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.dazn.com/en-US/",
+   "plans": [
+    {
+     "id": "boxing_monthly",
+     "name": "DAZN Boxing (monthly, cancel anytime)",
+     "price_monthly": 34.99,
+     "price_annual": null,
+     "effective_monthly": 34.99,
+     "verified": true,
+     "note": "US price per DAZN's own pricing article (30 days' notice to cancel)."
+    },
+    {
+     "id": "boxing_annual_monthly",
+     "name": "DAZN Boxing (annual, paid monthly)",
+     "price_monthly": 24.99,
+     "price_annual": null,
+     "effective_monthly": 24.99,
+     "verified": true,
+     "note": "12-month commitment billed $24.99/mo; per DAZN."
+    },
+    {
+     "id": "boxing_annual",
+     "name": "DAZN Boxing (annual upfront)",
+     "price_monthly": null,
+     "price_annual": 249.99,
+     "effective_monthly": 20.83,
+     "verified": true,
+     "note": "Per DAZN."
+    },
+    {
+     "id": "ultimate_annual",
+     "name": "DAZN Ultimate (annual upfront)",
+     "price_monthly": null,
+     "price_annual": 449.99,
+     "effective_monthly": 37.5,
+     "verified": true,
+     "note": "Includes at least 12 PPV events per year; also $44.99/mo on a 12-month instalment plan. Per DAZN."
+    },
+    {
+     "id": "team_season_pass",
+     "name": "Team season pass (NBA/NHL/MLB local teams)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price varies by team: DAZN's example is $119.99/yr or $19.99/mo Standard, $139.99/yr or $24.99/mo Ultimate. Local blackout-free in-market streaming for some teams (e.g. Spurs, Cavaliers)."
+    }
+   ],
+   "default_plan": "boxing_annual",
+   "features": [
+    {
+     "id": "boxing",
+     "name": "Live boxing and combat sports",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "ppv",
+     "name": "Pay-per-view events included",
+     "plans": [
+      "ultimate_annual"
+     ],
+     "overlap_tag": null
+    },
+    {
+     "id": "local_team",
+     "name": "In-market local team games",
+     "plans": [
+      "team_season_pass"
+     ],
+     "overlap_tag": "regional_sports"
+    }
+   ],
+   "best_for": "Boxing fans and fans of teams whose local games stream on DAZN.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Ultimate includes PPVs; worth it if you buy more than 2-3 PPVs a year.",
+    "Team passes are only available in the team's home market."
+   ],
+   "sources": [
+    {
+     "label": "DAZN: US cost and plans",
+     "url": "https://www.dazn.com/en-CA/news/other/dazn-cost-subscription-price-payment-methods-how-to-watch-usa-us-america/p4tzgn0msoc51q2291y9ycjfh"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "DA"
+  },
+  {
+   "id": "tennis_channel",
+   "name": "Tennis Channel (streaming)",
+   "category": "sports_streaming",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.tennischannel.com/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Tennis Channel monthly",
+     "price_monthly": 11.99,
+     "price_annual": null,
+     "effective_monthly": 11.99,
+     "verified": false,
+     "note": "App Store in-app price (checked Mar 2026 via App Pricing Lab); launch price was $9.99/mo in Nov 2024. Billed monthly."
+    },
+    {
+     "id": "annual",
+     "name": "Tennis Channel annual",
+     "price_monthly": null,
+     "price_annual": 109.99,
+     "effective_monthly": 9.17,
+     "verified": false,
+     "note": "Launch price per Nov 2024 press release; same amount appears in App Store in-app list (Mar 2026)."
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "live_tennis",
+     "name": "24/7 Tennis Channel network plus ATP/WTA tour events",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Tennis fans who want ATP and WTA tour events without cable.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Cable/satellite subscribers with Tennis Channel can log in at no extra cost.",
+    "Grand Slams are mostly on ESPN, not Tennis Channel."
+   ],
+   "sources": [
+    {
+     "label": "Business Wire: Tennis Channel DTC launch",
+     "url": "https://businesswire.com/news/home/20241106743991/en/Tennis-Channel-to-Unveil-Direct-to-Consumer-Streaming-Platform-November-12/"
+    },
+    {
+     "label": "App Pricing Lab: Tennis Channel IAP",
+     "url": "https://apppricinglab.com/iap/apple/651092377"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "TC"
+  },
+  {
+   "id": "big_ten_plus",
+   "name": "B1G+ (Big Ten Plus)",
+   "category": "sports_streaming",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.bigtenplus.com/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "B1G+ monthly",
+     "price_monthly": 12.99,
+     "price_annual": null,
+     "effective_monthly": 12.99,
+     "verified": false,
+     "note": "Per ThePricer (Nov 2025). Non-televised Big Ten events from all member schools."
+    },
+    {
+     "id": "annual",
+     "name": "B1G+ annual",
+     "price_monthly": null,
+     "price_annual": 89.99,
+     "effective_monthly": 7.5,
+     "verified": false,
+     "note": "Standard annual price per Cord Cutters News (Oct 14, 2026); a $39.99 ID.me-verified discount pass ran until Dec 31, 2026."
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "non_televised",
+     "name": "Non-televised Big Ten games (Olympic sports, some basketball)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Big Ten fans and families following non-televised college sports.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Football games on FOX/NBC/CBS/BTN are not on B1G+.",
+    "Students, alumni, military and nurses may get the discounted pass."
+   ],
+   "sources": [
+    {
+     "label": "Cord Cutters News: B1G+ offer",
+     "url": "https://cordcuttersnews.com/big-ten-fans-can-save-50-on-b1g-with-new-offer/"
+    },
+    {
+     "label": "ThePricer: B1G+ cost",
+     "url": "https://www.thepricer.org/how-much-does-big-ten-plus-cost/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "BB"
+  },
+  {
+   "id": "flosports",
+   "name": "FloSports",
+   "category": "sports_streaming",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.flosports.tv/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "FloSports monthly",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": false,
+     "note": "Regular price per Hampton University athletics notice (Aug 2026); FloSports site not checked."
+    },
+    {
+     "id": "yearly",
+     "name": "FloSports yearly",
+     "price_monthly": null,
+     "price_annual": 119.88,
+     "effective_monthly": 9.99,
+     "verified": false,
+     "note": "$9.99/mo billed annually; per Hampton University athletics (Aug 2026). A 3-stream family plan was listed at $155.88/yr."
+    }
+   ],
+   "default_plan": "yearly",
+   "features": [
+    {
+     "id": "niche_sports",
+     "name": "Small-college sports, wrestling, track, racing and more",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Fans of small-college sports, wrestling, track and grassroots racing.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Monthly costs 3x the annual rate; buy yearly if you watch all season.",
+    "Many conferences offer .edu or school discount codes."
+   ],
+   "sources": [
+    {
+     "label": "Hampton Pirates: discounted FloSports subscriptions",
+     "url": "https://hamptonpirates.com/news/2026/8/6/football-discounted-flosports-subscriptions-available.aspx"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d4ed8",
+   "mark": "FL"
+  },
+  {
+   "id": "mlb_ballpark_pass_diamondbacks",
+   "name": "Arizona Diamondbacks Ballpark Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/dbacks/tickets",
+   "plans": [
+    {
+     "id": "season",
+     "name": "2026 Ballpark Pass (season)",
+     "price_monthly": null,
+     "price_annual": 299,
+     "effective_monthly": 24.92,
+     "verified": true,
+     "note": "One payment for every 2026 regular-season home game plus 2 preseason exhibitions; upper deck seat varies by game. Non-transferable. Per MLB.com (Dec 2025)."
+    }
+   ],
+   "default_plan": "season",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Phoenix-area fans who want to attend lots of D-backs games cheaply.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Standing room only; tickets arrive in the MLB Ballpark app and you must opt in or check in before each game.",
+    "Sold for a limited time before the season; watch for the 2027 pass in winter."
+   ],
+   "sources": [
+    {
+     "label": "MLB.com: D-backs bring back Ballpark Pass for 2026",
+     "url": "https://www.mlb.com/news/d-backs-bring-back-ballpark-pass-for-2026-season"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "AZ"
+   ],
+   "service_area_note": "Arizona Diamondbacks, Chase Field, Phoenix",
+   "color": "#b91c1c",
+   "mark": "AD"
+  },
+  {
+   "id": "mlb_ballpark_pass_guardians",
+   "name": "Cleveland Guardians Ballpark Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://mlb.com/guardians/tickets/ballpark-pass",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "2026 Ballpark Pass (monthly)",
+     "price_monthly": 59,
+     "price_annual": null,
+     "effective_monthly": 59,
+     "verified": true,
+     "note": "$59/month including fees for standing-room access to any home game (incl. opening day); billed monthly during the 2026 season. Per MLB.com (2026)."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Cleveland fans who go to several games a month.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Standing room only; tickets arrive in the MLB Ballpark app and you must opt in or check in before each game.",
+    "2027 details not yet posted; sign up on the interest form."
+   ],
+   "sources": [
+    {
+     "label": "MLB.com: Guardians Ballpark Pass announced",
+     "url": "https://www.mlb.com/news/guardians-2026-home-opener-sold-out-ballpark-pass-announced"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "OH"
+   ],
+   "service_area_note": "Cleveland Guardians, Progressive Field, Cleveland",
+   "color": "#b91c1c",
+   "mark": "CG"
+  },
+  {
+   "id": "mlb_ballpark_pass_cardinals",
+   "name": "St. Louis Cardinals Budweiser Ballpark Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/cardinals/tickets/specials/ballpark-pass",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Budweiser Ballpark Pass (monthly)",
+     "price_monthly": 49.99,
+     "price_annual": null,
+     "effective_monthly": 49.99,
+     "verified": true,
+     "note": "$49.99/mo plus $5 set-up fee (first month $54.99); billed April-September 2026. Cancel by the 20th for end of month. Per Cardinals page."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "St. Louis fans who want any-game standing-room access.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Standing room only; tickets arrive in the MLB Ballpark app and you must opt in or check in before each game.",
+    "Email optoutpass@cardinals.com by the 20th to cancel.",
+    "2026 sales are closed; 2027 info to come."
+   ],
+   "sources": [
+    {
+     "label": "Cardinals Ballpark Pass page",
+     "url": "https://www.mlb.com/cardinals/tickets/specials/ballpark-pass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "MO"
+   ],
+   "service_area_note": "St. Louis Cardinals, Busch Stadium, St. Louis",
+   "color": "#b91c1c",
+   "mark": "SL"
+  },
+  {
+   "id": "mlb_ballpark_pass_brewers",
+   "name": "Milwaukee Brewers Ballpark Pass+",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/brewers/tickets/specials/ballpark-pass",
+   "plans": [
+    {
+     "id": "sro",
+     "name": "Ballpark Pass+ SRO",
+     "price_monthly": 42.99,
+     "price_annual": null,
+     "effective_monthly": 42.99,
+     "verified": true,
+     "note": "Unlimited games, standing room; monthly subscription during the 2026 season. Per Brewers page."
+    },
+    {
+     "id": "value",
+     "name": "Ballpark Pass+ Value",
+     "price_monthly": 64.99,
+     "price_annual": null,
+     "effective_monthly": 64.99,
+     "verified": true,
+     "note": "Reserved seats for 2 games per month; monthly."
+    },
+    {
+     "id": "premium",
+     "name": "Ballpark Pass+ Premium",
+     "price_monthly": 139.99,
+     "price_annual": null,
+     "effective_monthly": 139.99,
+     "verified": true,
+     "note": "Reserved seats for unlimited games; monthly."
+    }
+   ],
+   "default_plan": "sro",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Milwaukee fans who want flexible any-game access.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Includes presale access to postseason home games (extra fee).",
+    "Reservations are non-transferable."
+   ],
+   "sources": [
+    {
+     "label": "Brewers Ballpark Pass+ page",
+     "url": "https://www.mlb.com/brewers/tickets/specials/ballpark-pass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "WI"
+   ],
+   "service_area_note": "Milwaukee Brewers, American Family Field, Milwaukee",
+   "color": "#b91c1c",
+   "mark": "MB"
+  },
+  {
+   "id": "mlb_ballpark_pass_twins",
+   "name": "Minnesota Twins Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/twins/tickets/specials/twins-pass",
+   "plans": [
+    {
+     "id": "all_in",
+     "name": "Twins Pass All-In (season)",
+     "price_monthly": null,
+     "price_annual": 249,
+     "effective_monthly": 20.75,
+     "verified": false,
+     "note": "2026 price: $229 through Feb 28, then $249; one payment, no cancellation. Per ESPN Sioux Falls (2026); Twins page did not show prices after sales closed."
+    },
+    {
+     "id": "monthly",
+     "name": "Twins Pass (monthly)",
+     "price_monthly": 49,
+     "price_annual": null,
+     "effective_monthly": 49,
+     "verified": false,
+     "note": "$49/mo plus one-time $5 fee in 2026, charged around the 19th each month; cancel anytime. Per ESPN Sioux Falls."
+    }
+   ],
+   "default_plan": "all_in",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Twin Cities fans who go to many games.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Ballpark Access ticket, no guaranteed seat (standing room, drink rails).",
+    "Buy the All-In pass early for the lowest price."
+   ],
+   "sources": [
+    {
+     "label": "Twins Pass page",
+     "url": "https://www.mlb.com/twins/tickets/specials/twins-pass"
+    },
+    {
+     "label": "ESPN Sioux Falls: Twins Pass 2026",
+     "url": "https://espnsiouxfalls.com/ixp/150/p/minnesota-twins-pass-2026/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "MN"
+   ],
+   "service_area_note": "Minnesota Twins, Target Field, Minneapolis",
+   "color": "#b91c1c",
+   "mark": "MT"
+  },
+  {
+   "id": "mlb_ballpark_pass_rockies",
+   "name": "Colorado Rockies Ballpark Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/rockies/tickets/ballpark-pass",
+   "plans": [
+    {
+     "id": "season",
+     "name": "Season Ballpark Pass",
+     "price_monthly": null,
+     "price_annual": 199,
+     "effective_monthly": 16.58,
+     "verified": true,
+     "note": "2026: $199 paid in full for 80 home games (excludes Opening Day); sold out. Per Rockies page."
+    },
+    {
+     "id": "monthly",
+     "name": "Monthly Ballpark Pass",
+     "price_monthly": 39.99,
+     "price_annual": null,
+     "effective_monthly": 39.99,
+     "verified": true,
+     "note": "2026: $39.99 per month pass (June $49.99), covering all eligible games that month."
+    }
+   ],
+   "default_plan": "season",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Denver fans who want cheap any-game access, including the Rooftop.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Standing room only; tickets arrive in the MLB Ballpark app and you must opt in or check in before each game.",
+    "Guest passes from $10; season pass sells out early."
+   ],
+   "sources": [
+    {
+     "label": "Rockies Ballpark Pass page",
+     "url": "https://www.mlb.com/rockies/tickets/ballpark-pass"
+    },
+    {
+     "label": "Resell Calendar: 2026 Rockies Ballpark Pass",
+     "url": "https://resellcalendar.com/news/news/2026-colorado-rockies-ballpark-pass-cheap-baseball-tickets/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "CO"
+   ],
+   "service_area_note": "Colorado Rockies, Coors Field, Denver",
+   "color": "#b91c1c",
+   "mark": "CR"
+  },
+  {
+   "id": "mlb_ballpark_pass_rangers",
+   "name": "Texas Rangers Ballpark Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/rangers/tickets/packs/ballpark-pass",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Ballpark Pass (monthly)",
+     "price_monthly": 49.99,
+     "price_annual": null,
+     "effective_monthly": 49.99,
+     "verified": true,
+     "note": "2026 regular season, billed monthly; excludes Opening Day. Per Rangers page."
+    },
+    {
+     "id": "season",
+     "name": "Ballpark Pass (full season)",
+     "price_monthly": null,
+     "price_annual": 249.99,
+     "effective_monthly": 20.83,
+     "verified": false,
+     "note": "Limited-time 2026 full-season option per National Today/WFAA (Mar 2026)."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Dallas-Fort Worth fans who want standing-room access to any game.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Standing room only; tickets arrive in the MLB Ballpark app and you must opt in or check in before each game.",
+    "Pass holders do not get Lone Star Member benefits."
+   ],
+   "sources": [
+    {
+     "label": "Rangers Ballpark Pass page",
+     "url": "https://www.mlb.com/rangers/tickets/packs/ballpark-pass"
+    },
+    {
+     "label": "National Today: Rangers $250 Ballpark Pass",
+     "url": "https://nationaltoday.com/us/tx/arlington/news/2026/03/13/texas-rangers-unveil-250-ballpark-pass-for-2026-season/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "TX"
+   ],
+   "service_area_note": "Texas Rangers, Globe Life Field, Arlington",
+   "color": "#b91c1c",
+   "mark": "TR"
+  },
+  {
+   "id": "mlb_ballpark_pass_mets",
+   "name": "New York Mets Amazin' Mets Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/mets/tickets/specials/amazin-mets-pass",
+   "plans": [
+    {
+     "id": "season",
+     "name": "Amazin' Mets Pass (2026 season)",
+     "price_monthly": null,
+     "price_annual": 340,
+     "effective_monthly": 28.33,
+     "verified": true,
+     "note": "One-time $340 for a standing-room ticket to every 2026 regular-season home game, with some excluded dates. All sales final. Per Mets page."
+    }
+   ],
+   "default_plan": "season",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "New York fans who'll attend lots of Mets games.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Excludes several high-demand dates (e.g. Subway Series).",
+    "Up to 6 passes per household; you can forward tickets in the app."
+   ],
+   "sources": [
+    {
+     "label": "Mets Amazin' Mets Pass page",
+     "url": "https://www.mlb.com/mets/tickets/specials/amazin-mets-pass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "NY"
+   ],
+   "service_area_note": "New York Mets, Citi Field, Queens, New York City",
+   "color": "#b91c1c",
+   "mark": "NY"
+  },
+  {
+   "id": "mlb_ballpark_pass_angels",
+   "name": "Los Angeles Angels Big A Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/angels/tickets/specials/big-a-pass",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Big A Pass (monthly)",
+     "price_monthly": 49,
+     "price_annual": null,
+     "effective_monthly": 49,
+     "verified": true,
+     "note": "$49/month per seat; auto-renews on the 26th, cancel between the 15th and 25th in the MLB Ballpark app. View level/outfield seat varies. Per Angels page (2026)."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Orange County fans who go to several Angels games a month.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "High-demand games (Opening Day, Dodgers, Yankees, July 4) are excluded.",
+    "No partial refunds; access runs to month end after cancelling."
+   ],
+   "sources": [
+    {
+     "label": "Angels Big A Pass page",
+     "url": "https://www.mlb.com/angels/tickets/specials/big-a-pass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "CA"
+   ],
+   "service_area_note": "Los Angeles Angels, Angel Stadium, Anaheim",
+   "color": "#b91c1c",
+   "mark": "LA"
+  },
+  {
+   "id": "mlb_ballpark_pass_white_sox",
+   "name": "Chicago White Sox Ballpark Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/whitesox/tickets/ballpark-pass",
+   "plans": [
+    {
+     "id": "april_may",
+     "name": "2026 Ballpark Pass (April-May)",
+     "price_monthly": null,
+     "price_annual": 149,
+     "effective_monthly": 12.42,
+     "verified": true,
+     "note": "$149 for 28 home games in April and May 2026 including Opening Day; sales ended. Treated as a one-time per-season price. Per White Sox page."
+    }
+   ],
+   "default_plan": "april_may",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Chicago South Side fans who want cheap spring access.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Covers only April and May games.",
+    "Watch for a 2027 version in late winter."
+   ],
+   "sources": [
+    {
+     "label": "White Sox Ballpark Pass page",
+     "url": "https://www.mlb.com/whitesox/tickets/ballpark-pass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "IL"
+   ],
+   "service_area_note": "Chicago White Sox, Rate Field, Chicago",
+   "color": "#b91c1c",
+   "mark": "CW"
+  },
+  {
+   "id": "mlb_ballpark_pass_red_sox",
+   "name": "Boston Red Sox Fenway Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/redsox/tickets/specials/fenway-pass",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Fenway Pass (per month)",
+     "price_monthly": 99,
+     "price_annual": null,
+     "effective_monthly": 99,
+     "verified": true,
+     "note": "2026: $99 for lower-level standing room to every August home game, auto-enrolled for September at $99 unless opted out by Aug 14. Registration/lottery based. Per Red Sox page."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Boston fans who want late-season Fenway access.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Sold by registration for a limited number of passes.",
+    "Original purchaser must attend; tickets cannot be resold."
+   ],
+   "sources": [
+    {
+     "label": "Red Sox Fenway Pass page",
+     "url": "https://www.mlb.com/redsox/tickets/specials/fenway-pass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "MA"
+   ],
+   "service_area_note": "Boston Red Sox, Fenway Park, Boston",
+   "color": "#b91c1c",
+   "mark": "BR"
+  },
+  {
+   "id": "mlb_ballpark_pass_phillies",
+   "name": "Philadelphia Phillies Ballpark Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/phillies/tickets/ballpark-pass",
+   "plans": [
+    {
+     "id": "spring",
+     "name": "Spring Ballpark Pass",
+     "price_monthly": 125,
+     "price_annual": null,
+     "effective_monthly": 125,
+     "verified": true,
+     "note": "$125 for 15 home games (3/30-4/30); season inferred as 2026 from the page. Month-long pass, one payment."
+    },
+    {
+     "id": "september",
+     "name": "September Ballpark Pass",
+     "price_monthly": 110,
+     "price_annual": null,
+     "effective_monthly": 110,
+     "verified": true,
+     "note": "$110 for all 13 September home games; inferred 2026. One payment."
+    },
+    {
+     "id": "season",
+     "name": "Season Ballpark Pass",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Season pass offered but price no longer shown (offer ended)."
+    }
+   ],
+   "default_plan": "spring",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Philadelphia fans who want a month of standing-room access.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Passes are sold month by month and sell out; check back each month.",
+    "No postseason access."
+   ],
+   "sources": [
+    {
+     "label": "Phillies Ballpark Pass options",
+     "url": "https://www.mlb.com/phillies/tickets/ballpark-pass"
+    },
+    {
+     "label": "Phillies Spring Ballpark Pass",
+     "url": "https://www.mlb.com/phillies/tickets/april-ballpark-pass"
+    },
+    {
+     "label": "Phillies September Ballpark Pass",
+     "url": "https://www.mlb.com/phillies/tickets/september-ballpark-pass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "PA"
+   ],
+   "service_area_note": "Philadelphia Phillies, Citizens Bank Park, Philadelphia",
+   "color": "#b91c1c",
+   "mark": "PP"
+  },
+  {
+   "id": "mlb_ballpark_pass_pirates",
+   "name": "Pittsburgh Pirates Ballpark Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/pirates/tickets/specials/ballpark-pass",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Ballpark Pass (monthly)",
+     "price_monthly": 55,
+     "price_annual": null,
+     "effective_monthly": 55,
+     "verified": true,
+     "note": "\"Starts at $55\"/month on the Pirates page (season not stated; 2027 info coming). Auto-renews on the 25th; opt out by the 20th. A 2025 report listed $49/mo + $5 fee and a $65/mo Plus tier."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Pittsburgh fans who want any-game access.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Standing room only; tickets arrive in the MLB Ballpark app and you must opt in or check in before each game.",
+    "Email passoptout@pirates.com by the 20th to stop the next month."
+   ],
+   "sources": [
+    {
+     "label": "Pirates Ballpark Pass page",
+     "url": "https://www.mlb.com/pirates/tickets/specials/ballpark-pass"
+    },
+    {
+     "label": "Allied News: Two ways to save on MLB tickets",
+     "url": "https://www.alliednews.com/sports/extra-innings-two-ways-to-save-on-mlb-tickets/article_7b7c5fe5-0ac0-44b4-87d1-efd60eac78dc.html"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "PA"
+   ],
+   "service_area_note": "Pittsburgh Pirates, PNC Park, Pittsburgh",
+   "color": "#b91c1c",
+   "mark": "PP"
+  },
+  {
+   "id": "mlb_ballpark_pass_reds",
+   "name": "Cincinnati Reds 3-2-1 Tuesday Ballpark Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/reds/tickets/321-tuesdays/321-tuesdays-ballpark-pass",
+   "plans": [
+    {
+     "id": "tuesdays",
+     "name": "3-2-1 Tuesday Ballpark Pass (2027)",
+     "price_monthly": null,
+     "price_annual": 49.99,
+     "effective_monthly": 4.17,
+     "verified": true,
+     "note": "\"As low as $49.99\" for all 12 regular-season Tuesday home games in 2027; one-time per-season price. No assigned seat. Per Reds page. The Reds do not appear to sell an any-game monthly pass."
+    }
+   ],
+   "default_plan": "tuesdays",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Cincinnati fans who can make Tuesday night games.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Opt in by text on game morning.",
+    "Only Tuesday games are included."
+   ],
+   "sources": [
+    {
+     "label": "Reds 3-2-1 Tuesday Ballpark Pass",
+     "url": "https://www.mlb.com/reds/tickets/321-tuesdays/321-tuesdays-ballpark-pass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "OH"
+   ],
+   "service_area_note": "Cincinnati Reds, Great American Ball Park, Cincinnati",
+   "color": "#b91c1c",
+   "mark": "CR"
+  },
+  {
+   "id": "mlb_ballpark_pass_nationals",
+   "name": "Washington Nationals Ballpark Access Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/nationals/tickets/specials/natspass",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Ballpark Access Pass",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Price not shown: page says sales have concluded for the year; check back for next season. No reliable current price found."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "DC fans who want flexible access to Nats games.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Sales close during the season; watch for the 2027 launch."
+   ],
+   "sources": [
+    {
+     "label": "Nationals Ballpark Access Pass page",
+     "url": "https://www.mlb.com/nationals/tickets/specials/natspass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "DC"
+   ],
+   "service_area_note": "Washington Nationals, Nationals Park, Washington, DC",
+   "color": "#b91c1c",
+   "mark": "WN"
+  },
+  {
+   "id": "mlb_ballpark_pass_orioles",
+   "name": "Baltimore Orioles O's Unlimited",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mlb.com/orioles/tickets/unlimited",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "O's Unlimited",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Page exists (access to any game) but no current price shown. Launched in 2021 at $40/month for August-September (CBS Baltimore); no 2026 price found."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Baltimore fans who want any-game access late in the season.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Historically sold only for August and September."
+   ],
+   "sources": [
+    {
+     "label": "Orioles O's Unlimited page",
+     "url": "https://www.mlb.com/orioles/tickets/unlimited"
+    },
+    {
+     "label": "CBS Baltimore: O's Unlimited launch (2021)",
+     "url": "https://www.cbsnews.com/amp/baltimore/news/orioles-launch-40-unlimited-ticket-pass-for-august-and-september"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "MD"
+   ],
+   "service_area_note": "Baltimore Orioles, Oriole Park at Camden Yards, Baltimore",
+   "color": "#b91c1c",
+   "mark": "BO"
+  },
+  {
+   "id": "mlb_ballpark_pass_astros",
+   "name": "Houston Astros Moon Shot Monthly Subscription",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://mlb.com/astros/tickets/plans/moonshot-plan",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Moon Shot Plan",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Monthly subscription for up to 2 regular-season home games per month with chosen seats; price not shown on the page (behind the shop link)."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Houston fans who go to about two games a month.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Reservations don't roll over to the next month.",
+    "No postseason access."
+   ],
+   "sources": [
+    {
+     "label": "Astros Moon Shot plan page",
+     "url": "https://mlb.com/astros/tickets/plans/moonshot-plan"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "TX"
+   ],
+   "service_area_note": "Houston Astros, Daikin Park, Houston",
+   "color": "#b91c1c",
+   "mark": "HA"
+  },
+  {
+   "id": "nhl_rangers_pass",
+   "name": "New York Rangers Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.nhl.com/rangers/tickets/rangers-pass",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Rangers Pass",
+     "price_monthly": 150,
+     "price_annual": null,
+     "effective_monthly": 150,
+     "verified": true,
+     "note": "$150 per pass per month for 2 eligible home games in the 100 or 200 level; auto-renews monthly during the 2026-27 regular season (Oct-Apr). Cancel between the 15th and 25th. Per Rangers page/FAQ (Sep 2026)."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "2 eligible regular-season home games per month",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rangers fans who want two lower-bowl games a month without a season plan.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Seats are assigned 4 hours before puck drop.",
+    "Playoff games not included."
+   ],
+   "sources": [
+    {
+     "label": "Rangers Pass page",
+     "url": "https://www.nhl.com/rangers/tickets/rangers-pass"
+    },
+    {
+     "label": "NHL.com: Rangers Pass FAQ",
+     "url": "https://nhl.com/news/nyr-rangers-pass-faq"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "NY"
+   ],
+   "service_area_note": "New York Rangers, Madison Square Garden, New York City",
+   "color": "#b91c1c",
+   "mark": "NY"
+  },
+  {
+   "id": "nhl_blues_hat_trick",
+   "name": "St. Louis Blues Hat Trick Subscription",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.nhl.com/blues/tickets/hat-trick-subscription",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Hat Trick Subscription",
+     "price_monthly": 79,
+     "price_annual": null,
+     "effective_monthly": 79,
+     "verified": false,
+     "note": "$79/month for 3 pre-set home games with a Mezzanine seat; renews on the 26th. Per SI (season not stated); the Blues page returned an error in our check, so current availability is unconfirmed."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "3 pre-selected home games per month",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Blues fans who want three games a month at a fixed price.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Next month's games are announced on the 15th."
+   ],
+   "sources": [
+    {
+     "label": "SI: Blues introduce subscription ticket plan",
+     "url": "https://www.si.com/onsi/breakaway/news-feed-page/posts/st-louis-blues-introduce-subscription-ticket-plan"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "MO"
+   ],
+   "service_area_note": "St. Louis Blues, Enterprise Center, St. Louis",
+   "color": "#b91c1c",
+   "mark": "SL"
+  },
+  {
+   "id": "ncaa_south_carolina_go_pass",
+   "name": "South Carolina Gamecock Go Pass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://thegamecockclub.com/go-pass/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Gamecock Go Pass",
+     "price_monthly": 25,
+     "price_annual": null,
+     "effective_monthly": 25,
+     "verified": true,
+     "note": "$25/month, cancel anytime; 2026-27 reservations. Non-conference football (not Clemson), most basketball/baseball, all softball, soccer and volleyball. Per Gamecock Club."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "multi_sport",
+     "name": "Access to many home events across sports",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Gamecock fans who attend lots of non-premium home events.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Conference football seats cost extra (from $15).",
+    "Premier basketball and baseball games may cost extra."
+   ],
+   "sources": [
+    {
+     "label": "Gamecock Club: Go Pass",
+     "url": "https://thegamecockclub.com/go-pass/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "SC"
+   ],
+   "service_area_note": "South Carolina Gamecocks, Columbia",
+   "color": "#b91c1c",
+   "mark": "SC"
+  },
+  {
+   "id": "ncaa_siu_pawpass",
+   "name": "Southern Illinois Salukis PawPass",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://siusalukis.com/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "PawPass",
+     "price_monthly": 19.99,
+     "price_annual": null,
+     "effective_monthly": 14.99,
+     "verified": true,
+     "note": "$19.99/month for 9 monthly payments ($179.91 per ticket), 2025-26 season; auto-renews each June. Football, men's and women's basketball. 2026-27 price not confirmed. Per SIU Athletics (Jun 2025)."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "multi_sport",
+     "name": "Football and basketball home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Saluki fans who attend football and basketball.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Postseason games not included.",
+    "Remember it auto-renews in June."
+   ],
+   "sources": [
+    {
+     "label": "SIU Athletics: PawPass returns 2025-26",
+     "url": "https://siusalukis.com/news/2025/6/2/news-a-ticket-to-every-game-for-19-99-month-pawpass-returns-in-2025-26"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "IL"
+   ],
+   "service_area_note": "Southern Illinois University Salukis, Carbondale",
+   "color": "#b91c1c",
+   "mark": "SI"
+  },
+  {
+   "id": "ncaa_minnesota_gopher_pass",
+   "name": "Minnesota Gophers Gopher Pass (football)",
+   "category": "sports_tickets",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://gophersports.com/GopherPass",
+   "plans": [
+    {
+     "id": "season",
+     "name": "Gopher Pass 2026",
+     "price_monthly": null,
+     "price_annual": 254,
+     "effective_monthly": 21.17,
+     "verified": true,
+     "note": "$254 + tax for all seven 2026 home football games; single per-season payment. Per gophersports.com."
+    }
+   ],
+   "default_plan": "season",
+   "features": [
+    {
+     "id": "home_games",
+     "name": "Admission to eligible regular-season home games",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Gopher football fans who want every home game.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Price is per season, not monthly."
+   ],
+   "sources": [
+    {
+     "label": "Gopher Pass page",
+     "url": "https://gophersports.com/GopherPass"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "service_states": [
+    "MN"
+   ],
+   "service_area_note": "University of Minnesota Golden Gophers, Huntington Bank Stadium, Minneapolis",
+   "color": "#b91c1c",
+   "mark": "MG"
+  },
+  {
+   "id": "disneyland_magic_key",
+   "name": "Disneyland Magic Key",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CA"
+   ],
+   "service_area_note": "Disneyland Park and Disney California Adventure, Anaheim, CA.",
+   "official_url": "https://disneyland.disney.go.com/passes/",
+   "plans": [
+    {
+     "id": "inspire",
+     "name": "Inspire Key",
+     "price_monthly": 150,
+     "price_annual": 1899,
+     "effective_monthly": 158.25,
+     "verified": true,
+     "note": "Ages 3+; up to 6 park reservations held at once; fewest blockout dates. CA residents (ZIP 90000-96199, 18+) can pay $99 down then 12 monthly payments of $150 at 0% APR."
+    },
+    {
+     "id": "believe",
+     "name": "Believe Key",
+     "price_monthly": 114.59,
+     "price_annual": 1474,
+     "effective_monthly": 122.83,
+     "verified": true,
+     "note": "Up to 6 reservations; blockout dates apply. CA-resident monthly option: $99 down then 12 x $114.59 at 0% APR."
+    },
+    {
+     "id": "explore",
+     "name": "Explore Key",
+     "price_monthly": 75,
+     "price_annual": 999,
+     "effective_monthly": 83.25,
+     "verified": true,
+     "note": "New in 2026; valid on select dates each season, up to 4 reservations. CA-resident monthly option: $99 down then 12 x $75 at 0% APR."
+    },
+    {
+     "id": "imagine",
+     "name": "Imagine Key",
+     "price_monthly": 41.67,
+     "price_annual": 599,
+     "effective_monthly": 49.92,
+     "verified": true,
+     "note": "Southern California residents only (ZIP 90000-93599); most restrictive blockouts. Monthly option: $99 down then 12 x $41.67 at 0% APR. Enchant Key is no longer sold."
+    }
+   ],
+   "default_plan": "believe",
+   "features": [
+    {
+     "id": "park_reservations",
+     "name": "Theme park reservations (not unlimited entry on any day)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "parking",
+     "name": "Parking included or discounted (varies by Key)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "dining_merch_discount",
+     "name": "Food and merchandise discounts",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Southern California families who visit Disneyland several times a year.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Monthly payments are only for California residents and only appear when signed in.",
+    "Check the blockout calendar before buying; reservations are required.",
+    "Pass types are capacity-limited and can go off sale."
+   ],
+   "sources": [
+    {
+     "label": "Disneyland Magic Key passes (official)",
+     "url": "https://disneyland.disney.go.com/passes/"
+    },
+    {
+     "label": "Magic Key overview with monthly payments (official)",
+     "url": "https://disneyland.disney.go.com/en-CA/magic-key/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "DM"
+  },
+  {
+   "id": "walt_disney_world_annual_pass",
+   "name": "Walt Disney World Annual Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL"
+   ],
+   "service_area_note": "Magic Kingdom, EPCOT, Hollywood Studios and Animal Kingdom, Lake Buena Vista (Orlando area), FL.",
+   "official_url": "https://disneyworld.disney.go.com/passes/",
+   "plans": [
+    {
+     "id": "incredi_pass",
+     "name": "Disney Incredi-Pass",
+     "price_monthly": null,
+     "price_annual": 1749,
+     "effective_monthly": 145.75,
+     "verified": true,
+     "note": "Open to all (ages 3+); no blockouts. Price plus tax; raised Oct 6, 2026 (was $1,629); renewal $1,499 per BlogMickey. Florida residents 18+ can pay $205 down then monthly payments over 12 months at 0% APR (amount shown in the contract at checkout)."
+    },
+    {
+     "id": "sorcerer",
+     "name": "Disney Sorcerer Pass",
+     "price_monthly": null,
+     "price_annual": 1139,
+     "effective_monthly": 94.92,
+     "verified": false,
+     "note": "Florida residents and eligible DVC members only; some blockouts. Price plus tax from BlogMickey (Oct 6, 2026 increase); official page shows it only after login. FL monthly plan: $205 down then 12 monthly payments."
+    },
+    {
+     "id": "pirate",
+     "name": "Disney Pirate Pass",
+     "price_monthly": null,
+     "price_annual": 909,
+     "effective_monthly": 75.75,
+     "verified": false,
+     "note": "Florida residents only; blockout dates apply. Price plus tax from BlogMickey (Oct 6, 2026). FL monthly plan: $205 down then 12 monthly payments."
+    },
+    {
+     "id": "pixie_dust",
+     "name": "Disney Pixie Dust Pass",
+     "price_monthly": null,
+     "price_annual": 499,
+     "effective_monthly": 41.58,
+     "verified": false,
+     "note": "Florida residents only; weekday-focused with many blockouts. Price plus tax from BlogMickey (Oct 6, 2026). FL monthly plan: $205 down then 12 monthly payments."
+    }
+   ],
+   "default_plan": "incredi_pass",
+   "features": [
+    {
+     "id": "park_reservations",
+     "name": "Park reservations with pass",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "parking",
+     "name": "Standard theme park parking",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "discounts",
+     "name": "Dining and merchandise discounts",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Orlando-area locals and frequent Disney World visitors.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Only Incredi-Pass is sold to non-Floridians.",
+    "Monthly plan needs a Florida ID; Disney sometimes cuts the down payment to $99 as a promo.",
+    "Prices rose Oct 6, 2026; renewals are cheaper."
+   ],
+   "sources": [
+    {
+     "label": "WDW Annual Passes (official)",
+     "url": "https://disneyworld.disney.go.com/passes/"
+    },
+    {
+     "label": "BlogMickey: WDW annual pass price increase, Oct 2026",
+     "url": "https://blogmickey.com/2026/10/walt-disney-world-annual-pass-price-increase-2026/"
+    },
+    {
+     "label": "WDWMagic: FL resident monthly payment terms",
+     "url": "https://www.wdwmagic.com/other/ticket-annual-pass---disney-incredi-pass/news/03jun2026-disney-world-annual-pass-florida-resident-deal-ends-soon-last-chance-to-get-99-down-payment.htm"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "WD"
+  },
+  {
+   "id": "universal_orlando_annual_pass",
+   "name": "Universal Orlando Annual Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL"
+   ],
+   "service_area_note": "Universal Studios Florida, Islands of Adventure and Volcano Bay (3-Park), Orlando, FL. Epic Universe is not included (passholder-priced 1-day tickets only).",
+   "official_url": "https://www.universalorlando.com/web/en/us/tickets-packages/annual-passes/fl-resident-prices",
+   "plans": [
+    {
+     "id": "seasonal",
+     "name": "2-Park Seasonal Pass",
+     "price_monthly": 15.74,
+     "price_annual": 324.99,
+     "effective_monthly": 27.08,
+     "verified": true,
+     "note": "Most blockout dates. Florida-resident price (official FL page, before tax). FlexPay: tax-inclusive down payment of about half, then 11 monthly payments at 0% APR; after 12 months the pass rolls to month-to-month auto-renewal unless cancelled. 2-Park FlexPay: $173.06 down + 11 x $15.74. 3-Park $374.99. Out-of-state price $424.99 (Orlando Informer, unverified)."
+    },
+    {
+     "id": "power",
+     "name": "2-Park Power Pass",
+     "price_monthly": 18.16,
+     "price_annual": 374.99,
+     "effective_monthly": 31.25,
+     "verified": true,
+     "note": "Blockouts apply. Florida-resident price (official FL page, before tax). FlexPay: tax-inclusive down payment of about half, then 11 monthly payments at 0% APR; after 12 months the pass rolls to month-to-month auto-renewal unless cancelled. FlexPay: $199.69 down + 11 x $18.16. 3-Park $434.99. Out-of-state $474.99 (Orlando Informer, unverified)."
+    },
+    {
+     "id": "preferred",
+     "name": "2-Park Preferred Pass",
+     "price_monthly": 25.66,
+     "price_annual": 529.99,
+     "effective_monthly": 44.17,
+     "verified": true,
+     "note": "No blockouts; free self-parking. Florida-resident price (official FL page, before tax). FlexPay: tax-inclusive down payment of about half, then 11 monthly payments at 0% APR; after 12 months the pass rolls to month-to-month auto-renewal unless cancelled. FlexPay: $282.22 down + 11 x $25.66 (pay-in-full price from Orlando Informer, consistent with official FlexPay totals). 3-Park $589.99. Out-of-state $629.99 (unverified)."
+    },
+    {
+     "id": "premier",
+     "name": "2-Park Premier Pass",
+     "price_monthly": 38.25,
+     "price_annual": 789.99,
+     "effective_monthly": 65.83,
+     "verified": true,
+     "note": "No blockouts; Express after 4pm, preferred parking. Florida-resident price (official FL page, before tax). FlexPay: tax-inclusive down payment of about half, then 11 monthly payments at 0% APR; after 12 months the pass rolls to month-to-month auto-renewal unless cancelled. FlexPay: $420.67 down + 11 x $38.25 (pay-in-full from Orlando Informer, consistent with official FlexPay totals). 3-Park $899.99. Out-of-state $904.99 (unverified)."
+    }
+   ],
+   "default_plan": "power",
+   "features": [
+    {
+     "id": "blockout_free",
+     "name": "No blockout dates",
+     "plans": "preferred,premier",
+     "overlap_tag": null
+    },
+    {
+     "id": "parking",
+     "name": "Free parking",
+     "plans": "preferred,premier",
+     "overlap_tag": null
+    },
+    {
+     "id": "express",
+     "name": "Universal Express after 4pm",
+     "plans": "premier",
+     "overlap_tag": null
+    },
+    {
+     "id": "epic_discount",
+     "name": "Discounted 1-day Epic Universe tickets",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Florida residents who visit Universal several times a year.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "FlexPay passes auto-renew month-to-month after year one; cancel if you don't want that.",
+    "Volcano Bay is closed for maintenance until about April 2027, so 3-Park adds little right now.",
+    "Epic Universe needs a separate ticket."
+   ],
+   "sources": [
+    {
+     "label": "Universal Orlando FL resident pass prices (official)",
+     "url": "https://www.universalorlando.com/web/en/us/tickets-packages/annual-passes/fl-resident-prices"
+    },
+    {
+     "label": "Orlando Informer annual pass guide (Sep 2026)",
+     "url": "https://orlandoinformer.com/universal/orlando-annual-passes-guide/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "UO"
+  },
+  {
+   "id": "universal_hollywood_annual_pass",
+   "name": "Universal Studios Hollywood Annual Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CA"
+   ],
+   "service_area_note": "Universal Studios Hollywood, Universal City (Los Angeles), CA.",
+   "official_url": "https://www.universalstudioshollywood.com/web/en/us/theme-park-tickets/annual-passes",
+   "plans": [
+    {
+     "id": "california_neighbor",
+     "name": "California Neighbor Pass",
+     "price_monthly": null,
+     "price_annual": 179,
+     "effective_monthly": 14.92,
+     "verified": true,
+     "note": "California residents only; about 250 days of access with many blockouts. No payment plan. Official ticket store price."
+    },
+    {
+     "id": "silver",
+     "name": "Silver Annual Pass",
+     "price_monthly": 7,
+     "price_annual": 219,
+     "effective_monthly": 18.25,
+     "verified": true,
+     "note": "About 250 days, blockouts apply. FlexPay: $149 down then about $7/month for 11 months at 0% APR (official ticket store, estimate before tax)."
+    },
+    {
+     "id": "gold",
+     "name": "Gold Annual Pass",
+     "price_monthly": 11,
+     "price_annual": 299,
+     "effective_monthly": 24.92,
+     "verified": true,
+     "note": "Fewer blockouts; parking included. FlexPay: $179 down then about $11/month for 11 months at 0% APR; Universal publishes separate Gold FlexPay month-to-month terms, so check renewal terms."
+    },
+    {
+     "id": "platinum",
+     "name": "Platinum Annual Pass",
+     "price_monthly": 29,
+     "price_annual": 599,
+     "effective_monthly": 49.92,
+     "verified": true,
+     "note": "No blockouts; includes Universal Express and parking. FlexPay: $289 down then about $29/month for 11 months at 0% APR."
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "parking",
+     "name": "Parking included",
+     "plans": "gold,platinum",
+     "overlap_tag": null
+    },
+    {
+     "id": "express",
+     "name": "Universal Express access",
+     "plans": "platinum",
+     "overlap_tag": null
+    },
+    {
+     "id": "discounts",
+     "name": "Food and merchandise discounts",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "LA locals who visit Universal Studios Hollywood often.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Prices on the official store look like an online sale; gate prices are higher (Mickey Visit listed Gold $329 at gate in 2025).",
+    "California Neighbor Pass has the most blockouts and no payment plan."
+   ],
+   "sources": [
+    {
+     "label": "Universal Studios Hollywood ticket store (official)",
+     "url": "https://store.universalstudioshollywood.com/PurchaseTickets.aspx?View=CAT2"
+    },
+    {
+     "label": "Mickey Visit: USH annual pass guide",
+     "url": "https://mickeyvisit.com/is-universal-studios-hollywood-annual-pass-worth-it/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "US"
+  },
+  {
+   "id": "six_flags_season_pass",
+   "name": "Six Flags Season Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CA",
+    "AZ",
+    "TX",
+    "GA",
+    "IL",
+    "MO",
+    "NJ",
+    "NY",
+    "MA",
+    "OK",
+    "OH",
+    "PA",
+    "NC",
+    "SC",
+    "VA",
+    "MN",
+    "MI"
+   ],
+   "service_area_note": "Six Flags parks after the 2024 Six Flags/Cedar Fair merger: Cedar Point (Sandusky OH), Kings Island (Mason OH), Knott's Berry Farm (Buena Park CA), Carowinds (Charlotte NC/SC), Kings Dominion (Doswell VA), Dorney Park (Allentown PA), Valleyfair (MN), Michigan's Adventure, Worlds of Fun (Kansas City MO), California's Great America, Magic Mountain (Valencia CA), Discovery Kingdom (Vallejo CA), Over Texas (Arlington), Fiesta Texas (San Antonio), Over Georgia, Great America (Gurnee IL), St. Louis, Great Adventure (NJ), Darien Lake and Great Escape (NY), New England (MA), Frontier City (OK), plus Hurricane Harbor and Schlitterbahn water parks. Canada and Mexico parks excluded here.",
+   "official_url": "https://www.sixflags.com/cedarpoint/season-passes",
+   "plans": [
+    {
+     "id": "silver",
+     "name": "Silver Pass (home park)",
+     "price_monthly": null,
+     "price_annual": 149,
+     "effective_monthly": 12.42,
+     "verified": true,
+     "note": "2027 pass, usually home park only with visits through Labor Day 2027 at some parks. Cedar Point list $149 (sale $99 each); Kings Island $140 (sale $99); Magic Mountain $150 (sale $99); Over Texas $109 (sale $79). Knott's equivalent is the 2027 Season Pass, $115 sale / $215 regular, or $30 down + 10 x $8.50. Plus up to $9.99 processing fee and tax."
+    },
+    {
+     "id": "gold",
+     "name": "Gold Pass (regional parks)",
+     "price_monthly": null,
+     "price_annual": 175,
+     "effective_monthly": 14.58,
+     "verified": true,
+     "note": "2027 pass; includes rest of 2026 and all of 2027 at all Six Flags parks in the region (e.g., Midwest for Cedar Point/Kings Island; CA, AZ and MX for Magic Mountain/Knott's). Cedar Point/Kings Island $175 list ($125 sale, $99 renewal); Magic Mountain $199 ($139 sale); Knott's $139 sale or $39 down + 10 x $10; Great Adventure $99 sale ($115 regular). Plus processing fee and tax."
+    },
+    {
+     "id": "prestige",
+     "name": "Prestige Pass (all parks)",
+     "price_monthly": null,
+     "price_annual": 350,
+     "effective_monthly": 29.17,
+     "verified": true,
+     "note": "Replaces the old Cedar Fair All Park Passport: all Six Flags parks in North America for rest of 2026 and 2027, preferred parking, free drinks each visit. Cedar Point/Kings Island $350 list ($289 sale, $279 renewal); Magic Mountain/Knott's $399 list ($349 sale), Knott's plan $37.25 down + 10 x $31; Over Texas $225 sale; Great Adventure $275 ($249 sale). Plus processing fee and tax."
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "multi_park",
+     "name": "Access to other Six Flags parks",
+     "plans": "gold,prestige",
+     "overlap_tag": null
+    },
+    {
+     "id": "parking",
+     "name": "Free parking",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "drinks",
+     "name": "Free fountain drinks every visit",
+     "plans": "prestige",
+     "overlap_tag": null
+    },
+    {
+     "id": "bring_a_friend",
+     "name": "Bring-a-friend discounts or free tickets",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Coaster fans who visit one or more Six Flags / former Cedar Fair parks.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Prices vary by home park and change often; sale prices end on set dates (Knott's goes up 11/2).",
+    "Payment plans via Flex Pay by Upgrade on orders $49+, APR 0-36% depending on credit; former Cedar Fair parks also show a fixed down payment + 10 payments plan.",
+    "Pass must be activated at the park where it was bought."
+   ],
+   "sources": [
+    {
+     "label": "Cedar Point season passes (official)",
+     "url": "https://www.sixflags.com/cedarpoint/season-passes"
+    },
+    {
+     "label": "Kings Island season passes (official)",
+     "url": "https://www.sixflags.com/kingsisland/season-passes"
+    },
+    {
+     "label": "Knott's Berry Farm season passes (official)",
+     "url": "https://www.sixflags.com/knotts/season-passes"
+    },
+    {
+     "label": "Six Flags Magic Mountain season passes (official)",
+     "url": "https://www.sixflags.com/magicmountain/season-passes"
+    },
+    {
+     "label": "Six Flags Over Texas passes (official)",
+     "url": "https://www.sixflags.com/overtexas/store/tickets?lang=en"
+    },
+    {
+     "label": "Six Flags Flex Pay (official)",
+     "url": "https://www.sixflags.com/blog/flex-pay-six-flags"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "SF"
+  },
+  {
+   "id": "six_flags_membership",
+   "name": "Six Flags Membership",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CA",
+    "AZ",
+    "TX",
+    "GA",
+    "IL",
+    "MO",
+    "NJ",
+    "NY",
+    "MA",
+    "OK"
+   ],
+   "service_area_note": "Monthly memberships sold at legacy Six Flags parks, e.g. Magic Mountain (Valencia CA), Great Adventure (Jackson NJ), Over Texas, Over Georgia, Great America (IL), St. Louis, New England, Darien Lake, Frontier City, Discovery Kingdom, Hurricane Harbor parks.",
+   "official_url": "https://sixflags.com/magicmountain/memberships",
+   "plans": [
+    {
+     "id": "silver",
+     "name": "Silver Membership",
+     "price_monthly": 8,
+     "price_annual": null,
+     "effective_monthly": 8,
+     "verified": true,
+     "note": "Magic Mountain: $20 initial fee then $8/mo; home park and its water park; 12-month minimum, then auto-renews monthly. Not offered at every park."
+    },
+    {
+     "id": "gold",
+     "name": "Gold Membership",
+     "price_monthly": 12,
+     "price_annual": null,
+     "effective_monthly": 12,
+     "verified": true,
+     "note": "Magic Mountain: $20 initial fee then $12/mo (all Six Flags parks in CA, AZ, MX). Great Adventure: $20 then $8/mo (East Coast parks). 12-month minimum, auto-renews after 12 months."
+    },
+    {
+     "id": "prestige",
+     "name": "Prestige Membership",
+     "price_monthly": 28,
+     "price_annual": null,
+     "effective_monthly": 28,
+     "verified": true,
+     "note": "Magic Mountain: $40 initial fee then $28/mo. Great Adventure: $20 then $20/mo. All Six Flags parks in North America. 12-month minimum, auto-renews after 12 months."
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "multi_park",
+     "name": "Access to other Six Flags parks",
+     "plans": "gold,prestige",
+     "overlap_tag": null
+    },
+    {
+     "id": "parking",
+     "name": "Free parking",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "auto_renew",
+     "name": "Auto-renews monthly after 12 months",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "People who want to spread Six Flags access into small monthly charges and keep it year after year.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Monthly price varies by home park.",
+    "Memberships are not eligible for Flex Pay financing.",
+    "Cancel before month 13 if you only want one year."
+   ],
+   "sources": [
+    {
+     "label": "Six Flags Magic Mountain memberships (official)",
+     "url": "https://sixflags.com/magicmountain/memberships"
+    },
+    {
+     "label": "Six Flags Great Adventure memberships (official)",
+     "url": "https://sixflags.com/greatadventure/memberships"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "SF"
+  },
+  {
+   "id": "seaworld_annual_pass",
+   "name": "SeaWorld Annual Pass and Fun Card",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL",
+    "CA",
+    "TX",
+    "PA"
+   ],
+   "service_area_note": "SeaWorld Orlando (FL), SeaWorld San Diego (CA), SeaWorld San Antonio (TX) and their Aquatica water parks; Platinum adds Busch Gardens Tampa/Williamsburg, Sesame Place Philadelphia (Langhorne PA) and San Diego, Adventure Island and Water Country USA.",
+   "official_url": "https://seaworld.com/orlando/annual-pass/",
+   "plans": [
+    {
+     "id": "fun_card",
+     "name": "2027 Fun Card (SeaWorld Orlando)",
+     "price_monthly": null,
+     "price_annual": 144.99,
+     "effective_monthly": 12.08,
+     "verified": true,
+     "note": "Pay-in-full only; valid rest of 2026 and all of 2027 at SeaWorld Orlando with blockout dates (e.g., peak holidays and summer Saturdays); $184.99 with Aquatica. No parking or discounts. Auto-renews."
+    },
+    {
+     "id": "bronze",
+     "name": "Bronze Pass (SeaWorld Orlando)",
+     "price_monthly": 14.5,
+     "price_annual": 174,
+     "effective_monthly": 14.5,
+     "verified": true,
+     "note": "Monthly EZpay: no down payment, 12 monthly payments (first due at purchase) at 0% APR, then continues month-to-month until cancelled; pay-in-full renews yearly unless cancelled. Plus tax and fees. Orlando price; SoCal Pass at San Diego is $138 or $11.50/mo."
+    },
+    {
+     "id": "silver",
+     "name": "Silver Pass (SeaWorld Orlando)",
+     "price_monthly": 17.5,
+     "price_annual": 210,
+     "effective_monthly": 17.5,
+     "verified": true,
+     "note": "Monthly EZpay: no down payment, 12 monthly payments (first due at purchase) at 0% APR, then continues month-to-month until cancelled; pay-in-full renews yearly unless cancelled. Plus tax and fees. Orlando price; San Diego $168 or $14/mo; San Antonio $124.99 or $8.50/mo."
+    },
+    {
+     "id": "gold",
+     "name": "Gold Pass (SeaWorld Orlando)",
+     "price_monthly": 21,
+     "price_annual": 252,
+     "effective_monthly": 21.0,
+     "verified": true,
+     "note": "Monthly EZpay: no down payment, 12 monthly payments (first due at purchase) at 0% APR, then continues month-to-month until cancelled; pay-in-full renews yearly unless cancelled. Plus tax and fees. Orlando price; San Diego $186 or $15.50/mo; San Antonio $134.99 or $8.99/mo."
+    },
+    {
+     "id": "platinum",
+     "name": "Platinum Pass (11 parks)",
+     "price_monthly": 34.25,
+     "price_annual": 411,
+     "effective_monthly": 34.25,
+     "verified": true,
+     "note": "Monthly EZpay: no down payment, 12 monthly payments (first due at purchase) at 0% APR, then continues month-to-month until cancelled; pay-in-full renews yearly unless cancelled. Plus tax and fees. Orlando/Busch Tampa price; same pass costs $264 ($22/mo) bought at SeaWorld San Diego and $199.99 ($15.99/mo) at San Antonio. Excludes Discovery Cove."
+    }
+   ],
+   "default_plan": "silver",
+   "features": [
+    {
+     "id": "multi_park",
+     "name": "Access to all 11 SeaWorld/Busch/Sesame parks",
+     "plans": "platinum",
+     "overlap_tag": "seaworld_parks"
+    },
+    {
+     "id": "parking",
+     "name": "Free parking",
+     "plans": "gold,platinum",
+     "overlap_tag": null
+    },
+    {
+     "id": "discounts",
+     "name": "Food and merchandise discounts",
+     "plans": "bronze,silver,gold,platinum",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Families near a SeaWorld park, or anyone wanting access to all SeaWorld and Busch Gardens parks.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "The Platinum pass is the same 11-park pass at every park, but price depends on which park sells it; San Antonio is cheapest.",
+    "Monthly plans keep billing after 12 months until you cancel."
+   ],
+   "sources": [
+    {
+     "label": "SeaWorld Orlando annual passes (official)",
+     "url": "https://seaworld.com/orlando/annual-pass/"
+    },
+    {
+     "label": "SeaWorld Orlando 2027 Fun Card (official)",
+     "url": "https://seaworld.com/orlando/tickets/fun-card-b/"
+    },
+    {
+     "label": "SeaWorld San Diego annual passes (official)",
+     "url": "https://seaworld.com/san-diego/annual-pass/"
+    },
+    {
+     "label": "SeaWorld San Antonio annual passes (official)",
+     "url": "https://seaworld.com/san-antonio/annual-pass/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "SA"
+  },
+  {
+   "id": "busch_gardens_annual_pass",
+   "name": "Busch Gardens Annual Pass and Fun Card",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL",
+    "VA"
+   ],
+   "service_area_note": "Busch Gardens Tampa Bay and Adventure Island (Tampa, FL); Busch Gardens Williamsburg and Water Country USA (Williamsburg, VA). Platinum adds SeaWorld and Sesame Place parks.",
+   "official_url": "https://buschgardens.com/tampa/annual-pass/",
+   "plans": [
+    {
+     "id": "fun_card",
+     "name": "2027 Fun Card (Tampa)",
+     "price_monthly": null,
+     "price_annual": 114.99,
+     "effective_monthly": 9.58,
+     "verified": false,
+     "note": "Valid rest of 2026 and all of 2027 at Busch Gardens Tampa Bay with blockouts; price from WFTV/ThemeParkShark (Aug 2026); official price not captured."
+    },
+    {
+     "id": "bronze",
+     "name": "Bronze Pass (Tampa) / Basic (Williamsburg)",
+     "price_monthly": 14,
+     "price_annual": 168,
+     "effective_monthly": 14.0,
+     "verified": true,
+     "note": "Tampa Bronze $168 or $14/mo; Williamsburg Basic $174 or $14.50/mo. 12 monthly payments, first due at purchase, no down payment, 0% APR; continues monthly after 12 months until cancelled."
+    },
+    {
+     "id": "silver",
+     "name": "Silver Pass (Tampa) / Unlimited (Williamsburg)",
+     "price_monthly": 16.75,
+     "price_annual": 201,
+     "effective_monthly": 16.75,
+     "verified": true,
+     "note": "Tampa Silver $201 or $16.75/mo; Williamsburg Unlimited $225 or $18.75/mo. 12-payment EZpay terms as above."
+    },
+    {
+     "id": "gold",
+     "name": "Gold Pass (Tampa) / Premier (Williamsburg)",
+     "price_monthly": 20.75,
+     "price_annual": 249,
+     "effective_monthly": 20.75,
+     "verified": true,
+     "note": "Tampa Gold $249 or $20.75/mo; Williamsburg Premier $279 or $23.25/mo. 12-payment EZpay terms."
+    },
+    {
+     "id": "platinum",
+     "name": "Platinum Pass (11 parks)",
+     "price_monthly": 34.25,
+     "price_annual": 411,
+     "effective_monthly": 34.25,
+     "verified": true,
+     "note": "Tampa price $411 or $34.25/mo; Williamsburg sells the same pass for $342 or $28.50/mo. Excludes Discovery Cove."
+    }
+   ],
+   "default_plan": "silver",
+   "features": [
+    {
+     "id": "multi_park",
+     "name": "Access to all 11 SeaWorld/Busch/Sesame parks",
+     "plans": "platinum",
+     "overlap_tag": "seaworld_parks"
+    },
+    {
+     "id": "parking",
+     "name": "Free parking",
+     "plans": "gold,platinum",
+     "overlap_tag": null
+    },
+    {
+     "id": "water_park",
+     "name": "Water park add-on option",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Locals near Tampa or Williamsburg who want unlimited coaster and zoo visits.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Prices shown are current sale prices; regular prices are higher.",
+    "Williamsburg and Tampa use different tier names."
+   ],
+   "sources": [
+    {
+     "label": "Busch Gardens Tampa Bay annual passes (official)",
+     "url": "https://buschgardens.com/tampa/annual-pass/"
+    },
+    {
+     "label": "Busch Gardens Williamsburg annual passes (official)",
+     "url": "https://buschgardens.com/williamsburg/annual-pass/"
+    },
+    {
+     "label": "ThemeParkShark: 2027 Fun Card $114.99",
+     "url": "https://themeparkshark.com/2026/08/12/busch-gardens-tampa-bay-2027-fun-card-is-114-99/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "BG"
+  },
+  {
+   "id": "legoland_annual_pass",
+   "name": "LEGOLAND Annual Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "FL",
+    "CA",
+    "NY"
+   ],
+   "service_area_note": "LEGOLAND Florida (Winter Haven), LEGOLAND California (Carlsbad), LEGOLAND New York (Goshen); Premium adds 20+ Merlin attractions (SEA LIFE, Madame Tussauds, Peppa Pig parks).",
+   "official_url": "https://www.legoland.com/florida/tickets-passes/annual-passes/",
+   "plans": [
+    {
+     "id": "standard",
+     "name": "Standard Pass",
+     "price_monthly": null,
+     "price_annual": 179,
+     "effective_monthly": 14.92,
+     "verified": true,
+     "note": "Florida price; 83 blockout dates. California $189 (86 blockouts). New York Standard Season Pass $99 sale ($119). Monthly options from $15/mo (FL) and $19/mo (CA, one-time initial payment from $83, auto-renews after 12-month minimum)."
+    },
+    {
+     "id": "preferred",
+     "name": "Preferred Pass",
+     "price_monthly": null,
+     "price_annual": 249,
+     "effective_monthly": 20.75,
+     "verified": true,
+     "note": "Florida price; no blockouts, adds water park and 3 other Merlin attractions. California $289 (13 blockouts). New York $129 sale ($169)."
+    },
+    {
+     "id": "premium",
+     "name": "Premium Pass",
+     "price_monthly": null,
+     "price_annual": 299,
+     "effective_monthly": 24.92,
+     "verified": true,
+     "note": "Florida price; no blockouts, all 20+ North American Merlin attractions incl. all three LEGOLAND parks. California $349; New York $219 sale ($299)."
+    }
+   ],
+   "default_plan": "standard",
+   "features": [
+    {
+     "id": "multi_park",
+     "name": "Access to all US LEGOLAND parks and Merlin attractions",
+     "plans": "premium",
+     "overlap_tag": "merlin_attractions"
+    },
+    {
+     "id": "water_park",
+     "name": "LEGOLAND Water Park",
+     "plans": "preferred,premium",
+     "overlap_tag": null
+    },
+    {
+     "id": "no_blockouts",
+     "name": "No blockout dates",
+     "plans": "preferred,premium",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Families with kids roughly 2-12 who live near a LEGOLAND park.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Monthly memberships require a 12-month minimum and auto-renew.",
+    "Standard passes have 50-90 blockout days."
+   ],
+   "sources": [
+    {
+     "label": "LEGOLAND Florida annual passes (official)",
+     "url": "https://www.legoland.com/florida/tickets-passes/annual-passes/"
+    },
+    {
+     "label": "LEGOLAND California annual passes (official)",
+     "url": "https://www.legoland.com/california/tickets-passes/annual-passes/"
+    },
+    {
+     "label": "LEGOLAND New York passes (official)",
+     "url": "https://www.legoland.com/new-york/tickets-passes/annual-passes/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "LA"
+  },
+  {
+   "id": "dollywood_season_pass",
+   "name": "Dollywood Season Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "TN"
+   ],
+   "service_area_note": "Dollywood and Dollywood's Splash Country, Pigeon Forge, TN (Herschend).",
+   "official_url": "https://www.dollywood.com/Tickets/Season-Passes",
+   "plans": [
+    {
+     "id": "silver",
+     "name": "Silver Season Pass",
+     "price_monthly": null,
+     "price_annual": 169.99,
+     "effective_monthly": 14.17,
+     "verified": true,
+     "note": "One park. 2026 price (Dollywood blog, Sep 2026, before tax); 2027 prices expected when passes launch in early November 2026, renewal prices unchanged for 2027. Online plan: number of monthly payments depends on purchase date (10 if bought by early January), first payment includes all tax plus a $6.50 + tax fee per pass."
+    },
+    {
+     "id": "gold",
+     "name": "Gold Season Pass",
+     "price_monthly": null,
+     "price_annual": 244.99,
+     "effective_monthly": 20.42,
+     "verified": true,
+     "note": "One park, adds parking and more perks. 2026 price (Dollywood blog, Sep 2026, before tax); 2027 prices expected when passes launch in early November 2026, renewal prices unchanged for 2027. Online plan: number of monthly payments depends on purchase date (10 if bought by early January), first payment includes all tax plus a $6.50 + tax fee per pass."
+    },
+    {
+     "id": "two_park_silver",
+     "name": "Two-Park Silver Season Pass",
+     "price_monthly": null,
+     "price_annual": 224.99,
+     "effective_monthly": 18.75,
+     "verified": true,
+     "note": "Dollywood + Splash Country. 2026 price (Dollywood blog, Sep 2026, before tax); 2027 prices expected when passes launch in early November 2026, renewal prices unchanged for 2027. Online plan: number of monthly payments depends on purchase date (10 if bought by early January), first payment includes all tax plus a $6.50 + tax fee per pass."
+    },
+    {
+     "id": "two_park_gold",
+     "name": "Two-Park Gold Season Pass",
+     "price_monthly": null,
+     "price_annual": 299.99,
+     "effective_monthly": 25.0,
+     "verified": true,
+     "note": "Dollywood + Splash Country. 2026 price (Dollywood blog, Sep 2026, before tax); 2027 prices expected when passes launch in early November 2026, renewal prices unchanged for 2027. Online plan: number of monthly payments depends on purchase date (10 if bought by early January), first payment includes all tax plus a $6.50 + tax fee per pass."
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "water_park",
+     "name": "Splash Country water park",
+     "plans": "two_park_silver,two_park_gold",
+     "overlap_tag": null
+    },
+    {
+     "id": "parking",
+     "name": "Free parking",
+     "plans": "gold,two_park_gold",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Smoky Mountains locals and repeat Pigeon Forge visitors.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Buy early in the season window to get the most monthly payments.",
+    "Kids and seniors get discounted pass prices."
+   ],
+   "sources": [
+    {
+     "label": "Dollywood season passes (official)",
+     "url": "https://www.dollywood.com/Tickets/Season-Passes"
+    },
+    {
+     "label": "Dollywood blog: season pass prices (official)",
+     "url": "https://www.dollywood.com/blog/dollywood-season-passes/"
+    },
+    {
+     "label": "Smokies Live: 2027 renewal prices unchanged",
+     "url": "https://smokies.live/2026/10/07/dollywood-keeps-2027-season-pass-renewal-prices-unchanged/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "DS"
+  },
+  {
+   "id": "hersheypark_season_pass",
+   "name": "Hersheypark Season Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "PA"
+   ],
+   "service_area_note": "Hersheypark and ZooAmerica, Hershey, PA.",
+   "official_url": "https://www.hersheypark.com/tickets-and-passes/season-passes",
+   "plans": [
+    {
+     "id": "bite_size",
+     "name": "Bite Size Pass",
+     "price_monthly": 10,
+     "price_annual": 149,
+     "effective_monthly": 12.42,
+     "verified": true,
+     "note": "2027 Best Price (ends Nov 1, 2026); includes rest of 2026 holiday events for new Full/King/Giant buyers. Payment plan: $49 down then 10 monthly payments, auto-deducted. Bite Size: $49 + 10 x $10; no free parking or early access."
+    },
+    {
+     "id": "full_size",
+     "name": "Full Size Pass",
+     "price_monthly": 13,
+     "price_annual": 179,
+     "effective_monthly": 14.92,
+     "verified": true,
+     "note": "2027 Best Price (ends Nov 1, 2026); includes rest of 2026 holiday events for new Full/King/Giant buyers. Payment plan: $49 down then 10 monthly payments, auto-deducted. Full Size: $49 + 10 x $13; free parking."
+    },
+    {
+     "id": "king_size",
+     "name": "King Size Pass",
+     "price_monthly": 19,
+     "price_annual": 239,
+     "effective_monthly": 19.92,
+     "verified": true,
+     "note": "2027 Best Price (ends Nov 1, 2026); includes rest of 2026 holiday events for new Full/King/Giant buyers. Payment plan: $49 down then 10 monthly payments, auto-deducted. King Size: $49 + 10 x $19; all-year drink plan."
+    },
+    {
+     "id": "giant_size",
+     "name": "Giant Size Pass",
+     "price_monthly": 32,
+     "price_annual": 369,
+     "effective_monthly": 30.75,
+     "verified": true,
+     "note": "2027 Best Price (ends Nov 1, 2026); includes rest of 2026 holiday events for new Full/King/Giant buyers. Payment plan: $49 down then 10 monthly payments, auto-deducted. Giant Size: $49 + 10 x $32; lounge access, Fast Track discounts."
+    }
+   ],
+   "default_plan": "full_size",
+   "features": [
+    {
+     "id": "parking",
+     "name": "Free parking",
+     "plans": "full_size,king_size,giant_size",
+     "overlap_tag": null
+    },
+    {
+     "id": "drink_plan",
+     "name": "All-year drink plan",
+     "plans": "king_size,giant_size",
+     "overlap_tag": null
+    },
+    {
+     "id": "seasonal_events",
+     "name": "Halloween and Christmas Candylane events",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Central Pennsylvania families who visit Hersheypark several times a season.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Price rises after Nov 1 (regular prices $195-$490).",
+    "Payment plan is chosen at checkout."
+   ],
+   "sources": [
+    {
+     "label": "Hersheypark season passes (official)",
+     "url": "https://www.hersheypark.com/tickets-and-passes/season-passes"
+    },
+    {
+     "label": "Hershey stories: 2027 passes on sale (official)",
+     "url": "https://stories.hersheypa.com/2027-hersheypark-season-passes-on-sale-now-at-best-price/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "HS"
+  },
+  {
+   "id": "kennywood_palace_season_pass",
+   "name": "Kennywood and Palace Entertainment Season Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "PA",
+    "CT",
+    "WI",
+    "IA",
+    "NH",
+    "NY"
+   ],
+   "service_area_note": "Kennywood (West Mifflin/Pittsburgh PA); Platinum adds Sandcastle, Idlewild & SoakZone (Ligonier PA), Dutch Wonderland (Lancaster PA), Lake Compounce (Bristol CT), Noah's Ark (Wisconsin Dells WI), Adventureland (Altoona IA), Story Land and Living Shores Aquarium (Glen NH), Water Country (Portsmouth NH), Splish Splash (Riverhead NY).",
+   "official_url": "https://www.kennywood.com/buy-tickets/season-passes/",
+   "plans": [
+    {
+     "id": "silver",
+     "name": "Silver Season Pass",
+     "price_monthly": 13,
+     "price_annual": 99.99,
+     "effective_monthly": 8.33,
+     "verified": true,
+     "note": "2027 sale price ($129.99 regular); Kennywood summer admission. Payment plan: 8 payments under $13. Bronze (summer with blackout dates) is currently sold at the Silver price."
+    },
+    {
+     "id": "gold",
+     "name": "Gold Season Pass",
+     "price_monthly": 16,
+     "price_annual": 124.99,
+     "effective_monthly": 10.42,
+     "verified": true,
+     "note": "2027 sale price ($169.99 regular); Kennywood all year incl. Phantom Fall Fest and Holiday Lights. Payment plan: 8 payments under $16."
+    },
+    {
+     "id": "platinum",
+     "name": "Platinum Season Pass",
+     "price_monthly": 24,
+     "price_annual": 189.99,
+     "effective_monthly": 15.83,
+     "verified": true,
+     "note": "2027 sale price ($249.99 regular); Kennywood plus 11 Palace Entertainment parks. Payment plan: 8 payments under $24."
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "multi_park",
+     "name": "Access to Palace Entertainment parks",
+     "plans": "platinum",
+     "overlap_tag": null
+    },
+    {
+     "id": "seasonal_events",
+     "name": "Fall and holiday events",
+     "plans": "gold,platinum",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Pittsburgh-area families; Platinum suits road-trippers to other Palace parks.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Other Palace parks (Idlewild, Dutch Wonderland, Lake Compounce) sell their own cheaper single-park passes.",
+    "Sale prices end on set dates; check before buying."
+   ],
+   "sources": [
+    {
+     "label": "Kennywood season passes (official)",
+     "url": "https://www.kennywood.com/buy-tickets/season-passes/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "KA"
+  },
+  {
+   "id": "silver_dollar_city_season_pass",
+   "name": "Silver Dollar City Season Passport",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "MO"
+   ],
+   "service_area_note": "Silver Dollar City and White Water, Branson, MO (Herschend).",
+   "official_url": "https://www.silverdollarcity.com/tickets/season-passes/",
+   "plans": [
+    {
+     "id": "silver",
+     "name": "Silver Passport",
+     "price_monthly": 11.99,
+     "price_annual": 119.99,
+     "effective_monthly": 10.0,
+     "verified": true,
+     "note": "2027 Season Passport, adult (12-64), plus tax; ages 4-11 and 65+ pay $10 less. Payment plan: 10 monthly payments, online only, limited time. Silver: $11.99/mo x 10. Add White Water for $60 ($6/mo)."
+    },
+    {
+     "id": "gold",
+     "name": "Gold Passport",
+     "price_monthly": 19.99,
+     "price_annual": 199.99,
+     "effective_monthly": 16.67,
+     "verified": true,
+     "note": "2027 Season Passport, adult (12-64), plus tax; ages 4-11 and 65+ pay $10 less. Payment plan: 10 monthly payments, online only, limited time. Gold: $19.99/mo x 10; adds parking and more perks."
+    },
+    {
+     "id": "diamond",
+     "name": "Diamond Passport",
+     "price_monthly": 25.99,
+     "price_annual": 259.99,
+     "effective_monthly": 21.67,
+     "verified": true,
+     "note": "2027 Season Passport, adult (12-64), plus tax; ages 4-11 and 65+ pay $10 less. Payment plan: 10 monthly payments, online only, limited time. Diamond: $25.99/mo x 10; includes White Water."
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "water_park",
+     "name": "White Water water park",
+     "plans": "diamond",
+     "overlap_tag": null
+    },
+    {
+     "id": "parking",
+     "name": "Free parking",
+     "plans": "gold,diamond",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Branson locals and repeat Ozarks visitors.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "2027 prices were cut sharply from list ($174.99-$294.99 shown beside them)."
+   ],
+   "sources": [
+    {
+     "label": "Silver Dollar City season passes (official)",
+     "url": "https://www.silverdollarcity.com/tickets/season-passes/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "SD"
+  },
+  {
+   "id": "wild_adventures_season_pass",
+   "name": "Wild Adventures Season Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "GA"
+   ],
+   "service_area_note": "Wild Adventures and Splash Island Waterpark, Valdosta, GA (Herschend).",
+   "official_url": "https://www.wildadventures.com/blog/whats-new/2027-season-pass/",
+   "plans": [
+    {
+     "id": "gold",
+     "name": "2027 Gold Season Pass",
+     "price_monthly": null,
+     "price_annual": 99.99,
+     "effective_monthly": 8.33,
+     "verified": true,
+     "note": "Limited-time price plus tax (about $70 off full price), valid rest of 2026 and all of 2027, includes parking and concerts. Monthly plan with no credit check; number of payments depends on purchase date; tax paid with first payment plus $6 fee per pass. Other tiers not captured."
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "water_park",
+     "name": "Splash Island water park",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "concerts",
+     "name": "Wild Adventures LIVE! concerts",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "South Georgia and North Florida families.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Buy early for more monthly payments."
+   ],
+   "sources": [
+    {
+     "label": "Wild Adventures 2027 season pass (official blog)",
+     "url": "https://www.wildadventures.com/blog/whats-new/2027-season-pass/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "WA"
+  },
+  {
+   "id": "kentucky_kingdom_season_pass",
+   "name": "Kentucky Kingdom Season Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "KY"
+   ],
+   "service_area_note": "Kentucky Kingdom and Hurricane Bay, Louisville, KY (Herschend-operated).",
+   "official_url": "https://kentuckykingdom.com/tickets/season-passes",
+   "plans": [
+    {
+     "id": "gold",
+     "name": "Gold Season Pass",
+     "price_monthly": 9,
+     "price_annual": 89.99,
+     "effective_monthly": 7.5,
+     "verified": true,
+     "note": "2027 pass sale price, plus tax. Online plan (for buys 9/15-10/31/26): 10 monthly payments, first at purchase incl. all tax and a $6 + tax fee per pass; can't be cancelled; no auto-renew. Gold: $9/mo ($119.99 regular)."
+    },
+    {
+     "id": "diamond",
+     "name": "Diamond Season Pass",
+     "price_monthly": 13.5,
+     "price_annual": 134.99,
+     "effective_monthly": 11.25,
+     "verified": true,
+     "note": "2027 pass sale price, plus tax. Online plan (for buys 9/15-10/31/26): 10 monthly payments, first at purchase incl. all tax and a $6 + tax fee per pass; can't be cancelled; no auto-renew. Diamond: $13.50/mo ($209.99 regular)."
+    }
+   ],
+   "default_plan": "gold",
+   "features": [
+    {
+     "id": "water_park",
+     "name": "Hurricane Bay water park",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Louisville-area families.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Sale and payment-plan window shown ended Oct 31, 2026; next prices may differ."
+   ],
+   "sources": [
+    {
+     "label": "Kentucky Kingdom season passes (official)",
+     "url": "https://kentuckykingdom.com/tickets/season-passes"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "KK"
+  },
+  {
+   "id": "holiday_world_season_pass",
+   "name": "Holiday World Season Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "IN"
+   ],
+   "service_area_note": "Holiday World & Splashin' Safari, Santa Claus, IN.",
+   "official_url": "https://holidayworld.com/Passes",
+   "plans": [
+    {
+     "id": "summer_fun_card",
+     "name": "2027 Summer Fun Card",
+     "price_monthly": null,
+     "price_annual": 135,
+     "effective_monthly": 11.25,
+     "verified": true,
+     "note": "Sundays through Fridays only through Labor Day; no Easy Pay."
+    },
+    {
+     "id": "season_pass",
+     "name": "2027 Season Pass",
+     "price_monthly": 29.17,
+     "price_annual": 175,
+     "effective_monthly": 14.58,
+     "verified": true,
+     "note": "2027 price ($45 off through Nov 8, 2026). Easy Pay: 6 monthly payments through Nov 8; Easy Pay offered through Feb 11, 2027 with fewer payments. Season Pass: $29.17/mo."
+    },
+    {
+     "id": "platinum",
+     "name": "2027 Platinum Season Pass",
+     "price_monthly": 35.83,
+     "price_annual": 215,
+     "effective_monthly": 17.92,
+     "verified": true,
+     "note": "2027 price ($45 off through Nov 8, 2026). Easy Pay: 6 monthly payments through Nov 8; Easy Pay offered through Feb 11, 2027 with fewer payments. Platinum: $35.83/mo; 20% off food and merch, early entry."
+    }
+   ],
+   "default_plan": "season_pass",
+   "features": [
+    {
+     "id": "water_park",
+     "name": "Splashin' Safari water park",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "halloween",
+     "name": "Happy Halloween Weekends",
+     "plans": "season_pass,platinum",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Families in southern Indiana, Kentucky and Illinois.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Holiday World includes free parking, drinks and sunscreen with admission.",
+    "Free Pre-K pass for young kids."
+   ],
+   "sources": [
+    {
+     "label": "Holiday World passes (official)",
+     "url": "https://holidayworld.com/Passes"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "HW"
+  },
+  {
+   "id": "raging_waters_la_season_pass",
+   "name": "Raging Waters Los Angeles Season Pass",
+   "category": "theme_parks",
+   "alternative_to": [],
+   "kind": "direct",
+   "service_states": [
+    "CA"
+   ],
+   "service_area_note": "Raging Waters Los Angeles, San Dimas, CA (Palace Entertainment water park).",
+   "official_url": "https://ragingwaters.com/season-passes/",
+   "plans": [
+    {
+     "id": "silver",
+     "name": "Silver Season Pass",
+     "price_monthly": null,
+     "price_annual": 149.99,
+     "effective_monthly": 12.5,
+     "verified": true,
+     "note": "Page lists this as the in-park price; online sale may be lower. 2027 pass; includes remaining 2026 visits. Payment plans available with a down payment; amount and schedule not published on the page."
+    },
+    {
+     "id": "platinum",
+     "name": "Platinum Season Pass",
+     "price_monthly": null,
+     "price_annual": 199.99,
+     "effective_monthly": 16.67,
+     "verified": true,
+     "note": "In-park price. 2027 pass; includes remaining 2026 visits. Payment plans available with a down payment; amount and schedule not published on the page."
+    },
+    {
+     "id": "elite",
+     "name": "Elite Season Pass",
+     "price_monthly": null,
+     "price_annual": 279.99,
+     "effective_monthly": 23.33,
+     "verified": true,
+     "note": "In-park price. 2027 pass; includes remaining 2026 visits. Payment plans available with a down payment; amount and schedule not published on the page."
+    }
+   ],
+   "default_plan": "silver",
+   "features": [
+    {
+     "id": "water_park",
+     "name": "Water park admission all season",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "LA-area families who go to the water park often in summer.",
+   "free_trial_days": null,
+   "varies_by_region": true,
+   "regions": "US",
+   "tips": [
+    "Water park season only (roughly May-September)."
+   ],
+   "sources": [
+    {
+     "label": "Raging Waters LA season passes (official)",
+     "url": "https://ragingwaters.com/season-passes/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#7c3aed",
+   "mark": "RW"
   }
  ]
 }

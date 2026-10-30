@@ -1343,6 +1343,10 @@ const USAGE_BY_CAT = {
   connected_car: U("uses", "Days you used the app or car alerts a month", "day", "days", "month", 31),
   driver_assist: U("uses", "Days you used it while driving a month", "day", "days", "month", 31),
   satellite_radio: U("hours", "Listening hours a week", "listening hour", "listening hours", "week", 40, { per1: "hour", worth: 0.5 }),
+  // v238 (Cuong): sports and theme park passes. Streaming counts hours watched; ticket passes count games attended; park passes count visits a year.
+  sports_streaming: U("hours", "Hours of games watched a week", "hour watched", "hours watched", "week", 40, { per1: "hour", worth: 1.5, note: "Count everyone at home together." }),
+  sports_tickets: U("uses", "Games attended a month", "game", "games", "month", 20),
+  theme_parks: U("uses", "Park visits a year", "visit", "visits", "year", 50, { note: "Count each day you went, for everyone on a pass you pay for." }),
   auto: U("uses", "Roadside calls a year", "roadside call", "roadside calls", "year", 10, { per1: "call" }),
   travel: U("uses", "Perks used this month, in dollars", "dollar of perks", "dollars of perks", "month", 100, { per1: "dollar", worth: 1 }),  // credit cards (Cuong, v69)
   // Digital books (v72): $6 a book is our estimate, so a $12 plan pays off at about two books a month.
@@ -3460,7 +3464,8 @@ const CATEGORY_LABEL = { ai: "AI Assistants", video: "Video", music: "Music", ne
   elder_care: "Elderly Care", lawn_pest: "Lawn & Pest Control", tech_support: "Tech Repair & Support", small_business: "Small Business", domains: "Domain & Business Registration", child_care: "Child Care & Tutoring", passwords: "Password Managers",
   books: "Digital Books", car_insurance: "Car Insurance", home_insurance: "Home & Renters Insurance",
   live_tv: "Live TV & Cable", energy: "Electricity & Gas",
-  connected_car: "Connected Car", driver_assist: "Driver Assist & Self-Driving", satellite_radio: "Satellite Radio" };  // v237 (Cuong)
+  connected_car: "Connected Car", driver_assist: "Driver Assist & Self-Driving", satellite_radio: "Satellite Radio",
+  sports_streaming: "Sports Streaming", sports_tickets: "Sports Ticket Passes", theme_parks: "Theme Park Passes" };  // v237-238 (Cuong)
 const catLabel = c => CATEGORY_LABEL[c] || c.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join(" ");
 let exploreCat = "all", exploreOpen = null, pendingPick = null, exploreRegion = null;
 // US regions for the Explore region dropdown; matches the regional research batches.
@@ -4705,7 +4710,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 237 · Oct 30", VERSION_NUM = 237;
+const APP_VERSION = "Prototype · Version 238 · Oct 30", VERSION_NUM = 238;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
