@@ -18421,7 +18421,8 @@
    ],
    "service_area_note": "Arizona Diamondbacks, Chase Field, Phoenix",
    "color": "#b91c1c",
-   "mark": "AD"
+   "mark": "AD",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_guardians",
@@ -18470,7 +18471,8 @@
    ],
    "service_area_note": "Cleveland Guardians, Progressive Field, Cleveland",
    "color": "#b91c1c",
-   "mark": "CG"
+   "mark": "CG",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_cardinals",
@@ -18520,7 +18522,8 @@
    ],
    "service_area_note": "St. Louis Cardinals, Busch Stadium, St. Louis",
    "color": "#b91c1c",
-   "mark": "SL"
+   "mark": "SL",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_brewers",
@@ -18587,7 +18590,8 @@
    ],
    "service_area_note": "Milwaukee Brewers, American Family Field, Milwaukee",
    "color": "#b91c1c",
-   "mark": "MB"
+   "mark": "MB",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_twins",
@@ -18649,7 +18653,8 @@
    ],
    "service_area_note": "Minnesota Twins, Target Field, Minneapolis",
    "color": "#b91c1c",
-   "mark": "MT"
+   "mark": "MT",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_rockies",
@@ -18711,7 +18716,8 @@
    ],
    "service_area_note": "Colorado Rockies, Coors Field, Denver",
    "color": "#b91c1c",
-   "mark": "CR"
+   "mark": "CR",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_rangers",
@@ -18773,7 +18779,8 @@
    ],
    "service_area_note": "Texas Rangers, Globe Life Field, Arlington",
    "color": "#b91c1c",
-   "mark": "TR"
+   "mark": "TR",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_mets",
@@ -18822,7 +18829,8 @@
    ],
    "service_area_note": "New York Mets, Citi Field, Queens, New York City",
    "color": "#b91c1c",
-   "mark": "NY"
+   "mark": "NY",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_angels",
@@ -18871,7 +18879,8 @@
    ],
    "service_area_note": "Los Angeles Angels, Angel Stadium, Anaheim",
    "color": "#b91c1c",
-   "mark": "LA"
+   "mark": "LA",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_white_sox",
@@ -18920,7 +18929,8 @@
    ],
    "service_area_note": "Chicago White Sox, Rate Field, Chicago",
    "color": "#b91c1c",
-   "mark": "CW"
+   "mark": "CW",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_red_sox",
@@ -18969,7 +18979,8 @@
    ],
    "service_area_note": "Boston Red Sox, Fenway Park, Boston",
    "color": "#b91c1c",
-   "mark": "BR"
+   "mark": "BR",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_phillies",
@@ -19044,7 +19055,8 @@
    ],
    "service_area_note": "Philadelphia Phillies, Citizens Bank Park, Philadelphia",
    "color": "#b91c1c",
-   "mark": "PP"
+   "mark": "PP",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_pirates",
@@ -19097,7 +19109,8 @@
    ],
    "service_area_note": "Pittsburgh Pirates, PNC Park, Pittsburgh",
    "color": "#b91c1c",
-   "mark": "PP"
+   "mark": "PP",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_reds",
@@ -19146,7 +19159,8 @@
    ],
    "service_area_note": "Cincinnati Reds, Great American Ball Park, Cincinnati",
    "color": "#b91c1c",
-   "mark": "CR"
+   "mark": "CR",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_nationals",
@@ -19194,7 +19208,8 @@
    ],
    "service_area_note": "Washington Nationals, Nationals Park, Washington, DC",
    "color": "#b91c1c",
-   "mark": "WN"
+   "mark": "WN",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_orioles",
@@ -19246,7 +19261,8 @@
    ],
    "service_area_note": "Baltimore Orioles, Oriole Park at Camden Yards, Baltimore",
    "color": "#b91c1c",
-   "mark": "BO"
+   "mark": "BO",
+   "league": "MLB"
   },
   {
    "id": "mlb_ballpark_pass_astros",
@@ -19295,7 +19311,8 @@
    ],
    "service_area_note": "Houston Astros, Daikin Park, Houston",
    "color": "#b91c1c",
-   "mark": "HA"
+   "mark": "HA",
+   "league": "MLB"
   },
   {
    "id": "nhl_rangers_pass",
@@ -19348,7 +19365,8 @@
    ],
    "service_area_note": "New York Rangers, Madison Square Garden, New York City",
    "color": "#b91c1c",
-   "mark": "NY"
+   "mark": "NY",
+   "league": "NHL"
   },
   {
    "id": "nhl_blues_hat_trick",
@@ -19396,7 +19414,8 @@
    ],
    "service_area_note": "St. Louis Blues, Enterprise Center, St. Louis",
    "color": "#b91c1c",
-   "mark": "SL"
+   "mark": "SL",
+   "league": "NHL"
   },
   {
    "id": "ncaa_south_carolina_go_pass",
@@ -19445,7 +19464,8 @@
    ],
    "service_area_note": "South Carolina Gamecocks, Columbia",
    "color": "#b91c1c",
-   "mark": "SC"
+   "mark": "SC",
+   "league": "College"
   },
   {
    "id": "ncaa_siu_pawpass",
@@ -19494,7 +19514,8 @@
    ],
    "service_area_note": "Southern Illinois University Salukis, Carbondale",
    "color": "#b91c1c",
-   "mark": "SI"
+   "mark": "SI",
+   "league": "College"
   },
   {
    "id": "ncaa_minnesota_gopher_pass",
@@ -19542,7 +19563,8 @@
    ],
    "service_area_note": "University of Minnesota Golden Gophers, Huntington Bank Stadium, Minneapolis",
    "color": "#b91c1c",
-   "mark": "MG"
+   "mark": "MG",
+   "league": "College"
   },
   {
    "id": "disneyland_magic_key",

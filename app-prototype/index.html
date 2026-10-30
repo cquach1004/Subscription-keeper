@@ -122,6 +122,12 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .tip b { color: var(--good); }
 
 /* Add form */
+.lg-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 18px; }  /* v246 (Cuong): league tiles for Sports Ticket Passes */
+.lg-tile { display: grid; justify-items: start; gap: 6px; padding: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 16px; text-align: left; cursor: pointer; font: inherit; }
+.lg-tile:hover { border-color: var(--accent); } .lg-tile b { font-size: 15px; }
+.lg-badge { display: inline-flex; align-items: center; gap: 6px; padding: 7px 11px; border-radius: 10px; background: #0f1c3f; color: #4ade80; font: 800 16px/1 var(--f-body); letter-spacing: .03em; flex: none; }
+.lg-badge svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.lg-h { margin: 18px 0 8px; font-size: 16px; } .lg-sheet .catalog { grid-template-columns: 1fr; margin-bottom: 4px; } .lg-sheet .cat-item span:not(.logo):not(.pill) { white-space: normal; overflow: visible; }
 .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 18px; }
 .cat-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; text-align: left; min-width: 0; }
 .own-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -2256,7 +2262,7 @@ function welcomeView() {
   const more = offered.slice().sort((a, b) => catLabel(a.category).localeCompare(catLabel(b.category)) || a.name.localeCompare(b.name));
   const have = new Set(addMode ? state.subs.map(x => x.svc) : []);
   const tile = v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="false"${have.has(v.id) ? ' data-have="1" aria-disabled="true" title="Already on your list"' : ""} data-text="${esc((v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}</span></button>`;
-  const groups = [...new Set(more.map(v => v.category))].sort((x, y) => catLabel(x).localeCompare(catLabel(y)));
+  const groups = [...new Set([...more.map(v => v.category), ...(sportsAll().length ? ["sports_tickets"] : [])])].sort((x, y) => catLabel(x).localeCompare(catLabel(y)));
   // v188 (Cuong): short page. Search on top (no match: add as your own), Popular, then category pills with one category open
   // at a time, and a pinned "Your list" basket with name chips, Back and Next so nobody has to scroll to the bottom.
   const byCat = c => more.filter(v => v.category === c).sort(svcRank);
@@ -2293,6 +2299,7 @@ function welcomeView() {
       return `<button type="button" class="w-pill" data-wcat="${c}" aria-pressed="${c === wcat}">${esc(catLabel(c))}${n ? ` <span class="w-pill-n">${n}</span>` : ""}</button>`; }).join("")
       + (hidden ? `<button type="button" class="btn ghost small" id="w-allcats">More categories (${hidden})</button>` : allCats ? `<button type="button" class="btn ghost small" id="w-allcats">Fewer categories</button>` : ""); };
   const drawCat = () => { const box = $("w-catlist"); if (!wcat) { box.innerHTML = ""; return; }
+    if (wcat === "sports_tickets") { box.innerHTML = `<h4 class="w-h" style="margin:14px 0 8px">${esc(catLabel(wcat))}</h4><p class="small muted" style="margin:-4px 0 10px">Pick a league, then your team.</p>${leagueTilesHtml()}`; return; }
     const list = byCat(wcat), shown = wcatAll ? list : list.slice(0, 6);
     box.innerHTML = `<h4 class="w-h" style="margin:14px 0 8px">${esc(catLabel(wcat))}</h4><div class="catalog">${shown.map(tile).join("")}</div>
       ${list.length > 6 ? `<button type="button" class="btn ghost small w-more" id="w-more" style="margin:-8px 0 12px;padding-left:0">${wcatAll ? "Show fewer" : `See all ${list.length}`}</button>` : ""}`;
@@ -2314,7 +2321,7 @@ function welcomeView() {
   const search = () => { const raw = $("w-q").value.trim(), q = raw.toLowerCase(), res = $("w-results"), nr = $("w-nores");
     $("w-browse").hidden = !!q; res.hidden = !q; nr.hidden = !q;
     if (!q) { res.innerHTML = ""; return; }
-    const hits = offered.filter(v => (v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase().includes(q)).sort(svcRank).slice(0, 30);
+    const hits = [...offered, ...sportsAll().filter(v => !offered.includes(v))].filter(v => (v.name + " " + catLabel(v.category) + (v.bundleNote ? " bundle" : "")).toLowerCase().includes(q)).sort(svcRank).slice(0, 30);
     res.innerHTML = hits.map(tile).join(""); res.hidden = !hits.length; press(res);
     nr.innerHTML = `${hits.length ? "Not listed?" : `No match for "${esc(raw)}".`} <button type="button" class="btn ghost small" id="w-nores-add" style="padding:0">Add "${esc(raw)}" as your own</button>`; };
   // One click handler for the whole page, since tiles are redrawn as categories and searches change.
@@ -2322,6 +2329,7 @@ function welcomeView() {
     if (t.classList.contains("cat-item")) { if (t.dataset.have) return; const id = t.dataset.svc; picks.has(id) ? picks.delete(id) : picks.add(id); update(); }
     else if (t.dataset.wcat) { wcat = wcat === t.dataset.wcat ? null : t.dataset.wcat; wcatAll = false; drawPills(); drawCat(); }
     else if (t.id === "w-more") { wcatAll = !wcatAll; drawCat(); }
+    else if (t.dataset.league) openLeague(t.dataset.league, { tile, onPick: id => { picks.has(id) ? picks.delete(id) : picks.add(id); update(); }, after: press });
     else if (t.id === "w-allcats") { allCats = !allCats; drawPills(); }
     else if (t.dataset.bkX) { const [k, v] = t.dataset.bkX.split(/:(.*)/); k === "s" ? picks.delete(v) : own.splice(+v, 1); update(); }
     else if (t.id === "w-bk-more") { bkOpen = !bkOpen; drawBasket(); }
@@ -3502,6 +3510,36 @@ function openCatSheet(row) {
 }
 
 // Explore: browse the catalog before subscribing. Plans, features, trials and discounts all come from services.json.
+// v246 (Cuong): Sports Ticket Passes are browsed league first, then team. The badges are our own (league and team logos are trademarks).
+const LEAGUES = { MLB: ["Major League Baseball", `<circle cx="12" cy="12" r="9"/><path d="M7.6 4.3c1.9 2.3 1.9 13.1 0 15.4M16.4 4.3c-1.9 2.3-1.9 13.1 0 15.4"/>`],
+  NHL: ["National Hockey League", `<path d="M6 3l6.5 13.5H19"/><ellipse cx="8.5" cy="19" rx="4" ry="1.7"/>`],
+  College: ["College Sports", `<path d="M5 3v18M5 4.5l14 4.2L5 13"/>`] };
+const sportsAll = () => profile().country === "US" ? Object.values(CATALOG).filter(v => v.category === "sports_tickets") : [];
+const lgBadge = k => `<span class="lg-badge"><svg viewBox="0 0 24 24" aria-hidden="true">${LEAGUES[k]?.[1] || ""}</svg>${esc(k)}</span>`;
+function leagueTilesHtml() {
+  const all = sportsAll(), reg = profile().region;
+  return `<div class="lg-tiles">${[...new Set([...Object.keys(LEAGUES), ...all.map(v => v.league || "Other")])].map(k => { const n = all.filter(v => (v.league || "Other") === k); if (!n.length) return "";
+    const near = reg ? n.filter(v => v.service_states?.includes(reg)).length : 0;
+    return `<button type="button" class="lg-tile" data-league="${esc(k)}">${lgBadge(k)}<b>${esc(LEAGUES[k]?.[0] || k)}</b><span class="small muted">${n.length} team pass${n.length === 1 ? "" : "es"}${near ? ` · ${near} near you` : ""}</span></button>`; }).join("")}</div>`;
+}
+// The league's own page: teams near the user first, then every other team with a pass. o.tile draws a team, o.onPick(id, close) acts on a tap.
+function openLeague(k, o) {
+  const root = document.getElementById("sheet-root"), reg = profile().region;
+  const all = sportsAll().filter(v => (v.league || "Other") === k).sort((a, b) => a.name.localeCompare(b.name));
+  const near = reg ? all.filter(v => v.service_states?.includes(reg)) : [], rest = all.filter(v => !near.includes(v));
+  root.replaceChildren(el(`<div class="scrim" id="scrim"></div>
+    <aside class="sheet lg-sheet enter" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="sheet-head">${lgBadge(k)}<div><h2 id="sheet-title">${esc(LEAGUES[k]?.[0] || k)}</h2><div class="small muted">Pick your team. ${all.length} team pass${all.length === 1 ? "" : "es"}.</div></div>
+        <button class="btn" id="close">Done</button></div>
+      ${near.length ? `<h3 class="lg-h">Near you (${esc(US_STATES[reg] || reg)})</h3><div class="catalog">${near.map(o.tile).join("")}</div>` : ""}
+      ${rest.length ? `<h3 class="lg-h">${near.length ? "Other teams" : "All teams"}</h3><div class="catalog">${rest.map(o.tile).join("")}</div>` : ""}
+    </aside>`));
+  const close = () => { root.replaceChildren(); o.onClose?.(); };
+  root.querySelector("#scrim").onclick = close; root.querySelector("#close").onclick = close;
+  root.querySelector(".sheet").addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  root.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => { if (!b.dataset.have) o.onPick(b.dataset.svc, close); }));
+  o.after?.(root);
+}
 const CATEGORY_LABEL = { ai: "AI Assistants", video: "Video", music: "Music", news: "News", storage: "Cloud Storage", productivity: "Productivity",
   privacy: "Privacy & Security", auto: "Auto & Roadside", travel: "Travel", shopping: "Shopping", bundle: "Bundles",
   education: "Education & Learning", mobile: "Mobile Plans", internet: "Home Internet", fitness: "Fitness & Gym", home_security: "Home Security", food: "Food Delivery & Meal Kits",
@@ -3681,13 +3719,14 @@ function azGroups(list) {
 function addView() {
   const mine = new Set(state.subs.map(s => s.svc)), country = profile().country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no").sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" })), hidden = Object.keys(CATALOG).length - offered.length;
-  const cats = [...new Set(offered.map(v => v.category))].sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
+  const cats = [...new Set([...offered.map(v => v.category), ...(sportsAll().length ? ["sports_tickets"] : [])])].sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
   // v194 (Cuong): Did You Know? moved here from Overview, at the top of Explore.
   const f = el(`${factsHtml()}<div class="section-head"><h2>Explore and add</h2><span class="small muted">Browse by category or search. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span></div>
     <h3 style="margin:4px 0 8px">1. Which subscription?</h3>
     <input id="a-q" type="search" placeholder="Search, e.g. Hulu, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:10px">
     <div class="chips a-cats" role="group" aria-label="Category">${["all", "mine-alts", "public", ...cats].map(c => `<button class="chip x-cat" data-cat="${c}" aria-pressed="${exploreCat === c}">${c === "all" ? "All" : c === "mine-alts" ? "Alternatives To Mine" : c === "public" ? "Free Public Services" : esc(catLabel(c))}</button>`).join("")}</div>
     <div class="az-tools"><button type="button" class="btn ghost small" id="az-all">Collapse all</button></div>
+    <div id="a-leagues" hidden><p class="small muted" style="margin:0 0 10px">Pick a league, then your team.</p>${leagueTilesHtml()}</div>
     <div id="a-cat">${azGroups(offered).map(([l, vs]) => `<details class="fold az" data-l="${l}" open><summary><b>${l}</b><span class="small muted az-n">${vs.length}</span></summary><div class="catalog">${vs.map(v => `<button class="cat-item" data-svc="${v.id}" data-cat="${v.category}" data-alt-mine="${altFor(v).length ? 1 : 0}" data-public="${v.provider_type ? 1 : 0}" aria-pressed="${picked === v.id}" data-text="${esc((v.name + " " + catLabel(v.category) + " " + v.features.map(x => x.name).join(" ")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}</div></details>`).join("")}
       <div class="catalog" id="a-other"><button class="cat-item" data-svc="" aria-pressed="${picked === ""}" data-text=""><span class="logo" style="background:#6b7785">+</span><span>Something else</span></button></div></div>
     <p class="muted" id="a-none" hidden>No services match. Try another word or category, or choose Something else.</p>
@@ -3737,11 +3776,15 @@ function addView() {
     syncPrice(); $("add-form").scrollIntoView({ behavior: "smooth", block: "start" }); if (!v) $("f-name").focus();
   };
   f.querySelectorAll(".cat-item").forEach(b => b.addEventListener("click", () => fill(b.dataset.svc)));
+  f.querySelectorAll(".lg-tile").forEach(b => b.addEventListener("click", () => openLeague(b.dataset.league, {
+    tile: v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="${v.id === picked}">${logoHtml(v)}<span>${esc(v.name)}</span>${mine.has(v.id) ? ` <span class="pill great">On your list</span>` : ""}</button>`,
+    onPick: (id, close) => { close(); fill(id); } })));
   const applyAdd = () => { const q = ($("a-q")?.value || "").trim().toLowerCase(); let n = 0;
     document.querySelectorAll("#a-cat .cat-item").forEach(b => { if (!b.dataset.svc) { b.hidden = exploreCat !== "all" && !q; return; }
       const ok = (exploreCat === "all" || b.dataset.cat === exploreCat || (exploreCat === "mine-alts" && b.dataset.altMine === "1") || (exploreCat === "public" && b.dataset.public === "1")) && (!q || b.dataset.text.includes(q));
       b.hidden = !ok; n += ok; });
-    $("a-none").hidden = n > 0;
+    const lg = exploreCat === "sports_tickets" && !q; $("a-leagues").hidden = !lg; $("a-cat").hidden = lg; document.querySelector(".az-tools").style.display = lg ? "none" : "";
+    $("a-none").hidden = n > 0 || lg;
     // Letters with nothing left are hidden. A search or a category filter opens every letter that still has matches;
     // otherwise each letter is as the viewer left it (open to start).
     const auto = !!q || exploreCat !== "all";
@@ -4755,7 +4798,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 245 · Oct 30", VERSION_NUM = 245;
+const APP_VERSION = "Prototype · Version 246 · Oct 30", VERSION_NUM = 246;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
