@@ -614,7 +614,7 @@ h3 { font-weight: 600; }
 .stat, .list, .card, .upcoming, form.fields, .tbl-wrap { border-radius: 24px; }
 /* v198 (Cuong): testers found Overview busy. White cards get a light border so each widget reads as its own block (not the hero stats on the navy band). */
 .list, .card, .upcoming, form.fields, .tbl-wrap, details.sec, .fresh { border-color: var(--card-line, var(--line)); }  /* v247 (Cuong): medium gray card border (option B) for more contrast */
-body:not(.short-band) #view > .card, body:not(.short-band) #view .charts > .card, body:not(.short-band) #view .uml > .card { margin-bottom: 20px; }
+body:not(.short-band) #view > .card { margin-bottom: 20px; } #view .charts > .card, #view .uml > .card { margin-bottom: 0; }  /* v248 (Cuong): cards in a grid use its gap, no extra 20px below */
 body:not(.short-band) #view .card > h3:first-child { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .stat { padding: 18px 20px; }
 .stat .label { text-transform: none; letter-spacing: 0; font-size: 15px; font-weight: 500; color: var(--ink); }
@@ -4801,7 +4801,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 247 · Standalone copy · Oct 30", VERSION_NUM = 247;
+const APP_VERSION = "Prototype · Version 248 · Standalone copy · Oct 30", VERSION_NUM = 248;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
