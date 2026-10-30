@@ -1,6 +1,6 @@
 {
  "generated_at": "2026-10-19",
- "note": "New Explore categories researched 2026-10-19. verified=false means the price came from a news or review site. Added 2026-10-23: books (Digital Books) and car_insurance / home_insurance (no list prices). Added 2026-10-23: Adobe Creative Cloud (productivity), prices from Adobe's US plans page. Added 2026-10-25: Erie Insurance car and home (regional, service_states). Added 2026-10-26: domains (Domain & Business Registration): 6 domain registrars (.com yearly price) and 4 registered agents; prices from comparison sites except ZenBusiness (official page).",
+ "note": "New Explore categories researched 2026-10-19. verified=false means the price came from a news or review site. Added 2026-10-23: books (Digital Books) and car_insurance / home_insurance (no list prices). Added 2026-10-23: Adobe Creative Cloud (productivity), prices from Adobe's US plans page. Added 2026-10-25: Erie Insurance car and home (regional, service_states). Added 2026-10-26: domains (Domain & Business Registration): 6 domain registrars (.com yearly price) and 4 registered agents; prices from comparison sites except ZenBusiness (official page). Added 2026-10-30: connected_car (Connected Car), driver_assist (Driver Assist & Self-Driving), satellite_radio (SiriusXM), 25 carmaker programs; verified=false prices come from news, review or owner sites.",
  "services": [
   {
    "id": "duolingo",
@@ -15388,6 +15388,2073 @@
    "checked_at": "2026-10-26",
    "color": "#00a6a6",
    "mark": "Bz"
+  },
+  {
+   "id": "tesla_premium_connectivity",
+   "name": "Tesla Premium Connectivity",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.tesla.com/support/connectivity",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Monthly",
+     "price_monthly": 9.99,
+     "price_annual": null,
+     "effective_monthly": 9.99,
+     "verified": true,
+     "note": "Official Tesla support page: $9.99/month plus tax."
+    },
+    {
+     "id": "annual",
+     "name": "Annual",
+     "price_monthly": null,
+     "price_annual": 99,
+     "effective_monthly": 8.25,
+     "verified": true,
+     "note": "Official Tesla support page: $99/year plus tax."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "cellular_data",
+     "name": "Features over cellular, not just Wi-Fi",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "live_traffic",
+     "name": "Live traffic and satellite maps",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "streaming",
+     "name": "Music and video streaming over cellular",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "sentry_view",
+     "name": "Sentry Mode live camera in app",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Tesla owners who stream music or want live traffic and satellite maps.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Standard Connectivity is free for 8 years from delivery: basic maps, Bluetooth music, Wi-Fi features.",
+    "New Model S, 3, X, Y and Cybertruck orders come with a Premium trial; Tesla says to check order pricing details for its length.",
+    "App remote lock/unlock, climate and phone key work without Premium."
+   ],
+   "sources": [
+    {
+     "label": "Tesla Support: Connectivity",
+     "url": "https://www.tesla.com/support/connectivity"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#cc0000",
+   "mark": "T"
+  },
+  {
+   "id": "tesla_fsd_supervised",
+   "name": "Tesla Full Self-Driving (Supervised)",
+   "category": "driver_assist",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.tesla.com/support/full-self-driving-subscriptions",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Monthly",
+     "price_monthly": 99,
+     "price_annual": null,
+     "effective_monthly": 99,
+     "verified": true,
+     "note": "Official Tesla FSD subscriptions page: $99/month. Tesla says price may change."
+    },
+    {
+     "id": "monthly_eap_owners",
+     "name": "Monthly (Enhanced Autopilot owners)",
+     "price_monthly": 49,
+     "price_annual": null,
+     "effective_monthly": 49,
+     "verified": false,
+     "note": "Reported by FSDClarity guide (effective Jan 29, 2026) for owners who already bought Enhanced Autopilot; not on the official page."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "city_streets",
+     "name": "Supervised self-driving on city streets and highways",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "auto_lane_change",
+     "name": "Automatic lane changes and navigation",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "autopark",
+     "name": "Autopark and Smart Summon",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Tesla drivers who want supervised point-to-point self-driving.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Tesla stopped selling FSD outright after Feb 14, 2026, so subscription is the only way to add it to a new car (per news reports).",
+    "No refunds and no proration; you keep FSD to the end of the paid month after canceling.",
+    "Musk has said the price will rise as capability improves; no increase announced as of Oct 2026 (per FSDClarity)."
+   ],
+   "sources": [
+    {
+     "label": "Tesla Support: FSD (Supervised) subscriptions",
+     "url": "https://www.tesla.com/support/full-self-driving-subscriptions"
+    },
+    {
+     "label": "FSDClarity: FSD price 2026",
+     "url": "https://www.fsdclarity.blog/blog/tesla-fsd-subscription-price-2026-monthly-cost"
+    },
+    {
+     "label": "TFLcar: subscription-only from Feb 14",
+     "url": "https://tflcar.com/2026/01/tesla-full-self-driving-subscription-only-update/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#cc0000",
+   "mark": "T"
+  },
+  {
+   "id": "bmw_connecteddrive",
+   "name": "BMW ConnectedDrive (Connected Services / Remote Engine Start)",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.bmwusa.com/en/shop/ls/cp/connected-drive",
+   "plans": [
+    {
+     "id": "connected_services",
+     "name": "BMW Connected Services (Connected Package Pro)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price shown only after sign-in on BMW USA store. Reports vary: Bimmer-Mag (Jul 2025) says about $299/year; Smartcar says about $120/year."
+    },
+    {
+     "id": "remote_engine_start_annual",
+     "name": "Remote Engine Start (1 year)",
+     "price_monthly": null,
+     "price_annual": 105,
+     "effective_monthly": 8.75,
+     "verified": false,
+     "note": "Carscoops (Jan 2023): $10/month, $105/year, $250/3 years, $330 one-time. Official store hides prices behind sign-in."
+    },
+    {
+     "id": "remote_engine_start_monthly",
+     "name": "Remote Engine Start (monthly)",
+     "price_monthly": 10,
+     "price_annual": null,
+     "effective_monthly": 10,
+     "verified": false,
+     "note": "Carscoops (Jan 2023): $10/month."
+    }
+   ],
+   "default_plan": "connected_services",
+   "features": [
+    {
+     "id": "remote_engine_start",
+     "name": "Remote engine start",
+     "plans": "remote_engine_start_annual,remote_engine_start_monthly",
+     "overlap_tag": null
+    },
+    {
+     "id": "live_traffic",
+     "name": "Real-time traffic",
+     "plans": "connected_services",
+     "overlap_tag": null
+    },
+    {
+     "id": "traffic_cameras",
+     "name": "Traffic camera info",
+     "plans": "connected_services",
+     "overlap_tag": null
+    },
+    {
+     "id": "online_services",
+     "name": "BMW Online and voice",
+     "plans": "connected_services",
+     "overlap_tag": null
+    },
+    {
+     "id": "connected_parking",
+     "name": "Connected parking",
+     "plans": "connected_services",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "BMW owners whose included connected period has ended or who want app remote start.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "BMW Remote Services (lock/unlock, vehicle status in My BMW app) is listed separately on the store and has been reported as free.",
+    "New BMWs include a connected trial; reported as 1 to 4 years depending on model.",
+    "Remote Engine Start is not in Connected Services; buy it separately. Some features offer a free trial in the store."
+   ],
+   "sources": [
+    {
+     "label": "BMW USA ConnectedDrive Store",
+     "url": "https://www.bmwusa.com/en/shop/ls/cp/connected-drive"
+    },
+    {
+     "label": "BMW USA: BMW Connected Services",
+     "url": "https://www.bmwusa.com/en/shop/ls/dp/BMW_Connected_Services_3_us"
+    },
+    {
+     "label": "Carscoops: BMW US subscriptions (2023)",
+     "url": "https://www.carscoops.com/2023/01/bmw-now-offering-more-feature-subscriptions-in-the-u-s/"
+    },
+    {
+     "label": "Bimmer-Mag: Connected Package Pro",
+     "url": "https://www.bimmer-mag.com/bmw-connected-package-pro/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1c69d4",
+   "mark": "BM"
+  },
+  {
+   "id": "bmw_driving_assistant",
+   "name": "BMW Driving Assistant Plus (ConnectedDrive upgrade)",
+   "category": "driver_assist",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.bmwusa.com/en/shop/ls/cp/connected-drive",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Monthly",
+     "price_monthly": 20,
+     "price_annual": null,
+     "effective_monthly": 20,
+     "verified": false,
+     "note": "Carscoops (Jan 2023): Driving Assistance Plus with Stop&Go $20/month. Official prices need sign-in."
+    },
+    {
+     "id": "annual",
+     "name": "1 year",
+     "price_monthly": null,
+     "price_annual": 210,
+     "effective_monthly": 17.5,
+     "verified": false,
+     "note": "Carscoops (Jan 2023): $210/year; $580 for 3 years; $950 one-time."
+    },
+    {
+     "id": "parking_pro_annual",
+     "name": "Parking Assistant Professional (1 year)",
+     "price_monthly": null,
+     "price_annual": 50,
+     "effective_monthly": 4.17,
+     "verified": false,
+     "note": "Carscoops (Jan 2023): $5/month, $50/year, $130/3 years, $220 one-time."
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "stop_and_go",
+     "name": "Adaptive cruise with Stop&Go",
+     "plans": "monthly,annual",
+     "overlap_tag": null
+    },
+    {
+     "id": "lane_centering",
+     "name": "Lane centering assist",
+     "plans": "monthly,annual",
+     "overlap_tag": null
+    },
+    {
+     "id": "app_parking",
+     "name": "Remote parking from phone",
+     "plans": "parking_pro_annual",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "BMW owners with the hardware who want Stop&Go cruise or remote parking without buying it upfront.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Only works on cars built with the needed hardware.",
+    "One-time (lifetime) purchase may cost less than 3+ years of renewals.",
+    "Hands-free Highway Assistant on many models is part of Driving Assistant Professional, usually bought with the car."
+   ],
+   "sources": [
+    {
+     "label": "BMW USA ConnectedDrive Store",
+     "url": "https://www.bmwusa.com/en/shop/ls/cp/connected-drive"
+    },
+    {
+     "label": "Carscoops: BMW US subscriptions (2023)",
+     "url": "https://www.carscoops.com/2023/01/bmw-now-offering-more-feature-subscriptions-in-the-u-s/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1c69d4",
+   "mark": "BM"
+  },
+  {
+   "id": "mercedes_me_connect",
+   "name": "Mercedes me connect",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mbusa.com/en/mercedes-benz-app",
+   "plans": [
+    {
+     "id": "annual",
+     "name": "Mercedes me connect (annual)",
+     "price_monthly": null,
+     "price_annual": 150,
+     "effective_monthly": 12.5,
+     "verified": false,
+     "note": "MBWorld owner forum (2024-2025): about $150/year for the bundled services. Official price shown only in the Mercedes-Benz Store by vehicle."
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "remote_start",
+     "name": "Remote start and lock",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "vehicle_status",
+     "name": "Vehicle status and location",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "navigation_services",
+     "name": "Online navigation services",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "crash_sos",
+     "name": "Crash notification and SOS",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Mercedes owners whose first-year remote services have ended.",
+   "free_trial_days": 365,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Mercedes says most remote services are free for 1 year (standard from model year 2022).",
+    "Some services never expire; check the app for what stays active.",
+    "Digital Extras (navigation, dashcam, acceleration boost) are sold separately in the Mercedes-Benz Store."
+   ],
+   "sources": [
+    {
+     "label": "MBUSA: Mercedes-Benz app",
+     "url": "https://www.mbusa.com/en/mercedes-benz-app"
+    },
+    {
+     "label": "MBWorld forum: Mercedes me connect $150",
+     "url": "https://mbworld.org/forums/mercedes-tech-talk/881920-mercedes-me-connect-150-a.html"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#222222",
+   "mark": "MB"
+  },
+  {
+   "id": "mercedes_drive_assist_pro",
+   "name": "Mercedes MB.DRIVE ASSIST PRO",
+   "category": "driver_assist",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.mbusa.com/en/mercedes-benz-app",
+   "plans": [
+    {
+     "id": "three_year",
+     "name": "3-year package",
+     "price_monthly": null,
+     "price_annual": 1316.67,
+     "effective_monthly": 109.72,
+     "verified": false,
+     "note": "Edmunds (Jan 2026): $3,950 package incl. 3 years of service on 2026 CLA; annual shown is $3,950 / 3. Repairer Driven News says monthly and yearly options will exist; prices not announced. US service due later in 2026."
+    }
+   ],
+   "default_plan": "three_year",
+   "features": [
+    {
+     "id": "city_assist",
+     "name": "Supervised point-to-point assist on city streets",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "highway_assist",
+     "name": "Highway lane keeping and lane changes",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "New Mercedes CLA owners who want supervised city-street driving assist.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Debuts on the 2026 CLA; more models expected later.",
+    "Drive Pilot (Level 3, hands off and eyes off in traffic jams) was about $2,500/year on 2024 S-Class/EQS, but Mercedes paused it for the 2026 S-Class (news reports)."
+   ],
+   "sources": [
+    {
+     "label": "Edmunds: CLA Drive Assist Pro",
+     "url": "https://www.edmunds.com/car-news/2026-mercedes-benz-cla-drive-assist-pro-review.html"
+    },
+    {
+     "label": "Repairer Driven News: US rollout",
+     "url": "https://www.repairerdrivennews.com/2026/01/09/mercedes-benz-plans-roll-out-of-its-automated-driving-feature-in-u-s/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#222222",
+   "mark": "MB"
+  },
+  {
+   "id": "gm_onstar",
+   "name": "GM OnStar (Chevrolet, Buick, GMC, Cadillac)",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.onstar.com/standard-content",
+   "plans": [
+    {
+     "id": "one",
+     "name": "OnStar One (2025+ vehicles)",
+     "price_monthly": 34.99,
+     "price_annual": null,
+     "effective_monthly": 34.99,
+     "verified": true,
+     "note": "OnStar.com standard-content page: One from $34.99/month or $349.99/year. Bundles safety, Wi-Fi and media."
+    },
+    {
+     "id": "one_annual",
+     "name": "OnStar One annual (2025+)",
+     "price_monthly": null,
+     "price_annual": 349.99,
+     "effective_monthly": 29.17,
+     "verified": true,
+     "note": "OnStar.com: $349.99/year."
+    },
+    {
+     "id": "connect_plus",
+     "name": "Connect Plus (2025+ vehicles)",
+     "price_monthly": 19.99,
+     "price_annual": null,
+     "effective_monthly": 19.99,
+     "verified": true,
+     "note": "OnStar.com: from $19.99/month or $199/year. Wi-Fi hotspot, streaming, games."
+    },
+    {
+     "id": "connect_plus_annual",
+     "name": "Connect Plus annual (2025+)",
+     "price_monthly": null,
+     "price_annual": 199,
+     "effective_monthly": 16.58,
+     "verified": true,
+     "note": "OnStar.com: $199/year."
+    },
+    {
+     "id": "protect",
+     "name": "Protect / Safety & Security",
+     "price_monthly": 29.99,
+     "price_annual": null,
+     "effective_monthly": 29.99,
+     "verified": true,
+     "note": "shop.onstar.com: $29.99/month (GM Authority lists $22.99 for 2025 models). Crash response, SOS, stolen vehicle help, roadside."
+    },
+    {
+     "id": "connect",
+     "name": "Connect (older vehicles)",
+     "price_monthly": 14.99,
+     "price_annual": null,
+     "effective_monthly": 14.99,
+     "verified": true,
+     "note": "shop.onstar.com: $14.99/month. Remote commands, nav, voice, music apps."
+    }
+   ],
+   "default_plan": "one",
+   "features": [
+    {
+     "id": "crash_response",
+     "name": "Automatic crash response",
+     "plans": "one,one_annual,protect",
+     "overlap_tag": null
+    },
+    {
+     "id": "sos",
+     "name": "Emergency and roadside help",
+     "plans": "one,one_annual,protect",
+     "overlap_tag": null
+    },
+    {
+     "id": "stolen_vehicle",
+     "name": "Stolen vehicle assistance",
+     "plans": "one,one_annual,protect",
+     "overlap_tag": null
+    },
+    {
+     "id": "wifi_hotspot",
+     "name": "In-car Wi-Fi hotspot",
+     "plans": "one,one_annual,connect_plus,connect_plus_annual",
+     "overlap_tag": "in_car_wifi"
+    },
+    {
+     "id": "remote_commands",
+     "name": "Remote start, lock, location",
+     "plans": "connect,one,one_annual,connect_plus,connect_plus_annual",
+     "overlap_tag": null
+    },
+    {
+     "id": "guardian_app",
+     "name": "OnStar Guardian app",
+     "plans": "one,one_annual,protect",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "GM owners who want Wi-Fi in the car or human-backed crash and emergency help.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "2025+ GM vehicles get OnStar Basics free for 8 years: auto crash response, remote commands, Google Maps, Gemini voice, audio apps.",
+    "Prices differ by model year; older vehicles see the higher shop.onstar.com prices.",
+    "Super Cruise is a separate plan (see GM Super Cruise)."
+   ],
+   "sources": [
+    {
+     "label": "OnStar: standard content (Basics)",
+     "url": "https://www.onstar.com/standard-content"
+    },
+    {
+     "label": "OnStar shop",
+     "url": "https://shop.onstar.com/"
+    },
+    {
+     "label": "GM Authority: OnStar plans 2025",
+     "url": "https://gmauthority.com/blog/2025/05/gm-revises-onstar-plans-and-pricing/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#0170ce",
+   "mark": "GM"
+  },
+  {
+   "id": "gm_super_cruise",
+   "name": "GM Super Cruise",
+   "category": "driver_assist",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.onstar.com/support/faq/super-cruise",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "OnStar Super Cruise plan",
+     "price_monthly": 39.99,
+     "price_annual": null,
+     "effective_monthly": 39.99,
+     "verified": true,
+     "note": "OnStar Super Cruise FAQ and Chevrolet Super Cruise page: $39.99/month in the US. No annual price listed."
+    }
+   ],
+   "default_plan": "monthly",
+   "features": [
+    {
+     "id": "hands_free",
+     "name": "Hands-free highway driving",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "auto_lane_change",
+     "name": "Automatic and signal lane changes",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "trailering",
+     "name": "Hands-free trailering",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "GM owners past the 3-year included period who drive long highway stretches.",
+   "free_trial_days": 1095,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "New Super Cruise vehicles include 3 years of connectivity for it.",
+    "OnStar One Super Cruise bundles were also sold (GM Authority: $64.99/month for 2025 models)."
+   ],
+   "sources": [
+    {
+     "label": "OnStar: Super Cruise FAQ",
+     "url": "https://www.onstar.com/support/faq/super-cruise"
+    },
+    {
+     "label": "Chevrolet: Super Cruise",
+     "url": "https://www.chevrolet.com/super-cruise"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#0170ce",
+   "mark": "GM"
+  },
+  {
+   "id": "ford_connectivity_package",
+   "name": "Ford Connectivity Package (FordPass / Ford app)",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.ford.com/technology/connected-services/connectivity-package/pricing/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Monthly",
+     "price_monthly": 14.99,
+     "price_annual": null,
+     "effective_monthly": 14.99,
+     "verified": true,
+     "note": "Ford.com pricing page: $14.99/month."
+    },
+    {
+     "id": "annual",
+     "name": "Annual",
+     "price_monthly": null,
+     "price_annual": 149.95,
+     "effective_monthly": 12.5,
+     "verified": true,
+     "note": "Ford.com: $149.95/year; full refund within 14 days."
+    },
+    {
+     "id": "seven_year",
+     "name": "One-time (7 years)",
+     "price_monthly": null,
+     "price_annual": 106.43,
+     "effective_monthly": 8.87,
+     "verified": true,
+     "note": "Ford.com: $745 one-time for 7 years from warranty start; annual shown is $745/7. Cannot cancel. $745 one-time for 7 years; yearly figure is $745 / 7."
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "wifi_hotspot",
+     "name": "5G Wi-Fi hotspot, unlimited data",
+     "plans": "all",
+     "overlap_tag": "in_car_wifi"
+    },
+    {
+     "id": "connected_nav",
+     "name": "Connected navigation / Google Maps",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "streaming",
+     "name": "Video and audio streaming",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "voice",
+     "name": "Alexa or Google voice assistant",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Ford owners who use in-car Wi-Fi or connected maps after the free year.",
+   "free_trial_days": 365,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Included free for 1 year on eligible new Fords; activate in the Ford app.",
+    "Basic app features such as remote start and lock are part of Ford connected services, separate from this package; some owners report limits after an initial period, so check your app.",
+    "Lincoln has a matching Lincoln Connectivity Package."
+   ],
+   "sources": [
+    {
+     "label": "Ford: Connectivity Package pricing",
+     "url": "https://www.ford.com/technology/connected-services/connectivity-package/pricing/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#003478",
+   "mark": "F"
+  },
+  {
+   "id": "ford_bluecruise",
+   "name": "Ford / Lincoln BlueCruise",
+   "category": "driver_assist",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.ford.com/technology/bluecruise/",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Monthly",
+     "price_monthly": 49.99,
+     "price_annual": null,
+     "effective_monthly": 49.99,
+     "verified": true,
+     "note": "Ford.com BlueCruise page (updated Oct 2026): $49.99/month."
+    },
+    {
+     "id": "annual",
+     "name": "Annual",
+     "price_monthly": null,
+     "price_annual": 495,
+     "effective_monthly": 41.25,
+     "verified": true,
+     "note": "Ford.com: $495/year."
+    },
+    {
+     "id": "one_time",
+     "name": "One-time (at purchase)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "$2,495 one-time, only when buying the vehicle from a Ford dealer (Ford's BlueCruise page, checked 2026-10-30)."
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "hands_free",
+     "name": "Hands-free highway driving",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "lane_change",
+     "name": "Lane change assist",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "in_lane_repositioning",
+     "name": "In-lane repositioning",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Ford and Lincoln drivers who spend a lot of time on mapped highways.",
+   "free_trial_days": 90,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Monthly and annual plans start with a 3-month trial at warranty start (some premium models got 1 year).",
+    "Annual saves about $105 a year over monthly."
+   ],
+   "sources": [
+    {
+     "label": "Ford: BlueCruise",
+     "url": "https://www.ford.com/technology/bluecruise/"
+    },
+    {
+     "label": "Motor Authority: BlueCruise price cut",
+     "url": "https://motorauthority.com/news/1144613_ford-slashes-bluecruise-pricing-while-adding-one-time-purchase-option"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#003478",
+   "mark": "F"
+  },
+  {
+   "id": "toyota_connected_services",
+   "name": "Toyota Connected Services (Remote Connect, Drive Connect, Safety Connect)",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.toyota.com/connected-services/connected-services-plans/",
+   "plans": [
+    {
+     "id": "music_lover",
+     "name": "Music Lover (2022+)",
+     "price_monthly": 15,
+     "price_annual": null,
+     "effective_monthly": 15,
+     "verified": true,
+     "note": "Toyota.com: $15/month. Integrated streaming + Remote Connect."
+    },
+    {
+     "id": "go_anywhere",
+     "name": "Go Anywhere (2022+)",
+     "price_monthly": 15,
+     "price_annual": null,
+     "effective_monthly": 15,
+     "verified": true,
+     "note": "Toyota.com: $15/month. Drive Connect (cloud nav, voice) + Remote Connect."
+    },
+    {
+     "id": "premium",
+     "name": "Premium (2022+)",
+     "price_monthly": 25,
+     "price_annual": null,
+     "effective_monthly": 25,
+     "verified": true,
+     "note": "Toyota.com: $25/month. Drive Connect + streaming + Remote Connect."
+    },
+    {
+     "id": "safety_connect",
+     "name": "Safety Connect",
+     "price_monthly": 8,
+     "price_annual": null,
+     "effective_monthly": 8,
+     "verified": false,
+     "note": "PickupTruckTalk (Jan 2022): $8/month or $80/year. Not priced on Toyota's plans page."
+    },
+    {
+     "id": "remote_connect_only",
+     "name": "Remote Connect (standalone, older models)",
+     "price_monthly": 8,
+     "price_annual": null,
+     "effective_monthly": 8,
+     "verified": false,
+     "note": "PickupTruckTalk (Jan 2022) and Smartcar: $8/month or $80/year."
+    }
+   ],
+   "default_plan": "go_anywhere",
+   "features": [
+    {
+     "id": "remote_start",
+     "name": "Remote start, lock, status",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "cloud_nav",
+     "name": "Cloud navigation and voice",
+     "plans": "go_anywhere,premium",
+     "overlap_tag": null
+    },
+    {
+     "id": "streaming",
+     "name": "Built-in Apple Music / Amazon Music",
+     "plans": "music_lover,premium",
+     "overlap_tag": null
+    },
+    {
+     "id": "crash_sos",
+     "name": "Crash notification and SOS",
+     "plans": "safety_connect",
+     "overlap_tag": null
+    },
+    {
+     "id": "wifi",
+     "name": "Wi-Fi hotspot (AT&T add-on)",
+     "plans": "none",
+     "overlap_tag": "in_car_wifi"
+    }
+   ],
+   "best_for": "Toyota owners who want app remote start after their trial ends.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "New Toyotas include trials; length varies by model and audio system (often 1 to 3 years; Safety Connect and Service Connect have had up to 10-year trials on some models).",
+    "Wi-Fi Connect hotspot is billed by AT&T and can join an AT&T phone plan.",
+    "The Toyota app itself is free."
+   ],
+   "sources": [
+    {
+     "label": "Toyota: Connected Services plans",
+     "url": "https://www.toyota.com/connected-services/connected-services-plans/"
+    },
+    {
+     "label": "Toyota app page",
+     "url": "https://www.toyota.com/connected-services/toyotaapp"
+    },
+    {
+     "label": "PickupTruckTalk: Toyota connected costs (2022)",
+     "url": "https://pickuptrucktalk.com/2022/01/toyota-connected-service-breaking-down-what-8-to-32-per-month-gets-you/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#eb0a1e",
+   "mark": "TY"
+  },
+  {
+   "id": "lexus_connected_services",
+   "name": "Lexus Connected Services",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://support.lexus.com/s/article/Lexus-Subscription-Plans",
+   "plans": [
+    {
+     "id": "go_anywhere",
+     "name": "Go Anywhere",
+     "price_monthly": 15,
+     "price_annual": null,
+     "effective_monthly": 15,
+     "verified": false,
+     "note": "Cars.com (Jan 2026): $15/month. Lexus support page did not load prices."
+    },
+    {
+     "id": "music_lover",
+     "name": "Music Lover",
+     "price_monthly": 15,
+     "price_annual": null,
+     "effective_monthly": 15,
+     "verified": false,
+     "note": "Cars.com (Jan 2026): $15/month."
+    },
+    {
+     "id": "premium",
+     "name": "Premium",
+     "price_monthly": 25,
+     "price_annual": null,
+     "effective_monthly": 25,
+     "verified": false,
+     "note": "Cars.com (Jan 2026): $25/month."
+    },
+    {
+     "id": "remote_only",
+     "name": "Remote (older Enform models)",
+     "price_monthly": null,
+     "price_annual": 80,
+     "effective_monthly": 6.67,
+     "verified": false,
+     "note": "Smartcar docs: Lexus Remote $80/year."
+    }
+   ],
+   "default_plan": "go_anywhere",
+   "features": [
+    {
+     "id": "remote_start",
+     "name": "Remote start, lock, status",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "cloud_nav",
+     "name": "Cloud navigation and voice",
+     "plans": "go_anywhere,premium",
+     "overlap_tag": null
+    },
+    {
+     "id": "streaming",
+     "name": "Built-in music streaming",
+     "plans": "music_lover,premium",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Lexus owners whose remote start or cloud navigation trial ended.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Basic Lexus services are free; trials of up to 3 years come with new cars depending on model year.",
+    "Wi-Fi hotspot is sold separately through AT&T."
+   ],
+   "sources": [
+    {
+     "label": "Lexus support: Subscription plans",
+     "url": "https://support.lexus.com/s/article/Lexus-Subscription-Plans"
+    },
+    {
+     "label": "Cars.com: automaker app subscriptions (Jan 2026)",
+     "url": "https://www.cars.com/articles/what-automakers-offer-app-subscriptions-and-how-much-do-they-cost-520637/"
+    },
+    {
+     "label": "Smartcar: brand subscriptions",
+     "url": "https://smartcar.com/docs/help/brand-subscriptions"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1a1a1a",
+   "mark": "LX"
+  },
+  {
+   "id": "hyundai_bluelink",
+   "name": "Hyundai Bluelink",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.hyundaiusa.com/us/en/blue-link",
+   "plans": [
+    {
+     "id": "bluelink_plus",
+     "name": "Bluelink+ (2024+ models, original owner)",
+     "price_monthly": 0,
+     "price_annual": null,
+     "effective_monthly": 0,
+     "verified": true,
+     "note": "Hyundai USA: Bluelink+ is free for original owners of new 2024+ models and 2023 IONIQ 6."
+    },
+    {
+     "id": "connected_care",
+     "name": "Connected Care (older models)",
+     "price_monthly": 9.9,
+     "price_annual": null,
+     "effective_monthly": 9.9,
+     "verified": false,
+     "note": "ThePricer: $9.90/month or $99/year per package. Hyundai says only 'a low monthly fee'."
+    },
+    {
+     "id": "remote",
+     "name": "Remote (older models)",
+     "price_monthly": 9.9,
+     "price_annual": null,
+     "effective_monthly": 9.9,
+     "verified": false,
+     "note": "ThePricer: $9.90/month or $99/year."
+    },
+    {
+     "id": "guidance",
+     "name": "Guidance (older models)",
+     "price_monthly": 9.9,
+     "price_annual": null,
+     "effective_monthly": 9.9,
+     "verified": false,
+     "note": "ThePricer: $9.90/month or $99/year."
+    }
+   ],
+   "default_plan": "bluelink_plus",
+   "features": [
+    {
+     "id": "crash_sos",
+     "name": "Crash notification and SOS",
+     "plans": "bluelink_plus,connected_care",
+     "overlap_tag": null
+    },
+    {
+     "id": "remote_start",
+     "name": "Remote start and climate",
+     "plans": "bluelink_plus,remote",
+     "overlap_tag": null
+    },
+    {
+     "id": "find_car",
+     "name": "Car finder and alerts",
+     "plans": "bluelink_plus,remote",
+     "overlap_tag": null
+    },
+    {
+     "id": "nav",
+     "name": "Connected navigation",
+     "plans": "bluelink_plus,guidance",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Owners of 2023-and-older Hyundais who want remote start back.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Map and multimedia updates on Bluelink+ are free for 3 years, then fees apply.",
+    "Used cars: 3-month Advanced trial; Basic stays free. CPO: Advanced free for 1 year.",
+    "Hyundai Rewards members may get 50-60% off a year of Connected Care and Remote through Dec 31, 2026 (per ThePricer)."
+   ],
+   "sources": [
+    {
+     "label": "Hyundai USA: Bluelink",
+     "url": "https://www.hyundaiusa.com/us/en/blue-link"
+    },
+    {
+     "label": "ThePricer: Bluelink cost",
+     "url": "https://www.thepricer.org/how-much-does-a-hyundai-blue-link-cost/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#002c5f",
+   "mark": "HY"
+  },
+  {
+   "id": "kia_connect",
+   "name": "Kia Connect",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://owners.kia.com/us/en/about-uvo-link.html",
+   "plans": [
+    {
+     "id": "lite",
+     "name": "Lite",
+     "price_monthly": 0,
+     "price_annual": null,
+     "effective_monthly": 0,
+     "verified": true,
+     "note": "Kia owners site: free for up to 10 years. Trips, 911 Connect, maintenance alerts."
+    },
+    {
+     "id": "care",
+     "name": "Care",
+     "price_monthly": 5.99,
+     "price_annual": null,
+     "effective_monthly": 5.99,
+     "verified": true,
+     "note": "Kia: $5.99/month or $59/year. Adds curfew and alarm alerts, roadside."
+    },
+    {
+     "id": "plus",
+     "name": "Plus",
+     "price_monthly": 14.99,
+     "price_annual": null,
+     "effective_monthly": 14.99,
+     "verified": true,
+     "note": "Kia: $14.99/month or $149/year. Adds remote lock, climate, find my car."
+    },
+    {
+     "id": "plus_annual",
+     "name": "Plus (annual)",
+     "price_monthly": null,
+     "price_annual": 149,
+     "effective_monthly": 12.42,
+     "verified": true,
+     "note": "Kia: $149/year."
+    },
+    {
+     "id": "ultimate",
+     "name": "Ultimate",
+     "price_monthly": 19.99,
+     "price_annual": null,
+     "effective_monthly": 19.99,
+     "verified": true,
+     "note": "Kia: $19.99/month or $199/year. Adds Alexa home-to-car, saved POIs."
+    }
+   ],
+   "default_plan": "plus_annual",
+   "features": [
+    {
+     "id": "sos",
+     "name": "911 Connect",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "roadside",
+     "name": "Roadside assistance",
+     "plans": "care,plus,plus_annual,ultimate",
+     "overlap_tag": null
+    },
+    {
+     "id": "remote_start",
+     "name": "Remote lock and climate",
+     "plans": "plus,plus_annual,ultimate",
+     "overlap_tag": null
+    },
+    {
+     "id": "find_car",
+     "name": "Find my car",
+     "plans": "plus,plus_annual,ultimate",
+     "overlap_tag": null
+    },
+    {
+     "id": "alexa",
+     "name": "Alexa home-to-car",
+     "plans": "ultimate",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Kia owners past the 3-year included period who use remote start.",
+   "free_trial_days": 1095,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "2025 Kias with Kia Connect include 3 years free, and it transfers to the next owner within that term.",
+    "Lite stays free for up to 10 years."
+   ],
+   "sources": [
+    {
+     "label": "Kia Owners: Kia Connect",
+     "url": "https://owners.kia.com/us/en/about-uvo-link.html"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#05141f",
+   "mark": "KI"
+  },
+  {
+   "id": "genesis_connected_services",
+   "name": "Genesis Connected Services",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": null,
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Per package, monthly",
+     "price_monthly": 9.99,
+     "price_annual": null,
+     "effective_monthly": 9.99,
+     "verified": false,
+     "note": "Cars.com (Jan 2026): $9.99/month or $99/year after trial."
+    },
+    {
+     "id": "annual",
+     "name": "Per package, annual",
+     "price_monthly": null,
+     "price_annual": 99,
+     "effective_monthly": 8.25,
+     "verified": false,
+     "note": "Cars.com (Jan 2026) and Genesis owner forum (2026): $99/year for each of Connected Care, Remote, Guidance."
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "crash_sos",
+     "name": "Crash notification and SOS",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "remote_start",
+     "name": "Remote start and climate",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "nav",
+     "name": "Connected navigation",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Genesis owners after the 3-year included period.",
+   "free_trial_days": 1095,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "2023+ Genesis models include 3 years free.",
+    "Genesis has emailed 50%-off renewal offers (owner forum, 2026)."
+   ],
+   "sources": [
+    {
+     "label": "Cars.com: automaker app subscriptions (Jan 2026)",
+     "url": "https://www.cars.com/articles/what-automakers-offer-app-subscriptions-and-how-much-do-they-cost-520637/"
+    },
+    {
+     "label": "Genesis owners forum (2026)",
+     "url": "https://genesisowners.com/genesis-forum/threads/genesis-connected-services-subscription.57592/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1d1d1b",
+   "mark": "GN"
+  },
+  {
+   "id": "honda_hondalink",
+   "name": "HondaLink",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://hondalink.honda.com/",
+   "plans": [
+    {
+     "id": "security",
+     "name": "Security",
+     "price_monthly": null,
+     "price_annual": 89,
+     "effective_monthly": 7.42,
+     "verified": false,
+     "note": "CarTipsDaily (Jun 2026) and JD Power: $89/year (about $9/month). Honda's 2018 subscription sheet also lists $89/year."
+    },
+    {
+     "id": "remote",
+     "name": "Remote",
+     "price_monthly": null,
+     "price_annual": 110,
+     "effective_monthly": 9.17,
+     "verified": false,
+     "note": "CarTipsDaily (Jun 2026) and JD Power: $110/year (about $10/month)."
+    },
+    {
+     "id": "concierge",
+     "name": "Concierge",
+     "price_monthly": null,
+     "price_annual": 260,
+     "effective_monthly": 21.67,
+     "verified": false,
+     "note": "CarTipsDaily (Jun 2026) and JD Power: $260/year (about $26/month)."
+    }
+   ],
+   "default_plan": "remote",
+   "features": [
+    {
+     "id": "crash_sos",
+     "name": "Crash notification and SOS",
+     "plans": "security,concierge",
+     "overlap_tag": null
+    },
+    {
+     "id": "stolen_vehicle",
+     "name": "Stolen vehicle locator",
+     "plans": "security,remote,concierge",
+     "overlap_tag": null
+    },
+    {
+     "id": "remote_start",
+     "name": "Remote start and lock",
+     "plans": "remote,concierge",
+     "overlap_tag": null
+    },
+    {
+     "id": "concierge",
+     "name": "Live concierge",
+     "plans": "concierge",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Honda owners who want app remote start after the trial.",
+   "free_trial_days": 90,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Basic and Link plans are free.",
+    "Typical trials: Security 1 year, Remote and Concierge 3 months (varies by model year).",
+    "Honda Prologue uses HondaLink connected by OnStar with separate plans."
+   ],
+   "sources": [
+    {
+     "label": "CarTipsDaily: HondaLink monthly cost (2026)",
+     "url": "https://cartipsdaily.com/how-much-is-hondalink-monthly"
+    },
+    {
+     "label": "JD Power: HondaLink plans",
+     "url": "https://www.jdpower.com/cars/shopping-guides/what-is-hondalink-what-hondalink-plans-are-available"
+    },
+    {
+     "label": "Honda: 2018 HondaLink subscription sheet",
+     "url": "https://owners.honda.com/utility/download?path=%2Fstatic%2Fpdfs%2F2018%2FAccord+Sedan%2F2018_ACCORD_4D_HondaLink_Subscription+Services.pdf"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#cc0000",
+   "mark": "HO"
+  },
+  {
+   "id": "acura_acuralink",
+   "name": "AcuraLink",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://acuralink.acura.com/",
+   "plans": [
+    {
+     "id": "remote",
+     "name": "Remote",
+     "price_monthly": 10,
+     "price_annual": null,
+     "effective_monthly": 10,
+     "verified": false,
+     "note": "Cars.com (Jan 2026): plans from $10/month or $110/year; Smartcar lists Remote at $110/year."
+    },
+    {
+     "id": "remote_annual",
+     "name": "Remote (annual)",
+     "price_monthly": null,
+     "price_annual": 110,
+     "effective_monthly": 9.17,
+     "verified": false,
+     "note": "Cars.com / Smartcar: $110/year."
+    },
+    {
+     "id": "concierge",
+     "name": "Concierge (top plan)",
+     "price_monthly": 26,
+     "price_annual": null,
+     "effective_monthly": 26,
+     "verified": false,
+     "note": "Cars.com (Jan 2026): up to $26/month or $260/year."
+    }
+   ],
+   "default_plan": "remote_annual",
+   "features": [
+    {
+     "id": "remote_start",
+     "name": "Remote start and lock",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "stolen_vehicle",
+     "name": "Stolen vehicle locator",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "concierge",
+     "name": "Live concierge",
+     "plans": "concierge",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Acura owners whose included remote services have ended.",
+   "free_trial_days": 1095,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Smartcar: 2023+ Acuras get a 3-year trial; 2022 and older got 6 months.",
+    "Basic and Link plans are free."
+   ],
+   "sources": [
+    {
+     "label": "Cars.com: automaker app subscriptions (Jan 2026)",
+     "url": "https://www.cars.com/articles/what-automakers-offer-app-subscriptions-and-how-much-do-they-cost-520637/"
+    },
+    {
+     "label": "Smartcar: brand subscriptions",
+     "url": "https://smartcar.com/docs/help/brand-subscriptions"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1a1a1a",
+   "mark": "AC"
+  },
+  {
+   "id": "subaru_mysubaru_starlink",
+   "name": "Subaru MySubaru Connected Services (STARLINK)",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.subaru.com/vehicle-info/connected-services/mysubaru-connected-services/companion-plans.html",
+   "plans": [
+    {
+     "id": "companion_plus",
+     "name": "Companion+ (2026+ models)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": true,
+     "note": "Subaru.com says 'plans as low as $69.95' but not the billing period; exact price null."
+    },
+    {
+     "id": "safety",
+     "name": "Safety / Safety Plus (2016-2025)",
+     "price_monthly": 9.95,
+     "price_annual": null,
+     "effective_monthly": 9.95,
+     "verified": false,
+     "note": "CherishYourCar (Nov 2025): $9.95/month or $99.95/year."
+    },
+    {
+     "id": "safety_annual",
+     "name": "Safety (annual, 2016-2025)",
+     "price_monthly": null,
+     "price_annual": 99.95,
+     "effective_monthly": 8.33,
+     "verified": false,
+     "note": "CherishYourCar (Nov 2025): $99.95/year."
+    },
+    {
+     "id": "security_addon",
+     "name": "Security add-on (2016-2025)",
+     "price_monthly": 4.95,
+     "price_annual": null,
+     "effective_monthly": 4.95,
+     "verified": false,
+     "note": "Smartcar docs: Security Plus $4.95/month on top of Safety."
+    }
+   ],
+   "default_plan": "safety_annual",
+   "features": [
+    {
+     "id": "sos",
+     "name": "SOS and crash notification",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "roadside",
+     "name": "Enhanced roadside assistance",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "remote_start",
+     "name": "Remote start, lock, climate",
+     "plans": "companion_plus,security_addon",
+     "overlap_tag": null
+    },
+    {
+     "id": "alerts",
+     "name": "Curfew, speed, boundary alerts",
+     "plans": "companion_plus,security_addon",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Subaru owners who want remote start or keep SOS after the trial.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "2026+ models: Companion (SOS, roadside, locate) is free for 5 years with a new car.",
+    "2016-2025 models: Safety 3-year trial, Security 6-month trial; enroll within 180 days.",
+    "New SiriusXM-equipped Subarus get a 4-month SiriusXM trial."
+   ],
+   "sources": [
+    {
+     "label": "Subaru: Companion Plans",
+     "url": "https://www.subaru.com/vehicle-info/connected-services/mysubaru-connected-services/companion-plans.html"
+    },
+    {
+     "label": "Subaru: Safety & Security Plans",
+     "url": "https://www.subaru.com/vehicle-info/connected-services/mysubaru-connected-services/safety-and-security-plans.html"
+    },
+    {
+     "label": "Subaru: MySubaru FAQ",
+     "url": "https://www.subaru.com/vehicle-info/connected-services/mysubaru-connected-services/frequently-asked-questions.html"
+    },
+    {
+     "label": "CherishYourCar: Is STARLINK worth it (Nov 2025)",
+     "url": "https://www.cherishyourcar.com/is-subaru-starlink-worth-it/"
+    },
+    {
+     "label": "Smartcar: brand subscriptions",
+     "url": "https://smartcar.com/docs/help/brand-subscriptions"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#013c74",
+   "mark": "SU"
+  },
+  {
+   "id": "nissan_nissanconnect",
+   "name": "NissanConnect Services",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.nissanusa.com/owners/connect/premium-packages.html",
+   "plans": [
+    {
+     "id": "premium",
+     "name": "Premium",
+     "price_monthly": 16.99,
+     "price_annual": null,
+     "effective_monthly": 16.99,
+     "verified": false,
+     "note": "Cars.com (Jan 2026): $16.99/month. Nissan only shows price via its model tool."
+    },
+    {
+     "id": "premium_plus",
+     "name": "Premium Plus",
+     "price_monthly": 26.99,
+     "price_annual": null,
+     "effective_monthly": 26.99,
+     "verified": false,
+     "note": "Cars.com (Jan 2026): $26.99/month."
+    }
+   ],
+   "default_plan": "premium",
+   "features": [
+    {
+     "id": "remote_start",
+     "name": "Remote start and climate",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "crash_sos",
+     "name": "Crash notification and emergency call",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "stolen_vehicle",
+     "name": "Stolen vehicle locator",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "wifi_hotspot",
+     "name": "Wi-Fi hotspot",
+     "plans": "premium,premium_plus",
+     "overlap_tag": "in_car_wifi"
+    },
+    {
+     "id": "google",
+     "name": "Google Maps and Assistant (select trims)",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Nissan owners who want remote start and crash help after the trial.",
+   "free_trial_days": 1095,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Cars.com: Premium 3 years free, Select 5 years free; after Select ends it is only sold with Premium.",
+    "Select 2026 models: 1-year Wi-Fi trial with up to 2GB/month.",
+    "CPO buyers get a 3-month Premium trial."
+   ],
+   "sources": [
+    {
+     "label": "Nissan USA: Premium packages",
+     "url": "https://www.nissanusa.com/owners/connect/premium-packages.html"
+    },
+    {
+     "label": "Nissan USA: packages",
+     "url": "https://Nissanusa.Com/connect/packages.html"
+    },
+    {
+     "label": "Cars.com: automaker app subscriptions (Jan 2026)",
+     "url": "https://www.cars.com/articles/what-automakers-offer-app-subscriptions-and-how-much-do-they-cost-520637/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#c3002f",
+   "mark": "NI"
+  },
+  {
+   "id": "infiniti_intouch",
+   "name": "INFINITI InTouch Services",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.infinitiusa.com/owners/connected-services/packages.html",
+   "plans": [
+    {
+     "id": "premium",
+     "name": "Premium",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not published; INFINITI says use the model tool or call 1-855-444-7244. Smartcar lists MyINFINITI at $12.99/month (plan not named)."
+    },
+    {
+     "id": "premium_plus",
+     "name": "Premium Plus",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Price not published. Unlimited Wi-Fi data."
+    }
+   ],
+   "default_plan": "premium",
+   "features": [
+    {
+     "id": "remote_start",
+     "name": "Remote start and lock",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "crash_sos",
+     "name": "Crash notification and SOS",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "wifi_hotspot",
+     "name": "Wi-Fi hotspot (3GB Premium, unlimited Premium Plus)",
+     "plans": "all",
+     "overlap_tag": "in_car_wifi"
+    }
+   ],
+   "best_for": "INFINITI owners after the 3-year Premium trial.",
+   "free_trial_days": 1095,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Select is free for 5 years, Premium for 3 years on new cars.",
+    "CPO: remaining time or 3 months, whichever is longer."
+   ],
+   "sources": [
+    {
+     "label": "INFINITI USA: packages",
+     "url": "https://www.infinitiusa.com/owners/connected-services/packages.html"
+    },
+    {
+     "label": "Smartcar: brand subscriptions",
+     "url": "https://smartcar.com/docs/help/brand-subscriptions"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#1a1a1a",
+   "mark": "IN"
+  },
+  {
+   "id": "nissan_propilot_assist_2",
+   "name": "Nissan / INFINITI ProPILOT Assist 2.1",
+   "category": "driver_assist",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.infinitiusa.com/owners/connected-services/packages.html",
+   "plans": [
+    {
+     "id": "subscription",
+     "name": "ProPILOT Assist 2.1 subscription",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "Sold as a connected package after the trial; price not published by Nissan/INFINITI."
+    }
+   ],
+   "default_plan": "subscription",
+   "features": [
+    {
+     "id": "hands_free",
+     "name": "Hands-free highway driving",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "lane_change",
+     "name": "Assisted lane changes",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Owners of equipped Nissan/INFINITI models (e.g. 2026 Murano, QX60) after the 3-year trial.",
+   "free_trial_days": 1095,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "INFINITI lists a 3-year ProPILOT Assist 2.1 trial on equipped vehicles."
+   ],
+   "sources": [
+    {
+     "label": "INFINITI USA: packages",
+     "url": "https://www.infinitiusa.com/owners/connected-services/packages.html"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#c3002f",
+   "mark": "NI"
+  },
+  {
+   "id": "audi_connect",
+   "name": "Audi connect",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.audiusa.com/en/inside-audi/innovation/audi-connect/",
+   "plans": [
+    {
+     "id": "nav_annual",
+     "name": "Audi connect NAV (annual)",
+     "price_monthly": null,
+     "price_annual": 150,
+     "effective_monthly": 12.5,
+     "verified": true,
+     "note": "Audi USA: $150/year (saves $30 vs monthly)."
+    },
+    {
+     "id": "nav_monthly",
+     "name": "Audi connect NAV (monthly)",
+     "price_monthly": 15,
+     "price_annual": null,
+     "effective_monthly": 15,
+     "verified": true,
+     "note": "Derived from Audi USA: $150/year saves $30 vs monthly, so $15/month."
+    },
+    {
+     "id": "plus_annual",
+     "name": "Audi connect PLUS (annual)",
+     "price_monthly": null,
+     "price_annual": 250,
+     "effective_monthly": 20.83,
+     "verified": true,
+     "note": "Audi USA: $250/year (saves $50 vs monthly)."
+    },
+    {
+     "id": "plus_monthly",
+     "name": "Audi connect PLUS (monthly)",
+     "price_monthly": 25,
+     "price_annual": null,
+     "effective_monthly": 25,
+     "verified": true,
+     "note": "Derived from Audi USA: $250/year saves $50 vs monthly, so $25/month."
+    }
+   ],
+   "default_plan": "plus_annual",
+   "features": [
+    {
+     "id": "nav",
+     "name": "Online navigation and traffic light info",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "wifi_hotspot",
+     "name": "Full-speed Wi-Fi hotspot",
+     "plans": "plus_annual,plus_monthly",
+     "overlap_tag": "in_car_wifi"
+    },
+    {
+     "id": "alexa",
+     "name": "Amazon Alexa",
+     "plans": "plus_annual,plus_monthly",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Audi owners who want in-car Wi-Fi or online navigation.",
+   "free_trial_days": null,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Audi connect CARE (crash/SOS, basic remote) is included with every new Audi.",
+    "Annual plans are 12 months for the price of 10 on MY2024+ (except 2026 Q8/SQ8/RSQ8)."
+   ],
+   "sources": [
+    {
+     "label": "Audi USA: Audi connect",
+     "url": "https://www.audiusa.com/en/inside-audi/innovation/audi-connect/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#bb0a30",
+   "mark": "AU"
+  },
+  {
+   "id": "volvo_connect_plus",
+   "name": "Volvo Connect Plus / Volvo On Call",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.volvocars.com/us/support/topic/blt67e164ca219644b1/",
+   "plans": [
+    {
+     "id": "connect_plus",
+     "name": "Connect Plus (Google built-in)",
+     "price_monthly": null,
+     "price_annual": 120,
+     "effective_monthly": 10.0,
+     "verified": true,
+     "note": "Volvo Connect Plus FAQ PDF: $120/year in the US."
+    },
+    {
+     "id": "volvo_on_call",
+     "name": "Volvo On Call (Sensus cars)",
+     "price_monthly": null,
+     "price_annual": 200,
+     "effective_monthly": 16.67,
+     "verified": false,
+     "note": "Motor1 (Oct 2025): about $200 per 12 months for Sensus Connect cars."
+    }
+   ],
+   "default_plan": "connect_plus",
+   "features": [
+    {
+     "id": "data",
+     "name": "Unlimited data for Google Maps, Assistant, Play",
+     "plans": "connect_plus",
+     "overlap_tag": "in_car_wifi"
+    },
+    {
+     "id": "remote_start",
+     "name": "Remote start and lock (Sensus)",
+     "plans": "volvo_on_call",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Volvo owners whose 4 years of included Connect Plus has ended.",
+   "free_trial_days": 1460,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "New Volvos with Google built-in include 4 years of Connect Plus; it stays with the car.",
+    "Without it, you can tether to a phone hotspot for Google services.",
+    "MY2021 Google cars do not need an extension."
+   ],
+   "sources": [
+    {
+     "label": "Volvo US support: Connect Plus",
+     "url": "https://www.volvocars.com/us/support/topic/blt67e164ca219644b1/"
+    },
+    {
+     "label": "Volvo Connect Plus FAQ (PDF)",
+     "url": "https://www.volvocars.com/images/cs/v3/assets/bltccbab8edae0354cd/bltf7ccdb069cb0d1b1/6a304d264e8587342e893f44/Connect_Plus_FAQs.pdf?branch=prod_alias"
+    },
+    {
+     "label": "Motor1: Volvo remote start fee",
+     "url": "https://www.motor1.com/news/776531/volvo-remote-start-fee-workaround/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#003057",
+   "mark": "VO"
+  },
+  {
+   "id": "rivian_connect_plus",
+   "name": "Rivian Connect+",
+   "category": "connected_car",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://rivian.com/support/article/what-is-connect",
+   "plans": [
+    {
+     "id": "monthly",
+     "name": "Monthly",
+     "price_monthly": 14.99,
+     "price_annual": null,
+     "effective_monthly": 14.99,
+     "verified": true,
+     "note": "Rivian support: $14.99/month."
+    },
+    {
+     "id": "annual",
+     "name": "Annual",
+     "price_monthly": null,
+     "price_annual": 149.99,
+     "effective_monthly": 12.5,
+     "verified": true,
+     "note": "Rivian support: $149.99/year."
+    }
+   ],
+   "default_plan": "annual",
+   "features": [
+    {
+     "id": "wifi_hotspot",
+     "name": "In-car Wi-Fi hotspot",
+     "plans": "all",
+     "overlap_tag": "in_car_wifi"
+    },
+    {
+     "id": "streaming",
+     "name": "Streaming data (Spotify, Apple Music, Audible)",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "satellite_maps",
+     "name": "Satellite map images",
+     "plans": "all",
+     "overlap_tag": null
+    },
+    {
+     "id": "alexa",
+     "name": "Alexa connected commands",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Rivian owners who stream in the car or want a hotspot.",
+   "free_trial_days": 60,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "Free without Connect+: OTA updates, live navigation, remote commands, phone as key, basic Alexa.",
+    "60-day trial starts at delivery."
+   ],
+   "sources": [
+    {
+     "label": "Rivian: What is Connect+",
+     "url": "https://rivian.com/support/article/what-is-connect"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#f5a623",
+   "mark": "RV"
+  },
+  {
+   "id": "siriusxm_car",
+   "name": "SiriusXM (in-car)",
+   "category": "satellite_radio",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.siriusxm.com/plans",
+   "plans": [
+    {
+     "id": "all_music",
+     "name": "All Music (car + app)",
+     "price_monthly": 11.99,
+     "price_annual": null,
+     "effective_monthly": 11.99,
+     "verified": true,
+     "note": "SiriusXM plans page: $11.99/month after $1 for 3 months promo."
+    },
+    {
+     "id": "all_access",
+     "name": "All Access (car + app)",
+     "price_monthly": 25.99,
+     "price_annual": null,
+     "effective_monthly": 25.99,
+     "verified": true,
+     "note": "SiriusXM plans page: $25.99/month after promo."
+    },
+    {
+     "id": "play",
+     "name": "SiriusXM Play (ad-supported)",
+     "price_monthly": null,
+     "price_annual": null,
+     "effective_monthly": null,
+     "verified": false,
+     "note": "ETCentric (2025): 'under $7' per month, limited rollout; exact price not on plans page."
+    }
+   ],
+   "default_plan": "all_music",
+   "features": [
+    {
+     "id": "music",
+     "name": "Ad-free music channels",
+     "plans": "all_music,all_access",
+     "overlap_tag": null
+    },
+    {
+     "id": "sports_talk",
+     "name": "Sports, news, talk",
+     "plans": "all_access",
+     "overlap_tag": null
+    },
+    {
+     "id": "app",
+     "name": "App streaming",
+     "plans": "all_music,all_access",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Drivers who listen to satellite radio, especially in low-cell areas.",
+   "free_trial_days": 90,
+   "varies_by_region": false,
+   "regions": "US",
+   "tips": [
+    "New cars usually include a trial (often 3 months; Subaru 4 months, some brands longer).",
+    "Add-ons to All Music: Sports +$8, News +$5, Talk +$5 a month.",
+    "Promo plans auto-renew at full price; call or chat to ask for a retention rate.",
+    "Taxes and fees (such as the music royalty fee) are extra."
+   ],
+   "sources": [
+    {
+     "label": "SiriusXM plans",
+     "url": "https://www.siriusxm.com/plans"
+    },
+    {
+     "label": "ETCentric: SiriusXM Play",
+     "url": "https://www.etcentric.org/siriusxm-adds-car-targeted-music-plan-for-under-7-with-ads/"
+    }
+   ],
+   "checked_at": "2026-10-30",
+   "color": "#0000eb",
+   "mark": "SX"
   }
  ]
 }
