@@ -144,7 +144,9 @@ body.intro-mode .brand { width: 100%; text-align: left; justify-content: flex-st
 body.intro-mode .brand h1 { font-size: clamp(30px, 10.4vw, 64px); line-height: 1.1; color: #4ade80; letter-spacing: -.01em; white-space: nowrap; }
 body.intro-mode .intro-h { font-size: 38px; } body.intro-mode .intro-p { font-size: 21px; }
 body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { font-size: 19px; padding: 14px 28px; min-width: 240px; }
-.section-head h2.about-title { font-size: 30px; color: #a87a00; }
+.section-head h2.about-title, .intro-gold { font-size: 30px; color: #a87a00; }
+.intro-gold { margin: 0; line-height: 1.25; max-width: 520px; text-align: center; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .intro-gold { color: #fbbf24; } } :root[data-theme="dark"] .intro-gold { color: #fbbf24; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .section-head h2.about-title { color: #fbbf24; } }
 :root[data-theme="dark"] .section-head h2.about-title { color: #fbbf24; }
 /* v224 (Cuong): every input on the welcome pages uses the age group tile text: bold 22px (19px on small phones) in the accent color. */
@@ -1822,8 +1824,8 @@ function aboutView() {
   // v149 (Cuong): name under "Tell us about yourself", email after "Where do you live?". Optional; kept in this browser only.
   let saved = ""; try { saved = localStorage.getItem("sk-name") || ""; } catch {}
   const [sf, ...sl] = saved.trim().split(/\s+/), first = saved ? sf : p.first || "", last = saved ? sl.join(" ") : p.last || "";
-  const f = el(`<div class="section-head"><h2 class="about-title">Let&rsquo;s get started.</h2></div>
-    <h3 style="margin:8px 0 2px">1. Tell us about yourself</h3>
+  // v242 (Cuong): no heading here; "Let's get started" moved to the page before (promiseView).
+  const f = el(`<h3 style="margin:8px 0 2px">1. Tell us about yourself</h3>
     <div class="loc-row" style="margin:10px 0 16px"><label>First name<input id="w-first" autocomplete="given-name" value="${esc(first)}"></label>
       <label>Last name<input id="w-last" autocomplete="family-name" value="${esc(last)}"></label></div>
     <p class="small muted" style="margin:0 0 12px">Pick all that apply. It helps us suggest plans that fit you.</p>
@@ -1855,7 +1857,7 @@ function aboutView() {
     document.querySelectorAll("#view [data-age]").forEach(x => { x.setAttribute("aria-pressed", x.dataset.age === age); x.setAttribute("aria-checked", x.dataset.age === age); }); }));
   $("w-country").addEventListener("change", () => { keep(); save(); render(); });
   $("w-next").addEventListener("click", () => { if (!emailOk()) { $("w-email").focus(); return; } keep(); save(); welcomeStep = 2; render(); window.scrollTo(0, 0); });
-  $("w-intro").addEventListener("click", () => { keep(); save(); welcomeStep = 0; render(); window.scrollTo(0, 0); });
+  $("w-intro").addEventListener("click", () => { keep(); save(); welcomeStep = 0.5; render(); window.scrollTo(0, 0); });
   $("w-example")?.addEventListener("click", () => { keep(); const prof = state.profile; state = seed(); state.profile = prof;
     state.subs.forEach(s => { s.measure = measuresOf(s)[0].id; (s.usage ||= {})[s.measure] = { rate: s.rate, per: s.per }; }); genAll(); state.histV = 2; state.chatgptFixed = state.nflV = state.cloakedV = state.unitsV = state.aaaV = state.cardV = state.evV = state.pwV = state.clubV = 1; state.sampleV = 4; save(); view = "home"; render(); window.scrollTo(0, 0); });
   return f;
@@ -1881,8 +1883,21 @@ function introView() {
     <p class="intro-p">At MoSuBi, we use AI and market research to help you get the most for your money.</p>
     <button class="btn primary intro-next" id="i-next">Next</button>
     <p class="small muted intro-src">Source: <a href="https://thedesk.net/2025/05/cnet-subscription-survey-2025/" target="_blank" rel="noopener" style="color:inherit">CNET survey with YouGov, May 2025</a>.</p></section>`);
-  f.getElementById("i-next").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
+  f.getElementById("i-next").addEventListener("click", () => { welcomeStep = 0.5; render(); window.scrollTo(0, 0); });
   // v151 (Cuong): middle-align the content in the space below the header.
+  requestAnimationFrame(fitIntro);
+  return f;
+}
+// Second welcome page (Cuong, v242): one gold line, centered, with Back and Next.
+function promiseView() {
+  const f = el(`<section class="intro">
+    <h2 class="intro-gold">No gimmick, no fluff. We&rsquo;re here to help so let&rsquo;s get started!</h2>
+    <div style="display:flex;gap:12px;justify-content:center;align-items:center">
+      <button type="button" class="btn intro-next" id="pr-back" style="min-width:130px">Back</button>
+      <button class="btn primary intro-next" id="pr-next" style="min-width:130px">Next</button></div></section>`);
+  const go = n => { welcomeStep = n; render(); window.scrollTo(0, 0); };
+  f.getElementById("pr-back").addEventListener("click", () => go(0));
+  f.getElementById("pr-next").addEventListener("click", () => go(1));
   requestAnimationFrame(fitIntro);
   return f;
 }
@@ -2200,6 +2215,7 @@ function wireCrowd(root, s, redraw) {
     await sharePrice(s, v); if (v === "right") redraw(); })); }
 function welcomeView() {
   if (welcomeStep === 0) return introView();
+  if (welcomeStep === 0.5) return promiseView();
   if (welcomeStep === 1) return aboutView();
   if (welcomeStep === 3) return setupStepView();
   // v193 (Cuong): picks are kept in state.wDraft, so Back and Next (or a reload) don't lose them. Not in Add mode.
@@ -4711,7 +4727,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 241 · Oct 30", VERSION_NUM = 241;
+const APP_VERSION = "Prototype · Version 242 · Oct 30", VERSION_NUM = 242;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
