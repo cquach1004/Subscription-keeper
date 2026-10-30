@@ -1880,7 +1880,8 @@ addEventListener("resize", fitIntro);
 function introView() {
   const f = el(`<section class="intro">
     <h2 class="intro-h">Smarter Spending on Subscriptions &amp; Household Services</h2>
-    <p class="intro-p">Paying for subscriptions and services you barely use? The average American spends about $1,080 a year on them, with over $200 going to ones they rarely or never use. We use AI, market research, and information you share to present the options that give you the most for your money.</p>
+    <p class="intro-p">The average American spends about $1,080 a year on subscriptions and recurring services, with over $200 going to things they rarely or never use.</p>
+    <p class="intro-p">At MoSuBi, we use AI, market research, and information you share to present the options that give you the most for your money.</p>
     <button class="btn primary intro-next" id="i-next">Next</button>
     <p class="small muted intro-src">Source: <a href="https://thedesk.net/2025/05/cnet-subscription-survey-2025/" target="_blank" rel="noopener" style="color:inherit">CNET survey with YouGov, May 2025</a>.</p></section>`);
   f.getElementById("i-next").addEventListener("click", () => { welcomeStep = 1; render(); window.scrollTo(0, 0); });
@@ -4713,7 +4714,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 238 · Standalone copy · Oct 30", VERSION_NUM = 238;
+const APP_VERSION = "Prototype · Version 239 · Standalone copy · Oct 30", VERSION_NUM = 239;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
