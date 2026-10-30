@@ -145,6 +145,7 @@ body.intro-mode .top-btns { display: none; }
 body.intro-mode .brand { width: 100%; text-align: left; justify-content: flex-start; }  /* v183 (Cuong): logo and name left-aligned on the welcome pages */
 body.intro-mode .brand h1 { font-size: clamp(30px, 10.4vw, 64px); line-height: 1.1; color: #4ade80; letter-spacing: -.01em; white-space: nowrap; }
 body.intro-mode .intro-h { font-size: 38px; } body.intro-mode .intro-p { font-size: 21px; }
+body.intro-mode .w-sec { font-size: 21px; color: var(--ink); } /* v244 (Cuong): welcome pages 3-4 section headers match pages 1-2 text */
 body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { font-size: 19px; padding: 14px 28px; min-width: 240px; }
 .section-head h2.about-title, .intro-gold { font-size: 30px; color: #a87a00; }
 .intro-gold { margin: 0; line-height: 1.25; max-width: 520px; text-align: center; }
@@ -156,7 +157,7 @@ body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { fo
 body.intro-mode #view input:not([type=checkbox]):not([type=radio]):not([type=range]), body.intro-mode #view select, body.intro-mode #view textarea { font: 700 22px/1.15 var(--f-body); color: var(--accent); }
 body.intro-mode #view input::placeholder, body.intro-mode #view textarea::placeholder { font-weight: 500; color: var(--muted); opacity: 1; }
 @media (max-width: 380px) { body.intro-mode #view input:not([type=checkbox]):not([type=radio]):not([type=range]), body.intro-mode #view select, body.intro-mode #view textarea { font-size: 19px; } }
-@media (max-width: 520px) { body.intro-mode .intro-h { font-size: 31px; } body.intro-mode .intro-p { font-size: 20px; } body.intro-mode .intro-src { font-size: 15px; } }
+@media (max-width: 520px) { body.intro-mode .intro-h { font-size: 31px; } body.intro-mode .intro-p, body.intro-mode .w-sec { font-size: 20px; } body.intro-mode .intro-src { font-size: 15px; } }
 @media (max-width: 520px) { .intro-h { font-size: 25px; } .intro-p { font-size: 16px; } .intro-pillars { gap: 8px; } .intro-pill { padding: 12px 6px; gap: 4px; } .intro-pill b { font-size: 13px; } .intro-pill .small { font-size: 11.5px; line-height: 1.35; } .intro-pill svg { width: 26px; height: 26px; } }
 #persona-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 6px 6px 6px 14px; border-radius: 14px; background: var(--accent-soft); border: 2px solid var(--accent); font-size: 14px; }
 .pp-txt { display: grid; gap: 2px; padding-right: 54px; } .pp-pic { flex: none; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: var(--accent); color: #fff; }
@@ -1829,18 +1830,18 @@ function aboutView() {
   let saved = ""; try { saved = localStorage.getItem("sk-name") || ""; } catch {}
   const [sf, ...sl] = saved.trim().split(/\s+/), first = saved ? sf : p.first || "", last = saved ? sl.join(" ") : p.last || "";
   // v242 (Cuong): no heading here; "Let's get started" moved to the page before (promiseView).
-  const f = el(`<h3 style="margin:8px 0 2px">1. Tell us about yourself</h3>
+  const f = el(`<h3 class="w-sec" style="margin:8px 0 2px">1. Tell us about yourself</h3>
     <div class="loc-row" style="margin:10px 0 16px"><label>First name<input id="w-first" autocomplete="given-name" value="${esc(first)}"></label>
       <label>Last name<input id="w-last" autocomplete="family-name" value="${esc(last)}"></label></div>
     <p class="small muted" style="margin:0 0 12px">Pick all that apply. It helps us suggest plans that fit you.</p>
     <div class="about-grid about-3">${ABOUT.map(([k, label, svg]) => `<button type="button" class="about-opt" data-about="${k}" aria-pressed="${about.has(k)}"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><span>${label}</span></button>`).join("")}</div>
-    <h3 style="margin:22px 0 8px">2. My age group</h3>
+    <h3 class="w-sec" style="margin:22px 0 8px">2. My age group</h3>
     <div class="about-grid about-3 age-grid" role="radiogroup" aria-label="Age">${AGES.map(([k, l]) => `<button type="button" class="about-opt age-opt" role="radio" data-age="${k}" aria-checked="${age === k}" aria-pressed="${age === k}" aria-label="${l}"><b>${AGE_TILE[k]}</b><span>years old</span></button>`).join("")}</div>
     <label class="share-box"><input type="checkbox" id="w-share" ${p.shares ? "checked" : ""}><span><b>I'm open to sharing plans</b><span class="small muted">With family or friends, like a family or duo plan, to split the cost.</span></span></label>
-    <h3 style="margin:22px 0 8px">3. Where do you live?</h3>
+    <h3 class="w-sec" style="margin:22px 0 8px">3. Where do you live?</h3>
     <div class="loc-row" style="margin-bottom:18px"><label>Country<select id="w-country">${Object.entries(COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${k === country ? "selected" : ""}>${n}</option>`).join("")}</select></label>
       ${country === "US" ? `<label>State<select id="w-state"><option value="">Choose your state</option>${Object.entries(US_STATES).map(([k, n]) => `<option value="${k}" ${k === p.region ? "selected" : ""}>${n}</option>`).join("")}</select></label>` : ""}</div>
-    <h3 style="margin:22px 0 8px">4. Your email address</h3>
+    <h3 class="w-sec" style="margin:22px 0 8px">4. Your email address</h3>
     <label class="w-email" style="display:block;margin-bottom:6px"><input id="w-email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" value="${esc(p.email || "")}" aria-label="Email address"></label>
     <p class="small muted" id="w-email-msg" style="margin:0 0 18px"></p>
     <div class="w-bar" style="display:flex;gap:12px;justify-content:center;align-items:center">
@@ -2262,14 +2263,14 @@ function welcomeView() {
   // at a time, and a pinned "Your list" basket with name chips, Back and Next so nobody has to scroll to the bottom.
   const byCat = c => more.filter(v => v.category === c).sort(svcRank);
   let wcat = null, wcatAll = false, bkOpen = false;
-  const f = el(`<div id="w-pick">${addMode ? `<h2 style="margin:18px 0 0">Add subscriptions</h2><p class="small muted" style="margin:2px 0 0">Ones already on your list are marked.</p>` : ""}<h3 style="margin:18px 0 8px">1. Which subscriptions do you have?</h3>
+  const f = el(`<div id="w-pick">${addMode ? `<h2 style="margin:18px 0 0">Add subscriptions</h2><p class="small muted" style="margin:2px 0 0">Ones already on your list are marked.</p>` : ""}<h3 class="w-sec" style="margin:18px 0 8px">1. Which subscriptions do you have?</h3>
     <p class="small muted" style="margin:0 0 10px">Search, or tap each one you pay for.</p>
     <input id="w-q" type="search" placeholder="e.g. Netflix, gym" aria-label="Search services" style="width:100%;margin-bottom:10px">
     <p class="small muted" id="w-nores" hidden style="margin:0 0 12px"></p>
     <div class="catalog" id="w-results" hidden></div>
     <div id="w-browse">
       <h4 class="w-h" style="margin:4px 0 8px">Popular</h4><div class="catalog">${popular.map(tile).join("")}</div>
-      <h3 style="margin:22px 0 4px">2. Browse by category</h3>
+      <h3 class="w-sec" style="margin:22px 0 4px">2. Browse by category</h3>
       <p class="small muted" style="margin:0 0 10px">Tap a category to see what's in it.</p>
       <div class="w-pills" id="w-pills"></div>
       <div id="w-catlist"></div>
@@ -4756,7 +4757,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 243 · Standalone copy · Oct 30", VERSION_NUM = 243;
+const APP_VERSION = "Prototype · Version 244 · Standalone copy · Oct 30", VERSION_NUM = 244;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
