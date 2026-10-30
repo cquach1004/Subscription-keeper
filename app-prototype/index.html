@@ -146,6 +146,7 @@ body.intro-mode .intro-h { font-size: 38px; } body.intro-mode .intro-p { font-si
 body.intro-mode .intro-src { font-size: 16px; } body.intro-mode .intro-next { font-size: 19px; padding: 14px 28px; min-width: 240px; }
 .section-head h2.about-title, .intro-gold { font-size: 30px; color: #a87a00; }
 .intro-gold { margin: 0; line-height: 1.25; max-width: 520px; text-align: center; }
+.brand-green { color: #4ade80; font-weight: 700; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .intro-gold { color: #fbbf24; } } :root[data-theme="dark"] .intro-gold { color: #fbbf24; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .section-head h2.about-title { color: #fbbf24; } }
 :root[data-theme="dark"] .section-head h2.about-title { color: #fbbf24; }
@@ -1880,7 +1881,7 @@ function introView() {
   const f = el(`<section class="intro">
     <h2 class="intro-h">Smarter Spending on Subscriptions &amp; Household Services</h2>
     <p class="intro-p">The average American spends about $1,080 a year on subscriptions and recurring services, with over $200 going to things they rarely or never use.</p>
-    <p class="intro-p">At MoSuBi, we use AI and market research to help you get the most for your money.</p>
+    <p class="intro-p">At <span class="brand-green">MoSuBi</span>, we use AI and market research to help you get the most for your money.</p>
     <button class="btn primary intro-next" id="i-next">Next</button>
     <p class="small muted intro-src">Source: <a href="https://thedesk.net/2025/05/cnet-subscription-survey-2025/" target="_blank" rel="noopener" style="color:inherit">CNET survey with YouGov, May 2025</a>.</p></section>`);
   f.getElementById("i-next").addEventListener("click", () => { welcomeStep = 0.5; render(); window.scrollTo(0, 0); });
@@ -1888,19 +1889,44 @@ function introView() {
   requestAnimationFrame(fitIntro);
   return f;
 }
-// Second welcome page (Cuong, v242): one gold line, centered, with Back and Next.
+// Second welcome page (Cuong, v242-243): a gold "Let's get started!" where page one's title sits, then one line, with Back and
+// Next where page one's Next button sits. Page one is laid out off-screen to measure those spots, so both pages line up.
 function promiseView() {
-  const f = el(`<section class="intro">
-    <h2 class="intro-gold">No gimmick, no fluff. We&rsquo;re here to help so let&rsquo;s get started!</h2>
-    <div style="display:flex;gap:12px;justify-content:center;align-items:center">
+  const f = el(`<section class="intro promise">
+    <h2 class="intro-h intro-gold">Let&rsquo;s get started!</h2>
+    <p class="intro-p">No gimmick, no fluff. We&rsquo;re here to help.</p>
+    <div class="pr-btns" style="display:flex;gap:12px;justify-content:center;align-items:center">
       <button type="button" class="btn intro-next" id="pr-back" style="min-width:130px">Back</button>
       <button class="btn primary intro-next" id="pr-next" style="min-width:130px">Next</button></div></section>`);
   const go = n => { welcomeStep = n; render(); window.scrollTo(0, 0); };
   f.getElementById("pr-back").addEventListener("click", () => go(0));
   f.getElementById("pr-next").addEventListener("click", () => go(1));
-  requestAnimationFrame(fitIntro);
+  requestAnimationFrame(alignPromise);
   return f;
 }
+function alignPromise() {
+  const sec = document.querySelector(".intro.promise"); if (!sec) return;
+  fitIntro();
+  const h = sec.querySelector(".intro-h"), btns = sec.querySelector(".pr-btns");
+  h.style.marginTop = btns.style.marginTop = "";
+  const ghost = document.createElement("div"); ghost.setAttribute("aria-hidden", "true");
+  ghost.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:${sec.getBoundingClientRect().left + scrollX}px;top:${sec.getBoundingClientRect().top + scrollY}px;width:${sec.offsetWidth}px`;
+  const g = el(`<section class="intro">
+    <h2 class="intro-h">Smarter Spending on Subscriptions &amp; Household Services</h2>
+    <p class="intro-p">The average American spends about $1,080 a year on subscriptions and recurring services, with over $200 going to things they rarely or never use.</p>
+    <p class="intro-p">At MoSuBi, we use AI and market research to help you get the most for your money.</p>
+    <button class="btn primary intro-next">Next</button>
+    <p class="small muted intro-src">Source: CNET survey with YouGov, May 2025.</p></section>`);
+  ghost.append(g); document.body.append(ghost);
+  const gs = ghost.querySelector(".intro"); gs.style.minHeight = sec.style.minHeight;
+  const top = x => x.getBoundingClientRect().top;
+  const hGap = top(gs.querySelector(".intro-h")) - top(gs), bGap = top(gs.querySelector(".intro-next")) - top(gs);
+  ghost.remove();
+  sec.style.alignContent = "start";
+  h.style.marginTop = Math.max(0, hGap - (top(h) - top(sec))) + "px";  // set first: it moves the buttons down too
+  btns.style.marginTop = Math.max(0, bGap - (top(btns.querySelector(".intro-next")) - top(sec))) + "px";
+}
+addEventListener("resize", alignPromise);
 const WELCOME_SKIP = new Set(["energy"]);
 // Welcome, step 3 (Cuong, v190): one subscription at a time, two questions each: which plan, then one usage number for the value
 // chart (the subscription's own measure). Next saves and moves on; "Finish later" goes to Overview, where Finish setting up picks up the rest.
@@ -4727,7 +4753,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 242 · Oct 30", VERSION_NUM = 242;
+const APP_VERSION = "Prototype · Version 243 · Oct 30", VERSION_NUM = 243;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
