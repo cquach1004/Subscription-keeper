@@ -1,0 +1,1245 @@
+[
+  {
+    "id": "sonic_fiber",
+    "name": "Sonic Fiber Internet",
+    "category": "internet",
+    "alternative_to": [
+      "att_fiber",
+      "xfinity_internet",
+      "astound_broadband"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "CA"
+    ],
+    "service_area_note": "Parts of Northern California (Bay Area, Sacramento) and Los Angeles area; check address.",
+    "official_url": "https://www.sonic.com/",
+    "plans": [
+      {
+        "id": "gig",
+        "name": "1 Gig Fiber",
+        "price_monthly": 49.99,
+        "price_annual": null,
+        "effective_monthly": 49.99,
+        "verified": true,
+        "note": "$49.99/mo first 12 months, then $59.99/mo. Free install, no data caps or contract."
+      }
+    ],
+    "default_plan": "gig",
+    "features": [
+      {
+        "id": "symmetric_gig",
+        "name": "Symmetric 1 Gig fiber",
+        "plans": "all",
+        "overlap_tag": null
+      },
+      {
+        "id": "no_caps",
+        "name": "No data caps",
+        "plans": "all",
+        "overlap_tag": "no_data_cap"
+      }
+    ],
+    "best_for": "Bay Area households wanting cheap symmetric fiber.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Price rises to $59.99 after month 12."
+    ],
+    "sources": [
+      {
+        "label": "Sonic 1 Gig offer page",
+        "url": "https://www.sonic.com/lp/1gs"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "gci_internet",
+    "name": "GCI Home Internet",
+    "category": "internet",
+    "alternative_to": [
+      "starlink_residential"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "AK"
+    ],
+    "service_area_note": "Alaska (Anchorage, Fairbanks, Juneau and many communities).",
+    "official_url": "https://www.gci.com/",
+    "plans": [
+      {
+        "id": "250",
+        "name": "GCI 250 Mbps",
+        "price_monthly": 89.99,
+        "price_annual": null,
+        "effective_monthly": 89.99,
+        "verified": true,
+        "note": "Not an intro rate, no contract; data allowance then slowed to 10 Mbps or buy more usage."
+      }
+    ],
+    "default_plan": "250",
+    "features": [
+      {
+        "id": "wifi",
+        "name": "AK-Fi Home Wi-Fi (Plume) included",
+        "plans": "all",
+        "overlap_tag": null
+      },
+      {
+        "id": "bundle_mobile",
+        "name": "Discounted GCI mobile with internet",
+        "plans": "all",
+        "overlap_tag": "bundle"
+      }
+    ],
+    "best_for": "Alaskans in GCI cable areas.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Data allowance applies; GCI+ bundle adds mobile savings."
+    ],
+    "sources": [
+      {
+        "label": "GCI comparison page",
+        "url": "https://www.gci.com/red"
+      },
+      {
+        "label": "Alaska Communications comparison (Jan 2026)",
+        "url": "https://www.alaskacommunications.com/"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "gci_mobile",
+    "name": "GCI Wireless",
+    "category": "mobile",
+    "alternative_to": [
+      "att_wireless",
+      "verizon_wireless",
+      "tmobile_wireless"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "AK"
+    ],
+    "service_area_note": "Alaska; nationwide roaming via partners.",
+    "official_url": "https://www.gci.com/mobile",
+    "plans": [
+      {
+        "id": "explore",
+        "name": "Explore (per line, 4 lines)",
+        "price_monthly": 35,
+        "price_annual": null,
+        "effective_monthly": 35,
+        "verified": true,
+        "note": "$35/line with 4 lines; 1-line price not listed. $35 activation fee may apply."
+      },
+      {
+        "id": "peak",
+        "name": "Peak (per line, 4 lines)",
+        "price_monthly": 40,
+        "price_annual": null,
+        "effective_monthly": 40,
+        "verified": true,
+        "note": "50 GB full-speed data per line."
+      },
+      {
+        "id": "summit",
+        "name": "Summit (per line, 4 lines)",
+        "price_monthly": 48,
+        "price_annual": null,
+        "effective_monthly": 48,
+        "verified": true,
+        "note": "100 GB per line."
+      },
+      {
+        "id": "apex",
+        "name": "Apex (per line, 4 lines)",
+        "price_monthly": 68,
+        "price_annual": null,
+        "effective_monthly": 68,
+        "verified": true,
+        "note": "Unlimited premium data, 100 GB hotspot."
+      }
+    ],
+    "default_plan": "explore",
+    "features": [
+      {
+        "id": "hotspot",
+        "name": "Mobile hotspot",
+        "plans": "all",
+        "overlap_tag": null
+      },
+      {
+        "id": "can_mex",
+        "name": "Canada/Mexico roaming 5 GB",
+        "plans": "apex,summit",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Alaskans who need in-state coverage beyond national carriers.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Mobile line is discounted or free for 12 months with GCI Internet."
+    ],
+    "sources": [
+      {
+        "label": "GCI mobile plans",
+        "url": "https://www.gci.com/mobile/plans"
+      },
+      {
+        "label": "GCI mobile",
+        "url": "https://www.gci.com/mobile"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "alaska_communications",
+    "name": "Alaska Communications (ACS) Internet",
+    "category": "internet",
+    "alternative_to": [
+      "gci_internet"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "AK"
+    ],
+    "service_area_note": "Alaska (Anchorage, Fairbanks, Juneau and others); speeds vary by address.",
+    "official_url": "https://www.alaskacommunications.com/",
+    "plans": [
+      {
+        "id": "300",
+        "name": "300 Mbps Unlimited",
+        "price_monthly": 89.99,
+        "price_annual": null,
+        "effective_monthly": 89.99,
+        "verified": true,
+        "note": "Reverts to $99.99/mo after promo; unlimited data."
+      },
+      {
+        "id": "150",
+        "name": "150 Mbps",
+        "price_monthly": 79.99,
+        "price_annual": null,
+        "effective_monthly": 79.99,
+        "verified": true,
+        "note": "Promo price with 24-month commitment; reverts to $89.99."
+      }
+    ],
+    "default_plan": "300",
+    "features": [
+      {
+        "id": "unlimited",
+        "name": "Unlimited data",
+        "plans": "all",
+        "overlap_tag": "no_data_cap"
+      }
+    ],
+    "best_for": "Alaskans wanting unlimited data.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Alaska Communications home page (comparison as of 01/22/2026)",
+        "url": "https://www.alaskacommunications.com/"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "hawaiian_telcom_fiber",
+    "name": "Hawaiian Telcom Fiber Internet",
+    "category": "internet",
+    "alternative_to": [
+      "spectrum_internet"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "HI"
+    ],
+    "service_area_note": "Hawaii; fiber availability varies by address.",
+    "official_url": "https://www.hawaiiantel.com/",
+    "plans": [
+      {
+        "id": "500",
+        "name": "500 Mbps Fiber",
+        "price_monthly": 44.99,
+        "price_annual": null,
+        "effective_monthly": 44.99,
+        "verified": true,
+        "note": "No price lock listed."
+      },
+      {
+        "id": "750",
+        "name": "750 Mbps Fiber",
+        "price_monthly": 54.99,
+        "price_annual": null,
+        "effective_monthly": 54.99,
+        "verified": true,
+        "note": "3-year price lock."
+      },
+      {
+        "id": "1g",
+        "name": "1 Gig Fiber",
+        "price_monthly": 74.99,
+        "price_annual": null,
+        "effective_monthly": 74.99,
+        "verified": true,
+        "note": "3-year price lock."
+      }
+    ],
+    "default_plan": "500",
+    "features": [
+      {
+        "id": "guarantee",
+        "name": "30-day satisfaction guarantee",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Hawaii homes in fiber areas.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "$200 per-gateway charge if not returned within 45 days of cancel."
+    ],
+    "sources": [
+      {
+        "label": "Hawaiian Telcom fiber page",
+        "url": "https://www.hawaiiantel.com/Residential/Reddit-Surfing-the-Web"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "monkeybrains",
+    "name": "Monkeybrains",
+    "category": "internet",
+    "alternative_to": [
+      "xfinity_internet",
+      "att_fiber"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "CA"
+    ],
+    "service_area_note": "San Francisco only; building eligibility checked by staff.",
+    "official_url": "https://www.monkeybrains.net/",
+    "plans": [
+      {
+        "id": "res",
+        "name": "Residential",
+        "price_monthly": 35,
+        "price_annual": null,
+        "effective_monthly": 35,
+        "verified": true,
+        "note": "$150 install; 100 Mbps (up to 1 Gbps in large buildings). Month-to-month."
+      }
+    ],
+    "default_plan": "res",
+    "features": [
+      {
+        "id": "no_caps",
+        "name": "No data caps",
+        "plans": "all",
+        "overlap_tag": "no_data_cap"
+      }
+    ],
+    "best_for": "San Francisco renters wanting cheap, no-contract internet.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Monkeybrains home page",
+        "url": "https://www.monkeybrains.net/"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "good_eggs",
+    "name": "Good Eggs Membership",
+    "category": "food",
+    "alternative_to": [
+      "instacart_plus",
+      "amazon_prime"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "CA"
+    ],
+    "service_area_note": "SF Bay Area and Los Angeles area grocery delivery.",
+    "official_url": "https://www.goodeggs.com/",
+    "plans": [
+      {
+        "id": "monthly",
+        "name": "Monthly membership",
+        "price_monthly": 29.0,
+        "price_annual": null,
+        "effective_monthly": 29.0,
+        "verified": true,
+        "note": ""
+      },
+      {
+        "id": "annual",
+        "name": "Annual membership",
+        "price_monthly": null,
+        "price_annual": 179.99,
+        "effective_monthly": 15.0,
+        "verified": true,
+        "note": ""
+      }
+    ],
+    "default_plan": "monthly",
+    "features": [
+      {
+        "id": "delivery",
+        "name": "Member delivery perks",
+        "plans": "all",
+        "overlap_tag": "free_delivery"
+      }
+    ],
+    "best_for": "Bay Area/LA households ordering local groceries weekly.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "$50 order minimum shown in cart."
+    ],
+    "sources": [
+      {
+        "label": "Good Eggs help: membership cost",
+        "url": "https://help.goodeggs.com/hc/en-us/articles/10043224964756-How-much-does-it-cost-to-become-a-member"
+      },
+      {
+        "label": "Good Eggs",
+        "url": "https://www.goodeggs.com/"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "farm_fresh_to_you",
+    "name": "Farm Fresh To You",
+    "category": "food",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "CA"
+    ],
+    "service_area_note": "California home/office produce box delivery in select areas.",
+    "official_url": "https://www.farmfreshtoyou.com/",
+    "plans": [
+      {
+        "id": "box",
+        "name": "Recurring farm box",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Box prices not shown without address; delivery included."
+      }
+    ],
+    "default_plan": "box",
+    "features": [
+      {
+        "id": "custom",
+        "name": "Customizable box, skip anytime",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Californians wanting a recurring organic produce box.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Farm Fresh To You",
+        "url": "https://www.farmfreshtoyou.com/"
+      },
+      {
+        "label": "Compare boxes",
+        "url": "https://www.farmfreshtoyou.com/compare"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "seattle_times",
+    "name": "The Seattle Times",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "WA"
+    ],
+    "service_area_note": "Seattle / Washington local news; digital available anywhere.",
+    "official_url": "https://www.seattletimes.com/",
+    "plans": [
+      {
+        "id": "digital",
+        "name": "Unlimited Digital Access",
+        "price_monthly": 30.03,
+        "price_annual": null,
+        "effective_monthly": 30.03,
+        "verified": true,
+        "note": "$6.93/week regular rate (about $30.03/mo); intro 99 cents for 5 months."
+      }
+    ],
+    "default_plan": "digital",
+    "features": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital access",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "Seattle-area readers.",
+    "free_trial_days": null,
+    "varies_by_region": false,
+    "regions": "US only",
+    "tips": [
+      "Intro offer: 99 cents for 5 months."
+    ],
+    "sources": [
+      {
+        "label": "Seattle Times promo page",
+        "url": "https://promo.seattletimes.com/5mfor99cents"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "honolulu_star_advertiser",
+    "name": "Honolulu Star-Advertiser",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "HI"
+    ],
+    "service_area_note": "Hawaii news; digital available anywhere.",
+    "official_url": "https://www.staradvertiser.com/",
+    "plans": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital access",
+        "price_monthly": 12.95,
+        "price_annual": null,
+        "effective_monthly": 12.95,
+        "verified": false,
+        "note": "Site button says 'from as low as $12.95/mo'; full plan list not readable."
+      }
+    ],
+    "default_plan": "digital",
+    "features": [
+      {
+        "id": "digital",
+        "name": "Unlimited digital access",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "Hawaii residents following local news.",
+    "free_trial_days": null,
+    "varies_by_region": false,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Star-Advertiser site",
+        "url": "https://www.staradvertiser.com/?p=461629"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "anchorage_daily_news",
+    "name": "Anchorage Daily News",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "AK"
+    ],
+    "service_area_note": "Alaska news; print twice weekly, digital anywhere.",
+    "official_url": "https://www.adn.com/",
+    "plans": [
+      {
+        "id": "digital",
+        "name": "Digital membership",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price not published on FAQ; check adn.com."
+      }
+    ],
+    "default_plan": "digital",
+    "features": [
+      {
+        "id": "eedition",
+        "name": "e-Edition and apps",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "Alaskans wanting statewide news.",
+    "free_trial_days": null,
+    "varies_by_region": false,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "ADN FAQ",
+        "url": "https://adn.com/faq"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "sf_chronicle",
+    "name": "San Francisco Chronicle",
+    "category": "news",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "CA"
+    ],
+    "service_area_note": "Bay Area news; digital available anywhere.",
+    "official_url": "https://www.sfchronicle.com/",
+    "plans": [
+      {
+        "id": "digital",
+        "name": "Digital subscription",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Official price page not reachable; 2022 reports cited ~$360/yr renewal."
+      }
+    ],
+    "default_plan": "digital",
+    "features": [
+      {
+        "id": "digital",
+        "name": "Digital access",
+        "plans": "all",
+        "overlap_tag": "local_news"
+      }
+    ],
+    "best_for": "Bay Area readers.",
+    "free_trial_days": null,
+    "varies_by_region": false,
+    "regions": "US only",
+    "tips": [
+      "Renewal rates often rise; call to ask for intro pricing."
+    ],
+    "sources": [
+      {
+        "label": "Pricing writeup (2022, unofficial)",
+        "url": "https://kevin.burke.dev/kevin/san-francisco-chronicle-pricing/"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "touchstone_climbing",
+    "name": "Touchstone Climbing",
+    "category": "fitness",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "CA"
+    ],
+    "service_area_note": "19 climbing gyms in Northern and Southern California.",
+    "official_url": "https://touchstoneclimbing.com/",
+    "plans": [
+      {
+        "id": "individual",
+        "name": "Individual membership",
+        "price_monthly": 120,
+        "price_annual": null,
+        "effective_monthly": 120,
+        "verified": true,
+        "note": "$100 initiation fee."
+      },
+      {
+        "id": "family_2",
+        "name": "Family, 2 adults",
+        "price_monthly": 230,
+        "price_annual": null,
+        "effective_monthly": 230,
+        "verified": true,
+        "note": "$150 initiation; kids 0-12 free."
+      }
+    ],
+    "default_plan": "individual",
+    "features": [
+      {
+        "id": "all_gyms",
+        "name": "Access to all Touchstone gyms",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "California climbers.",
+    "free_trial_days": null,
+    "varies_by_region": false,
+    "regions": "US only",
+    "tips": [
+      "10-visit pass ($300) waives the initiation fee."
+    ],
+    "sources": [
+      {
+        "label": "Touchstone membership",
+        "url": "https://touchstoneclimbing.com/membership/"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "inshape_health_clubs",
+    "name": "In-Shape Health Clubs",
+    "category": "fitness",
+    "alternative_to": [
+      "24_hour_fitness",
+      "planet_fitness"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "CA"
+    ],
+    "service_area_note": "Up to 63 clubs across California.",
+    "official_url": "https://www.inshape.com/",
+    "plans": [
+      {
+        "id": "preferred",
+        "name": "Preferred Perks",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Dues not listed online; Oct 2026 promo: $1 join + 50% off dues until 2027."
+      }
+    ],
+    "default_plan": "preferred",
+    "features": [
+      {
+        "id": "multi_club",
+        "name": "Multi-club access",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Central Valley and NorCal gym-goers.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "In-Shape",
+        "url": "https://www.inshape.com/"
+      },
+      {
+        "label": "In-Shape gyms",
+        "url": "https://www.inshape.com/gyms"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "bay_club",
+    "name": "Bay Club",
+    "category": "fitness",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "CA"
+    ],
+    "service_area_note": "Premium clubs in Bay Area, Southern California and Los Angeles.",
+    "official_url": "https://www.bayclubs.com/",
+    "plans": [
+      {
+        "id": "membership",
+        "name": "Club membership",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Dues and initiation vary by club; not listed online."
+      }
+    ],
+    "default_plan": "membership",
+    "features": [
+      {
+        "id": "shared",
+        "name": "Shared membership option",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Families wanting a full-service country-club style gym.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Bay Club LA memberships",
+        "url": "https://www.bayclubs.com/?p=19498"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "alaska_club",
+    "name": "The Alaska Club",
+    "category": "fitness",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "AK"
+    ],
+    "service_area_note": "12 clubs in Anchorage, Eagle River, Mat-Su, Fairbanks and Juneau.",
+    "official_url": "https://www.thealaskaclub.com/",
+    "plans": [
+      {
+        "id": "membership",
+        "name": "Annual membership",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Monthly rate not listed; 12-month agreement required."
+      }
+    ],
+    "default_plan": "membership",
+    "features": [
+      {
+        "id": "childcare",
+        "name": "Childcare at clubs",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Alaskans wanting a statewide gym network.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [
+      "Early cancellation fee applies."
+    ],
+    "sources": [
+      {
+        "label": "Alaska Club",
+        "url": "https://www.thealaskaclub.com/"
+      },
+      {
+        "label": "Special offer",
+        "url": "https://www.thealaskaclub.com/offer"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "bouldering_project",
+    "name": "Bouldering Project",
+    "category": "fitness",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "WA",
+      "TX",
+      "MA",
+      "NY",
+      "UT",
+      "MN",
+      "AZ",
+      "DC"
+    ],
+    "service_area_note": "13 bouldering gyms; Seattle has 3.",
+    "official_url": "https://boulderingproject.com/",
+    "plans": [
+      {
+        "id": "monthly",
+        "name": "Monthly unlimited",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Adult $94-$135/mo by location plus $50-$80 activation."
+      }
+    ],
+    "default_plan": "monthly",
+    "features": [
+      {
+        "id": "unlimited",
+        "name": "Unlimited access",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Seattle boulderers.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Bouldering Project pricing",
+        "url": "https://boulderingproject.com/pricing-membership/"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "brown_bear_car_wash",
+    "name": "Brown Bear Car Wash Unlimited Wash Club",
+    "category": "auto",
+    "alternative_to": [
+      "quick_quack"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "WA"
+    ],
+    "service_area_note": "45+ locations in Washington (Puget Sound area).",
+    "official_url": "https://www.brownbear.com/",
+    "plans": [
+      {
+        "id": "clean",
+        "name": "Beary Clean",
+        "price_monthly": 25.98,
+        "price_annual": null,
+        "effective_monthly": 25.98,
+        "verified": true,
+        "note": ""
+      },
+      {
+        "id": "bright",
+        "name": "Beary Bright",
+        "price_monthly": 47.98,
+        "price_annual": null,
+        "effective_monthly": 47.98,
+        "verified": true,
+        "note": ""
+      },
+      {
+        "id": "best",
+        "name": "Beary Best",
+        "price_monthly": 59.98,
+        "price_annual": null,
+        "effective_monthly": 59.98,
+        "verified": true,
+        "note": ""
+      }
+    ],
+    "default_plan": "clean",
+    "features": [
+      {
+        "id": "unlimited",
+        "name": "Unlimited washes",
+        "plans": "all",
+        "overlap_tag": "unlimited_car_wash"
+      }
+    ],
+    "best_for": "Western Washington drivers washing often.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Brown Bear enroll",
+        "url": "https://www.brownbear.com/enroll"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "street_shine_hawaii",
+    "name": "Street Shine Hawaii Unlimited",
+    "category": "auto",
+    "alternative_to": [],
+    "kind": "direct",
+    "service_states": [
+      "HI"
+    ],
+    "service_area_note": "Oahu (Kapolei, Honolulu).",
+    "official_url": "https://www.streetshinehawaii.com/",
+    "plans": [
+      {
+        "id": "unlimited",
+        "name": "Unlimited Car Wash Membership",
+        "price_monthly": 99,
+        "price_annual": null,
+        "effective_monthly": 99,
+        "verified": false,
+        "note": "From May 2025 press release."
+      }
+    ],
+    "default_plan": "unlimited",
+    "features": [
+      {
+        "id": "unlimited",
+        "name": "Unlimited washes",
+        "plans": "all",
+        "overlap_tag": "unlimited_car_wash"
+      }
+    ],
+    "best_for": "Oahu drivers wanting unlimited washes.",
+    "free_trial_days": null,
+    "varies_by_region": false,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Press release (May 2025)",
+        "url": "https://www2.newsfilecorp.com/release/253084/Street-Shine-Hawaii-Launches-the-Unlimited-Car-Wash-Membership-Program"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "smud_greenergy",
+    "name": "SMUD Greenergy",
+    "category": "home",
+    "alternative_to": [
+      "rocky_mountain_power_blue_sky"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "CA"
+    ],
+    "service_area_note": "Sacramento Municipal Utility District customers.",
+    "official_url": "https://www.smud.org/Going-Green/Get-Green-Energy",
+    "plans": [
+      {
+        "id": "3",
+        "name": "Greenergy $3 level",
+        "price_monthly": 3,
+        "price_annual": null,
+        "effective_monthly": 3,
+        "verified": true,
+        "note": ""
+      },
+      {
+        "id": "10",
+        "name": "Greenergy $10 level",
+        "price_monthly": 10,
+        "price_annual": null,
+        "effective_monthly": 10,
+        "verified": true,
+        "note": ""
+      },
+      {
+        "id": "18",
+        "name": "Greenergy $18 level",
+        "price_monthly": 18,
+        "price_annual": null,
+        "effective_monthly": 18,
+        "verified": true,
+        "note": ""
+      }
+    ],
+    "default_plan": "3",
+    "features": [
+      {
+        "id": "renewable",
+        "name": "Renewable energy match",
+        "plans": "all",
+        "overlap_tag": "green_power"
+      }
+    ],
+    "best_for": "Sacramento households wanting green power.",
+    "free_trial_days": null,
+    "varies_by_region": false,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "SMUD green energy",
+        "url": "https://www.smud.org/Going-Green/Get-Green-Energy"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "pge_green_future",
+    "name": "Portland General Electric Green Future Choice",
+    "category": "home",
+    "alternative_to": [
+      "rocky_mountain_power_blue_sky"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "OR"
+    ],
+    "service_area_note": "PGE customers in the Portland/Salem area.",
+    "official_url": "https://portlandgeneral.com/energy-choices/renewable-power/green-future-choice",
+    "plans": [
+      {
+        "id": "choice",
+        "name": "Green Future Choice",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": true,
+        "note": "About $0.0094/kWh extra; ~$5/mo for average 784 kWh home."
+      }
+    ],
+    "default_plan": "choice",
+    "features": [
+      {
+        "id": "renewable",
+        "name": "100% renewable match",
+        "plans": "all",
+        "overlap_tag": "green_power"
+      },
+      {
+        "id": "habitat",
+        "name": "Habitat Support add-on",
+        "plans": "all",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "Portland-area homes wanting renewable power.",
+    "free_trial_days": null,
+    "varies_by_region": false,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "PGE Green Future Choice",
+        "url": "https://portlandgeneral.com/energy-choices/renewable-power/green-future-choice"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "pse_green_power",
+    "name": "Puget Sound Energy Green Power",
+    "category": "home",
+    "alternative_to": [
+      "rocky_mountain_power_blue_sky"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "WA"
+    ],
+    "service_area_note": "PSE electric customers in western Washington.",
+    "official_url": "https://www.pse.com/en/green-options/Renewable-Energy-Programs/green-power",
+    "plans": [
+      {
+        "id": "block",
+        "name": "Green Power block",
+        "price_monthly": 4,
+        "price_annual": null,
+        "effective_monthly": 4,
+        "verified": true,
+        "note": "From $4/mo per block."
+      },
+      {
+        "id": "full",
+        "name": "Match 100% of use",
+        "price_monthly": 8.82,
+        "price_annual": null,
+        "effective_monthly": 8.82,
+        "verified": true,
+        "note": "Average residential cost ~$8.82/mo; varies with usage."
+      }
+    ],
+    "default_plan": "block",
+    "features": [
+      {
+        "id": "renewable",
+        "name": "Renewable energy match",
+        "plans": "all",
+        "overlap_tag": "green_power"
+      }
+    ],
+    "best_for": "Puget Sound homes wanting green power.",
+    "free_trial_days": null,
+    "varies_by_region": false,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "PSE Green Power",
+        "url": "https://www.pse.com/en/green-options/Renewable-Energy-Programs/green-power"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  },
+  {
+    "id": "clark_pest_control",
+    "name": "Clark Pest Control",
+    "category": "lawn_pest",
+    "alternative_to": [
+      "orkin",
+      "terminix"
+    ],
+    "kind": "direct",
+    "service_states": [
+      "CA",
+      "NV"
+    ],
+    "service_area_note": "California and northwest Nevada; 30+ branches.",
+    "official_url": "https://www.clarkpest.com/",
+    "plans": [
+      {
+        "id": "pest_away",
+        "name": "Year-Round Pest-Away",
+        "price_monthly": null,
+        "price_annual": null,
+        "effective_monthly": null,
+        "verified": false,
+        "note": "Price by inspection quote only."
+      }
+    ],
+    "default_plan": "pest_away",
+    "features": [
+      {
+        "id": "termite",
+        "name": "Term Alert 365 termite monitoring",
+        "plans": "optional",
+        "overlap_tag": null
+      },
+      {
+        "id": "lawn",
+        "name": "Lawn care program",
+        "plans": "optional",
+        "overlap_tag": null
+      }
+    ],
+    "best_for": "California homeowners wanting recurring pest service.",
+    "free_trial_days": null,
+    "varies_by_region": true,
+    "regions": "US only",
+    "tips": [],
+    "sources": [
+      {
+        "label": "Clark Pest Control",
+        "url": "https://www.clarkpest.com/"
+      }
+    ],
+    "checked_at": "2026-10-28"
+  }
+]
