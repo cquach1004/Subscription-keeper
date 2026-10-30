@@ -1825,7 +1825,7 @@ function aboutView() {
   // v149 (Cuong): name under "Tell us about yourself", email after "Where do you live?". Optional; kept in this browser only.
   let saved = ""; try { saved = localStorage.getItem("sk-name") || ""; } catch {}
   const [sf, ...sl] = saved.trim().split(/\s+/), first = saved ? sf : p.first || "", last = saved ? sl.join(" ") : p.last || "";
-  const f = el(`<div class="section-head"><h2 class="about-title">We&rsquo;re Glad You&rsquo;re Here!</h2></div>
+  const f = el(`<div class="section-head"><h2 class="about-title">Let&rsquo;s get started.</h2></div>
     <h3 style="margin:8px 0 2px">1. Tell us about yourself</h3>
     <div class="loc-row" style="margin:10px 0 16px"><label>First name<input id="w-first" autocomplete="given-name" value="${esc(first)}"></label>
       <label>Last name<input id="w-last" autocomplete="family-name" value="${esc(last)}"></label></div>
@@ -4714,7 +4714,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 239 · Standalone copy · Oct 30", VERSION_NUM = 239;
+const APP_VERSION = "Prototype · Version 240 · Standalone copy · Oct 30", VERSION_NUM = 240;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
