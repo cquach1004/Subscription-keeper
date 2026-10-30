@@ -7,7 +7,7 @@
 <style>
 /* Layout: app shell, a narrow column with top tabs; phones get a bottom tab bar. Detail opens as a sheet. */
 :root {
-  --bg: #e9edf3; --surface: #ffffff; --line: #d6dde8; --ink: #0d1626; --muted: #46526a;
+  --bg: #e9edf3; --surface: #ffffff; --line: #d6dde8; --card-line: #a3b1c6; --ink: #0d1626; --muted: #46526a;
   --accent: #1e3a8a; --accent-soft: #e4eaf8; --sky: #0b1d45; --sky-2: #1e3a8a; --sky-3: #3b5bb5;
   --hero-ink: #ffffff; --glass: rgba(255,255,255,.14); --lead-bg: linear-gradient(150deg, #0b1d45, #1e3a8a 65%, #3355b5); --lead-ink: #ffffff;
   --band: linear-gradient(160deg, #081634 0%, #13296b 45%, #2a4a9e 100%); --tabbar: rgba(255,255,255,.88);
@@ -19,14 +19,14 @@
   --f-num: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #070b16; --surface: #111827; --line: #222d42; --ink: #e9eef8; --muted: #98a3ba;
+  --bg: #070b16; --surface: #111827; --line: #222d42; --card-line: #44547a; --ink: #e9eef8; --muted: #98a3ba;
   --accent: #a3bcff; --accent-soft: #1a2747; --sky: #0b1d45; --sky-2: #1e3a8a; --sky-3: #5b7bd5;
   --hero-ink: #ffffff; --glass: rgba(255,255,255,.1); --lead-bg: linear-gradient(150deg, #0e2257, #1e3a8a 65%, #2f51ad); --lead-ink: #ffffff;
   --band: linear-gradient(160deg, #050c1f 0%, #0d1f52 50%, #1a3480 100%); --tabbar: rgba(17,24,39,.86);
   --good: #5fd39b; --good-soft: #143326; --warn: #f0b860; --warn-soft: #382a12; --bad: #ff8a95; --bad-soft: #3d1a1f;
   --shadow: 0 12px 34px rgba(0,0,0,.5); --card-shadow: 0 1px 0 rgba(255,255,255,.03) inset; color-scheme: dark; } }
 :root[data-theme="dark"] {
-  --bg: #070b16; --surface: #111827; --line: #222d42; --ink: #e9eef8; --muted: #98a3ba;
+  --bg: #070b16; --surface: #111827; --line: #222d42; --card-line: #44547a; --ink: #e9eef8; --muted: #98a3ba;
   --accent: #a3bcff; --accent-soft: #1a2747; --sky: #0b1d45; --sky-2: #1e3a8a; --sky-3: #5b7bd5;
   --hero-ink: #ffffff; --glass: rgba(255,255,255,.1); --lead-bg: linear-gradient(150deg, #0e2257, #1e3a8a 65%, #2f51ad); --lead-ink: #ffffff;
   --band: linear-gradient(160deg, #050c1f 0%, #0d1f52 50%, #1a3480 100%); --tabbar: rgba(17,24,39,.86);
@@ -613,7 +613,7 @@ h3 { font-weight: 600; }
 .stat, .list, .card, .upcoming, form.fields, .tbl-wrap, .cat-item, details.sec, .fresh { border-color: transparent; box-shadow: var(--card-shadow); }
 .stat, .list, .card, .upcoming, form.fields, .tbl-wrap { border-radius: 24px; }
 /* v198 (Cuong): testers found Overview busy. White cards get a light border so each widget reads as its own block (not the hero stats on the navy band). */
-.list, .card, .upcoming, form.fields, .tbl-wrap, details.sec, .fresh { border-color: var(--line); }
+.list, .card, .upcoming, form.fields, .tbl-wrap, details.sec, .fresh { border-color: var(--card-line, var(--line)); }  /* v247 (Cuong): medium gray card border (option B) for more contrast */
 body:not(.short-band) #view > .card, body:not(.short-band) #view .charts > .card, body:not(.short-band) #view .uml > .card { margin-bottom: 20px; }
 body:not(.short-band) #view .card > h3:first-child { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .stat { padding: 18px 20px; }
@@ -4801,7 +4801,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 246 · Standalone copy · Oct 30", VERSION_NUM = 246;
+const APP_VERSION = "Prototype · Version 247 · Standalone copy · Oct 30", VERSION_NUM = 247;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
