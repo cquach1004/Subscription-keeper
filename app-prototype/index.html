@@ -185,6 +185,7 @@ body.intro-mode #view input::placeholder, body.intro-mode #view textarea::placeh
 .hc-row b { display: block; font-size: 16px; } .hc-row .small { display: block; margin-top: 2px; } .hc-row .hc-go { margin-left: auto; color: var(--muted); font-size: 22px; }
 .hc-steps { margin: 4px 0 0; padding-left: 22px; display: grid; gap: 10px; } .hc-steps li { line-height: 1.45; }
 .hc-subs { display: grid; gap: 8px; } .hc-sub { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); font: inherit; text-align: left; cursor: pointer; width: 100%; }
+.hc-ct { align-items: flex-start; cursor: default; } .hc-ct-links { display: flex; gap: 14px; flex-wrap: wrap; margin: 6px 0 2px; }
 .hc-sub .hc-links { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: none; } .hc-sub a { color: var(--accent); font-size: 14px; font-weight: 600; }
 .wb-card { gap: 12px; margin-bottom: 4px; } .wb-card .su-btns { margin-top: 6px; }
 .wb-list { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 16px; } .wb-tip { margin-bottom: 14px; }
@@ -964,6 +965,7 @@ function buildAlts(d) {
 const altTo = v => (v.alternative_to || []).filter(id => CATALOG[id]);
 // Prices by location (location-prices.json, app-side, researched 2026-10-19): { svc: { level, why, locations: [{ country, state, city, label, currency, plans, sources, checked_at }] } }.
 let LOC_PRICES = {};
+let CONTACTS = {};  // v250 (Cuong): official support routes from each service's own help pages (contacts.json)
 const PROVINCES = { CA: { AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland and Labrador", NS: "Nova Scotia", ON: "Ontario", PE: "Prince Edward Island", QC: "Quebec", SK: "Saskatchewan", NT: "Northwest Territories", NU: "Nunavut", YT: "Yukon" },
   AU: { NSW: "New South Wales", VIC: "Victoria", QLD: "Queensland", WA: "Western Australia", SA: "South Australia", TAS: "Tasmania", ACT: "Australian Capital Territory", NT: "Northern Territory" } };
 const stateName = (c, st) => !st ? "" : c === "US" ? US_STATES[st] || st : PROVINCES[c]?.[st] || st;
@@ -2063,8 +2065,12 @@ const HELP_TOPICS = {
     pick: "Change the plan for", act: "price" } };
 function openHelpTopic(k) {
   const h = HELP_TOPICS[k], root = document.getElementById("sheet-root"); if (!h) return;
-  const subs = state.subs.slice().sort((a, b) => a.name.localeCompare(b.name));
+  const subs = state.subs.slice().sort((a, b) => (k === "contact" ? !CONTACTS[a.svc] - !CONTACTS[b.svc] : 0) || a.name.localeCompare(b.name));
   const subRow = s => { const v = svcOf(s), url = v.official_url;
+    const ct = CONTACTS[s.svc];
+    if (k === "contact" && ct) return `<div class="hc-sub hc-ct">${logoHtml(v)}<span style="min-width:0;flex:1"><b>${esc(s.name)}</b><span class="small muted" style="display:block;margin-top:2px">${esc(ct.how)}</span>
+      <span class="hc-ct-links">${ct.phone ? `<a href="tel:${esc(ct.phone.replace(/[^0-9+]/g, ""))}">Call ${esc(ct.phone)}</a>` : ""}<a href="${esc(ct.url)}" target="_blank" rel="noopener">Contact page</a></span>
+      <span class="small muted" style="display:block;font-size:12px">From ${esc(host(ct.url))}, checked ${fmtDate(ct.checked)}</span></span></div>`;
     return k === "contact" ? `<div class="hc-sub">${logoHtml(v)}<b style="min-width:0">${esc(s.name)}</b><span class="hc-links">${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">Official site</a>` : ""}<a href="https://www.google.com/search?q=${encodeURIComponent(`${s.name} official customer service contact`)}" target="_blank" rel="noopener">Search for help</a></span></div>`
       : `<button type="button" class="hc-sub" data-hc-sub="${s.id}">${logoHtml(v)}<b style="min-width:0">${esc(s.name)}</b><span class="small muted" style="margin-left:auto">${money(monthly(s))}/mo &rsaquo;</span></button>`; };
   root.replaceChildren(el(`<div class="scrim" id="scrim"></div>
@@ -4865,7 +4871,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 249 · Oct 31", VERSION_NUM = 249;
+const APP_VERSION = "Prototype · Version 250 · Oct 31", VERSION_NUM = 250;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
@@ -4998,8 +5004,8 @@ document.getElementById("persona-btn").innerHTML = PERSONA_ICON;
 document.getElementById("persona-btn").addEventListener("click", openPersonas);
 document.getElementById("view").innerHTML = `<p class="muted">Loading service prices…</p>`;
 fetch("services.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-  .then(d => Promise.all(["alternatives.json", "explore-extra.json", "location-prices.json", "regional.json"].map(f => fetch(f).then(r => r.ok ? r.json() : {}).catch(() => ({})))).then(xs => [d, xs])).then(([d, xs]) => {
-  buildCatalog(d); xs.slice(0, 2).forEach(buildAlts); LOC_PRICES = xs[2]?.services || {}; buildAlts(xs[3] || {}); addExtraFeatures();
+  .then(d => Promise.all(["alternatives.json", "explore-extra.json", "location-prices.json", "regional.json", "contacts.json"].map(f => fetch(f).then(r => r.ok ? r.json() : {}).catch(() => ({})))).then(xs => [d, xs])).then(([d, xs]) => {
+  buildCatalog(d); xs.slice(0, 2).forEach(buildAlts); LOC_PRICES = xs[2]?.services || {}; CONTACTS = xs[4]?.services || {}; buildAlts(xs[3] || {}); addExtraFeatures();
   const saved = load();
   // New visitors start on the welcome screen and pick their own subscriptions; returning visitors keep their list.
   state = saved?.subs ? saved : persona !== "me" ? personaState(persona) : FRESH(); if (!state.subs.length && persona === "me" && !saved?.subs) { view = "welcome"; welcomeStep = 0; }

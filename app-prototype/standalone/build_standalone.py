@@ -4,7 +4,7 @@ import json, os, re
 P = os.path.dirname(os.path.abspath(__file__)) + "/../"
 SVC = "/mnt/project-files/value-tracker/services.json"  # read only; owned by the value tracker thread
 data = {"services.json": json.load(open(SVC))}
-for f in ["alternatives.json", "explore-extra.json", "location-prices.json", "regional.json"]:
+for f in ["alternatives.json", "explore-extra.json", "location-prices.json", "regional.json", "contacts.json"]:
     data[f] = json.load(open(P + f))
 html = open(P + "index.html").read()
 shim = ("<script>window.__DATA=" + json.dumps(data, separators=(",", ":")).replace("</", "<\\/") + ";"

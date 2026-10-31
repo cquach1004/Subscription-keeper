@@ -1,0 +1,145 @@
+{
+ "note": "Official support contact routes, US, taken only from each service's own help pages (2026-10-31). Phone numbers only where the service publishes one. Hulu and NYT not yet confirmed.",
+ "services": {
+  "netflix": {
+   "how": "No published phone number. Call or chat from the Netflix app: open Help, then tap Call or Chat.",
+   "url": "https://help.netflix.com/en/contactus",
+   "src": "https://help.netflix.com/en/node/33335",
+   "checked": "2026-10-31"
+  },
+  "spotify": {
+   "how": "No phone support. Send a message to Spotify customer service.",
+   "url": "https://support.spotify.com/contact-spotify-support/",
+   "src": "https://support.spotify.com/us/article/contact-us/",
+   "checked": "2026-10-31"
+  },
+  "amazon_prime": {
+   "how": "Sign in and use Amazon's Help & Contact Us page.",
+   "url": "https://www.amazon.com/gp/help/customer/contact-us",
+   "src": "https://www.amazon.com/gp/help/customer/contact-us",
+   "checked": "2026-10-31"
+  },
+  "youtube_premium": {
+   "how": "Sign in, then chat or request a call from YouTube's paid products support page.",
+   "url": "https://support.google.com/youtube/answer/7071292",
+   "src": "https://support.google.com/youtube/answer/7071292",
+   "checked": "2026-10-31"
+  },
+  "disney_plus": {
+   "how": "Use Contact Us in the Disney+ Help Center.",
+   "url": "https://help.disneyplus.com/",
+   "src": "https://help.disneyplus.com/en-GB/contact-us",
+   "checked": "2026-10-31"
+  },
+  "hbo_max": {
+   "how": "Use Contact us in the HBO Max Help Center, or message @hbomaxhelp on X.",
+   "url": "https://help.hbomax.com/us/ContactUs",
+   "src": "https://help.hbomax.com/us/ContactUs",
+   "checked": "2026-10-31"
+  },
+  "apple_music": {
+   "how": "Call Apple Support, chat in the Messages app, or start online.",
+   "phone": "1-800-275-2273",
+   "url": "https://support.apple.com/contact",
+   "src": "https://support.apple.com/en-us/106932",
+   "checked": "2026-10-31"
+  },
+  "icloud": {
+   "how": "Call Apple Support, chat in the Messages app, or start online.",
+   "phone": "1-800-275-2273",
+   "url": "https://support.apple.com/contact",
+   "src": "https://support.apple.com/en-us/106932",
+   "checked": "2026-10-31"
+  },
+  "peacock": {
+   "how": "No phone number. Sign in, then use Get in Touch for live chat (9 AM to 1 AM ET) or email.",
+   "url": "https://www.peacocktv.com/help/article/contact-us-in-customer-service",
+   "src": "https://www.peacocktv.com/help/article/contact-us-in-customer-service",
+   "checked": "2026-10-31"
+  },
+  "paramount_plus": {
+   "how": "Use Contact Us in the Paramount+ Help Center.",
+   "url": "https://help.paramountplus.com/s/contact-us",
+   "src": "https://help.paramountplus.com/s/contact-us",
+   "checked": "2026-10-31"
+  },
+  "google_one": {
+   "how": "Members can chat, call or email Google One support. In the app: Menu, Help, then Contact us.",
+   "url": "https://support.google.com/googleone/answer/17311711",
+   "src": "https://support.google.com/googleone/answer/17311711",
+   "checked": "2026-10-31"
+  },
+  "chatgpt": {
+   "how": "Get help through the OpenAI Help Center.",
+   "url": "https://help.openai.com/",
+   "src": "https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform",
+   "checked": "2026-10-31"
+  },
+  "claude": {
+   "how": "No phone support. In Claude, open Get help from the account menu to message support.",
+   "url": "https://support.claude.com/en/articles/9015913-how-to-get-support",
+   "src": "https://support.claude.com/en/articles/9015913-how-to-get-support",
+   "checked": "2026-10-31"
+  },
+  "m365": {
+   "how": "Choose Personal & family accounts, then Get Home support for live chat with a Microsoft specialist.",
+   "url": "https://support.microsoft.com/en-us/contactus/",
+   "src": "https://support.microsoft.com/en-us/contactus/",
+   "checked": "2026-10-31"
+  },
+  "xbox_game_pass": {
+   "how": "Sign in and use Contact us on Xbox Support.",
+   "url": "https://support.xbox.com/en-us/contact-us/emerald",
+   "src": "https://support.microsoft.com/en-us/contactus/",
+   "checked": "2026-10-31"
+  },
+  "playstation_plus": {
+   "how": "Look up your issue first. PlayStation Support then shows the right way to contact them.",
+   "url": "https://www.playstation.com/en-us/support/playstation-support-contact-guide/",
+   "src": "https://www.playstation.com/en-us/support/playstation-support-contact-guide/",
+   "checked": "2026-10-31"
+  },
+  "planet_fitness": {
+   "how": "Billing and membership questions go to your home club. If it's closed, Member Services helps on weekdays.",
+   "url": "https://www.planetfitness.com/about-planet-fitness/customer-service",
+   "src": "https://www.planetfitness.com/about-planet-fitness/customer-service",
+   "checked": "2026-10-31"
+  },
+  "doordash_dashpass": {
+   "how": "Use Contact Support in the DoorDash Help Center or app.",
+   "url": "https://help.doordash.com/consumers/s/contactsupport",
+   "src": "https://help.doordash.com/en-us/consumers/category/dashpass",
+   "checked": "2026-10-31"
+  },
+  "uber_one": {
+   "how": "Report membership or billing problems from Uber's Uber One help page.",
+   "url": "https://help.uber.com/en/riders/article/uber-one-membership-subscription-issues?nodeId=f327efae-1fb8-4a92-b86b-cb649b7746b0",
+   "src": "https://help.uber.com/en/riders/article/uber-one-membership-subscription-issues?nodeId=f327efae-1fb8-4a92-b86b-cb649b7746b0",
+   "checked": "2026-10-31"
+  },
+  "walmart_plus": {
+   "how": "Chat with Walmart from the Walmart.com help page.",
+   "url": "https://www.walmart.com/help",
+   "src": "https://www.walmart.com/help",
+   "checked": "2026-10-31"
+  },
+  "costco": {
+   "how": "See Costco's Contact Us page for membership phone and live chat options.",
+   "url": "https://customerservice.costco.com/app/answers/answer_view/a_id/8162/~/contact-us",
+   "src": "https://customerservice.costco.com/app/answers/answer_view/a_id/8688/~/can-i-make-any-change-to-my-membership-via-live-chat",
+   "checked": "2026-10-31"
+  },
+  "audible": {
+   "how": "Customer service is open 24/7. Use Audible's Contact Us page and pick your issue.",
+   "url": "https://www.audible.com/contactus",
+   "src": "https://help.audible.com/s/article/contact-audible-customer-service-and-accessibility-specialists?language=en_US",
+   "checked": "2026-10-31"
+  },
+  "duolingo": {
+   "how": "Use the Duolingo Help Center.",
+   "url": "https://support.duolingo.com/hc/en-us",
+   "src": "https://support.duolingo.com/hc/en-us",
+   "checked": "2026-10-31"
+  }
+ }
+}
