@@ -1749,6 +1749,7 @@ function render() {
   if (view === "shelf" && !admin.shelf) view = "home";
   drawAvatar(document.getElementById("me-btn")); inboxBadge();
   document.body.classList.toggle("short-band", view !== "home");
+  if (view !== "home") selSummary = false;
   document.body.classList.toggle("intro-mode", view === "welcome");  // v171-178: big title, no header buttons on all three welcome pages
   if (view === "admin" && !admin.show) view = "home";
   document.querySelector("nav.tabs").hidden = view === "welcome" || (view === "legal" && lastView === "welcome");
@@ -1983,7 +1984,7 @@ function wireUse(f, id, s, m) { const sel = f.getElementById(id + "-per"), st = 
   return st; }
 function setupStepView() {
   const inBatch = x => !wsBatch || wsBatch.has(x.id), todo = setupTodo().filter(inBatch), all = state.subs.filter(x => x.setup && inBatch(x)).length, done = all - todo.length;
-  const toHome = () => { view = "home"; welcomeStep = 1; addMode = false; wsBatch = null; save(); render(); window.scrollTo(0, 0); };
+  const toHome = () => { view = "home"; selSummary = true; welcomeStep = 1; addMode = false; wsBatch = null; save(); render(); window.scrollTo(0, 0); };
   if (!todo.length) { toHome(); return el(""); }
   const s = todo[0], v = svcOf(s), m = measureOf(s), plans = v.plans || [], showPrice = profile().country === catalogCountry();
   const planLine = p => { const mo = p.price_monthly, yr = p.price_annual;
@@ -2428,7 +2429,7 @@ function welcomeView() {
     if (picks.size || own.length) state.startDone = true;  // v118: picked here already, so go straight to Finish setting up
     const added = state.subs.filter(s => !kept.includes(s)); added.forEach(s => { s.measure = measuresOf(s)[0].id; }); save();
     wsBatch = new Set(added.map(s => s.id));
-    if (added.length) welcomeStep = 3; else { view = "home"; addMode = false; }  // v190: picked some, so set them up one at a time
+    if (added.length) welcomeStep = 3; else { view = "home"; selSummary = true; addMode = false; }  // v190: picked some, so set them up one at a time
     render(); window.scrollTo(0, 0); });
   $("w-later").addEventListener("click", () => { const prof = state.profile; state = { ...FRESH(), profile: prof, plkShow: true }; save(); view = "home"; render(); window.scrollTo(0, 0); });
   $("w-example").addEventListener("click", () => { setLoc(); const prof = state.profile; state = seed(); state.profile = prof;
@@ -3094,6 +3095,8 @@ function wireNudge(f) {
   f.querySelectorAll("[data-nudge]").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.nudge)));
   f.getElementById("nudge-later")?.addEventListener("click", () => { state.nudgeLater = iso(new Date(Date.now() + 7 * 864e5)); save(); render(); });
 }
+// v251 (Cuong): right after the welcome flow ends with Next, the Overview heading reads "Selection Summary" instead of the greeting.
+let selSummary = false;
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
 // v148 (Cuong): each Overview number compared with the average person in the profile's group.
 // Household service averages per US household, a month (v161, Cuong: compare subscriptions and household services together).
@@ -3216,7 +3219,7 @@ function homeView() {
   const cmpRows = state.subs.length ? cmpRow("You pay each year", cmpLine(cd.allAmt * 12, cd.avgAll && cd.avgAll * 12, money, total * 12)) + cmpRow(cd.billN ? "Subscriptions & services" : "Subscriptions", cmpLine(state.subs.length, cd.avgAllN, x => x, state.subs.length)) : "";
   const cmpInfo = cmpRows || cmpNote(cd) ? cmpRows + cmpNote(cd) : "";
   const f = el(`
-    <section class="hero"><h2>${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
+    <section class="hero"><h2>${selSummary ? "Selection Summary" : `${greeting()}${firstName() ? `, ${esc(firstName())}` : ""}`}</h2>${state.subs.length ? "" : `<p>Add what you pay for to get started.</p>`}</section>
     ${state.subs.length ? "" : listBtns()}
     ${state.subs.length ? `<section class="summary">
       <div class="stat lead"><div class="label">You pay each month</div>${cmpInfo ? infoBtn("cmp", "How we compare") : ""}<div class="value num">${money(total)}</div>${cmpLine(cd.allAmt, cd.avgAll, money, total)}</div>
@@ -4871,7 +4874,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 250 · Oct 31", VERSION_NUM = 250;
+const APP_VERSION = "Prototype · Version 251 · Oct 31", VERSION_NUM = 251;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
