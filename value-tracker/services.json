@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-19",
+  "generated_at": "2026-11-02",
   "currency": "USD",
   "region": "US",
   "notes": "List prices before tax. Plans with verified=false are estimates to confirm. effective_monthly = price_monthly, or price_annual/12 when the plan is annual-only. checked_at is when prices were last researched; official_url is the company pricing page (not link-checked from the build environment); sources are the pages the prices were read from.",
@@ -1042,6 +1042,22 @@
           "effective_monthly": 14.99,
           "verified": true,
           "note": "$119.99/yr when billed annually ($10.00/mo)."
+        },
+        {
+          "id": "couple",
+          "name": "Couple (you + 1)",
+          "price_monthly": 19.99,
+          "price_annual": 174.99,
+          "effective_monthly": 19.99,
+          "verified": true
+        },
+        {
+          "id": "family",
+          "name": "Family (you + 3)",
+          "price_monthly": 29.99,
+          "price_annual": 299.99,
+          "effective_monthly": 29.99,
+          "verified": true
         }
       ],
       "default_plan": "individual",
@@ -1096,7 +1112,7 @@
       "sources": [
         "https://allaboutcookies.org/cloaked-review"
       ],
-      "checked_at": "2026-10-19",
+      "checked_at": "2026-11-02",
       "official_url": "https://www.cloaked.com/pricing",
       "varies_by_region": false,
       "discounts": [
@@ -1108,9 +1124,8 @@
         },
         {
           "type": "family",
-          "label": "Couple or Family plan",
-          "verified": false,
-          "note": "Price not confirmed"
+          "label": "Couple ($19.99/mo) or Family plan for you + 3 ($29.99/mo)",
+          "verified": true
         }
       ],
       "pause_policy": {
@@ -1534,7 +1549,7 @@
         },
         {
           "id": "max5",
-          "name": "Max 5x",
+          "name": "Max",
           "price_monthly": 100.0,
           "price_annual": null,
           "effective_monthly": 100.0,
@@ -1542,7 +1557,7 @@
         },
         {
           "id": "max20",
-          "name": "Max 20x",
+          "name": "Ultra",
           "price_monthly": 200.0,
           "price_annual": null,
           "effective_monthly": 200.0,
@@ -1578,7 +1593,12 @@
           "plans": "all"
         }
       ],
-      "recent_changes": [],
+      "recent_changes": [
+        {
+          "date": "2026-10-30",
+          "summary": "Max 5x renamed Max and Max 20x renamed Ultra; prices unchanged."
+        }
+      ],
       "tips": [
         "Annual Pro is $200/yr ($16.67/mo), saving $40 vs monthly.",
         "If you keep both Claude and ChatGPT, note which one you reach for each day for a month."
@@ -1586,7 +1606,7 @@
       "sources": [
         "https://www.eesel.ai/blog/claude-pro-pricing"
       ],
-      "checked_at": "2026-10-19",
+      "checked_at": "2026-11-02",
       "official_url": "https://claude.com/pricing",
       "varies_by_region": false,
       "discounts": [
@@ -2042,7 +2062,7 @@
           "id": "ai_pro",
           "name": "AI Pro",
           "price_monthly": 19.99,
-          "price_annual": null,
+          "price_annual": 199.99,
           "effective_monthly": 19.99,
           "verified": true
         }
@@ -2076,6 +2096,10 @@
         {
           "date": "2026",
           "summary": "Storage raised from 2 TB to 5 TB at the same price."
+        },
+        {
+          "date": "2026-11",
+          "summary": "Annual billing added at $199.99/yr."
         }
       ],
       "tips": [
@@ -2084,7 +2108,7 @@
       "sources": [
         "https://www.techradar.com/ai-platforms-assistants/google-has-doubled-its-storage-allowance-for-its-ai-pro-plan-and-its-just-one-upped-chatgpt-heres-how-they-compare"
       ],
-      "checked_at": "2026-10-19",
+      "checked_at": "2026-11-02",
       "official_url": "https://one.google.com/about/plans",
       "varies_by_region": false,
       "free_trial_days": 30,
