@@ -130,6 +130,8 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .lg-badge { display: inline-flex; align-items: center; gap: 6px; padding: 7px 11px; border-radius: 10px; background: #0f1c3f; color: #4ade80; font: 800 16px/1 var(--f-body); letter-spacing: .03em; flex: none; }
 .lg-badge svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .lg-h { margin: 18px 0 8px; font-size: 16px; } .lg-sheet .catalog { grid-template-columns: 1fr; margin-bottom: 4px; } .lg-sheet .cat-item span:not(.logo):not(.pill) { white-space: normal; overflow: visible; }
+body.intro-mode #view .cw input:not([type=checkbox]):not([type=radio]):not([type=range]), body.intro-mode #view .cw select, body.intro-mode #view .cw textarea { font: 500 16px/1.3 var(--f-body); color: var(--ink); }
+& justify-content: center; margin: 24px 0 8px; }  /* v260 welcome copy of Explore */
 .ex-back { background: none; border: 0; padding: 0; margin: 0 0 4px; color: var(--accent); font: 600 15px var(--f-body); cursor: pointer; }  /* v259 Explore topics */
 .ex-short { margin: 2px 0 6px; } .ex-short .chip { font-size: 14px; padding: 7px 13px; }
 .ex-h { margin: 18px 0 10px; font-size: 18px; }
@@ -2019,6 +2021,18 @@ function learnView() {
   f.getElementById("lm-go").addEventListener("click", () => go(1));
   return f;
 }
+// v260 (Cuong): "Browse the Catalog" opens a copy of Explore inside the welcome flow (no tab bar), with Back to "How Can We Help?".
+// Topics, A-Z and service details all stay on this screen; adding a service ends the welcome flow on the Overview as usual.
+function catalogWelcomeView() {
+  const back = () => { exploreOpen = null; exploreTopic = null; exploreCat = "all"; picked = null; welcomeStep = 0.5; render(); window.scrollTo(0, 0); };
+  const top = exploreOpen && CATALOG[exploreOpen] ? null : exploreTopic ? null : el(`<button type="button" class="ex-back" id="cw-top">&lsaquo; How Can We Help?</button>`);
+  const body = exploreOpen && CATALOG[exploreOpen] ? exploreDetail(CATALOG[exploreOpen]) : addView();
+  const f = el(`<div class="cw"></div>`), wrap = f.firstElementChild;
+  if (top) { top.firstElementChild.addEventListener("click", back); wrap.append(top); }
+  wrap.append(body, el(`<div class="pr-btns cw-back"><button type="button" class="btn intro-next" id="cw-back" style="min-width:130px">Back</button></div>`));
+  wrap.querySelector("#cw-back").addEventListener("click", back);
+  return f;
+}
 // v257 (Cuong): "Choose a Plan". Free does everything except connecting a bank or card; Premium ($4.99/mo) adds that.
 // Premium is a placeholder: the bank/card connection (e.g. via Plaid) is not built yet, so it only records interest.
 const PLAN_FEATURES = [["Track every subscription and bill in one place", 1, 1], ["Value ratings: Great, Fair or Costly", 1, 1],
@@ -2063,18 +2077,15 @@ function promiseView() {
     <div class="about-grid pr-opts" role="group" aria-label="How can we help?">${PR_OPTS.map(([k, l, d]) => `<button type="button" class="about-opt" data-pr="${k}" aria-pressed="${prPick === k}"><svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>${l}</button>`).join("")}</div>
     <div class="pr-btns" style="display:flex;gap:12px;justify-content:center;align-items:center">
       <button type="button" class="btn intro-next" id="pr-back" style="min-width:130px">Back</button>
-      <button class="btn primary intro-next" id="pr-next" style="min-width:130px"${prPick ? "" : " disabled"}>Next</button></div></section>`);
+      </div></section>`);
   const go = n => { welcomeStep = n; render(); window.scrollTo(0, 0); };
+  // v260 (Cuong): a tap goes straight to that screen (no Next). Every screen it opens has Back to this page.
   f.querySelectorAll("[data-pr]").forEach(b => b.addEventListener("click", () => { prPick = b.dataset.pr;
-    document.querySelectorAll("[data-pr]").forEach(x => x.setAttribute("aria-pressed", x === b)); document.getElementById("pr-next").disabled = false; }));
-  f.getElementById("pr-back").addEventListener("click", () => go(0));
-  f.getElementById("pr-next").addEventListener("click", () => { if (!prPick) return;
     if (prPick === "review") return go(1);
     if (prPick === "learn") return go(0.6);
     if (prPick === "plan") return go(0.7);
-    exploreOpen = null; exploreCat = "all"; exploreTopic = null;
-    view = "explore"; render(); window.scrollTo(0, 0);
-    if (prPick === "browse") setTimeout(() => document.querySelector(".ex-topics")?.scrollIntoView({ block: "center" })); });
+    exploreOpen = null; exploreCat = "all"; exploreTopic = null; picked = null; go(0.8); }));
+  f.getElementById("pr-back").addEventListener("click", () => go(0));
   requestAnimationFrame(alignPromise);
   return f;
 }
@@ -2481,6 +2492,7 @@ function welcomeView() {
   if (welcomeStep === 0.5) return promiseView();
   if (welcomeStep === 0.6) return learnView();
   if (welcomeStep === 0.7) return planView();
+  if (welcomeStep === 0.8) return catalogWelcomeView();
   if (welcomeStep === 1) return aboutView();
   if (welcomeStep === 3) return setupStepView();
   // v193 (Cuong): picks are kept in state.wDraft, so Back and Next (or a reload) don't lose them. Not in Add mode.
@@ -3923,12 +3935,12 @@ function exploreDetail(v) {
     ${(v.recent_changes || []).length ? `<h3 style="margin-bottom:8px">Recent price changes</h3><div class="card" style="margin-bottom:20px">${v.recent_changes.map(c => `<div class="small"><b>${esc(c.date)}</b>: ${esc(c.summary)}</div>`).join("")}</div>` : ""}
     ${compareHtml(v)}
     ${similar.length ? `<h3 style="margin-bottom:8px">Similar services</h3><div class="x-grid">${similar.map(x => `<button class="card x-card" data-svc="${x.id}"><div class="x-top">${logoHtml(x)}<div><b>${esc(x.name)}</b><div class="small muted">${inCatalog ? (fromPrice(x) ? `From ${money(fromPrice(x))}/mo` : priceTxt(fromPrice(x))) : esc(catLabel(x.category))}</div>${alts.includes(x.id) ? `<div class="small muted">Alternative</div>` : ""}</div></div></button>`).join("")}</div>` : ""}`);
-  f.getElementById("x-back").addEventListener("click", () => { exploreOpen = null; view = "add"; render(); });
+  f.getElementById("x-back").addEventListener("click", () => { exploreOpen = null; if (view !== "welcome") view = "add"; render(); window.scrollTo(0, 0); });
   f.getElementById("x-mine")?.addEventListener("click", () => openSheet(mine.id));
   f.querySelectorAll(".x-card").forEach(c => c.addEventListener("click", () => { exploreOpen = c.dataset.svc; render(); window.scrollTo(0, 0); }));
   f.querySelectorAll("[data-add]").forEach(b => b.addEventListener("click", () => {
     if (mine) { const p = planOf(v, b.dataset.add); mine.plan = p.id; mine.cycle = defaultCycle(p); mine.price = priceFor(p, mine.cycle); mine.priceMine = false; save(); openSheet(mine.id); return; }
-    pendingPick = { svc: v.id, plan: b.dataset.add, price: b.dataset.price || null }; view = "add"; render(); window.scrollTo(0, 0); }));
+    pendingPick = { svc: v.id, plan: b.dataset.add, price: b.dataset.price || null }; if (view === "welcome") exploreOpen = null; else view = "add"; render(); window.scrollTo(0, 0); }));
   // Location picker events.
   const setLoc = i => { exploreLoc[v.id] = { i: +i }; const y = window.scrollY; render(); window.scrollTo(0, y); };
   const ls = locsOf(v), firstIn = pred => ls.findIndex(pred);
@@ -4043,7 +4055,7 @@ function addView() {
     document.querySelectorAll(".cat-item").forEach(b => b.setAttribute("aria-pressed", b.dataset.svc === id));
     $("add-form").hidden = false; $("a-hint").hidden = true; $("plan-wrap").hidden = !v; $("name-wrap").hidden = !!v;
     $("a-title").innerHTML = v ? `2. Tell us about your ${esc(v.name)} <button type="button" class="btn ghost small" id="a-compare">Compare plans and features</button>` : "2. Tell us about it";
-    if (v) $("a-compare").onclick = () => { exploreOpen = v.id; view = "explore"; render(); window.scrollTo(0, 0); };
+    if (v) $("a-compare").onclick = () => { exploreOpen = v.id; if (view !== "welcome") view = "explore"; render(); window.scrollTo(0, 0); };
     $("f-go").textContent = v ? `Add ${v.name} to my list` : "Add to my list";
     useBox();
     $("f-name").value = v ? v.name : ""; $("f-price").value = ""; $("f-feats").innerHTML = "";
@@ -4092,7 +4104,7 @@ function addView() {
   f.getElementById("az-all").addEventListener("click", () => { const ds = [...document.querySelectorAll("#a-cat details.az:not([hidden])")], open = !ds.every(d => d.open);
     ds.forEach(d => d.open = open); });
   // Coming back with a service picked, open its letter so the selection shows.
-  if (picked) { const b = f.querySelector(`.cat-item[data-svc="${picked}"]`); if (b) azClosed.delete(b.closest("details.az").dataset.l); }
+  if (picked) { const d = f.querySelector(`#a-cat .cat-item[data-svc="${picked}"]`)?.closest("details.az"); if (d) azClosed.delete(d.dataset.l); }
   f.getElementById("a-q").addEventListener("input", applyAdd);
   f.querySelectorAll(".a-cats .x-cat").forEach(b => b.addEventListener("click", () => { exploreCat = b.dataset.cat;
     document.querySelectorAll(".a-cats .x-cat").forEach(x => x.setAttribute("aria-pressed", x.dataset.cat === exploreCat)); applyAdd(); }));
@@ -5092,7 +5104,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; if (b.dataset.view === "add") { exploreTopic = null; exploreCat = "all"; picked = null; } view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 259 · Standalone copy · Nov 5", VERSION_NUM = 259;
+const APP_VERSION = "Prototype · Version 260 · Standalone copy · Nov 5", VERSION_NUM = 260;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
