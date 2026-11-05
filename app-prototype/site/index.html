@@ -130,6 +130,21 @@ nav.tabs button[aria-selected="true"] { background: var(--accent-soft); color: v
 .lg-badge { display: inline-flex; align-items: center; gap: 6px; padding: 7px 11px; border-radius: 10px; background: #0f1c3f; color: #4ade80; font: 800 16px/1 var(--f-body); letter-spacing: .03em; flex: none; }
 .lg-badge svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .lg-h { margin: 18px 0 8px; font-size: 16px; } .lg-sheet .catalog { grid-template-columns: 1fr; margin-bottom: 4px; } .lg-sheet .cat-item span:not(.logo):not(.pill) { white-space: normal; overflow: visible; }
+.ex-back { background: none; border: 0; padding: 0; margin: 0 0 4px; color: var(--accent); font: 600 15px var(--f-body); cursor: pointer; }  /* v259 Explore topics */
+.ex-short { margin: 2px 0 6px; } .ex-short .chip { font-size: 14px; padding: 7px 13px; }
+.ex-h { margin: 18px 0 10px; font-size: 18px; }
+.ex-topics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.ex-tile { display: grid; align-content: start; gap: 4px; padding: 14px; border: 1px solid var(--card-line); background: var(--surface); border-radius: 16px; text-align: left; color: var(--ink); font: inherit; cursor: pointer; }
+.ex-tile:hover { border-color: var(--accent); } .ex-tile svg { width: 30px; height: 30px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 4px; }
+.ex-tile b { font-size: 16px; line-height: 1.25; } .ex-tile .small { line-height: 1.35; }
+.ex-pop { margin-bottom: 12px; } .ex-all { width: 100%; padding: 13px; font-weight: 700; margin-bottom: 18px; }
+.ex-tip .facts { padding: 10px 14px; } .ex-tip .facts-dots, .ex-tip .fact-big { display: none; } .ex-tip .facts-head h3 { font-size: 14px; } .ex-tip .fact p { margin: 0; font-size: 14px; }
+.ex-subcats { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; margin-bottom: 4px; scrollbar-width: thin; } .ex-subcats .chip { white-space: nowrap; flex: none; }
+.ex-sec { margin-top: 14px; } .ex-sec-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; } .ex-sec-h h3 { margin: 0; font-size: 17px; }
+.ex-sec .catalog { margin-bottom: 6px; } .ex-sec .catalog, .catalog.ex-pop { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ex-subcats .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (max-width: 760px) { .ex-topics, .ex-sec .catalog, .catalog.ex-pop { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 400px) { .ex-tile { padding: 12px; } .ex-tile b { font-size: 15px; } }
 .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 18px; }
 .cat-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; text-align: left; min-width: 0; }
 .own-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -2057,9 +2072,9 @@ function promiseView() {
     if (prPick === "review") return go(1);
     if (prPick === "learn") return go(0.6);
     if (prPick === "plan") return go(0.7);
-    exploreOpen = null; exploreCat = "all";
+    exploreOpen = null; exploreCat = "all"; exploreTopic = null;
     view = "explore"; render(); window.scrollTo(0, 0);
-    if (prPick === "browse") setTimeout(() => document.querySelector(".a-cats")?.scrollIntoView({ block: "center" })); });
+    if (prPick === "browse") setTimeout(() => document.querySelector(".ex-topics")?.scrollIntoView({ block: "center" })); });
   requestAnimationFrame(alignPromise);
   return f;
 }
@@ -3934,19 +3949,61 @@ function azGroups(list) {
   const m = new Map(); list.forEach(v => { const k = key(v); m.has(k) || m.set(k, []); m.get(k).push(v); });
   return [...m].sort(([a], [b]) => a === "#" ? -1 : b === "#" ? 1 : a.localeCompare(b));
 }
+// v259 (Cuong): Explore opens on 8 topics instead of every service. Nothing is removed: topics open their categories
+// (top 4 each + Show all), and "See all A-Z" keeps the full list with the category chips.
+const EX_TOPICS = [
+  ["watch", "Watch, Listen & Play", "Video, music, news, gaming", ["video", "music", "live_tv", "sports_streaming", "gaming", "news", "books", "satellite_radio"], '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M10 9l4 2-4 2z"/><path d="M8 20h8"/>'],
+  ["home", "Home & Utilities", "Internet, phone, power, home care", ["internet", "mobile", "energy", "home_security", "home", "lawn_pest"], '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>'],
+  ["car", "Car", "Insurance, roadside, connected car", ["car_insurance", "auto", "connected_car", "driver_assist"], '<path d="M5 16V12l2-5h10l2 5v4"/><path d="M3 16h18"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>'],
+  ["protect", "Protection & Security", "Home insurance, privacy, passwords", ["home_insurance", "privacy", "passwords", "tech_support"], '<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/>'],
+  ["health", "Health & Lifestyle", "Gym, meal kits, beauty, shopping", ["fitness", "food", "beauty", "shopping", "dating"], '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>'],
+  ["family", "Family & Care", "Child care, elder care, pets, learning", ["child_care", "elder_care", "pets", "education"], '<circle cx="8" cy="7" r="2.6"/><circle cx="16.5" cy="8.5" r="2"/><path d="M3.5 19a4.5 4.5 0 0 1 9 0M13 19a3.5 3.5 0 0 1 7 0"/>'],
+  ["work", "Work & Money", "AI, cloud, finance, small business", ["ai", "productivity", "storage", "finance", "small_business", "domains"], '<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M9 7V5h6v2M3 12h18"/>'],
+  ["out", "Travel & Outings", "Travel, theme parks, sports passes", ["travel", "theme_parks", "sports_tickets"], '<path d="M3 9a2 2 0 0 0 0 4v5h18v-5a2 2 0 0 1 0-4V5H3z"/><path d="M14 5v13" stroke-dasharray="2 2"/>']];
+let exploreTopic = null;  // null = topic tiles, "az" = full A-Z list, or an EX_TOPICS key
+const exShowAll = new Set();  // categories the viewer expanded with "Show all"
 function addView() {
   const mine = new Set(state.subs.map(s => s.svc)), country = profile().country;
   const offered = Object.values(CATALOG).filter(v => availability(v.id, country) !== "no").sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" })), hidden = Object.keys(CATALOG).length - offered.length;
   const cats = [...new Set([...offered.map(v => v.category), ...(sportsAll().length ? ["sports_tickets"] : [])])].sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
   // v194 (Cuong): Did You Know? moved here from Overview, at the top of Explore.
-  const f = el(`${factsHtml()}<div class="section-head"><h2>Explore and add</h2><span class="small muted">Browse by category or search. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span></div>
-    <h3 style="margin:4px 0 8px">1. Which subscription?</h3>
-    <input id="a-q" type="search" placeholder="Search, e.g. Hulu, gym, internet" aria-label="Search services" style="width:100%;margin-bottom:10px">
+  // v259: which screen. A category filter from elsewhere (Overview, alternatives) or a service picked earlier opens the A-Z list.
+  if (exploreTopic && exploreTopic !== "az" && !EX_TOPICS.some(t => t[0] === exploreTopic)) exploreTopic = null;
+  if (!exploreTopic && (exploreCat !== "all" || picked)) exploreTopic = "az";
+  const mode = exploreTopic || "home", topic = EX_TOPICS.find(t => t[0] === mode), reg = profile().region;
+  const topicOf = c => EX_TOPICS.find(t => t[3].includes(c)) || null;
+  const exRank = v => svcRankKey(v) - (reg && v.service_states?.includes(reg) ? 3 : 0) + (reg && v.service_states && !v.service_states.includes(reg) ? 4 : 0);
+  const card = v => `<button class="cat-item" data-svc="${v.id}" data-cat="${v.category}" aria-pressed="${picked === v.id}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`;
+  const inCats = cs => offered.filter(v => cs.includes(v.category));
+  const others = cats.filter(c => !topicOf(c));  // any category not mapped yet gets its own "More" tile
+  const tiles = [...EX_TOPICS, ...(others.length ? [["more", "More", "Everything else", others, '<circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/>']] : [])];
+  const topicCats = topic ? topic[3].filter(c => cats.includes(c)) : mode === "more" ? others : [];
+  const homeHtml = `<div class="ex-short chips">${[["mine-alts", "⇄ Alternatives to mine"], ["public", "★ Free public services"]].map(([c, l]) => `<button type="button" class="chip" data-ex-cat="${c}">${l}</button>`).join("")}</div>
+    <h3 class="ex-h">Browse by topic</h3>
+    <div class="ex-topics">${tiles.map(([k, l, line, cs, ic]) => { const n = inCats(cs).length; return n ? `<button type="button" class="ex-tile" data-topic="${k}"><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg><b>${esc(l)}</b><span class="small muted">${esc(line)} · ${n}</span></button>` : ""; }).join("")}</div>
+    <h3 class="ex-h">Popular</h3>
+    <div class="catalog ex-pop">${POPULAR.map(id => CATALOG[id]).filter(v => v && offered.includes(v)).slice(0, 8).map(card).join("")}</div>
+    <button type="button" class="btn ex-all" data-topic="az">See all ${offered.length} A–Z</button>
+    <div class="ex-tip">${factsHtml()}</div>`;
+  const topicHtml = () => { const cs = topicCats, all = inCats(cs);
+    return `<div class="chips ex-subcats" role="group" aria-label="Category"><button class="chip" data-sub="all" aria-pressed="true">All ${all.length}</button>${cs.map(c => `<button class="chip" data-sub="${c}" aria-pressed="false">${esc(catLabel(c))} ${inCats([c]).length + (c === "sports_tickets" && !inCats([c]).length ? sportsAll().length : 0)}</button>`).join("")}</div>
+      ${cs.map(c => { const vs = inCats([c]).sort((a, b) => exRank(a) - exRank(b) || a.name.localeCompare(b.name)), open = exShowAll.has(c);
+        if (c === "sports_tickets") return `<section class="ex-sec" data-sec="${c}"><div class="ex-sec-h"><h3>${esc(catLabel(c))}</h3></div><p class="small muted" style="margin:0 0 10px">Pick a league, then your team.</p>${leagueTilesHtml()}</section>`;
+        return `<section class="ex-sec" data-sec="${c}"><div class="ex-sec-h"><h3>${esc(catLabel(c))}</h3>${vs.length > 4 ? `<button type="button" class="btn ghost small" data-more="${c}" aria-expanded="${open}">${open ? "Show fewer" : `Show all ${vs.length}`}</button>` : ""}</div>
+          <div class="catalog">${vs.map((v, i) => card(v).replace("<button ", `<button ${i >= 4 && !open ? "hidden " : ""}data-extra="${i >= 4 ? 1 : 0}" `)).join("")}</div></section>`; }).join("")}
+      ${reg ? `<p class="small muted">Providers that serve ${esc(US_STATES[reg] || reg)} are listed first.</p>` : ""}`; };
+  const head = mode === "home" ? `<div class="section-head"><h2>Explore</h2><span class="small muted">Showing services offered in ${esc(countryName(country))}.</span></div>`
+    : `<button type="button" class="ex-back" data-topic="home">&lsaquo; All topics</button><div class="section-head"><h2>${mode === "az" ? "All services A–Z" : esc(topic ? topic[1] : "More")}</h2>${mode === "az" ? `<span class="small muted">Browse by category or search. Showing services offered in ${esc(countryName(country))}${hidden ? `; ${hidden} not offered there ${hidden === 1 ? "is" : "are"} hidden` : ""}.</span>` : ""}</div>`;
+  const f = el(`${head}
+    <input id="a-q" type="search" placeholder="${mode === "home" ? `Search ${offered.length} services, e.g. Hulu, gym, internet` : mode === "az" ? "Search, e.g. Hulu, gym, internet" : "Search this topic"}" aria-label="Search services" style="width:100%;margin-bottom:10px">
+    ${mode === "home" ? `<div id="ex-home">${homeHtml}</div>` : mode !== "az" ? `<div id="ex-topic">${topicHtml()}</div>` : ""}
+    <div class="ex-azwrap"${mode === "az" ? "" : " hidden"}>
     <div class="chips a-cats" role="group" aria-label="Category">${["all", "mine-alts", "public", ...cats].map(c => `<button class="chip x-cat" data-cat="${c}" aria-pressed="${exploreCat === c}">${c === "all" ? "All" : c === "mine-alts" ? "Alternatives To Mine" : c === "public" ? "Free Public Services" : esc(catLabel(c))}</button>`).join("")}</div>
     <div class="az-tools"><button type="button" class="btn ghost small" id="az-all">Collapse all</button></div>
     <div id="a-leagues" hidden><p class="small muted" style="margin:0 0 10px">Pick a league, then your team.</p>${leagueTilesHtml()}</div>
     <div id="a-cat">${azGroups(offered).map(([l, vs]) => `<details class="fold az" data-l="${l}" open><summary><b>${l}</b><span class="small muted az-n">${vs.length}</span></summary><div class="catalog">${vs.map(v => `<button class="cat-item" data-svc="${v.id}" data-cat="${v.category}" data-alt-mine="${altFor(v).length ? 1 : 0}" data-public="${v.provider_type ? 1 : 0}" aria-pressed="${picked === v.id}" data-text="${esc((v.name + " " + catLabel(v.category) + " " + v.features.map(x => x.name).join(" ")).toLowerCase())}">${logoHtml(v)}<span>${esc(v.name)}${mine.has(v.id) ? " ✓" : ""}</span></button>`).join("")}</div></details>`).join("")}
       <div class="catalog" id="a-other"><button class="cat-item" data-svc="" aria-pressed="${picked === ""}" data-text=""><span class="logo" style="background:#6b7785">+</span><span>Something else</span></button></div></div>
+    </div>
     <p class="muted" id="a-none" hidden>No services match. Try another word or category, or choose Something else.</p>
     <p class="muted" id="a-hint">Tap a subscription above to fill in the details.</p>
     <form class="fields" id="add-form" hidden>
@@ -3997,11 +4054,30 @@ function addView() {
   f.querySelectorAll(".lg-tile").forEach(b => b.addEventListener("click", () => openLeague(b.dataset.league, {
     tile: v => `<button type="button" class="cat-item" data-svc="${v.id}" aria-pressed="${v.id === picked}">${logoHtml(v)}<span>${esc(v.name)}</span>${mine.has(v.id) ? ` <span class="pill great">On your list</span>` : ""}</button>`,
     onPick: (id, close) => { close(); fill(id); } })));
+  const goTopic = k => { picked = null; exploreTopic = k === "home" ? null : k; if (k === "home") exploreCat = "all"; render(); window.scrollTo(0, 0); };
+  f.querySelectorAll("[data-topic]").forEach(b => b.addEventListener("click", () => goTopic(b.dataset.topic)));
+  f.querySelectorAll("[data-ex-cat]").forEach(b => b.addEventListener("click", () => { exploreCat = b.dataset.exCat; goTopic("az"); }));
+  f.querySelectorAll("[data-more]").forEach(b => b.addEventListener("click", () => { const c = b.dataset.more, open = !exShowAll.has(c); open ? exShowAll.add(c) : exShowAll.delete(c);
+    b.closest(".ex-sec").querySelectorAll('[data-extra="1"]').forEach(x => x.hidden = !open); b.setAttribute("aria-expanded", open);
+    b.textContent = open ? "Show fewer" : `Show all ${b.closest(".ex-sec").querySelectorAll(".cat-item").length}`; }));
+  let exSub = "all";
+  const applyTopic = () => { const q = ($("a-q")?.value || "").trim().toLowerCase(); let n = 0;
+    document.querySelectorAll("#ex-topic .ex-sec").forEach(sec => { const on = exSub === "all" || sec.dataset.sec === exSub; let k = 0;
+      sec.querySelectorAll(".catalog .cat-item").forEach(b => { const v = CATALOG[b.dataset.svc], ok = on && (q ? (v.name + " " + v.features.map(x => x.name).join(" ")).toLowerCase().includes(q) : (b.dataset.extra !== "1" || exShowAll.has(sec.dataset.sec) || exSub !== "all"));
+        b.hidden = !ok; k += ok; });
+      const lg = sec.querySelector(".lg-tiles"); if (lg && on && !q) k++; sec.hidden = !on || !k;
+      const mb = sec.querySelector("[data-more]"); if (mb) mb.hidden = !!q || exSub !== "all"; n += k; });
+    $("a-none").hidden = n > 0; };
+  f.querySelectorAll("[data-sub]").forEach(b => b.addEventListener("click", () => { exSub = b.dataset.sub;
+    document.querySelectorAll("[data-sub]").forEach(x => x.setAttribute("aria-pressed", x === b)); applyTopic(); }));
   const applyAdd = () => { const q = ($("a-q")?.value || "").trim().toLowerCase(); let n = 0;
+    if (mode !== "az" && mode !== "home") return applyTopic();
+    // Home: typing a search shows matches from the full list in place of the topic tiles.
+    if (mode === "home") { $("ex-home").hidden = !!q; document.querySelector(".ex-azwrap").hidden = !q; document.querySelector(".a-cats").hidden = true; document.querySelector(".az-tools").style.display = "none"; if (!q) { $("a-none").hidden = true; return; } }
     document.querySelectorAll("#a-cat .cat-item").forEach(b => { if (!b.dataset.svc) { b.hidden = exploreCat !== "all" && !q; return; }
       const ok = (exploreCat === "all" || b.dataset.cat === exploreCat || (exploreCat === "mine-alts" && b.dataset.altMine === "1") || (exploreCat === "public" && b.dataset.public === "1")) && (!q || b.dataset.text.includes(q));
       b.hidden = !ok; n += ok; });
-    const lg = exploreCat === "sports_tickets" && !q; $("a-leagues").hidden = !lg; $("a-cat").hidden = lg; document.querySelector(".az-tools").style.display = lg ? "none" : "";
+    const lg = exploreCat === "sports_tickets" && !q; $("a-leagues").hidden = !lg; $("a-cat").hidden = lg; if (mode === "az") document.querySelector(".az-tools").style.display = lg ? "none" : "";
     $("a-none").hidden = n > 0 || lg;
     // Letters with nothing left are hidden. A search or a category filter opens every letter that still has matches;
     // otherwise each letter is as the viewer left it (open to start).
@@ -5014,9 +5090,9 @@ function openSheet(id) {
   document.onkeydown = e => { if (e.key === "Escape" && root.firstChild) { root.replaceChildren(); render(); } };
 }
 
-document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; if (b.dataset.view === "add") { exploreTopic = null; exploreCat = "all"; picked = null; } view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 258 · Standalone copy · Nov 5", VERSION_NUM = 258;
+const APP_VERSION = "Prototype · Version 259 · Standalone copy · Nov 5", VERSION_NUM = 259;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
