@@ -175,6 +175,9 @@ body.intro-mode #view input::placeholder, body.intro-mode #view textarea::placeh
 .about-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-width: 860px; }
 .about-opt { display: grid; justify-items: center; gap: 8px; padding: 18px 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; color: var(--ink); font: 600 14px var(--f-body); cursor: pointer; text-align: center; }
 .about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.pr-opts { width: 100%; grid-template-columns: 1fr 1fr; margin: 26px 0 0; } .pr-opts .about-opt { font-size: 17px; padding: 20px 10px 16px; min-height: 130px; align-content: center; }  /* v253 */
+@media (max-width: 520px) { .pr-opts .about-opt { font-size: 15px; min-height: 118px; } }
+.btn.intro-next:disabled { opacity: .5; cursor: default; }
 .about-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
 .about-grid.about-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 620px; }
 .wb-lead { margin: -4px 0 12px; } .wb-gold { display: block; font-size: 19px; font-weight: 600; color: #a87a00; margin-bottom: 2px; }
@@ -1913,16 +1916,30 @@ function introView() {
 }
 // Second welcome page (Cuong, v242-243): a gold "Let's get started!" where page one's title sits, then one line, with Back and
 // Next where page one's Next button sits. Page one is laid out off-screen to measure those spots, so both pages line up.
+// v253 (Cuong): "How Can We Help?" with four choices instead of the one line. Review/Analyze carries on to About you;
+// the others leave the welcome flow for Explore (search or categories) or the Help page.
+const PR_OPTS = [["research", "Research a Subscription", '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>'],
+  ["review", "Review/Analyze My Subscription(s)", '<path d="M4 19V9M10 19V5M16 19v-7M21 19H3"/>'],
+  ["browse", "Browse the Catalog", '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>'],
+  ["help", "Get Help", '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7M12 17h.01"/>']];
+let prPick = null;
 function promiseView() {
   const f = el(`<section class="intro promise">
-    <h2 class="intro-h intro-gold">Let&rsquo;s get started!</h2>
-    <p class="intro-p">No gimmick, no fluff. We&rsquo;re here to help.</p>
+    <h2 class="intro-h intro-gold">How Can We Help?</h2>
+    <div class="about-grid pr-opts" role="group" aria-label="How can we help?">${PR_OPTS.map(([k, l, d]) => `<button type="button" class="about-opt" data-pr="${k}" aria-pressed="${prPick === k}"><svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>${l}</button>`).join("")}</div>
     <div class="pr-btns" style="display:flex;gap:12px;justify-content:center;align-items:center">
       <button type="button" class="btn intro-next" id="pr-back" style="min-width:130px">Back</button>
-      <button class="btn primary intro-next" id="pr-next" style="min-width:130px">Next</button></div></section>`);
+      <button class="btn primary intro-next" id="pr-next" style="min-width:130px"${prPick ? "" : " disabled"}>Next</button></div></section>`);
   const go = n => { welcomeStep = n; render(); window.scrollTo(0, 0); };
+  f.querySelectorAll("[data-pr]").forEach(b => b.addEventListener("click", () => { prPick = b.dataset.pr;
+    document.querySelectorAll("[data-pr]").forEach(x => x.setAttribute("aria-pressed", x === b)); document.getElementById("pr-next").disabled = false; }));
   f.getElementById("pr-back").addEventListener("click", () => go(0));
-  f.getElementById("pr-next").addEventListener("click", () => go(1));
+  f.getElementById("pr-next").addEventListener("click", () => { if (!prPick) return;
+    if (prPick === "review") return go(1);
+    exploreOpen = null; if (prPick !== "help") exploreCat = "all";
+    view = prPick === "help" ? "help" : "explore"; render(); window.scrollTo(0, 0);
+    if (prPick === "research") setTimeout(() => document.getElementById("a-q")?.focus());
+    if (prPick === "browse") setTimeout(() => document.querySelector(".a-cats")?.scrollIntoView({ block: "center" })); });
   requestAnimationFrame(alignPromise);
   return f;
 }
@@ -4877,7 +4894,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 252 · Standalone copy · Nov 5", VERSION_NUM = 252;
+const APP_VERSION = "Prototype · Version 253 · Standalone copy · Nov 5", VERSION_NUM = 253;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
