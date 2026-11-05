@@ -176,6 +176,9 @@ body.intro-mode #view input::placeholder, body.intro-mode #view textarea::placeh
 .learn { display: grid; gap: 18px; max-width: 760px; margin: 0 auto; padding: 16px 0 24px; text-align: center; justify-items: center; }  /* v254 Learn More */
 .lm-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; width: 100%; } .lm-card { grid-column: span 2; }  /* v255: six cards, two rows of three */
 .lm-card { display: grid; gap: 6px; justify-items: center; align-content: start; padding: 18px 14px; background: var(--surface); border: 1px solid var(--card-line, var(--line)); border-radius: 18px; }
+.lm-card { color: var(--ink); font: inherit; cursor: pointer; text-align: center; } .lm-card:hover { border-color: var(--accent); } .lm-tap { font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 2px; }
+.lm-big { cursor: default; padding: 22px 14px; } .lm-big .lm-vis { transform: scale(1.15); min-height: 110px; } .lm-more { margin: 0; padding-left: 22px; display: grid; gap: 10px; line-height: 1.45; font-size: 16px; }
+.lm-sheet .lm-card.lm-big { grid-column: auto; }
 .lm-vis { min-height: 96px; display: grid; place-items: center; gap: 8px; width: 100%; margin-bottom: 4px; }
 .lm-h { font-size: 18px; } .lm-s { font-size: 14px; color: var(--muted); line-height: 1.35; }
 .lm-logos { display: flex; justify-content: center; } .lm-logos .logo { width: 40px; height: 40px; margin: 0 -5px; border: 2px solid var(--surface); }
@@ -1949,14 +1952,36 @@ function learnView() {
       `<div class="lm-plk"><span class="lm-ppl">${[0, 1, 2].map(() => `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>`).join("")}</span><div class="lm-bars"><div><span class="small">You</span><i style="width:100%;background:var(--warn)"></i><b class="num">$22.99</b></div><div><span class="small">Others</span><i style="width:68%;background:var(--accent)"></i><b class="num">$15.49</b></div></div></div>`],
     ["Help when you need it", "Price hikes, disputes, contacts, plan changes.",
       `<div class="lm-help">${Object.values(HELP_TOPICS).map(h => `<span><svg viewBox="0 0 24 24" aria-hidden="true">${h.icon}</svg></span>`).join("")}</div>`]];
+  // v256 (Cuong): tap a card for a fuller explanation in a panel that closes again, without leaving the page.
+  const more = {
+    "All in one place": ["Pick from hundreds of services in our catalog, or add your own.", "Household bills count too: insurance, phone, internet and more.", "See your monthly and yearly total, spending by category, and what renews next."],
+    "See what's worth it": ["Every subscription gets a rating: Great, Fair or Costly.", "We compare how much you use it and what you pay with typical subscribers.", "Insurance and protection services are rated on doing their job, price and service.", "A 30-second weekly check-in keeps ratings up to date."],
+    "Find ways to save": ["Cheaper plans from the same service, like yearly billing or a plan with ads.", "Alternatives that do the same job, including free ones from your library or city.", "Overlaps, when two subscriptions cover the same thing.", "For car insurance, how your price compares with drivers like you."],
+    "No surprises": ["Your Inbox flags renewals coming up in the next 14 days.", "It warns you before a free trial or intro price ends and the bill goes up.", "A red badge on your profile means something new needs a look."],
+    "People like you": ["See how your total compares with the average for adults, families or seniors.", "See what other members pay for the same service, as more people share prices.", "Not sure where to start? We suggest the usual set for people like you."],
+    "Help when you need it": ["Step-by-step guides for surprise price increases, payment disputes and plan changes.", "The official way to reach support for popular services, so you avoid fake numbers.", "Ask Sam, our assistant, or send us a ticket from the Help page."] };
+  const openCard = i => { const [h, s, vis] = panels[i], root = document.getElementById("sheet-root");
+    root.replaceChildren(el(`<div class="scrim" id="scrim"></div>
+      <aside class="sheet lm-sheet enter" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+        <div class="sheet-head"><div><h2 id="sheet-title">${h}</h2><div class="small muted">${s}</div></div><button class="btn" id="close">Close</button></div>
+        <div class="lm-card lm-big"><div class="lm-vis">${vis}</div></div>
+        <ul class="lm-more">${more[h].map(x => `<li>${x}</li>`).join("")}</ul>
+        <p class="small muted" style="margin:0">Numbers shown are an example.</p>
+      </aside>`));
+    const close = () => { root.replaceChildren(); document.querySelectorAll(".lm-card")[i]?.focus(); };
+    root.querySelector("#scrim").onclick = close; root.querySelector("#close").onclick = close;
+    root.querySelector(".sheet").addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+    root.querySelector("#close").focus(); };
   const f = el(`<section class="learn">
     <h2 class="intro-h intro-gold">What MoSuBi Does</h2>
-    <div class="lm-grid">${panels.map(([h, s, vis]) => `<article class="lm-card"><div class="lm-vis">${vis}</div><b class="lm-h">${h}</b><span class="lm-s">${s}</span></article>`).join("")}</div>
+    <p class="small muted" style="margin:-8px 0 0">Tap a card to learn more.</p>
+    <div class="lm-grid">${panels.map(([h, s, vis], i) => `<button type="button" class="lm-card" data-lm="${i}" aria-haspopup="dialog"><span class="lm-vis">${vis}</span><b class="lm-h">${h}</b><span class="lm-s">${s}</span><span class="lm-tap" aria-hidden="true">More &rsaquo;</span></button>`).join("")}</div>
     <p class="small muted" style="margin:0">Numbers shown are an example.</p>
     <div class="pr-btns" style="display:flex;gap:12px;justify-content:center;align-items:center">
       <button type="button" class="btn intro-next" id="lm-back" style="min-width:130px">Back</button>
       <button class="btn primary intro-next" id="lm-go" style="min-width:150px">Get started</button></div></section>`);
   const go = n => { welcomeStep = n; render(); window.scrollTo(0, 0); };
+  f.querySelectorAll("[data-lm]").forEach(b => b.addEventListener("click", () => openCard(+b.dataset.lm)));
   f.getElementById("lm-back").addEventListener("click", () => go(0.5));
   f.getElementById("lm-go").addEventListener("click", () => go(1));
   return f;
@@ -4940,7 +4965,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 255 · Nov 5", VERSION_NUM = 255;
+const APP_VERSION = "Prototype · Version 256 · Nov 5", VERSION_NUM = 256;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
