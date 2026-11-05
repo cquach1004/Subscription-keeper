@@ -176,7 +176,7 @@ body.intro-mode #view input::placeholder, body.intro-mode #view textarea::placeh
 .about-opt { display: grid; justify-items: center; gap: 8px; padding: 18px 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; color: var(--ink); font: 600 14px var(--f-body); cursor: pointer; text-align: center; }
 .about-opt svg { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .learn { display: grid; gap: 18px; max-width: 760px; margin: 0 auto; padding: 16px 0 24px; text-align: center; justify-items: center; }  /* v254 Learn More */
-.lm-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; width: 100%; } .lm-card { grid-column: span 2; } .lm-card:nth-child(n+4) { grid-column: span 3; }
+.lm-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; width: 100%; } .lm-card { grid-column: span 2; }  /* v255: six cards, two rows of three */
 .lm-card { display: grid; gap: 6px; justify-items: center; align-content: start; padding: 18px 14px; background: var(--surface); border: 1px solid var(--card-line, var(--line)); border-radius: 18px; }
 .lm-vis { min-height: 96px; display: grid; place-items: center; gap: 8px; width: 100%; margin-bottom: 4px; }
 .lm-h { font-size: 18px; } .lm-s { font-size: 14px; color: var(--muted); line-height: 1.35; }
@@ -187,10 +187,12 @@ body.intro-mode #view input::placeholder, body.intro-mode #view textarea::placeh
 .lm-bars i { display: block; height: 14px; border-radius: 7px; } .lm-bars b { font-size: 14px; text-align: right; }
 .lm-alerts { display: flex; align-items: center; gap: 14px; } .lm-alerts > div { display: grid; gap: 6px; justify-items: start; }
 .lm-bell { position: relative; } .lm-bell svg { width: 46px; height: 46px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linejoin: round; } .lm-bell i { position: absolute; top: 4px; right: 4px; width: 12px; height: 12px; border-radius: 50%; background: #ef4444; border: 2px solid var(--surface); }
+.lm-plk { display: grid; gap: 8px; justify-items: center; width: 100%; } .lm-ppl { display: flex; } .lm-ppl svg { width: 30px; height: 30px; margin: 0 -3px; fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
 .lm-help { display: grid; grid-template-columns: repeat(4, 44px); gap: 10px; } .lm-help span { width: 44px; height: 44px; border-radius: 12px; background: var(--accent-soft); display: grid; place-items: center; }
 .lm-help svg { width: 26px; height: 26px; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-@media (max-width: 680px) { .lm-grid { grid-template-columns: 1fr 1fr; } .lm-card, .lm-card:nth-child(n+4) { grid-column: auto; } .lm-card:last-child { grid-column: 1 / -1; } }
-@media (max-width: 520px) { .lm-grid { grid-template-columns: 1fr 1fr; gap: 10px; } .lm-card { padding: 14px 8px; } .lm-h { font-size: 15px; } .lm-s { font-size: 12.5px; } .lm-card:last-child { grid-column: 1 / -1; } .lm-rings { gap: 6px; } .lm-ring svg { width: 40px; height: 40px; } .lm-logos .logo { width: 32px; height: 32px; } .lm-total b { font-size: 22px; } .lm-bars > div { grid-template-columns: 42px 1fr 46px; gap: 5px; } .lm-alerts { flex-direction: column; gap: 6px; } .lm-alerts .pill { font-size: 11px; } .lm-bell svg { width: 34px; height: 34px; } }
+@media (max-width: 680px) { .lm-grid { grid-template-columns: 1fr 1fr; } .lm-card { grid-column: auto; } }
+@media (max-width: 520px) { .lm-help { grid-template-columns: repeat(2, 40px); gap: 8px; } .lm-help span { width: 40px; height: 40px; } .lm-ppl svg { width: 26px; height: 26px; }
+  .lm-grid { grid-template-columns: 1fr 1fr; gap: 10px; } .lm-card { padding: 14px 8px; } .lm-h { font-size: 15px; } .lm-s { font-size: 12.5px; } .lm-rings { gap: 6px; } .lm-ring svg { width: 40px; height: 40px; } .lm-logos .logo { width: 32px; height: 32px; } .lm-total b { font-size: 22px; } .lm-bars > div { grid-template-columns: 42px 1fr 46px; gap: 5px; } .lm-alerts { flex-direction: column; gap: 6px; } .lm-alerts .pill { font-size: 11px; } .lm-bell svg { width: 34px; height: 34px; } }
 .pr-opts { width: 100%; grid-template-columns: 1fr 1fr; margin: 26px 0 0; } .pr-opts .about-opt { font-size: 17px; padding: 20px 10px 16px; min-height: 130px; align-content: center; }  /* v253 */
 @media (max-width: 520px) { .pr-opts .about-opt { font-size: 15px; min-height: 118px; } }
 .btn.intro-next:disabled { opacity: .5; cursor: default; }
@@ -1946,6 +1948,8 @@ function learnView() {
       `<div class="lm-bars"><div><span class="small">Now</span><i style="width:100%;background:var(--bad)"></i><b class="num">$27.98</b></div><div><span class="small">Option</span><i style="width:32%;background:var(--good)"></i><b class="num">$8.99</b></div></div><span class="pill great">Save $18.99/mo</span>`],
     ["No surprises", "Alerts before renewals and price hikes.",
       `<div class="lm-alerts"><span class="lm-bell"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><i></i></span><div><span class="pill ok">Renews in 3 days</span><span class="pill poor">Price going up</span></div></div>`],
+    ["People like you", "See what similar households pay.",
+      `<div class="lm-plk"><span class="lm-ppl">${[0, 1, 2].map(() => `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>`).join("")}</span><div class="lm-bars"><div><span class="small">You</span><i style="width:100%;background:var(--warn)"></i><b class="num">$22.99</b></div><div><span class="small">Others</span><i style="width:68%;background:var(--accent)"></i><b class="num">$15.49</b></div></div></div>`],
     ["Help when you need it", "Price hikes, disputes, contacts, plan changes.",
       `<div class="lm-help">${Object.values(HELP_TOPICS).map(h => `<span><svg viewBox="0 0 24 24" aria-hidden="true">${h.icon}</svg></span>`).join("")}</div>`]];
   const f = el(`<section class="learn">
@@ -4939,7 +4943,7 @@ function openSheet(id) {
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { exploreOpen = null; view = b.dataset.view; render(); window.scrollTo(0, 0); }));
 // Profile menu (Cuong, 2026-10-21): version, look, feedback and location live behind the avatar to keep Home clean.
-const APP_VERSION = "Prototype · Version 254 · Standalone copy · Nov 5", VERSION_NUM = 254;
+const APP_VERSION = "Prototype · Version 255 · Standalone copy · Nov 5", VERSION_NUM = 255;
 // Auto-update (Cuong, v134): a home-screen icon on iPhone can keep showing a saved copy of the public site. On opening, and
 // whenever the app comes back to the screen, ask the site for its version; if it's newer, reload past the saved copy.
 // Public site only (the Claude artifact always serves the latest). One try per version, so a slow cache can't loop.
