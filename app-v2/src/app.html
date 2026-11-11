@@ -209,6 +209,14 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 .alert { display: flex; gap: 12px; align-items: flex-start; }
 .alert .grow { display: flex; flex-direction: column; gap: 4px; }
 .alert h3 { font-size: 17px; }
+.mail { background: var(--card); border: 2px solid var(--line); border-radius: 18px; overflow: hidden; }
+.mail-head { padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.mail-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+.mail-item { border: 2px solid var(--line); border-radius: 14px; padding: 12px; }
+.mail-play { margin-top: 8px; padding: 8px 10px; border-radius: 10px; background: var(--good-soft); font-size: 14px; }
+.phone { background: var(--card); border: 2px solid var(--line); border-radius: 28px; padding: 18px 14px 14px; max-width: 360px; width: 100%; margin: 0 auto; }
+.phone-top { text-align: center; margin-bottom: 10px; }
+.sms { background: var(--soft); border-radius: 18px 18px 18px 6px; padding: 12px 14px; font-size: 15px; line-height: 1.4; max-width: 85%; }
 .toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 60; background: var(--navy); color: #fff; padding: 12px 18px; border-radius: 16px; font-weight: 800; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 30px rgba(0,0,0,.25); max-width: calc(100vw - 32px); }
 @media (min-width: 860px) { .toast { bottom: 32px; } }
 .foot { text-align: center; padding: 24px 0 0; }
@@ -221,7 +229,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 5 · Nov 11, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 6 · Nov 11, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
@@ -645,6 +653,8 @@ function alertsView() {
     : `<form class="card col" data-form="optin"><b style="font-size:18px">Get a heads-up by email</b><p class="small muted">Price increases, new features and policy changes for what you have. Nothing else, and it's free.</p>
       <div class="field"><label for="em">Email</label><input id="em" class="input" type="email" required autocomplete="email" placeholder="you@example.com"></div><button class="btn primary" type="submit">Turn on alerts</button>
       <p class="tiny muted">Preview: this is saved in this browser only, and no emails are sent yet.</p></form>`;
+  const prev = `<div class="card col"><b style="font-size:18px">See what an alert looks like</b><p class="small muted">A preview built from ${xs.length ? "your own alerts" : "an example alert"}. The prototype can't send real messages yet.</p>
+    <div class="row" style="flex-wrap:wrap"><button class="btn sm" data-act="preview" data-v="email">Email preview</button><button class="btn sm" data-act="preview" data-v="text">Text preview</button></div></div>`;
   return `<div class="layout"><div class="col" style="gap:14px">${head}
     ${xs.map(a => { const v = CATALOG[a.svc]; const [lab, cls] = KIND[a.kind];
       return `<article class="card alert">${logo(v)}<div class="grow"><div class="row" style="gap:8px;flex-wrap:wrap"><span class="pill ${cls}">${lab}</span><span class="tiny muted">${esc(fmtDate(a.date))}</span></div>
@@ -652,7 +662,39 @@ function alertsView() {
         <p class="tiny muted">Source: ${a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.src)}</a>` : esc(a.src)}</p>
         ${a.kind === "price" ? `<div><button class="btn sm" data-act="tab" data-v="plan">See my plays</button></div>` : ""}</div></article>`; }).join("")}
     ${!S.subs.length ? `<button class="btn go" data-act="addMore">Add my subscriptions</button>` : ""}
-  </div><aside class="side col">${opt}</aside></div>`;
+  </div><aside class="side col">${opt}${prev}</aside></div>`;
+}
+// Alert previews (Cuong, 2026-11-11): what Subi's email and text would look like, built from the user's alerts and plays.
+function previewItems() {
+  let xs = alertsFor().sort((a, b) => (b.kind === "price") - (a.kind === "price")).slice(0, 3), example = false;  // price changes lead
+  if (!xs.length) { const t = L.TRENDS.find(t => t.svc === "netflix" && t.kind === "up") || L.TRENDS.find(t => t.svc && t.kind === "up");
+    xs = t ? [{ svc: t.svc, date: t.date, kind: "price", title: t.title, text: t.text }] : []; example = true; }
+  const plays = buildPlays().filter(p => !S.plays[p.id]);
+  return { example, items: xs.map(a => ({ ...a, v: CATALOG[a.svc], play: a.kind === "price" ? plays.find(p => p.svc[0] === a.svc) : null })) };
+}
+function openPreview(kind) {
+  const { example, items } = previewItems();
+  const top = items[0]; const v0 = top && top.v;
+  const head = top ? (top.kind === "price" ? `${v0.name} price change` : top.kind === "new" ? `${v0.name} has something new` : `${v0.name} changed its rules`) : "Your subscription news";
+  const to = S.optIn ? S.optIn.email : "you@example.com";
+  const email = `<div class="mail"><div class="mail-head"><div class="row" style="gap:10px">${MARK.replace('width="28" height="28"', 'width="36" height="36" style="background:#142f73;border-radius:10px;padding:4px"')}<div class="grow"><b>Subi from MoSuBi</b><div class="tiny muted">To: ${esc(to)}</div></div><span class="tiny muted">Now</span></div>
+      <div style="font-size:18px;font-weight:900;margin-top:10px">Heads up: ${esc(head)}</div></div>
+    <div class="mail-body">
+      <div class="row" style="align-items:flex-end">${subi("alert", 72)}<p class="bubble" style="margin:0 0 10px">Hi${S.optIn ? "" : " there"}! I spotted ${items.length === 1 ? "a change" : `${items.length} changes`} to subscriptions you have. Here's what it means for you.</p></div>
+      ${items.map(a => `<div class="mail-item"><div class="row" style="gap:10px">${logo(a.v, "logo sm")}<div class="grow"><span class="pill ${KIND[a.kind][1]}">${KIND[a.kind][0]}</span> <b>${esc(a.title === a.v.name ? a.v.name : a.title)}</b></div></div>
+        <p class="small" style="margin-top:6px">${esc(a.text)}</p>
+        ${a.play ? `<div class="mail-play"><b>Your play:</b> ${esc(a.play.title)}. Save about ${yr(a.play.save)} a year.</div>` : `<div class="mail-play"><b>Your play:</b> Nothing to do. I'll keep watching.</div>`}</div>`).join("")}
+      <div style="text-align:center;margin:16px 0 6px"><span class="btn go" style="pointer-events:none">Open my game plan</span></div>
+      <p class="tiny muted" style="text-align:center">You get these because you turned on alerts in MoSuBi. Unsubscribe or change what you get anytime. MoSuBi is free.</p></div></div>`;
+  const t = top ? `MoSuBi: Heads up! ${top.title === v0.name ? v0.name + ": " + top.text : top.title + "."}${top.play ? ` Your play: ${top.play.title.replace(/^./, c => c.toLowerCase())}, save ~${yr(top.play.save)}/yr.` : ""} Reply STOP to opt out.` : "";
+  const text = `<div class="phone"><div class="phone-top"><span class="tiny muted">Text Message · Today ${new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</span></div>
+      <div class="sms">${esc(t)}</div><p class="tiny muted" style="text-align:center;margin-top:10px">${t.length} characters${t.length > 160 ? " (sent as 2 texts)" : " (fits in one text)"}</p></div>`;
+  $("#sheet").innerHTML = `<div class="scrim" data-act="close"></div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pv-t"><div class="col">
+    <div class="row"><h2 id="pv-t" class="grow" style="font-size:22px">${kind === "email" ? "Email preview" : "Text preview"}</h2><button class="btn sm" data-act="close">Close</button></div>
+    <div class="seg" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button data-act="preview" data-v="email" aria-pressed="${kind === "email"}">Email</button><button data-act="preview" data-v="text" aria-pressed="${kind === "text"}">Text</button></div>
+    ${example ? `<p class="small muted">Example only: none of your subscriptions has a change yet, so this uses a recent Netflix price change.</p>` : ""}
+    ${kind === "email" ? email : text}
+    <p class="tiny muted">Preview only. Sending real emails and texts needs a server and a sending service, which comes with the live app.</p></div></div>`;
 }
 
 // ----- Me -----
@@ -727,6 +769,7 @@ document.addEventListener("click", e => {
   else if (a === "addMore") { S.step = "pick"; go(); toTop(); }
   else if (a === "exCat") { ui.exCat = v || null; ui.exQ = ""; render(); toTop(); }
   else if (a === "open") openSheet(v);
+  else if (a === "preview") openPreview(v);
   else if (a === "close") closeSheet();
   else if (a === "addFromSheet") { addSub(v); save(); closeSheet(); render(); toast(`Added ${CATALOG[v].name} to your plan.`, "plan"); }
   else if (a === "optOut") { S.optIn = null; go(); }
