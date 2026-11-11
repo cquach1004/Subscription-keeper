@@ -167,6 +167,8 @@ main { padding: 20px 0 110px; }
 :root { --pie-1: #2a78d6; --pie-2: #eb6834; --pie-3: #1baf7a; --pie-4: #eda100; --pie-5: #e87ba4; --pie-6: #008300; --pie-7: #6250d6; --pie-8: #e34948; --pie-other: #8a8f98; }
 :root[data-theme="dark"] { --pie-1: #3987e5; --pie-2: #d95926; --pie-3: #199e70; --pie-4: #c98500; --pie-5: #d55181; --pie-6: #008300; --pie-7: #9085e9; --pie-8: #e66767; --pie-other: #6f7480; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --pie-1: #3987e5; --pie-2: #d95926; --pie-3: #199e70; --pie-4: #c98500; --pie-5: #d55181; --pie-6: #008300; --pie-7: #9085e9; --pie-8: #e66767; --pie-other: #6f7480; } }
+.explainer { margin: 0; display: grid; justify-items: center; gap: 8px; }
+.explainer video { width: min(100%, 300px); aspect-ratio: 9 / 16; border-radius: 24px; background: #142f73; border: 3px solid var(--ink); display: block; }
 .pay-card { gap: 12px; border: 3px solid var(--ink); }
 .pay-card .lab { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-2); }
 .pay-card .big { font-size: 40px; font-weight: 900; line-height: 1.05; }
@@ -289,7 +291,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 12 · Nov 11, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 13 · Nov 11, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
@@ -560,6 +562,8 @@ function render() {
   else if (S.step !== "done") body = header(false) + welcome();
   else body = header(true) + `<main><div class="wrap">${{ plan: planView, explore: exploreView, alerts: huddleView, me: meView }[S.tab]()}</div></main>`;
   app.innerHTML = body;
+  // Explainer video (Cuong, 2026-11-11): the file sits beside the page; if it can't load (offline copy), hide the player.
+  const ex = $("#explainer"); if (ex) { const hide = () => { ex.hidden = true; }; ex.querySelector("video").addEventListener("error", hide); ex.querySelector("source").addEventListener("error", hide); }
   if (S.step === "done" && S.tab === "alerts") { const ids = huddleFor().map(a => a.id); if (ids.some(i => !S.seen.includes(i))) { S.seen = [...new Set([...S.seen, ...ids])]; save(); } }
 }
 
@@ -582,10 +586,10 @@ function welcome() {
     `<div class="wrap narrow welcome"><div class="col">
       <button class="choice" data-act="step" data-v="about"><span class="ic">${ICON.plan}</span><span class="grow"><b>Build my game plan</b><span class="muted">Tell me what you pay for. I'll tell you how to pay less.</span></span>${ICON.arrow}</button>
       <button class="choice" data-act="exploreFirst"><span class="ic">${ICON.explore}</span><span class="grow"><b>Explore subscriptions</b><span class="muted">See what's out there, including free options near you.</span></span>${ICON.arrow}</button>
-      <button class="choice" data-act="step" data-v="learn"><span class="ic">${ICON.gift}</span><span class="grow"><b>How MoSuBi works</b><span class="muted">The 30-second version.</span></span>${ICON.arrow}</button>
+      <button class="choice" data-act="step" data-v="learn"><span class="ic">${ICON.gift}</span><span class="grow"><b>How MoSuBi works</b><span class="muted">A 15-second video and the short version.</span></span>${ICON.arrow}</button>
     </div><button class="btn ghost" data-act="step" data-v="intro">${ICON.back} Back</button></div>`;
   if (st === "learn") return hero("plan", `Here's how I coach you. It takes about two minutes to set up.`) +
-    `<div class="wrap narrow welcome"><div class="learn">
+    `<div class="wrap narrow welcome"><figure class="explainer" id="explainer"><video controls playsinline preload="metadata" poster="mosubi-explainer.jpg" aria-label="MoSuBi in 15 seconds: a short video with sound"><source src="mosubi-explainer.mp4" type="video/mp4"></video><figcaption class="small muted">Watch: MoSuBi in 15 seconds (with sound)</figcaption></figure><div class="learn">
       <div class="card"><span class="ic">${ICON.list}</span><h3>Tap what you have</h3><p class="small muted">Pick your subscriptions from logos. No bank login, no typing.</p></div>
       <div class="card"><span class="ic">${ICON.plan}</span><h3>Get your plays</h3><p class="small muted">A short to-do list: switch this, cancel that, try this free option.</p></div>
       <div class="card"><span class="ic">${ICON.alarm}</span><h3>I watch for changes</h3><p class="small muted">Price increases, new features and policy changes for what you have.</p></div>

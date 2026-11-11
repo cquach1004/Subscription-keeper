@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MoSuBi explainer</title>
+<style>
+@font-face { font-family: Nunito; src: url(nunito.woff2) format("woff2"); font-weight: 200 1000; }
+html, body { margin: 0; background: #000; }
+#stage { position: relative; width: 540px; height: 960px; overflow: hidden; font-family: Nunito, system-ui, sans-serif; color: #142f73; background: #f3f6fc; }
+.scene { position: absolute; inset: 0; }
+.abs { position: absolute; }
+.navy { background: #142f73; color: #fff; }
+.light { background: #f3f6fc; }
+.tile { position: absolute; width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 34px; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 10px 0 rgba(20,47,115,.16); }
+.tile b { font-size: 25px; font-weight: 900; }
+.tile span { background: rgba(255,255,255,.94); color: #142f73; font-weight: 900; font-size: 20px; padding: 3px 12px; border-radius: 999px; }
+.h { position: absolute; left: 0; right: 0; text-align: center; font-weight: 900; }
+.cap { position: absolute; left: 30px; right: 30px; bottom: 70px; text-align: center; font-size: 34px; line-height: 1.2; font-weight: 900; }
+.play { position: absolute; left: 40px; width: 460px; height: 108px; box-sizing: border-box; background: #fff; border: 4px solid #dfe6f5; border-radius: 26px; display: flex; align-items: center; gap: 16px; padding: 0 18px; }
+.play .n { width: 56px; height: 56px; border-radius: 18px; background: #142f73; color: #fff; font-size: 28px; font-weight: 900; display: grid; place-items: center; flex-shrink: 0; }
+.play b { font-size: 23px; font-weight: 900; line-height: 1.15; display: block; }
+.play i { font-style: normal; font-size: 19px; font-weight: 900; color: #15803d; }
+.bubble { position: absolute; background: #fff; border-radius: 26px 26px 26px 6px; padding: 16px 20px; font-size: 26px; font-weight: 900; line-height: 1.2; box-shadow: 0 6px 0 rgba(20,47,115,.1); }
+.save { position: absolute; left: 40px; width: 460px; height: 130px; box-sizing: border-box; background: #142f73; border-radius: 30px; padding: 20px 26px; color: #c9d6f5; font-size: 22px; font-weight: 800; }
+.save b { display: block; color: #4ade80; font-size: 56px; font-weight: 900; line-height: 1.05; }
+.name { position: absolute; width: 140px; margin-left: -70px; text-align: center; font-size: 24px; font-weight: 900; color: #142f73; }
+.name small { display: block; font-size: 16px; font-weight: 800; color: #3b4f86; }
+.conf { position: absolute; width: 14px; height: 22px; border-radius: 4px; }
+svg { display: block; overflow: visible; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+/*__ART__*/
+const DUR = 14.5;
+const c01 = x => Math.max(0, Math.min(1, x));
+const p = (t, s, d) => c01((t - s) / d);
+const outCubic = x => 1 - Math.pow(1 - x, 3);
+const outBack = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const bounce = x => { const n = 7.5625, d = 2.75; if (x < 1 / d) return n * x * x; if (x < 2 / d) return n * (x -= 1.5 / d) * x + .75; if (x < 2.5 / d) return n * (x -= 2.25 / d) * x + .9375; return n * (x -= 2.625 / d) * x + .984375; };
+const lerp = (a, b, x) => a + (b - a) * x;
+const fig = (inner, w) => `<svg width="${w}" height="${Math.round(w * 1.1)}" viewBox="0 0 200 220">${inner}</svg>`;
+const subiSvg = (pose, w) => fig(SUBI_BASE + SUBI_POSE[pose], w);
+const coachSvg = (role, w) => fig(COACH_BASE + (role === "ref" ? REF_STRIPES : "") + SHORTS + COACH_OUTLINE + COACH_GEAR[role], w);
+const money = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const TILES = [["Movies", 17.99, "#e23b3b", 110, 300, -5], ["Music", 11.99, "#1baf7a", 270, 290, 4], ["Shopping", 14.99, "#eda100", 430, 305, -3],
+  ["Food", 9.99, "#eb6834", 120, 470, 5], ["Cloud", 22.99, "#2a78d6", 275, 480, -4], ["AI", 20.00, "#6250d6", 425, 465, 6]];
+const PLAYS = [["Switch to the plan with ads", 132], ["Drop the one you never use", 96], ["Pay yearly, not monthly", 84]];
+const CHECK_AT = [7.9, 8.6, 9.3];
+const TEAM = [["scout", "Scout", "What's hot", 105], ["doc", "Doc", "Price fixes", 270], ["ref", "Ref", "Rule changes", 435]];
+const rnd = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+const CONF = Array.from({ length: 46 }, (_, i) => ({ x: rnd() * 540, d: rnd() * 1.6, v: 260 + rnd() * 240, r: rnd() * 360, w: 60 + rnd() * 240, c: ["#4ade80", "#ffc93c", "#ff8fa8", "#7cc6ff", "#142f73"][i % 5] }));
+
+const stage = document.getElementById("stage");
+stage.innerHTML = `
+<div class="scene light" id="s1">
+  <div class="h" id="s1h" style="top:96px;font-size:44px;line-height:1.1">Subscriptions<br>add up fast.</div>
+  ${TILES.map((x, i) => `<div class="tile" id="tl${i}" style="background:${x[2]}"><b>${x[0]}</b><span>${money(x[1])}</span></div>`).join("")}
+  <div class="h" id="tot" style="top:610px"><div style="font-size:22px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#3b4f86">You pay</div>
+    <div style="font-size:84px;line-height:1"><span id="totn">$0.00</span></div><div style="font-size:26px;color:#3b4f86">a month</div></div>
+  <div class="h" id="yr" style="top:800px"><span style="display:inline-block;background:#ffc93c;border-radius:999px;padding:8px 26px;font-size:32px">That's $1,175 a year!</span></div>
+</div>
+<div class="scene navy" id="s2">
+  <div class="abs" id="s2c" style="left:270px;top:400px;width:400px;height:400px;margin:-200px 0 0 -200px;border-radius:50%;background:#dfe8ff"></div>
+  <div class="abs" id="s2a" style="left:120px;top:230px">${subiSvg("alert", 300)}</div>
+  <div class="abs" id="s2w" style="left:120px;top:230px">${subiSvg("wave", 300)}</div>
+  <div class="h" id="s2t" style="top:650px;font-size:64px;line-height:1.05">Meet Subi</div>
+  <div class="h" id="s2u" style="top:730px;font-size:36px;color:#4ade80">your pocket coach</div>
+</div>
+<div class="scene light" id="s3">
+  <div class="abs" id="s3s" style="left:28px;top:70px">${subiSvg("plan", 150)}</div>
+  <div class="bubble" id="s3b" style="left:190px;top:100px;width:270px">Here's your<br>game plan!</div>
+  ${PLAYS.map((x, i) => `<div class="play" id="pl${i}" style="top:${270 + i * 124}px"><div class="n" id="pn${i}">${i + 1}</div><div><b>${x[0]}</b><i>Save about $${x[1]} a year</i></div></div>`).join("")}
+  <div class="save" id="sv" style="top:652px">You could save<b><span id="svn">$0</span> a year</b></div>
+  <div class="cap" id="s3cap" style="bottom:66px;font-size:30px">Tell Subi what you have.<br>Get a simple game plan.</div>
+</div>
+<div class="scene light" id="s4">
+  <div id="confs">${CONF.map((c, i) => `<div class="conf" id="cf${i}" style="background:${c.c}"></div>`).join("")}</div>
+  <div class="abs" id="s4s" style="left:150px;top:70px">${subiSvg("cheer", 240)}</div>
+  ${TEAM.map((x, i) => `<div class="abs" id="tm${i}" style="left:${x[3] - 70}px;top:360px">${coachSvg(x[0], 140)}</div><div class="name" id="tn${i}" style="left:${x[3]}px;top:520px">${x[1]}<small>${x[2]}</small></div>`).join("")}
+  <div class="abs navy" id="s4p" style="left:0;right:0;top:640px;bottom:0;border-radius:44px 44px 0 0"></div>
+  <div class="h" id="s4l" style="color:#fff;top:690px;display:flex;justify-content:center;align-items:center;gap:14px;font-size:72px">${MARK.replace('width="28" height="28"', 'width="84" height="84"')}<span>Mo<span style="color:#4ade80">Su</span>Bi</span></div>
+  <div class="h" id="s4g" style="color:#fff;top:796px;font-size:32px;line-height:1.25">Spend less on subscriptions.<br><span id="s4f" style="display:inline-block;color:#4ade80;font-size:44px">It's free.</span></div>
+</div>`;
+const $ = id => document.getElementById(id);
+const set = (id, o) => { const e = $(id); for (const k in o) e.style[k] = o[k]; };
+const tf = (x, y, s = 1, r = 0) => `translate(${x.toFixed(2)}px,${y.toFixed(2)}px) rotate(${r.toFixed(2)}deg) scale(${s.toFixed(4)})`;
+const CUTS = [0, 3.2, 6.2, 10, DUR];
+
+window.seek = function (t) {
+  // scene visibility with a short slide-up wipe between scenes
+  for (let i = 0; i < 4; i++) {
+    const a = CUTS[i], b = CUTS[i + 1], on = t >= a - 0.001 && t < b + 0.3;
+    const inn = i === 0 ? 1 : outCubic(p(t, a, 0.3));
+    set("s" + (i + 1), { visibility: on && t >= a ? "visible" : "hidden", transform: `translateY(${((1 - inn) * 960).toFixed(1)}px)`, zIndex: i + 1 });
+  }
+  // --- scene 1 ---
+  set("s1h", { opacity: outCubic(p(t, 0.05, 0.35)), transform: tf(0, lerp(20, 0, outCubic(p(t, 0.05, 0.35)))) });
+  let sum = 0;
+  TILES.forEach((x, i) => { const s = 0.3 + i * 0.3, q = p(t, s, 0.55), land = bounce(q);
+    const y = lerp(-700, 0, land), wob = Math.sin((t - s) * 5 + i) * 1.2 * (q >= 1 ? 1 : 0);
+    set("tl" + i, { left: x[3] + "px", top: x[4] + "px", opacity: q > 0 ? 1 : 0, transform: tf(0, y, 1, x[5] + wob) });
+    sum += x[1] * outCubic(p(t, s + 0.2, 0.3)); });
+  $("totn").textContent = money(sum);
+  set("tot", { opacity: outCubic(p(t, 0.3, 0.3)), transform: tf(0, 0, 1 + 0.06 * Math.sin(Math.PI * p(t, 2.0, 0.35))) });
+  $("totn").style.color = t > 2.0 ? "#c2410c" : "#142f73";
+  const yq = p(t, 2.3, 0.4); set("yr", { opacity: yq > 0 ? 1 : 0, transform: tf(0, 0, outBack(yq) * (yq > 0 ? 1 : 0), -3) });
+  // --- scene 2 ---
+  const e2 = p(t, 3.35, 0.6), y2 = lerp(700, 0, outBack(e2));
+  const hop = t > 4.3 ? -Math.abs(Math.sin((t - 4.3) * 5.2)) * 16 : 0, tilt = t > 4.3 ? Math.sin((t - 4.3) * 5.2) * 3 : 0;
+  set("s2c", { transform: `scale(${outBack(p(t, 3.3, 0.5)).toFixed(4)})` });
+  set("s2a", { opacity: t < 4.3 ? 1 : 0, transform: tf(0, y2, 1, t < 4.3 && t > 3.95 ? Math.sin((t - 3.95) * 40) * 2.5 : 0) });
+  set("s2w", { opacity: t >= 4.3 ? 1 : 0, transform: tf(0, hop, 1, tilt) });
+  const tq = p(t, 4.35, 0.4); set("s2t", { opacity: tq > 0 ? 1 : 0, transform: tf(0, 0, outBack(tq) * (tq > 0 ? 1 : 0)) });
+  const uq = p(t, 4.75, 0.4); set("s2u", { opacity: outCubic(uq), transform: tf(0, lerp(24, 0, outCubic(uq))) });
+  // --- scene 3 ---
+  set("s3s", { transform: tf(0, Math.sin(t * 4) * 4, outBack(p(t, 6.35, 0.4))) });
+  const bq = p(t, 6.55, 0.35); set("s3b", { opacity: bq > 0 ? 1 : 0, transformOrigin: "0 100%", transform: `scale(${(outBack(bq) * (bq > 0 ? 1 : 0)).toFixed(4)})` });
+  let saved = 0;
+  PLAYS.forEach((x, i) => { const q = p(t, 6.8 + i * 0.3, 0.45), done = t >= CHECK_AT[i], dq = p(t, CHECK_AT[i], 0.3);
+    set("pl" + i, { opacity: q > 0 ? 1 : 0, transform: tf(lerp(560, 0, outBack(q)), 0, 1 + 0.05 * Math.sin(Math.PI * dq)), borderColor: done ? "#4ade80" : "#dfe6f5", background: done ? "#eafbf0" : "#fff" });
+    const n = $("pn" + i); n.style.background = done ? "#4ade80" : "#142f73"; n.style.color = done ? "#142f73" : "#fff"; n.textContent = done ? "✓" : i + 1;
+    n.style.transform = `scale(${(done ? outBack(dq) : 1).toFixed(3)})`;
+    saved += x[1] * outCubic(p(t, CHECK_AT[i], 0.45)); });
+  $("svn").textContent = "$" + Math.round(saved);
+  const sq = p(t, 7.5, 0.4); let pulse = 0; CHECK_AT.forEach(c => pulse += Math.sin(Math.PI * p(t, c, 0.3)));
+  set("sv", { opacity: sq > 0 ? 1 : 0, transform: tf(0, lerp(60, 0, outCubic(sq)), 1 + 0.04 * pulse) });
+  set("s3cap", { opacity: outCubic(p(t, 6.6, 0.4)) });
+  // --- scene 4 ---
+  const jq = p(t, 10.15, 0.5), jump = -Math.abs(Math.sin((t - 10.3) * 4.6)) * 22 * (t > 10.65 ? 1 : 0);
+  set("s4s", { transform: tf(0, lerp(500, 0, outBack(jq)) + jump, 1) });
+  TEAM.forEach((x, i) => { const q = p(t, 10.35 + i * 0.2, 0.4), s = q > 0 ? outBack(q) : 0;
+    set("tm" + i, { transformOrigin: "50% 100%", transform: tf(0, -Math.abs(Math.sin((t - 10.35 - i * 0.2) * 4.6 + i)) * 8 * (q >= 1 ? 1 : 0), s) });
+    set("tn" + i, { opacity: outCubic(p(t, 10.5 + i * 0.2, 0.3)) }); });
+  set("s4p", { transform: tf(0, lerp(340, 0, outCubic(p(t, 10.45, 0.4)))) });
+  const lq = p(t, 10.7, 0.45); set("s4l", { opacity: lq > 0 ? 1 : 0, transform: tf(0, 0, lq > 0 ? outBack(lq) : 0) });
+  const gq = p(t, 11.6, 0.4); set("s4g", { opacity: outCubic(gq), transform: tf(0, lerp(24, 0, outCubic(gq))) });
+  const fq = p(t, 13.35, 0.4); set("s4f", { opacity: fq > 0 ? 1 : 0, transform: `scale(${(fq > 0 ? outBack(fq) * (1 + 0.25 * Math.sin(Math.PI * fq)) : 0).toFixed(4)})` });
+  CONF.forEach((c, i) => { const tt = t - 10.2 - c.d; set("cf" + i, { opacity: tt > 0 ? 0.95 : 0, transform: tf(c.x + Math.sin(tt * 3 + i) * 18, -40 + tt * c.v, 1, c.r + tt * c.w) }); });
+};
+window.seek(0);
+// Preview: play in real time unless ?still
+if (!location.search.includes("still")) { const t0 = performance.now(); const tick = () => { const t = ((performance.now() - t0) / 1000) % (DUR + 1); window.seek(Math.min(t, DUR)); requestAnimationFrame(tick); }; requestAnimationFrame(tick); }
+</script>
+</body>
+</html>
