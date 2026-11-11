@@ -19,8 +19,15 @@ body{margin:0}
 <rect x="114" y="170" width="16" height="28" rx="8" fill="#142f73"></rect>
 <rect x="60" y="190" width="32" height="14" rx="7" fill="#4ade80" stroke="#142f73" stroke-width="3"></rect>
 <rect x="108" y="190" width="32" height="14" rx="7" fill="#4ade80" stroke="#142f73" stroke-width="3"></rect>
-<rect x="38" y="66" width="124" height="116" rx="28" fill="#ffffff"></rect>
-<rect x="88" y="68" width="24" height="112" fill="#4ade80"></rect>
+<rect x="38" y="66" width="124" height="116" rx="28" fill="{{bodyFill}}"></rect>
+</svg>
+<sc-if value="{{showStripe}}" hint-placeholder-val="{{true}}">
+<svg viewBox="0 0 200 220" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%" aria-hidden="true"><rect x="88" y="68" width="24" height="112" fill="#4ade80"></rect></svg>
+</sc-if>
+<sc-if value="{{showShorts}}" hint-placeholder-val="{{false}}">
+<svg viewBox="0 0 200 220" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%" aria-hidden="true"><path d="M40 156 H160 V156 Q160 180 134 180 H66 Q40 180 40 156 Z" fill="#4ade80"></path><path d="M40 156 H160" stroke="#142f73" stroke-width="3"></path><path d="M100 158 V178" stroke="#142f73" stroke-width="3" stroke-linecap="round"></path></svg>
+</sc-if>
+<svg viewBox="0 0 200 220" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%" aria-hidden="true">
 <rect x="38" y="66" width="124" height="116" rx="28" fill="none" stroke="#142f73" stroke-width="4"></rect>
 <path d="M44 86 C44 40 156 40 156 86 Z" fill="#142f73"></path>
 <rect x="122" y="78" width="58" height="11" rx="5.5" fill="#4ade80" stroke="#142f73" stroke-width="3"></rect>
@@ -101,12 +108,14 @@ body{margin:0}
 </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"pose":{"editor":"enum","options":["wave","plan","cheer","alert"],"default":"wave"},"size":{"editor":"int","min":40,"max":600,"default":220},"$preview":{"width":220,"height":242}}'>
+<script type="text/x-dc" data-dc-script data-props='{"look":{"editor":"enum","options":["stripe","clean","shorts","mint","sky"],"default":"shorts"},"pose":{"editor":"enum","options":["wave","plan","cheer","alert"],"default":"wave"},"size":{"editor":"int","min":40,"max":600,"default":220},"$preview":{"width":220,"height":242}}'>
 class Component extends DCLogic {
 renderVals() {
+const look = this.props.look ?? 'shorts';
+const lookVals = { bodyFill: look === 'mint' ? '#dcfce7' : look === 'sky' ? '#dfe8ff' : '#ffffff', showStripe: look === 'stripe', showShorts: look === 'shorts' };
 const pose = this.props.pose ?? 'wave';
 const size = Number(this.props.size ?? 220);
-return {
+return { ...lookVals,
 w: size + 'px',
 h: Math.round(size * 1.1) + 'px',
 isWave: pose === 'wave',

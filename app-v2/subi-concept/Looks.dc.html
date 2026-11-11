@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Looks without the stripe</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1060px; box-sizing: border-box; padding: 40px 56px; background: #f3f6fc; color: #142f73; font-family: Nunito, system-ui, sans-serif; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #3b4f86">Character options</div>
+<h1 style="margin: 0; font-size: 44px; font-weight: 900; line-height: 1.05">Same team, no green stripe</h1>
+<p style="margin: 0; font-size: 17px; font-weight: 600; color: #2b3f78">Faces, gear and poses stay the same. Only the body changes. The Bundle logo keeps its green band either way.</p>
+</div>
+<div style="display: grid; grid-template-columns: 230px repeat(4, minmax(0, 1fr)); gap: 16px; padding: 0 22px; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: #3b4f86; text-align: center"><span></span><span>Subi</span><span>Scout</span><span>Doc</span><span>Ref</span></div>
+<div style="display: grid; grid-template-columns: 230px repeat(4, minmax(0, 1fr)); align-items: center; gap: 16px; padding: 12px 20px; border-radius: 20px; background: #e8edf8; border: 2px dashed #c7d2ec;">
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 22px; font-weight: 900">Before</div><div style="font-size: 14px; font-weight: 700; line-height: 1.4; color: #3b4f86">Green stripe down the middle (for comparison).</div></div>
+<div style="display: flex; justify-content: center"><dc-import name="Subi" pose="wave" look="stripe" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="scout" look="stripe" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="doc" look="stripe" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="ref" look="stripe" size="118" hint-size="118px,130px"></dc-import></div>
+</div>
+<div style="display: grid; grid-template-columns: 230px repeat(4, minmax(0, 1fr)); align-items: center; gap: 16px; padding: 12px 20px; border-radius: 20px; background: #ffffff; border: 2px solid #dfe6f5;">
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 22px; font-weight: 900">A · Clean white</div><div style="font-size: 14px; font-weight: 700; line-height: 1.4; color: #3b4f86">No stripe at all. Green stays on the shoes and cap, so the face does all the work.</div></div>
+<div style="display: flex; justify-content: center"><dc-import name="Subi" pose="wave" look="clean" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="scout" look="clean" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="doc" look="clean" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="ref" look="clean" size="118" hint-size="118px,130px"></dc-import></div>
+</div>
+<div style="display: grid; grid-template-columns: 230px repeat(4, minmax(0, 1fr)); align-items: center; gap: 16px; padding: 12px 20px; border-radius: 20px; background: #ffffff; border: 2px solid #dfe6f5;">
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 22px; font-weight: 900">B · Team shorts (chosen)</div><div style="font-size: 14px; font-weight: 700; line-height: 1.4; color: #3b4f86">Green moves to the bottom as sports shorts. Still on-brand, reads as a uniform.</div></div>
+<div style="display: flex; justify-content: center"><dc-import name="Subi" pose="wave" look="shorts" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="scout" look="shorts" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="doc" look="shorts" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="ref" look="shorts" size="118" hint-size="118px,130px"></dc-import></div>
+</div>
+<div style="display: grid; grid-template-columns: 230px repeat(4, minmax(0, 1fr)); align-items: center; gap: 16px; padding: 12px 20px; border-radius: 20px; background: #ffffff; border: 2px solid #dfe6f5;">
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 22px; font-weight: 900">C · Mint</div><div style="font-size: 14px; font-weight: 700; line-height: 1.4; color: #3b4f86">Soft green body all over. Friendly, and green without a stripe.</div></div>
+<div style="display: flex; justify-content: center"><dc-import name="Subi" pose="wave" look="mint" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="scout" look="mint" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="doc" look="mint" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="ref" look="mint" size="118" hint-size="118px,130px"></dc-import></div>
+</div>
+<div style="display: grid; grid-template-columns: 230px repeat(4, minmax(0, 1fr)); align-items: center; gap: 16px; padding: 12px 20px; border-radius: 20px; background: #ffffff; border: 2px solid #dfe6f5;">
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 22px; font-weight: 900">D · Sky</div><div style="font-size: 14px; font-weight: 700; line-height: 1.4; color: #3b4f86">Light blue body that matches the app icon circle. Most calm option.</div></div>
+<div style="display: flex; justify-content: center"><dc-import name="Subi" pose="wave" look="sky" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="scout" look="sky" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="doc" look="sky" size="118" hint-size="118px,130px"></dc-import></div>
+<div style="display: flex; justify-content: center"><dc-import name="Coach" role="ref" look="sky" size="118" hint-size="118px,130px"></dc-import></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
