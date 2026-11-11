@@ -221,7 +221,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 2 · Nov 11, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 4 · Nov 11, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
@@ -514,9 +514,10 @@ function pickerHtml() {
   const restCats = rest;
   const q = ui.pickQ.trim().toLowerCase();
   let list = q ? ALL.filter(v => hereOk(v) && v.name.toLowerCase().includes(q)) : ui.pickCat === "popular" ? POP() : ALL.filter(v => hereOk(v) && v.category === ui.pickCat);
-  const keepOrder = !q && ui.pickCat === "popular";  // Popular keeps the testers' order
+  const popular = !q && ui.pickCat === "popular";  // Popular is A to Z (Cuong, 2026-11-11)
   list = list.filter(v => !v.provider_type);
-  if (!keepOrder) list.sort((a, b) => (L.LOGOS[b.id] ? 1 : 0) - (L.LOGOS[a.id] ? 1 : 0) || a.name.localeCompare(b.name));
+  if (popular) list.sort((a, b) => a.name.localeCompare(b.name));
+  else list.sort((a, b) => (L.LOGOS[b.id] ? 1 : 0) - (L.LOGOS[a.id] ? 1 : 0) || a.name.localeCompare(b.name));
   list = list.slice(0, 60);
   return `<div class="col">
     <div class="search"><span aria-hidden="true">${ICON.search}</span><label class="sr" for="pq">Search subscriptions</label><input id="pq" class="input" placeholder="Search, like Netflix or Planet Fitness" value="${esc(ui.pickQ)}" data-inp="pickQ" autocomplete="off"></div>
