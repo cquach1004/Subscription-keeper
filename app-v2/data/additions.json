@@ -1,0 +1,87 @@
+{
+ "note": "Services added for MoSuBi v2 (2026-11-11). verified=false means the price came from a news site, not the official page.",
+ "popular_young_adults": [
+  "costco",
+  "uber_one",
+  "grubhub_plus",
+  "amazon_prime",
+  "spotify",
+  "netflix",
+  "crunchyroll",
+  "disney_plus",
+  "apple_tv",
+  "onepassword",
+  "icloud",
+  "google_one",
+  "dropbox",
+  "chatgpt",
+  "claude",
+  "youtube_premium"
+ ],
+ "popular_source": "Cuong's group of young adult testers, 2026-11-11 (AAA left out: mostly on a parent's family plan); ChatGPT and Claude added by Cuong the same day",
+ "services": [
+  {
+   "id": "crunchyroll",
+   "name": "Crunchyroll",
+   "category": "video",
+   "alternative_to": [],
+   "kind": "direct",
+   "official_url": "https://www.crunchyroll.com/premium",
+   "regions": "Global",
+   "color": "#f47521",
+   "mark": "CR",
+   "plans": [
+    {
+     "id": "fan",
+     "name": "Fan",
+     "price_monthly": 9.99,
+     "price_annual": null,
+     "effective_monthly": 9.99,
+     "verified": false,
+     "note": "Up from $7.99 (Feb 2026)."
+    },
+    {
+     "id": "mega_fan",
+     "name": "Mega Fan",
+     "price_monthly": 13.99,
+     "price_annual": null,
+     "effective_monthly": 13.99,
+     "verified": false,
+     "note": "Up from $11.99 (Feb 2026)."
+    },
+    {
+     "id": "ultimate_fan",
+     "name": "Ultimate Fan",
+     "price_monthly": 17.99,
+     "price_annual": null,
+     "effective_monthly": 17.99,
+     "verified": false,
+     "note": "Up from $15.99 (Feb 2026)."
+    }
+   ],
+   "default_plan": "fan",
+   "features": [
+    {
+     "id": "library",
+     "name": "Ad-free anime library, new episodes soon after Japan",
+     "plans": "all",
+     "overlap_tag": null
+    }
+   ],
+   "best_for": "Anime fans who watch new seasons as they air.",
+   "recent_changes": [
+    {
+     "date": "2026-02",
+     "summary": "US prices rose $2 on every plan (Fan $9.99, Mega Fan $13.99, Ultimate Fan $17.99), a month after the free tier ended."
+    }
+   ],
+   "sources": [
+    {
+     "label": "AlternativeTo news, Feb 2026",
+     "url": "https://alternativeto.net/news/2026/2/crunchyroll-raises-prices-for-all-plans-in-the-us-right-after-killing-its-free-tier"
+    }
+   ],
+   "checked_at": "2026-11-11"
+  }
+ ]
+}

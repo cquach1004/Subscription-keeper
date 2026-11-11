@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Welcome with Subi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#142f73}a:hover{color:#0b1c48}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f3f6fc; color: #142f73; font-family: Nunito, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+<div style="background: #142f73; padding: 22px 20px 0; display: flex; flex-direction: column; gap: 6px; border-radius: 0 0 32px 32px">
+<div style="display: flex; align-items: center; gap: 8px; color: #ffffff; font-weight: 900; font-size: 20px">
+<svg width="26" height="26" viewBox="0 0 512 512" aria-hidden="true"><rect x="104" y="184" width="304" height="176" rx="40" fill="#ffffff"></rect><rect x="220" y="168" width="72" height="208" rx="14" fill="#4ade80"></rect></svg>
+MoSuBi
+</div>
+<div style="display: flex; align-items: flex-end; gap: 4px; margin-top: 8px">
+<div style="flex-shrink: 0; margin-bottom: -18px">
+<dc-import name="Subi" pose="wave" size="150" hint-size="150px,165px"></dc-import>
+</div>
+<div style="position: relative; background: #ffffff; border-radius: 20px 20px 20px 4px; padding: 14px 16px; margin-bottom: 40px; font-size: 16px; font-weight: 700; line-height: 1.4">Hey, I'm Subi! I coach people on their subscriptions. Two quick questions and I'll build your game plan.</div>
+</div>
+</div>
+<div style="padding: 36px 20px 20px; display: flex; flex-direction: column; gap: 26px; flex-grow: 1">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #3b4f86">Question 1 of 2</div>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900">Who's on your team?</h2>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{teams}}" as="t" hint-placeholder-count="3">
+<button type="button" onClick="{{t.pick}}" style="{{t.style}}">
+<span style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px">
+<span style="font-size: 18px; font-weight: 900">{{t.label}}</span>
+<span style="font-size: 14px; font-weight: 600; color: #3b4f86">{{t.sub}}</span>
+</span>
+<sc-if value="{{t.on}}" hint-placeholder-val="{{false}}">
+<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#4ade80"></circle><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#142f73" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #3b4f86">Question 2 of 2</div>
+<label for="state" style="font-size: 24px; font-weight: 900">Where do you live?</label>
+<select id="state" style="height: 52px; border-radius: 14px; border: 2px solid #c7d2ec; background: #ffffff; padding: 0 14px; font-family: inherit; font-size: 17px; font-weight: 700; color: #142f73">
+<option>Choose your state</option>
+<option>California</option>
+<option>Florida</option>
+<option>New York</option>
+<option>Texas</option>
+</select>
+<div style="font-size: 14px; font-weight: 600; color: #3b4f86">So I only show plans and prices you can get.</div>
+</div>
+<div style="flex-grow: 1"></div>
+<a href="GamePlan.dc.html" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; border-radius: 16px; background: #4ade80; color: #142f73; font-size: 18px; font-weight: 900; text-decoration: none; box-shadow: 0 4px 0 #22a35a">Build my game plan
+<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="#142f73" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { team: 'me' }; }
+renderVals() {
+const opts = [
+{ id: 'me', label: 'Just me', sub: 'Plans for one adult' },
+{ id: 'couple', label: 'Me + my partner', sub: 'Plans you can share for two' },
+{ id: 'family', label: 'Family with kids', sub: 'Family plans and kid-safe picks' }
+];
+const base = 'display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 64px; padding: 10px 16px; border-radius: 16px; font-family: inherit; color: #142f73; text-align: left; cursor: pointer; ';
+return {
+teams: opts.map((o) => {
+const on = this.state.team === o.id;
+return { ...o, on, style: base + (on ? 'background: #eafbf0; border: 3px solid #142f73;' : 'background: #ffffff; border: 2px solid #c7d2ec;'), pick: () => this.setState({ team: o.id }) };
+})
+};
+}
+}
+</script>
+</body>
+</html>
