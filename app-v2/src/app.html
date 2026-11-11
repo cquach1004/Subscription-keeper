@@ -229,7 +229,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 6 · Nov 11, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 7 · Nov 11, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
@@ -649,10 +649,15 @@ const closeSheet = () => { $("#sheet").innerHTML = ""; };
 function alertsView() {
   const xs = alertsFor();
   const head = `<div class="page-head">${subi("alert", 100, true)}<div class="grow col" style="gap:6px"><h1>Alerts</h1><div class="bubble" style="margin:0">${xs.length ? `Here's what changed for the services you have. I'll flag new ones here first.` : `All quiet for your subscriptions. I'll let you know the moment something changes.`}</div></div></div>`;
-  const opt = S.optIn ? `<div class="card col"><div class="row">${ICON.check}<div class="grow"><b>Alerts are on</b><div class="small muted">Sending to ${esc(S.optIn.email)}</div></div><button class="btn ghost sm" data-act="optOut">Turn off</button></div><p class="tiny muted">Preview: emails are not sent yet. In the live app, Subi will email you when something here changes.</p></div>`
-    : `<form class="card col" data-form="optin"><b style="font-size:18px">Get a heads-up by email</b><p class="small muted">Price increases, new features and policy changes for what you have. Nothing else, and it's free.</p>
-      <div class="field"><label for="em">Email</label><input id="em" class="input" type="email" required autocomplete="email" placeholder="you@example.com"></div><button class="btn primary" type="submit">Turn on alerts</button>
-      <p class="tiny muted">Preview: this is saved in this browser only, and no emails are sent yet.</p></form>`;
+  // Alert sign-up (Cuong, 2026-11-11): email for everything; texts optional, opt-in only, and only for price increases.
+  const opt = S.optIn ? `<div class="card col"><div class="row">${ICON.check}<div class="grow"><b>Alerts are on</b><div class="small muted">Email to ${esc(S.optIn.email)}</div>${S.optIn.phone ? `<div class="small muted">Texts to ${esc(S.optIn.phone)} for price increases</div>` : ""}</div><button class="btn ghost sm" data-act="optOut">Turn off</button></div>
+      ${S.optIn.phone ? `<button class="btn ghost sm" data-act="textsOff">Stop texts, keep email</button>` : ""}<p class="tiny muted">Preview: nothing is sent yet. In the live app, Subi will message you when something here changes.</p></div>`
+    : `<form class="card col" data-form="optin"><b style="font-size:18px">Get a heads-up</b><p class="small muted">Price increases, new features and policy changes for what you have. Nothing else, and it's free.</p>
+      <div class="field"><label for="em">Email</label><input id="em" class="input" type="email" required autocomplete="email" placeholder="you@example.com"></div>
+      <label class="row" style="align-items:flex-start;gap:10px;cursor:pointer"><input id="tx" type="checkbox" data-chg="wantText" ${ui.wantText ? "checked" : ""} style="width:22px;height:22px;margin-top:2px;accent-color:#142f73"><span><b>Also text me about price increases</b> <span class="muted">(optional)</span><span class="tiny muted" style="display:block">Only price increases for what you have. Reply STOP anytime. Message and data rates may apply.</span></span></label>
+      ${ui.wantText ? `<div class="field"><label for="ph">Mobile number</label><input id="ph" class="input" type="tel" required autocomplete="tel" inputmode="tel" placeholder="(555) 555-0123"></div>` : ""}
+      <button class="btn primary" type="submit">Turn on alerts</button>
+      <p class="tiny muted">Preview: this is saved in this browser only, and nothing is sent yet.</p></form>`;
   const prev = `<div class="card col"><b style="font-size:18px">See what an alert looks like</b><p class="small muted">A preview built from ${xs.length ? "your own alerts" : "an example alert"}. The prototype can't send real messages yet.</p>
     <div class="row" style="flex-wrap:wrap"><button class="btn sm" data-act="preview" data-v="email">Email preview</button><button class="btn sm" data-act="preview" data-v="text">Text preview</button></div></div>`;
   return `<div class="layout"><div class="col" style="gap:14px">${head}
@@ -686,8 +691,10 @@ function openPreview(kind) {
         ${a.play ? `<div class="mail-play"><b>Your play:</b> ${esc(a.play.title)}. Save about ${yr(a.play.save)} a year.</div>` : `<div class="mail-play"><b>Your play:</b> Nothing to do. I'll keep watching.</div>`}</div>`).join("")}
       <div style="text-align:center;margin:16px 0 6px"><span class="btn go" style="pointer-events:none">Open my game plan</span></div>
       <p class="tiny muted" style="text-align:center">You get these because you turned on alerts in MoSuBi. Unsubscribe or change what you get anytime. MoSuBi is free.</p></div></div>`;
-  const t = top ? `MoSuBi: Heads up! ${top.title === v0.name ? v0.name + ": " + top.text : top.title + "."}${top.play ? ` Your play: ${top.play.title.replace(/^./, c => c.toLowerCase())}, save ~${yr(top.play.save)}/yr.` : ""} Reply STOP to opt out.` : "";
-  const text = `<div class="phone"><div class="phone-top"><span class="tiny muted">Text Message · Today ${new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</span></div>
+  const pt = items.find(a => a.kind === "price");
+  const tTop = pt || null;
+  const t = tTop ? (() => { const top = tTop, v0 = tTop.v; return `MoSuBi: Heads up! ${top.title === v0.name ? v0.name + ": " + top.text : top.title + "."}${top.play ? ` Your play: ${top.play.title.replace(/^./, c => c.toLowerCase())}, save ~${yr(top.play.save)}/yr.` : ""} Reply STOP to opt out.`; })() : "";
+  const text = !t ? `<div class="card"><p>No text this time. Texts only go out for price increases, and none of your subscriptions has one right now. Everything else comes by email.</p></div>` : `<div class="phone"><div class="phone-top"><b style="display:block">MoSuBi</b><span class="tiny muted">To ${esc(S.optIn && S.optIn.phone ? S.optIn.phone : "your mobile")} · Text Message · Today ${new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</span></div>
       <div class="sms">${esc(t)}</div><p class="tiny muted" style="text-align:center;margin-top:10px">${t.length} characters${t.length > 160 ? " (sent as 2 texts)" : " (fits in one text)"}</p></div>`;
   $("#sheet").innerHTML = `<div class="scrim" data-act="close"></div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pv-t"><div class="col">
     <div class="row"><h2 id="pv-t" class="grow" style="font-size:22px">${kind === "email" ? "Email preview" : "Text preview"}</h2><button class="btn sm" data-act="close">Close</button></div>
@@ -772,6 +779,7 @@ document.addEventListener("click", e => {
   else if (a === "preview") openPreview(v);
   else if (a === "close") closeSheet();
   else if (a === "addFromSheet") { addSub(v); save(); closeSheet(); render(); toast(`Added ${CATALOG[v].name} to your plan.`, "plan"); }
+  else if (a === "textsOff") { S.optIn.phone = null; go(); toast("Texts are off. You'll still get email.", "wave"); }
   else if (a === "optOut") { S.optIn = null; go(); }
   else if (a === "theme") { S.theme = v; applyTheme(); go(); }
   else if (a === "reset") { ui.confirmReset = true; render(); }
@@ -780,6 +788,7 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("change", e => {
   const t = e.target, k = t.dataset.chg; if (!k) return;
+  if (k === "wantText") { ui.wantText = t.checked; const em = document.getElementById("em"); const keep = em && em.value; render(); const em2 = document.getElementById("em"); if (em2 && keep) em2.value = keep; const ph = document.getElementById("ph"); if (ph) ph.focus(); return; }
   if (k === "country") { S.country = t.value; if (!isUS()) S.region = ""; S.subs = S.subs.filter(s => CATALOG[s.id] && hereOk(CATALOG[s.id])); go(); }
   else if (k === "region") { S.region = t.value; S.subs = S.subs.filter(s => CATALOG[s.id] && hereOk(CATALOG[s.id])); go(); }
   else if (k === "plan") { const s = S.subs.find(x => x.id === t.dataset.v); s.plan = t.value; s.price = null; go(); }
@@ -794,7 +803,10 @@ document.addEventListener("input", e => {
 document.addEventListener("submit", e => {
   const f = e.target; if (f.dataset.form !== "optin") return; e.preventDefault();
   const em = f.querySelector("#em").value.trim(); if (!em) return;
-  S.optIn = { email: em, at: new Date().toISOString() }; go(); toast("Alerts are on. I've got your back!", "alert");
+  const phEl = f.querySelector("#ph"); const digits = phEl ? phEl.value.replace(/\D/g, "").replace(/^1(?=\d{10}$)/, "") : "";
+  if (phEl && digits.length !== 10) { phEl.setCustomValidity("Enter a 10-digit mobile number"); phEl.reportValidity(); phEl.oninput = () => phEl.setCustomValidity(""); return; }
+  const phone = digits ? `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}` : null;
+  S.optIn = { email: em, phone, at: new Date().toISOString() }; ui.wantText = false; go(); toast(phone ? "Alerts are on: email, plus texts for price increases." : "Alerts are on. I've got your back!", "alert");
 });
 document.addEventListener("toggle", e => { if (e.target.dataset && e.target.dataset.tog) ui[e.target.dataset.tog] = e.target.open; }, true);
 document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#sheet").innerHTML) closeSheet(); });
