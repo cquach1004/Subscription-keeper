@@ -217,6 +217,32 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 .phone { background: var(--card); border: 2px solid var(--line); border-radius: 28px; padding: 18px 14px 14px; max-width: 360px; width: 100%; margin: 0 auto; }
 .phone-top { text-align: center; margin-bottom: 10px; }
 .sms { background: var(--soft); border-radius: 18px 18px 18px 6px; padding: 12px 14px; font-size: 15px; line-height: 1.4; max-width: 85%; }
+.celebrate { position: fixed; inset: 0; z-index: 80; background: rgba(8, 18, 45, .82); display: grid; place-items: center; padding: 16px; animation: fadein .2s ease-out; }
+.celebrate.out { opacity: 0; transition: opacity .25s; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+.cel-card { position: relative; z-index: 2; width: min(420px, 100%); background: var(--card); border-radius: 26px; padding: 14px 14px 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; animation: pop .45s ease-out; }
+.cel-scene { width: 100%; height: auto; border-radius: 18px; display: block; }
+.cel-word { font-size: 40px; font-weight: 900; color: var(--ink); letter-spacing: .02em; animation: word 1s .9s both cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes word { from { transform: scale(.2) rotate(-8deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.cel-line { font-size: 16px; max-width: 34ch; }
+.confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+.confetti i { position: absolute; top: -20px; width: 9px; height: 14px; border-radius: 2px; animation: fall 2.6s linear infinite; }
+@keyframes fall { from { transform: translateY(-20px) rotate(0); } to { transform: translateY(110vh) rotate(540deg); } }
+.cel-bat { transform-box: fill-box; transform-origin: 50% 100%; animation: swing .35s .25s both ease-in; }
+@keyframes swing { from { transform: rotate(-70deg); } to { transform: rotate(60deg); } }
+.cel-bx.hr { animation: hrx 1.5s .5s both linear; } .cel-by.hr { animation: hry 1.5s .5s both cubic-bezier(.2, .8, .6, 1); }
+@keyframes hrx { from { transform: translateX(0); opacity: 1; } 90% { opacity: 1; } to { transform: translateX(300px); opacity: 0; } }
+@keyframes hry { 0% { transform: translateY(0); } 55% { transform: translateY(-115px); } 100% { transform: translateY(-40px); } }
+.cel-run { animation: run 1.1s .2s both cubic-bezier(.3, .7, .4, 1); }
+@keyframes run { from { transform: translateX(-110px); } to { transform: translateX(250px); } }
+.cel-jump { animation: jump .5s 1.3s 2 ease-in-out; }
+@keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-26px); } }
+.cel-bx.gl { animation: glx .9s .4s both cubic-bezier(.3, .6, .5, 1); } .cel-by.gl { animation: gly .9s .4s both ease-out; }
+@keyframes glx { from { transform: translateX(0); } to { transform: translateX(178px); } }
+@keyframes gly { 0% { transform: translateY(0); } 50% { transform: translateY(-62px); } 100% { transform: translateY(-38px); } }
+.cel-net { transform-box: fill-box; transform-origin: 0% 50%; animation: bulge .5s 1.2s both ease-out; }
+@keyframes bulge { 0% { transform: scaleX(1); } 40% { transform: scaleX(1.12); } 100% { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .celebrate *, .celebrate { animation: none !important; } .confetti { display: none; } }
 .toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 60; background: var(--navy); color: #fff; padding: 12px 18px; border-radius: 16px; font-weight: 800; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 30px rgba(0,0,0,.25); max-width: calc(100vw - 32px); }
 @media (min-width: 860px) { .toast { bottom: 32px; } }
 .foot { text-align: center; padding: 24px 0 0; }
@@ -229,7 +255,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 7 · Nov 11, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 8 · Nov 11, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
@@ -452,10 +478,26 @@ function header(showTabs) {
     ${showTabs ? `<nav class="tabs-top" aria-label="Main">${tabs.map(([k, l]) => `<button data-act="tab" data-v="${k}" ${S.tab === k ? 'aria-current="page"' : ""}>${l}${dot(k)}</button>`).join("")}</nav>` : ""}</div></header>
     ${showTabs ? `<nav class="tabs-bot" aria-label="Main">${tabs.map(([k, l, ic]) => `<button data-act="tab" data-v="${k}" ${S.tab === k ? 'aria-current="page"' : ""}><span class="ti">${ic}</span>${l}${dot(k)}</button>`).join("")}</nav>` : ""}`;
 }
+// Welcome back (Cuong, 2026-11-11, from v1): once per browser session for a returning visitor.
+function welcomeBack() {
+  const sm = planSummary(), n = unseen(), left = sm.lead.length + sm.more.length;
+  const hi = S.name ? `Welcome back, ${esc(S.name)}!` : "Welcome back!";
+  const lines = [];
+  if (n) lines.push([ICON.bell, `<b>${n} new alert${n > 1 ? "s" : ""}</b> for your subscriptions`]);
+  if (left) lines.push([ICON.plan, `<b>${left} play${left > 1 ? "s" : ""} left</b>, worth about ${yr(sm.couldSave)} a year`]);
+  if (sm.saved) lines.push([ICON.gift, `You're saving <b>${yr(sm.saved)} a year</b> so far`]);
+  if (!lines.length) lines.push([ICON.check, `All caught up. Nothing new since your last visit.`]);
+  return hero("wave", `Good to see you again! Here's what's new since you were last here.`) + `<div class="wrap narrow welcome">
+    <h1 style="font-size:32px">${hi}</h1>
+    <div class="col">${lines.map(([ic, t]) => `<div class="card row" style="gap:12px"><span class="ti" style="background:var(--soft);width:44px;height:44px;border-radius:12px">${ic}</span><span class="grow">${t}</span></div>`).join("")}</div>
+    <button class="btn go wide" data-act="wbGo" data-v="${n ? "alerts" : "plan"}">${n ? "See what's new" : left ? "Show my plays" : "Go to my plan"} ${ICON.arrow}</button>
+    ${n ? `<button class="btn ghost" data-act="wbGo" data-v="plan">Go to my plan</button>` : ""}</div>`;
+}
 function render() {
   const app = $("#app");
   let body;
-  if (S.step !== "done") body = header(false) + welcome();
+  if (S.step === "done" && ui.welcomeBack) body = header(false) + welcomeBack();
+  else if (S.step !== "done") body = header(false) + welcome();
   else body = header(true) + `<main><div class="wrap">${{ plan: planView, explore: exploreView, alerts: alertsView, me: meView }[S.tab]()}</div></main>`;
   app.innerHTML = body;
   if (S.step === "done" && S.tab === "alerts") { const ids = alertsFor().map(a => a.id); if (ids.some(i => !S.seen.includes(i))) { S.seen = [...new Set([...S.seen, ...ids])]; save(); } }
@@ -493,6 +535,7 @@ function welcome() {
     const T = [["me", "Just me", "Plans for one adult", ICON.me], ["couple", "Me + my partner", "Plans you can share for two", ICON.couple], ["family", "Family with kids", "Family plans and kid-friendly picks", ICON.family]];
     return hero("wave", `First, who's on your team? And where do you live, so I only show what you can get?`, "about") +
     `<div class="wrap narrow welcome">
+      <div class="col"><h2>What should I call you?</h2><div class="field"><label for="nm">First name <span class="muted">(optional)</span></label><input id="nm" class="input" autocomplete="given-name" maxlength="30" placeholder="Your first name" value="${esc(S.name || "")}" data-chg="name"></div></div>
       <div class="col"><h2>Who's on your team?</h2>
       ${T.map(([k, l, d, ic]) => `<button class="choice" data-act="team" data-v="${k}" aria-pressed="${S.team === k}"><span class="ic">${ic}</span><span class="grow"><b>${l}</b><span class="muted">${d}</span></span>${S.team === k ? ICON.check : ""}</button>`).join("")}</div>
       <div class="col"><h2>Where do you live?</h2>
@@ -708,6 +751,7 @@ function openPreview(kind) {
 function meView() {
   const T = { me: "Just me", couple: "Me + my partner", family: "Family with kids" };
   return `<div class="narrow col" style="gap:16px"><div class="page-head">${subi("wave", 90, true)}<div class="grow"><h1>Me</h1></div></div>
+    <div class="card col"><div class="field"><label for="nm2">Your first name</label><input id="nm2" class="input" autocomplete="given-name" maxlength="30" placeholder="Your first name" value="${esc(S.name || "")}" data-chg="name"></div></div>
     <div class="card col"><b>Your team</b><div class="chips">${Object.entries(T).map(([k, l]) => `<button class="chip" data-act="team" data-v="${k}" aria-pressed="${S.team === k}">${l}</button>`).join("")}</div></div>
     <div class="card col"><b>Where you live</b>
       <div class="field"><label for="country2">Country</label><select id="country2" class="input" data-chg="country">${Object.entries(L.COUNTRIES).map(([k, [n]]) => `<option value="${k}" ${S.country === k ? "selected" : ""}>${esc(n)}</option>`).join("")}</select></div>
@@ -732,6 +776,43 @@ function addSub(id) {
   const v = CATALOG[id]; const p = teamPlan(v);
   S.subs.push({ id, plan: p && p.id, price: null, use: "some" });
 }
+// Celebrations (Cuong, 2026-11-11): each finished play gets a sports moment with Subi, rotating home run, touchdown, goal.
+const subiG = (pose, x, y, w, cls = "") => `<svg class="${cls}" x="${x}" y="${y}" width="${w}" height="${Math.round(w * 1.1)}" viewBox="0 0 200 220" overflow="visible">${SUBI_BASE}${SUBI_POSE[pose]}</svg>`;
+const BALL = {
+  base: `<circle r="9" fill="#fff" stroke="#142f73" stroke-width="2"/><path d="M-5 -6 Q-1 0 -5 6 M5 -6 Q1 0 5 6" fill="none" stroke="#e23b3b" stroke-width="1.6"/>`,
+  foot: `<ellipse rx="13" ry="8" fill="#8a4b22" stroke="#142f73" stroke-width="2"/><path d="M-5 0 H5 M-3 -2 V2 M0 -2 V2 M3 -2 V2" stroke="#fff" stroke-width="1.4"/>`,
+  soccer: `<circle r="10" fill="#fff" stroke="#142f73" stroke-width="2"/><path d="M0 -4 L4 -1 L2.5 4 L-2.5 4 L-4 -1 Z" fill="#142f73"/>`
+};
+const SCENES = [
+  { word: "HOME RUN!", svg: `<rect width="360" height="220" fill="#7cc6ff"/><circle cx="300" cy="40" r="18" fill="#ffd95a"/>
+      <rect x="250" y="112" width="110" height="58" fill="#1f6b3a"/><path d="M250 112 H360" stroke="#ffc93c" stroke-width="4"/><text x="305" y="146" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="16" fill="#fff">400 FT</text>
+      <rect y="170" width="360" height="50" fill="#2f9e55"/><path d="M0 182 H360" stroke="#c98a4b" stroke-width="10" opacity=".5"/>
+      ${subiG("cheer", 14, 78, 92)}
+      <g class="cel-bat"><rect x="96" y="96" width="9" height="60" rx="4.5" fill="#c98a4b" stroke="#142f73" stroke-width="2"/></g>
+      <g class="cel-bx hr"><g class="cel-by hr"><g transform="translate(112 132)">${BALL.base}</g></g></g>` },
+  { word: "TOUCHDOWN!", svg: `<rect width="360" height="220" fill="#2f9e55"/>${[60, 120, 180].map(x => `<path d="M${x} 0 V220" stroke="#fff" stroke-width="3" opacity=".7"/>`).join("")}
+      <rect x="240" width="120" height="220" fill="#142f73"/><text x="300" y="118" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="26" fill="#4ade80" transform="rotate(-90 300 110)">MOSUBI</text>
+      <g class="cel-run"><g class="cel-jump">${subiG("cheer", 0, 70, 96)}<g transform="translate(92 120) rotate(-30)">${BALL.foot}</g></g></g>` },
+  { word: "GOOOAL!", svg: `<rect width="360" height="220" fill="#7cc6ff"/><rect y="150" width="360" height="70" fill="#2f9e55"/><path d="M0 150 H360" stroke="#fff" stroke-width="3"/>
+      <g class="cel-net"><rect x="262" y="70" width="88" height="96" fill="none" stroke="#fff" stroke-width="6"/>${[0, 1, 2, 3, 4].map(i => `<path d="M${276 + i * 16} 70 V166 M262 ${84 + i * 16} H350" stroke="#fff" stroke-width="1.5" opacity=".7"/>`).join("")}</g>
+      ${subiG("cheer", 14, 70, 92)}
+      <g class="cel-bx gl"><g class="cel-by gl"><g transform="translate(118 160)">${BALL.soccer}</g></g></g>` }
+];
+function celebrate(save, line) {
+  const i = (S.celebrate = ((S.celebrate ?? -1) + 1) % SCENES.length); try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {}
+  const sc = SCENES[i];
+  const colors = ["#4ade80", "#ffc93c", "#ff8fa8", "#7cc6ff", "#ffffff"];
+  const conf = Array.from({ length: 36 }, (_, k) => `<i style="left:${(k * 37) % 100}%;background:${colors[k % 5]};animation-delay:${((k * 13) % 10) / 10}s;animation-duration:${2.2 + (k % 5) * .3}s"></i>`).join("");
+  const el = document.createElement("div");
+  el.className = "celebrate"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", sc.word);
+  el.innerHTML = `<div class="confetti" aria-hidden="true">${conf}</div><div class="cel-card"><svg class="cel-scene" viewBox="0 0 360 220" aria-hidden="true">${sc.svg}</svg>
+    <div class="cel-word">${sc.word}</div><p class="cel-line">You're saving about <b>${yr(save)}</b> a year. ${esc(line)}</p><button class="btn go" data-act="celClose">Keep it rolling</button></div>`;
+  document.body.appendChild(el);
+  const close = () => { el.classList.add("out"); setTimeout(() => el.remove(), 250); };
+  el.addEventListener("click", e => { if (e.target === el || e.target.closest("[data-act=celClose]")) close(); });
+  setTimeout(() => el.querySelector("button")?.focus(), 50);
+  setTimeout(() => el.isConnected && close(), 6000);
+}
 // Done it: apply the play to the list (cancel = off the list, switch = new plan, yearly = paid yearly) and file it under History.
 function finishPlay(id) {
   const p = buildPlays().find(x => x.id === id); if (!p) return;
@@ -744,7 +825,7 @@ function finishPlay(id) {
     if (p.alt && !S.subs.some(x => x.id === p.alt)) { addSub(p.alt); added = p.alt; } }
   S.history.unshift({ id: p.id, svc: s.id, title: p.title, save: p.save, kind: p.kind, effect, added, at: new Date().toISOString(), before });
   S.lastDone = Date.now(); go();
-  toast(effect === "removed" ? `Nice play! ${v.name} is off your list and in History.` : `Nice play! That's about ${yr(p.save)} a year.`);
+  celebrate(p.save, effect === "removed" ? `${v.name} is off your list and in History.` : effect === "switched" ? `${v.name} is on its new plan.` : `${v.name} is now paid yearly.`);
 }
 function undoPlay(i) {
   const h = S.history[i]; if (!h) return;
@@ -757,7 +838,8 @@ document.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
   const a = b.dataset.act, v = b.dataset.v;
   if (a === "step") { S.step = v; go(); toTop(); }
-  else if (a === "home") { if (S.step === "done") { S.tab = "plan"; ui.exCat = null; } go(); toTop(); }
+  else if (a === "wbGo") { ui.welcomeBack = false; S.tab = v; go(); toTop(); }
+  else if (a === "home") { ui.welcomeBack = false; if (S.step === "done") { S.tab = "plan"; ui.exCat = null; } go(); toTop(); }
   else if (a === "exploreFirst") { S.step = "done"; S.tab = "explore"; if (!S.team) S.team = "me"; go(); toTop(); }
   else if (a === "team") { S.team = v; S.subs.forEach(s => { if (s.price == null || s.price === "") { const p = teamPlan(CATALOG[s.id]); if (p) s.plan = p.id; } }); go(); }
   else if (a === "moreCats") { ui.moreCats = !ui.moreCats; render(); }
@@ -788,6 +870,7 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("change", e => {
   const t = e.target, k = t.dataset.chg; if (!k) return;
+  if (k === "name") { S.name = t.value.trim().slice(0, 30); save(); return; }
   if (k === "wantText") { ui.wantText = t.checked; const em = document.getElementById("em"); const keep = em && em.value; render(); const em2 = document.getElementById("em"); if (em2 && keep) em2.value = keep; const ph = document.getElementById("ph"); if (ph) ph.focus(); return; }
   if (k === "country") { S.country = t.value; if (!isUS()) S.region = ""; S.subs = S.subs.filter(s => CATALOG[s.id] && hereOk(CATALOG[s.id])); go(); }
   else if (k === "region") { S.region = t.value; S.subs = S.subs.filter(s => CATALOG[s.id] && hereOk(CATALOG[s.id])); go(); }
@@ -810,6 +893,7 @@ document.addEventListener("submit", e => {
 });
 document.addEventListener("toggle", e => { if (e.target.dataset && e.target.dataset.tog) ui[e.target.dataset.tog] = e.target.open; }, true);
 document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#sheet").innerHTML) closeSheet(); });
+try { if (S.step === "done" && !sessionStorage.getItem("mosubi-v2-wb")) ui.welcomeBack = true; sessionStorage.setItem("mosubi-v2-wb", "1"); } catch (e) {}
 function applyTheme() { if (S.theme) document.documentElement.dataset.theme = S.theme; else delete document.documentElement.dataset.theme; }
 applyTheme();
 render();
