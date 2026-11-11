@@ -85,6 +85,7 @@ main { padding: 20px 0 110px; }
 .pill.price { background: var(--yellow); color: #142f73; }
 .pill.new { background: var(--green); color: #142f73; }
 .pill.policy { background: var(--line); color: var(--ink); }
+.pill.hot { background: #d9bb7f; color: #142f73; }
 .pill.free { background: var(--good-soft); color: var(--green-ink); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 2px solid var(--line-2); background: var(--card); font-weight: 800; font-size: 15px; cursor: pointer; }
@@ -209,6 +210,17 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 .alert { display: flex; gap: 12px; align-items: flex-start; }
 .alert .grow { display: flex; flex-direction: column; gap: 4px; }
 .alert h3 { font-size: 17px; }
+.huddle-card { display: flex; flex-direction: column; gap: 8px; }
+.huddle-card .who { display: flex; align-items: center; gap: 8px; }
+.huddle-card .who .grow { display: flex; flex-direction: column; }
+.huddle-card h3 { font-size: 18px; line-height: 1.25; }
+.coach-row { display: flex; align-items: center; gap: 10px; }
+.coach-row .grow { display: flex; flex-direction: column; }
+.switch { position: relative; flex-shrink: 0; width: 52px; height: 32px; border-radius: 16px; border: 0; cursor: pointer; background: var(--line-2); }
+.switch::after { content: ""; position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; border-radius: 12px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: left .15s; }
+.switch[aria-checked="true"] { background: var(--green); }
+.switch[aria-checked="true"]::after { left: 24px; }
+.mail-who { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--ink-2); }
 .mail { background: var(--card); border: 2px solid var(--line); border-radius: 18px; overflow: hidden; }
 .mail-head { padding: 14px 16px; border-bottom: 1px solid var(--line); }
 .mail-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
@@ -255,7 +267,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 8 · Nov 11, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 9 · Nov 11, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
@@ -353,6 +365,22 @@ const SUBI_POSE = {
   alert: `<path d="M56 96 L76 92 M124 92 L144 96" fill="none" stroke="${N}" stroke-width="4" stroke-linecap="round"/><circle cx="68" cy="112" r="10" fill="#fff" stroke="${N}" stroke-width="3.5"/><circle cx="68" cy="113" r="5.5" fill="${N}"/><circle cx="132" cy="112" r="10" fill="#fff" stroke="${N}" stroke-width="3.5"/><circle cx="132" cy="113" r="5.5" fill="${N}"/><ellipse cx="100" cy="142" rx="7" ry="8" fill="${N}"/>` + armL + `<path d="M160 118 Q178 102 176 80" fill="none" stroke="${N}" stroke-width="9" stroke-linecap="round"/><rect x="166" y="64" width="26" height="13" rx="6.5" fill="#ffc93c" stroke="${N}" stroke-width="3"/><circle cx="170" cy="78" r="8" fill="#ffc93c" stroke="${N}" stroke-width="3"/><circle cx="176" cy="80" r="9" fill="#fff" stroke="${N}" stroke-width="3"/><circle cx="176" cy="30" r="17" fill="#ffc93c" stroke="${N}" stroke-width="3.5"/><text x="176" y="39" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="26" fill="${N}">!</text>`
 };
 const subi = (pose, size, bob) => `<span class="subi${bob ? " bob" : ""}" style="width:${size}px;height:${Math.round(size * 1.1)}px"><svg viewBox="0 0 200 220" role="img" aria-label="Subi the coach">${SUBI_BASE}${SUBI_POSE[pose] || SUBI_POSE.wave}</svg></span>`;
+// ---------- coaching staff (Cuong, 2026-11-11): Subi is head coach; Scout, Doc and Ref sign only the cards they own ----------
+const COACHES = {
+  scout: { name: "Scout", job: "What's hot", meta: "Weekly scout report", how: "Weekly email digest, never texts", label: "Scout: what's hot" },
+  doc: { name: "Doc", job: "Price fixes", meta: "Price fix", how: "Email, plus a text if you opted in", label: "Doc: price fixes" },
+  ref: { name: "Ref", job: "Rule changes", meta: "Rule change", how: "Email only", label: "Ref: rule changes" }
+};
+const COACH_BASE = `<ellipse cx="100" cy="208" rx="54" ry="7" fill="${N}" opacity=".14"/><rect x="70" y="170" width="16" height="28" rx="8" fill="${N}"/><rect x="114" y="170" width="16" height="28" rx="8" fill="${N}"/><rect x="60" y="190" width="32" height="14" rx="7" fill="#4ade80" stroke="${N}" stroke-width="3"/><rect x="108" y="190" width="32" height="14" rx="7" fill="#4ade80" stroke="${N}" stroke-width="3"/><rect x="38" y="66" width="124" height="116" rx="28" fill="#fff"/><rect x="88" y="68" width="24" height="112" fill="#4ade80"/>`;
+const COACH_OUTLINE = `<rect x="38" y="66" width="124" height="116" rx="28" fill="none" stroke="${N}" stroke-width="4"/>`;
+const COACH_GEAR = {
+  scout: `<path d="M56 74 C56 30 144 30 144 74 Z" fill="#d9bb7f" stroke="${N}" stroke-width="3"/><rect x="57" y="62" width="86" height="9" fill="#4ade80"/><ellipse cx="100" cy="76" rx="74" ry="11" fill="#c9a86b" stroke="${N}" stroke-width="3"/><path d="M40 136 Q26 124 50 116" fill="none" stroke="${N}" stroke-width="9" stroke-linecap="round"/><path d="M160 136 Q174 124 150 116" fill="none" stroke="${N}" stroke-width="9" stroke-linecap="round"/><rect x="82" y="104" width="36" height="12" rx="4" fill="${N}"/><circle cx="68" cy="112" r="17" fill="${N}"/><circle cx="68" cy="112" r="10" fill="#7cc6ff"/><circle cx="64" cy="108" r="3" fill="#fff"/><circle cx="132" cy="112" r="17" fill="${N}"/><circle cx="132" cy="112" r="10" fill="#7cc6ff"/><circle cx="128" cy="108" r="3" fill="#fff"/><circle cx="52" cy="118" r="8" fill="#fff" stroke="${N}" stroke-width="3"/><circle cx="148" cy="118" r="8" fill="#fff" stroke="${N}" stroke-width="3"/><path d="M84 144 Q100 158 116 144" fill="none" stroke="${N}" stroke-width="4.5" stroke-linecap="round"/><path d="M176 40 L184 30 M184 48 L196 46 M24 46 L14 40" stroke="#ffc93c" stroke-width="4" stroke-linecap="round"/>`,
+  doc: `<rect x="40" y="70" width="120" height="14" fill="#fff" stroke="${N}" stroke-width="3"/><circle cx="100" cy="60" r="16" fill="#fff" stroke="${N}" stroke-width="3"/><rect x="96" y="50" width="8" height="20" rx="1.5" fill="#e23b3b"/><rect x="90" y="56" width="20" height="8" rx="1.5" fill="#e23b3b"/><circle cx="68" cy="112" r="9" fill="${N}"/><circle cx="71" cy="109" r="3" fill="#fff"/><circle cx="132" cy="112" r="9" fill="${N}"/><circle cx="135" cy="109" r="3" fill="#fff"/><ellipse cx="58" cy="132" rx="8" ry="5" fill="#ff8fa8" opacity=".6"/><ellipse cx="142" cy="132" rx="8" ry="5" fill="#ff8fa8" opacity=".6"/><path d="M88 134 Q100 144 112 134" fill="none" stroke="${N}" stroke-width="4.5" stroke-linecap="round"/><path d="M64 150 Q64 172 100 172 Q136 172 136 150" fill="none" stroke="${N}" stroke-width="3.5"/><circle cx="100" cy="172" r="7" fill="#c9d2e6" stroke="${N}" stroke-width="3"/><path d="M40 122 Q22 138 26 158" fill="none" stroke="${N}" stroke-width="9" stroke-linecap="round"/><circle cx="26" cy="160" r="9" fill="#fff" stroke="${N}" stroke-width="3"/><path d="M160 120 Q180 110 180 88" fill="none" stroke="${N}" stroke-width="9" stroke-linecap="round"/><rect x="170" y="70" width="20" height="18" rx="6" fill="#fff" stroke="${N}" stroke-width="3"/><rect x="176" y="56" width="8" height="18" rx="4" fill="#fff" stroke="${N}" stroke-width="3"/>`,
+  ref: `<path d="M44 86 C44 40 156 40 156 86 Z" fill="${N}"/><rect x="122" y="78" width="58" height="11" rx="5.5" fill="${N}" stroke="#fff" stroke-width="2"/><circle cx="68" cy="112" r="13" fill="#fff"/><circle cx="132" cy="112" r="13" fill="#fff"/><circle cx="68" cy="112" r="8" fill="${N}"/><circle cx="132" cy="112" r="8" fill="${N}"/><path d="M56 96 L78 100 M122 100 L144 96" stroke="${N}" stroke-width="4" stroke-linecap="round"/><rect x="84" y="134" width="32" height="14" rx="7" fill="#ffc93c" stroke="${N}" stroke-width="3"/><circle cx="112" cy="146" r="7" fill="#ffc93c" stroke="${N}" stroke-width="3"/><path d="M40 122 Q22 138 26 158" fill="none" stroke="${N}" stroke-width="9" stroke-linecap="round"/><circle cx="26" cy="160" r="9" fill="#fff" stroke="${N}" stroke-width="3"/><path d="M160 116 Q182 100 182 74" fill="none" stroke="${N}" stroke-width="9" stroke-linecap="round"/><rect x="168" y="30" width="26" height="36" rx="4" fill="#ffc93c" stroke="${N}" stroke-width="3" transform="rotate(12 181 48)"/><circle cx="182" cy="70" r="10" fill="#fff" stroke="${N}" stroke-width="3"/>`
+};
+// Ref's stripes need a body-shaped clip; plain rects inside the rounded body keep it free of ids.
+const REF_STRIPES = [44, 60, 76, 116, 132, 148].map(x => { const inset = x === 44 || x === 148 ? 11 : 1; return `<rect x="${x}" y="${68 + inset}" width="8" height="${112 - inset * 2}" fill="${N}"/>`; }).join("");
+const coachPic = (role, size) => `<span class="subi" style="width:${size}px;height:${Math.round(size * 1.1)}px;flex-shrink:0"><svg viewBox="0 0 200 220" role="img" aria-label="${COACHES[role].name}, the ${COACHES[role].job.toLowerCase()} coach">${COACH_BASE}${role === "ref" ? REF_STRIPES : ""}${COACH_OUTLINE}${COACH_GEAR[role]}</svg></span>`;
 const coach = (pose, size, text, cls = "") => `<div class="coach ${cls}">${subi(pose, size, true)}<div class="bubble">${text}</div></div>`;
 const ICON = {
   check: `<svg class="check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#4ade80"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#142f73" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
@@ -361,6 +389,7 @@ const ICON = {
   family: `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><circle cx="12" cy="13.5" r="2.2"/><path d="M1.5 20a5.5 5.5 0 0 1 9-4.2M22.5 20a5.5 5.5 0 0 0-9-4.2M8.5 21a3.5 3.5 0 0 1 7 0"/></svg>`,
   plan: `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 10l1.6 1.6L14 8.2M9 15h6"/></svg>`,
   explore: `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>`,
+  huddle: `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 19a5 5 0 0 1 10 0M11 19a5 5 0 0 1 10 0"/></svg>`,
   bell: `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>`,
   search: `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>`,
   back: `<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>`,
@@ -447,7 +476,8 @@ function planSummary() {
 
 // ---------- alerts: price increases, new features, policy changes for the user's services ----------
 const kindOf = t => /same price|added|launch|new |now includes|coming to/i.test(t) ? "new" : /rose|raise|increase|hike|up \$|\bup\b.*\$|fees/i.test(t) ? "price" : "policy";
-const KIND = { price: ["Price change", "price"], new: ["New feature", "new"], policy: ["Policy change", "policy"] };
+const KIND = { price: ["Price change", "price"], new: ["New perk", "new"], policy: ["Rule change", "policy"], hot: ["Hot now", "hot"] };
+const COACH_OF = { price: "doc", policy: "ref", new: "scout", hot: "scout" };
 const sortKey = d => { const m = String(d).match(/\d{4}(-\d{2})?(-\d{2})?/g); return m ? m[m.length - 1] : "0"; };
 function fmtDate(d) {
   const m = String(d).match(/^(\d{4})-(\d{2})(?:-(\d{2}))?$/);
@@ -463,16 +493,22 @@ function alertsFor() {
     const id = "c:" + v.id + ":" + c.date; if (out.some(o => o.svc === v.id && sortKey(o.date).slice(0, 7) === sortKey(c.date).slice(0, 7))) return;
     const so = (v.sources || [])[0]; const named = so && typeof so === "object";
     out.push({ id, svc: v.id, date: c.date, kind: kindOf(c.summary), title: v.name, text: c.summary, src: named ? so.label : "Our price check", url: named ? so.url : v.official_url }); }); });
+  // Scout's weekly report: real, dated picks inside services the user already has (one per service a week).
+  ((DATA.scout || {}).items || []).forEach(x => { if (!mine.has(x.svc) || (x.country && x.country !== S.country)) return;
+    out.push({ id: "s:" + x.svc + ":" + x.date, svc: x.svc, date: x.date, kind: "hot", title: x.title, text: x.text, src: x.src, url: x.url, cta: x.cta }); });
+  out.forEach(o => o.coach = COACH_OF[o.kind]);
   return out.sort((a, b) => sortKey(b.date).localeCompare(sortKey(a.date)));
 }
-const unseen = () => alertsFor().filter(a => !S.seen.includes(a.id)).length;
+const coachOn = r => !S.coaches || S.coaches[r] !== false;
+const huddleFor = () => alertsFor().filter(a => coachOn(a.coach) && !(S.hidden || []).includes(a.id));
+const unseen = () => huddleFor().filter(a => !S.seen.includes(a.id)).length;
 
 // ---------- rendering ----------
 const $ = s => document.querySelector(s);
 const STEPS = ["about", "pick", "setup"];
 function header(showTabs) {
   const n = unseen();
-  const tabs = [["plan", "My Plan", ICON.plan], ["explore", "Explore", ICON.explore], ["alerts", "Alerts", ICON.bell], ["me", "Me", ICON.me]];
+  const tabs = [["plan", "My Plan", ICON.plan], ["explore", "Explore", ICON.explore], ["alerts", "Huddle", ICON.huddle], ["me", "Me", ICON.me]];
   const dot = k => k === "alerts" && n ? `<span class="dot" aria-label="${n} new">${n}</span>` : "";
   return `<header class="top"><div class="wrap"><button class="brand" data-act="home" aria-label="MoSuBi home">${MARK}<span>Mo<b>Su</b>Bi</span></button>
     ${showTabs ? `<nav class="tabs-top" aria-label="Main">${tabs.map(([k, l]) => `<button data-act="tab" data-v="${k}" ${S.tab === k ? 'aria-current="page"' : ""}>${l}${dot(k)}</button>`).join("")}</nav>` : ""}</div></header>
@@ -483,7 +519,7 @@ function welcomeBack() {
   const sm = planSummary(), n = unseen(), left = sm.lead.length + sm.more.length;
   const hi = S.name ? `Welcome back, ${esc(S.name)}!` : "Welcome back!";
   const lines = [];
-  if (n) lines.push([ICON.bell, `<b>${n} new alert${n > 1 ? "s" : ""}</b> for your subscriptions`]);
+  if (n) lines.push([ICON.huddle, `<b>${n} new from the Huddle</b> about your subscriptions`]);
   if (left) lines.push([ICON.plan, `<b>${left} play${left > 1 ? "s" : ""} left</b>, worth about ${yr(sm.couldSave)} a year`]);
   if (sm.saved) lines.push([ICON.gift, `You're saving <b>${yr(sm.saved)} a year</b> so far`]);
   if (!lines.length) lines.push([ICON.check, `All caught up. Nothing new since your last visit.`]);
@@ -498,9 +534,9 @@ function render() {
   let body;
   if (S.step === "done" && ui.welcomeBack) body = header(false) + welcomeBack();
   else if (S.step !== "done") body = header(false) + welcome();
-  else body = header(true) + `<main><div class="wrap">${{ plan: planView, explore: exploreView, alerts: alertsView, me: meView }[S.tab]()}</div></main>`;
+  else body = header(true) + `<main><div class="wrap">${{ plan: planView, explore: exploreView, alerts: huddleView, me: meView }[S.tab]()}</div></main>`;
   app.innerHTML = body;
-  if (S.step === "done" && S.tab === "alerts") { const ids = alertsFor().map(a => a.id); if (ids.some(i => !S.seen.includes(i))) { S.seen = [...new Set([...S.seen, ...ids])]; save(); } }
+  if (S.step === "done" && S.tab === "alerts") { const ids = huddleFor().map(a => a.id); if (ids.some(i => !S.seen.includes(i))) { S.seen = [...new Set([...S.seen, ...ids])]; save(); } }
 }
 
 // ----- welcome flow (kept from v1: intro, how can we help, about you, pick, set up) -----
@@ -688,61 +724,73 @@ function openSheet(id) {
 }
 const closeSheet = () => { $("#sheet").innerHTML = ""; };
 
-// ----- Alerts -----
-function alertsView() {
-  const xs = alertsFor();
-  const head = `<div class="page-head">${subi("alert", 100, true)}<div class="grow col" style="gap:6px"><h1>Alerts</h1><div class="bubble" style="margin:0">${xs.length ? `Here's what changed for the services you have. I'll flag new ones here first.` : `All quiet for your subscriptions. I'll let you know the moment something changes.`}</div></div></div>`;
-  // Alert sign-up (Cuong, 2026-11-11): email for everything; texts optional, opt-in only, and only for price increases.
-  const opt = S.optIn ? `<div class="card col"><div class="row">${ICON.check}<div class="grow"><b>Alerts are on</b><div class="small muted">Email to ${esc(S.optIn.email)}</div>${S.optIn.phone ? `<div class="small muted">Texts to ${esc(S.optIn.phone)} for price increases</div>` : ""}</div><button class="btn ghost sm" data-act="optOut">Turn off</button></div>
-      ${S.optIn.phone ? `<button class="btn ghost sm" data-act="textsOff">Stop texts, keep email</button>` : ""}<p class="tiny muted">Preview: nothing is sent yet. In the live app, Subi will message you when something here changes.</p></div>`
-    : `<form class="card col" data-form="optin"><b style="font-size:18px">Get a heads-up</b><p class="small muted">Price increases, new features and policy changes for what you have. Nothing else, and it's free.</p>
+// ----- The Huddle (was Alerts): coach-signed cards, a coach filter, and an on/off switch per coach -----
+function huddleView() {
+  const all = huddleFor(), f = ui.coachF || "all";
+  const xs = all.filter(a => f === "all" || a.coach === f);
+  const hiddenN = (S.hidden || []).length;
+  const head = `<div class="page-head">${subi("wave", 100, true)}<div class="grow col" style="gap:6px"><h1>The Huddle</h1><div class="bubble" style="margin:0">${all.length ? `The team's been busy. Here's what they found for you.` : `All quiet for your subscriptions. The team will flag anything new here first.`}</div></div></div>`;
+  const chips = `<div class="chips" role="group" aria-label="Filter by coach">${[["all", "All"], ...Object.entries(COACHES).map(([k, c]) => [k, c.name])].map(([k, l]) => `<button class="chip" data-act="coachF" data-v="${k}" aria-pressed="${f === k}">${l}</button>`).join("")}</div>`;
+  const fixFor = new Set(buildPlays().filter(p => !S.plays[p.id]).map(p => p.svc[0]));
+  const card = a => { const v = CATALOG[a.svc], c = COACHES[a.coach], [lab, cls] = KIND[a.kind];
+    const cta = a.kind === "price" ? `<button class="btn primary sm" data-act="tab" data-v="plan">${fixFor.has(a.svc) ? "See the fix" : "See my plan"}</button>`
+      : a.kind === "hot" && (v.official_url || a.url) ? `<a class="btn primary sm" href="${esc(v.official_url || a.url)}" target="_blank" rel="noopener">${esc(a.cta || "Open " + v.name)} ${ICON.out}</a>`
+      : a.url ? `<a class="btn primary sm" href="${esc(a.url)}" target="_blank" rel="noopener">What changes for me ${ICON.out}</a>` : "";
+    return `<article class="card huddle-card"><div class="who">${coachPic(a.coach, 46)}<div class="grow"><b>${c.name}</b><span class="tiny muted">${c.meta} · ${esc(fmtDate(a.date))}</span></div><span class="pill ${cls}">${lab}</span></div>
+      <div class="row" style="gap:10px;align-items:flex-start">${logo(v, "logo sm")}<div class="grow col" style="gap:4px"><h3>${esc(a.title === v.name ? v.name : a.title)}</h3><p class="small">${esc(a.text)}</p>
+      <p class="tiny muted">Source: ${a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.src)}</a>` : esc(a.src)}</p></div></div>
+      <div class="row" style="flex-wrap:wrap">${cta}<button class="btn ghost sm" data-act="less" data-v="${esc(a.id)}">Less like this</button></div></article>`; };
+  const empty = !all.length ? "" : !xs.length ? `<div class="card"><p class="small">Nothing from ${COACHES[f].name} right now.</p></div>` : "";
+  const staff = `<div class="card col"><b style="font-size:18px">What do you want to hear about?</b>
+    ${Object.entries(COACHES).map(([k, c]) => `<div class="coach-row">${coachPic(k, 38)}<div class="grow"><b>${c.label}</b><span class="tiny muted">${c.how}</span></div><button class="switch" role="switch" aria-checked="${coachOn(k)}" aria-label="${c.label}" data-act="coachToggle" data-v="${k}"></button></div>`).join("")}
+    <p class="tiny muted">Subi stays your head coach. The others only show up on the cards they own, and only about services you have.</p>
+    ${hiddenN ? `<button class="btn ghost sm" data-act="unhide">Bring back ${hiddenN} hidden card${hiddenN > 1 ? "s" : ""}</button>` : ""}</div>`;
+  // Sign-up (Cuong, 2026-11-11): email for everything; texts optional, opt-in only, and only Doc's price increases.
+  const opt = S.optIn ? `<div class="card col"><div class="row">${ICON.check}<div class="grow"><b>The Huddle comes to you</b><div class="small muted">Email to ${esc(S.optIn.email)}</div>${S.optIn.phone ? `<div class="small muted">Texts from Doc to ${esc(S.optIn.phone)} for price increases</div>` : ""}</div><button class="btn ghost sm" data-act="optOut">Turn off</button></div>
+      ${S.optIn.phone ? `<button class="btn ghost sm" data-act="textsOff">Stop texts, keep email</button>` : ""}<p class="tiny muted">Preview: nothing is sent yet. In the live app, the team will message you when something here changes.</p></div>`
+    : `<form class="card col" data-form="optin"><b style="font-size:18px">Get a heads-up</b><p class="small muted">Doc's price fixes, Ref's rule changes and Scout's weekly digest, only for what you have. It's free.</p>
       <div class="field"><label for="em">Email</label><input id="em" class="input" type="email" required autocomplete="email" placeholder="you@example.com"></div>
-      <label class="row" style="align-items:flex-start;gap:10px;cursor:pointer"><input id="tx" type="checkbox" data-chg="wantText" ${ui.wantText ? "checked" : ""} style="width:22px;height:22px;margin-top:2px;accent-color:#142f73"><span><b>Also text me about price increases</b> <span class="muted">(optional)</span><span class="tiny muted" style="display:block">Only price increases for what you have. Reply STOP anytime. Message and data rates may apply.</span></span></label>
+      <label class="row" style="align-items:flex-start;gap:10px;cursor:pointer"><input id="tx" type="checkbox" data-chg="wantText" ${ui.wantText ? "checked" : ""} style="width:22px;height:22px;margin-top:2px;accent-color:#142f73"><span><b>Also text me about price increases</b> <span class="muted">(optional)</span><span class="tiny muted" style="display:block">Only Doc texts, only for price increases on what you have. Reply STOP anytime. Message and data rates may apply.</span></span></label>
       ${ui.wantText ? `<div class="field"><label for="ph">Mobile number</label><input id="ph" class="input" type="tel" required autocomplete="tel" inputmode="tel" placeholder="(555) 555-0123"></div>` : ""}
       <button class="btn primary" type="submit">Turn on alerts</button>
       <p class="tiny muted">Preview: this is saved in this browser only, and nothing is sent yet.</p></form>`;
-  const prev = `<div class="card col"><b style="font-size:18px">See what an alert looks like</b><p class="small muted">A preview built from ${xs.length ? "your own alerts" : "an example alert"}. The prototype can't send real messages yet.</p>
+  const prev = `<div class="card col"><b style="font-size:18px">See what the team sends</b><p class="small muted">A preview built from ${all.length ? "your own Huddle" : "an example"}. The prototype can't send real messages yet.</p>
     <div class="row" style="flex-wrap:wrap"><button class="btn sm" data-act="preview" data-v="email">Email preview</button><button class="btn sm" data-act="preview" data-v="text">Text preview</button></div></div>`;
-  return `<div class="layout"><div class="col" style="gap:14px">${head}
-    ${xs.map(a => { const v = CATALOG[a.svc]; const [lab, cls] = KIND[a.kind];
-      return `<article class="card alert">${logo(v)}<div class="grow"><div class="row" style="gap:8px;flex-wrap:wrap"><span class="pill ${cls}">${lab}</span><span class="tiny muted">${esc(fmtDate(a.date))}</span></div>
-        <h3>${esc(a.title === v.name ? v.name : a.title)}</h3><p class="small">${esc(a.text)}</p>
-        <p class="tiny muted">Source: ${a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.src)}</a>` : esc(a.src)}</p>
-        ${a.kind === "price" ? `<div><button class="btn sm" data-act="tab" data-v="plan">See my plays</button></div>` : ""}</div></article>`; }).join("")}
+  return `<div class="layout"><div class="col" style="gap:14px">${head}${all.length ? chips : ""}${xs.map(card).join("")}${empty}
     ${!S.subs.length ? `<button class="btn go" data-act="addMore">Add my subscriptions</button>` : ""}
-  </div><aside class="side col">${opt}${prev}</aside></div>`;
+  </div><aside class="side col">${staff}${opt}${prev}</aside></div>`;
 }
 // Alert previews (Cuong, 2026-11-11): what Subi's email and text would look like, built from the user's alerts and plays.
 function previewItems() {
-  let xs = alertsFor().sort((a, b) => (b.kind === "price") - (a.kind === "price")).slice(0, 3), example = false;  // price changes lead
+  let xs = huddleFor().sort((a, b) => (b.kind === "price") - (a.kind === "price")).slice(0, 4), example = false;  // price changes lead
   if (!xs.length) { const t = L.TRENDS.find(t => t.svc === "netflix" && t.kind === "up") || L.TRENDS.find(t => t.svc && t.kind === "up");
-    xs = t ? [{ svc: t.svc, date: t.date, kind: "price", title: t.title, text: t.text }] : []; example = true; }
+    xs = t ? [{ svc: t.svc, date: t.date, kind: "price", coach: "doc", title: t.title, text: t.text }] : []; example = true; }
   const plays = buildPlays().filter(p => !S.plays[p.id]);
   return { example, items: xs.map(a => ({ ...a, v: CATALOG[a.svc], play: a.kind === "price" ? plays.find(p => p.svc[0] === a.svc) : null })) };
 }
 function openPreview(kind) {
   const { example, items } = previewItems();
   const top = items[0]; const v0 = top && top.v;
-  const head = top ? (top.kind === "price" ? `${v0.name} price change` : top.kind === "new" ? `${v0.name} has something new` : `${v0.name} changed its rules`) : "Your subscription news";
+  const head = top ? (top.kind === "price" ? `${v0.name} price change` : top.kind === "hot" ? `what's hot on ${v0.name}` : top.kind === "new" ? `${v0.name} has something new` : `${v0.name} changed its rules`) : "Your subscription news";
   const to = S.optIn ? S.optIn.email : "you@example.com";
-  const email = `<div class="mail"><div class="mail-head"><div class="row" style="gap:10px">${MARK.replace('width="28" height="28"', 'width="36" height="36" style="background:#142f73;border-radius:10px;padding:4px"')}<div class="grow"><b>Subi from MoSuBi</b><div class="tiny muted">To: ${esc(to)}</div></div><span class="tiny muted">Now</span></div>
+  const email = `<div class="mail"><div class="mail-head"><div class="row" style="gap:10px">${MARK.replace('width="28" height="28"', 'width="36" height="36" style="background:#142f73;border-radius:10px;padding:4px"')}<div class="grow"><b>Subi and the team at MoSuBi</b><div class="tiny muted">To: ${esc(to)}</div></div><span class="tiny muted">Now</span></div>
       <div style="font-size:18px;font-weight:900;margin-top:10px">Heads up: ${esc(head)}</div></div>
     <div class="mail-body">
-      <div class="row" style="align-items:flex-end">${subi("alert", 72)}<p class="bubble" style="margin:0 0 10px">Hi${S.optIn ? "" : " there"}! I spotted ${items.length === 1 ? "a change" : `${items.length} changes`} to subscriptions you have. Here's what it means for you.</p></div>
-      ${items.map(a => `<div class="mail-item"><div class="row" style="gap:10px">${logo(a.v, "logo sm")}<div class="grow"><span class="pill ${KIND[a.kind][1]}">${KIND[a.kind][0]}</span> <b>${esc(a.title === a.v.name ? a.v.name : a.title)}</b></div></div>
+      <div class="row" style="align-items:flex-end">${subi("wave", 72)}<p class="bubble" style="margin:0 0 10px">Hi${S.optIn ? "" : " there"}! The team found ${items.length === 1 ? "something" : `${items.length} things`} about subscriptions you have. Here's what it means for you.</p></div>
+      ${items.map(a => `<div class="mail-item"><div class="mail-who">${coachPic(a.coach || COACH_OF[a.kind], 30)}<span>${COACHES[a.coach || COACH_OF[a.kind]].name} · ${COACHES[a.coach || COACH_OF[a.kind]].meta}</span></div><div class="row" style="gap:10px;margin-top:6px">${logo(a.v, "logo sm")}<div class="grow"><span class="pill ${KIND[a.kind][1]}">${KIND[a.kind][0]}</span> <b>${esc(a.title === a.v.name ? a.v.name : a.title)}</b></div></div>
         <p class="small" style="margin-top:6px">${esc(a.text)}</p>
-        ${a.play ? `<div class="mail-play"><b>Your play:</b> ${esc(a.play.title)}. Save about ${yr(a.play.save)} a year.</div>` : `<div class="mail-play"><b>Your play:</b> Nothing to do. I'll keep watching.</div>`}</div>`).join("")}
+        ${a.play ? `<div class="mail-play"><b>Doc's fix:</b> ${esc(a.play.title)}. Save about ${yr(a.play.save)} a year.</div>` : a.kind === "hot" ? `<div class="mail-play"><b>Scout says:</b> It's already in your plan, so enjoy it.</div>` : a.kind === "price" ? `<div class="mail-play"><b>Doc's take:</b> No cheaper fix for your plan right now. Doc will keep watching.</div>` : `<div class="mail-play"><b>Ref says:</b> Nothing to do unless this changes how you use it.</div>`}</div>`).join("")}
       <div style="text-align:center;margin:16px 0 6px"><span class="btn go" style="pointer-events:none">Open my game plan</span></div>
       <p class="tiny muted" style="text-align:center">You get these because you turned on alerts in MoSuBi. Unsubscribe or change what you get anytime. MoSuBi is free.</p></div></div>`;
-  const pt = items.find(a => a.kind === "price");
+  const pt = coachOn("doc") ? items.find(a => a.kind === "price") : null;
   const tTop = pt || null;
-  const t = tTop ? (() => { const top = tTop, v0 = tTop.v; return `MoSuBi: Heads up! ${top.title === v0.name ? v0.name + ": " + top.text : top.title + "."}${top.play ? ` Your play: ${top.play.title.replace(/^./, c => c.toLowerCase())}, save ~${yr(top.play.save)}/yr.` : ""} Reply STOP to opt out.`; })() : "";
-  const text = !t ? `<div class="card"><p>No text this time. Texts only go out for price increases, and none of your subscriptions has one right now. Everything else comes by email.</p></div>` : `<div class="phone"><div class="phone-top"><b style="display:block">MoSuBi</b><span class="tiny muted">To ${esc(S.optIn && S.optIn.phone ? S.optIn.phone : "your mobile")} · Text Message · Today ${new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</span></div>
+  const t = tTop ? (() => { const top = tTop, v0 = tTop.v; return `MoSuBi Doc: Heads up! ${top.title === v0.name ? v0.name + ": " + top.text : top.title + "."}${top.play ? ` Easy fix: ${top.play.title.replace(/^./, c => c.toLowerCase())}, save ~${yr(top.play.save)}/yr.` : ""} Reply STOP to opt out.`; })() : "";
+  const text = !t ? `<div class="card"><p>No text this time. Only Doc sends texts, and only for price increases. None of your subscriptions has one right now${coachOn("doc") ? "" : " (Doc is switched off)"}. Scout and Ref stick to email.</p></div>` : `<div class="phone"><div class="phone-top"><b style="display:block">MoSuBi</b><span class="tiny muted">To ${esc(S.optIn && S.optIn.phone ? S.optIn.phone : "your mobile")} · Text Message · Today ${new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</span></div>
       <div class="sms">${esc(t)}</div><p class="tiny muted" style="text-align:center;margin-top:10px">${t.length} characters${t.length > 160 ? " (sent as 2 texts)" : " (fits in one text)"}</p></div>`;
   $("#sheet").innerHTML = `<div class="scrim" data-act="close"></div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pv-t"><div class="col">
     <div class="row"><h2 id="pv-t" class="grow" style="font-size:22px">${kind === "email" ? "Email preview" : "Text preview"}</h2><button class="btn sm" data-act="close">Close</button></div>
     <div class="seg" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button data-act="preview" data-v="email" aria-pressed="${kind === "email"}">Email</button><button data-act="preview" data-v="text" aria-pressed="${kind === "text"}">Text</button></div>
-    ${example ? `<p class="small muted">Example only: none of your subscriptions has a change yet, so this uses a recent Netflix price change.</p>` : ""}
+    ${example ? `<p class="small muted">Example only: none of your subscriptions has a change yet, so this uses a recent Netflix price change from Doc.</p>` : ""}
     ${kind === "email" ? email : text}
     <p class="tiny muted">Preview only. Sending real emails and texts needs a server and a sending service, which comes with the live app.</p></div></div>`;
 }
@@ -859,6 +907,10 @@ document.addEventListener("click", e => {
   else if (a === "exCat") { ui.exCat = v || null; ui.exQ = ""; render(); toTop(); }
   else if (a === "open") openSheet(v);
   else if (a === "preview") openPreview(v);
+  else if (a === "coachF") { ui.coachF = v; render(); }
+  else if (a === "coachToggle") { S.coaches = { scout: true, doc: true, ref: true, ...(S.coaches || {}) }; S.coaches[v] = !S.coaches[v]; go(); toast(S.coaches[v] ? `${COACHES[v].name} is back in the Huddle.` : `${COACHES[v].name} is off. Switch back on anytime.`, "wave"); }
+  else if (a === "less") { S.hidden = [...new Set([...(S.hidden || []), v])]; go(); toast("Got it. You'll see fewer like that.", "wave"); }
+  else if (a === "unhide") { S.hidden = []; go(); }
   else if (a === "close") closeSheet();
   else if (a === "addFromSheet") { addSub(v); save(); closeSheet(); render(); toast(`Added ${CATALOG[v].name} to your plan.`, "plan"); }
   else if (a === "textsOff") { S.optIn.phone = null; go(); toast("Texts are off. You'll still get email.", "wave"); }

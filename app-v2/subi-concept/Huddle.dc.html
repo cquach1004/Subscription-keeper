@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Huddle</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#142f73}a:hover{color:#0b1c48}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f3f6fc; color: #142f73; font-family: Nunito, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+<div style="flex-grow: 1; overflow-y: auto; padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 8px">
+<dc-import name="Subi" pose="wave" size="86" hint-size="86px,95px"></dc-import>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-size: 28px; font-weight: 900">The Huddle</h1>
+<div style="background: #ffffff; border-radius: 16px 16px 16px 4px; padding: 8px 12px; font-size: 14px; font-weight: 700; line-height: 1.35">The team's been busy. Here's what they found for you.</div>
+</div>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap" role="group" aria-label="Filter by coach">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
+<button type="button" onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="{{f.style}}">{{f.label}}</button>
+</sc-for>
+</div>
+<sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
+<article style="background: #ffffff; border: 2px solid #dfe6f5; border-radius: 20px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 8px">
+<dc-import name="Coach" role="{{c.role}}" size="46" hint-size="46px,51px"></dc-import>
+<div style="display: flex; flex-direction: column; flex-grow: 1">
+<span style="font-size: 15px; font-weight: 900">{{c.coach}}</span>
+<span style="font-size: 12px; font-weight: 700; color: #3b4f86">{{c.meta}}</span>
+</div>
+<span style="{{c.tagStyle}}">{{c.tag}}</span>
+</div>
+<div style="font-size: 17px; font-weight: 900; line-height: 1.25">{{c.title}}</div>
+<div style="font-size: 14px; font-weight: 600; line-height: 1.4; color: #3b4f86">{{c.body}}</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<a href="#" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 12px; background: #142f73; color: #ffffff; font-size: 14px; font-weight: 900; text-decoration: none">{{c.cta}}</a>
+<button type="button" style="min-height: 44px; padding: 0 12px; border-radius: 12px; border: 2px solid #c7d2ec; background: #ffffff; color: #142f73; font-family: inherit; font-size: 14px; font-weight: 800; cursor: pointer">Less like this</button>
+</div>
+</article>
+</sc-for>
+<div style="background: #ffffff; border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 17px; font-weight: 900">What do you want to hear about?</div>
+<sc-for list="{{settings}}" as="t" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px">
+<dc-import name="Coach" role="{{t.role}}" size="38" hint-size="38px,42px"></dc-import>
+<div style="display: flex; flex-direction: column; flex-grow: 1">
+<span style="font-size: 15px; font-weight: 900">{{t.label}}</span>
+<span style="font-size: 12px; font-weight: 700; color: #3b4f86">{{t.how}}</span>
+</div>
+<button type="button" role="switch" aria-checked="{{t.on}}" aria-label="{{t.label}}" onClick="{{t.toggle}}" style="{{t.style}}"><span style="{{t.knob}}"></span></button>
+</div>
+</sc-for>
+</div>
+</div>
+<nav aria-label="Main" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: #ffffff; border-top: 1px solid #dfe6f5; padding: 8px 6px 18px">
+<a href="GamePlan.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; text-decoration: none; color: #3b4f86; font-size: 12px; font-weight: 800">
+<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2.5" fill="none" stroke="#3b4f86" stroke-width="2"></rect><path d="M9 10l1.6 1.6L14 8.2M9 15h6" fill="none" stroke="#3b4f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+My Plan</a>
+<a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; text-decoration: none; color: #3b4f86; font-size: 12px; font-weight: 800">
+<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#3b4f86" stroke-width="2"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="none" stroke="#3b4f86" stroke-width="2" stroke-linejoin="round"></path></svg>
+Explore</a>
+<a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; text-decoration: none; color: #142f73; font-size: 12px; font-weight: 900">
+<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="9" r="3" fill="#4ade80" stroke="#142f73" stroke-width="2"></circle><circle cx="16" cy="9" r="3" fill="#4ade80" stroke="#142f73" stroke-width="2"></circle><path d="M3 19a5 5 0 0 1 10 0M11 19a5 5 0 0 1 10 0" fill="none" stroke="#142f73" stroke-width="2" stroke-linecap="round"></path></svg>
+Huddle</a>
+<a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; text-decoration: none; color: #3b4f86; font-size: 12px; font-weight: 800">
+<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="4" fill="none" stroke="#3b4f86" stroke-width="2"></circle><path d="M4.5 20a7.5 7.5 0 0 1 15 0" fill="none" stroke="#3b4f86" stroke-width="2" stroke-linecap="round"></path></svg>
+Me</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { filter: 'all', on: { scout: true, doc: true, ref: true } }; }
+renderVals() {
+const all = [
+{ role: 'doc', coach: 'Doc', meta: 'Price fix · Today', tag: 'Price up', tagBg: '#ffc93c', title: '[Service] is going up [$X] a month', body: 'Starts [date]. Easy fix: switch to [cheaper plan] and save about [$Y] a year.', cta: 'See the fix' },
+{ role: 'scout', coach: 'Scout', meta: 'Weekly scout report · Mon', tag: 'Hot now', tagBg: '#d9bb7f', title: '[Show] is #1 on Netflix this week', body: 'It is already in your Netflix plan. Source: Netflix Top 10, week of [date].', cta: 'Watch on Netflix' },
+{ role: 'scout', coach: 'Scout', meta: 'Weekly scout report · Mon', tag: 'Hot now', tagBg: '#d9bb7f', title: '[Playlist] is blowing up on Spotify', body: 'Climbing the Spotify charts this week, and it comes with your Premium plan.', cta: 'Open in Spotify' },
+{ role: 'ref', coach: 'Ref', meta: 'Rule change · 2 days ago', tag: 'Yellow card', tagBg: '#ffe48a', title: '[Service] is changing its sharing rules', body: 'From [date], [what changes]. Nothing to do if only your household uses it.', cta: 'What changes for me' }
+];
+const f = this.state.filter, on = this.state.on;
+const chip = (id, label) => ({ label, on: f === id, pick: () => this.setState({ filter: id }), style: 'min-height: 40px; padding: 0 14px; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 800; cursor: pointer; ' + (f === id ? 'background: #142f73; color: #ffffff; border: 2px solid #142f73;' : 'background: #ffffff; color: #142f73; border: 2px solid #c7d2ec;') });
+const set = [
+{ role: 'scout', label: 'Scout: what is hot', how: 'Weekly email digest' },
+{ role: 'doc', label: 'Doc: price fixes', how: 'Email, plus text if you opted in' },
+{ role: 'ref', label: 'Ref: rule changes', how: 'Email only' }
+];
+return {
+filters: [chip('all', 'All'), chip('scout', 'Scout'), chip('doc', 'Doc'), chip('ref', 'Ref')],
+cards: all.filter((c) => on[c.role] && (f === 'all' || f === c.role)).map((c) => ({ ...c, tagStyle: 'padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: #142f73; background: ' + c.tagBg })),
+settings: set.map((t) => ({ ...t, on: on[t.role],
+toggle: () => this.setState({ on: { ...on, [t.role]: !on[t.role] } }),
+style: 'position: relative; flex-shrink: 0; width: 52px; height: 32px; border-radius: 16px; border: none; cursor: pointer; background: ' + (on[t.role] ? '#4ade80' : '#c7d2ec'),
+knob: 'position: absolute; top: 4px; width: 24px; height: 24px; border-radius: 12px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.25); left: ' + (on[t.role] ? '24px' : '4px') }))
+};
+}
+}
+</script>
+</body>
+</html>

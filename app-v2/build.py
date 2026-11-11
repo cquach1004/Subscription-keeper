@@ -44,6 +44,7 @@ for f in ["alternatives", "explore-extra", "regional", "location-prices"]:
     data[f] = json.load(open(os.path.join(ROOT, "app-prototype", f + ".json")))
 data["legacy"] = legacy
 data["additions"] = json.load(open(os.path.join(HERE, "data", "additions.json")))
+data["scout"] = json.load(open(os.path.join(HERE, "data", "scout.json")))
 
 src = open(os.path.join(HERE, "src", "app.html")).read()
 blob = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
