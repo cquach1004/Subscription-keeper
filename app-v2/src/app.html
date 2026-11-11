@@ -221,7 +221,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 4 · Nov 11, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 5 · Nov 11, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
@@ -255,9 +255,12 @@ const catName = c => L.CATEGORY_LABEL[c] || c.split("_").map(w => w[0].toUpperCa
 const PROTECT = new Set([...L.PROTECTION_CATS, "car_insurance", "home_insurance"]);
 
 // ---------- state ----------
-const fresh = () => ({ v: 1, step: "intro", team: "", country: "US", region: "", subs: [], plays: {}, tab: "plan", seen: [], optIn: null, savedAt: {} });
+const fresh = () => ({ v: 1, step: "intro", team: "", country: "US", region: "", subs: [], plays: {}, history: [], tab: "plan", seen: [], optIn: null, savedAt: {} });
 let S;
 try { S = { ...fresh(), ...JSON.parse(localStorage.getItem(STORE) || "{}") }; } catch (e) { S = fresh(); }
+// Build 5: finished plays live in S.history (older previews kept "done" in S.plays; those plays simply reopen).
+if (!Array.isArray(S.history)) S.history = [];
+Object.keys(S.plays || {}).forEach(k => { if (S.plays[k] === "done") delete S.plays[k]; });
 const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
 let ui = { cat: null, q: "", pickCat: "popular", pickQ: "", exCat: null, exQ: "", openMore: false };
 
@@ -291,7 +294,7 @@ function teamPlan(v) {
 // ---------- money ----------
 const fmt = (n, d) => n == null ? "" : new Intl.NumberFormat("en-US", { style: "currency", currency: currency(), minimumFractionDigits: d ?? (Math.round(n) === n ? 0 : 2), maximumFractionDigits: d ?? 2 }).format(n);
 const yr = n => fmt(Math.round(n), 0);
-const subPrice = s => { if (s.price != null && s.price !== "") return +s.price; if (!isUS()) return null; const v = CATALOG[s.id]; const p = v && planOf(v, s.plan); return p ? p.eff : null; };
+const subPrice = s => { if (s.price != null && s.price !== "") return +s.price; if (!isUS()) return null; const v = CATALOG[s.id]; const p = v && planOf(v, s.plan); if (!p) return null; return s.billing === "yearly" && p.price_annual ? +(p.price_annual / 12).toFixed(2) : p.eff; };
 const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
 // ---------- pictures ----------
@@ -352,17 +355,17 @@ function buildPlays() {
     // 2. Plan bigger than the household.
     if (S.team === "me" && cur && /family|duo|household|premier|2 accounts/i.test(cur.name)) {
       const solo = ps.filter(p => /individual|standard|personal|basic/i.test(p.name) && !bundleName(p.name) && p.eff < price).sort((a, b) => b.eff - a.eff)[0];
-      if (solo) out.push({ id: "solo:" + s.id, svc: [s.id], kind: "switch", save: (price - solo.eff) * 12,
+      if (solo) out.push({ id: "solo:" + s.id, svc: [s.id], kind: "switch", to: solo.id, save: (price - solo.eff) * 12,
         title: `Switch ${v.name} to ${solo.name}`, why: `You're on ${cur.name}, but it's just you. ${solo.name} is ${fmt(solo.eff)} a month.`, url: v.official_url, how: "Change plan in your account settings. The new price starts at your next bill." });
     }
     // 3. A plan with ads (shows and movies) for people who don't watch a lot.
     if (v.category === "video" && s.use !== "lot" && cur && !/ads/i.test(cur.name)) {
       const ads = ps.filter(p => /with ads|\(ads\)/i.test(p.name) && !bundleName(p.name) && p.eff > 0 && p.eff < price).sort((a, b) => a.eff - b.eff)[0];
-      if (ads) out.push({ id: "ads:" + s.id, svc: [s.id], kind: "switch", save: (price - ads.eff) * 12,
+      if (ads) out.push({ id: "ads:" + s.id, svc: [s.id], kind: "switch", to: ads.id, save: (price - ads.eff) * 12,
         title: `Switch ${v.name} to ${ads.name}`, why: `Same shows, a few ads, ${fmt(ads.eff)} a month. A good trade if you don't watch every night.`, url: v.official_url, how: "Change plan in your account settings." });
     }
     // 4. Pay yearly, where the yearly price is lower.
-    if (cur && cur.price_monthly && cur.price_annual && cur.price_annual < cur.price_monthly * 12 - 1)
+    if (s.billing !== "yearly" && cur && cur.price_monthly && cur.price_annual && cur.price_annual < cur.price_monthly * 12 - 1)
       out.push({ id: "yearly:" + s.id, svc: [s.id], kind: "yearly", save: cur.price_monthly * 12 - cur.price_annual,
         title: `Pay for ${v.name} yearly`, why: `If you pay monthly, the yearly price of ${fmt(cur.price_annual)} works out cheaper. Only worth it if you're keeping it all year.`, url: v.official_url, how: "Look for annual billing in your plan settings." });
     // 5. A free option that does the same job (libraries and city services first).
@@ -396,21 +399,16 @@ function buildPlays() {
 function planSummary() {
   const plays = buildPlays();
   const open = plays.filter(p => !S.plays[p.id]);
-  const done = plays.filter(p => S.plays[p.id] === "done");
   const bestBySub = {};
   open.forEach(p => p.svc.forEach(id => { bestBySub[id] = Math.max(bestBySub[id] || 0, p.save); }));
-  const doneSubs = new Set(done.flatMap(p => p.svc));
-  Object.keys(bestBySub).forEach(id => { if (doneSubs.has(id)) delete bestBySub[id]; });
   const couldSave = Object.values(bestBySub).reduce((a, b) => a + b, 0);
-  const savedBySub = {};
-  done.forEach(p => p.svc.forEach(id => { savedBySub[id] = Math.max(savedBySub[id] || 0, p.save); }));
-  const saved = Object.values(savedBySub).reduce((a, b) => a + b, 0);
-  // Lead plays: the single best open play for each subscription, best first.
+  const saved = S.history.reduce((a, h) => a + (h.save || 0), 0);
+  // Lead plays: the single best open play for each subscription, best first. Subi calls 3 plays at a time.
   const seen = new Set(), lead = [], more = [];
-  open.forEach(p => { const k = p.svc[0]; if (seen.has(k) || doneSubs.has(k) || lead.length >= 3) more.push(p); else { seen.add(k); lead.push(p); } });  // Subi calls 3 plays at a time
-  const withPlays = new Set(plays.flatMap(p => p.svc));
+  open.forEach(p => { const k = p.svc[0]; if (seen.has(k) || lead.length >= 3) more.push(p); else { seen.add(k); lead.push(p); } });
+  const withPlays = new Set(open.flatMap(p => p.svc));
   const keep = S.subs.filter(s => !withPlays.has(s.id) && CATALOG[s.id]);
-  return { plays, open, done, lead, more, couldSave, saved, keep };
+  return { plays, open, lead, more, couldSave, saved, keep, done: S.history };
 }
 
 // ---------- alerts: price increases, new features, policy changes for the user's services ----------
@@ -542,34 +540,52 @@ function setupHtml() {
 
 // ----- My Plan -----
 const playHtml = (p, n) => {
-  const st = S.plays[p.id]; const v = CATALOG[p.svc[0]]; const alt = p.alt && CATALOG[p.alt];
-  return `<article class="play ${st === "done" ? "done" : ""}"><div class="row" style="align-items:flex-start;gap:12px">${n ? `<span class="num">${n}</span>` : logo(alt || v, "logo sm")}
-    <div class="grow col" style="gap:4px"><h3>${esc(p.title)}</h3><p class="why">${esc(p.why)}</p><p class="save">${st === "done" ? "Saving" : "Save"} about ${yr(p.save)} a year</p></div></div>
-    ${st === "done" ? `<div class="row"><span class="howto" style="color:var(--green-ink)">Nice play! Marked as done.</span><button class="btn ghost sm" data-act="undo" data-v="${esc(p.id)}">Undo</button></div>`
-    : `<p class="small muted"><b>How:</b> ${esc(p.how)}${p.url ? ` <a href="${esc(p.url)}" target="_blank" rel="noopener">Open ${esc(alt ? alt.name : v.name)} ${ICON.out}</a>` : ""}</p>
-    <div class="acts"><button class="btn primary sm" data-act="done" data-v="${esc(p.id)}">Done it</button><button class="btn sm" data-act="skip" data-v="${esc(p.id)}">Not for me</button></div>`}</article>`;
+  const v = CATALOG[p.svc[0]]; const alt = p.alt && CATALOG[p.alt];
+  return `<article class="play"><div class="row" style="align-items:flex-start;gap:12px">${n ? `<span class="num">${n}</span>` : logo(alt || v, "logo sm")}
+    <div class="grow col" style="gap:4px"><h3>${esc(p.title)}</h3><p class="why">${esc(p.why)}</p><p class="save">Save about ${yr(p.save)} a year</p></div></div>
+    <p class="small muted"><b>How:</b> ${esc(p.how)}${p.url ? ` <a href="${esc(p.url)}" target="_blank" rel="noopener">Open ${esc(alt ? alt.name : v.name)} ${ICON.out}</a>` : ""}</p>
+    <div class="acts"><button class="btn primary sm" data-act="done" data-v="${esc(p.id)}">Done it</button><button class="btn sm" data-act="skip" data-v="${esc(p.id)}">Not for me</button></div></article>`;
 };
+const EFFECT = { removed: "Taken off your list", switched: "Plan updated on your list", yearly: "Now paid yearly" };
+function historyHtml(sm) {
+  if (!S.history.length) return `<div class="col">${coach("plan", 110, `Plays you finish move here, so My Plan only shows what's left to do.`)}</div>`;
+  const skipped = Object.entries(S.plays).filter(([, st]) => st === "skip").length;
+  return `<div class="col" style="gap:12px">
+    <div class="save-card"><div><div class="lab">Saved with MoSuBi</div><div class="big">${yr(sm.saved)} a year</div><div class="lab">${S.history.length} play${S.history.length > 1 ? "s" : ""} done</div></div>${COIN}</div>
+    ${S.history.map((h, i) => { const v = CATALOG[h.svc]; const when = new Date(h.at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      return `<article class="card col" style="gap:8px"><div class="row" style="align-items:flex-start">${v ? logo(v, "logo sm") : ""}<div class="grow col" style="gap:2px"><h3 style="font-size:17px">${esc(h.title)}</h3>
+        <span class="small muted">Done ${esc(when)} · ${esc(EFFECT[h.effect] || "")}</span><span class="save" style="font-weight:900;color:var(--green-ink)">Saving about ${yr(h.save)} a year</span></div>
+        <button class="btn ghost sm" data-act="undo" data-v="${i}" aria-label="Undo ${esc(h.title)}">Undo</button></div></article>`; }).join("")}
+    ${skipped ? `<p class="small muted">${skipped} play${skipped > 1 ? "s" : ""} you said weren't for you. <button class="btn ghost sm" data-act="unskip">Show them again</button></p>` : ""}</div>`;
+}
+const COIN = `<svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#ffc93c" stroke="#fff" stroke-width="3"/><text x="24" y="32" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="22" fill="#142f73">$</text></svg>`;
 function badgesHtml(sm) {
-  const B = [["1", "First play", sm.done.length >= 1], ["$", "Saved $100", sm.saved >= 100], ["★", "Plan complete", sm.plays.length > 0 && sm.open.length === 0], ["!", "Alerts on", !!S.optIn]];
+  const B = [["1", "First play", S.history.length >= 1], ["$", "Saved $100", sm.saved >= 100], ["★", "Plan complete", S.history.length > 0 && sm.open.length === 0], ["!", "Alerts on", !!S.optIn]];
   return `<div class="badges">${B.map(([i, l, on]) => `<span class="badge ${on ? "" : "off"}"><i aria-hidden="true">${i}</i>${l}${on ? "" : `<span class="sr"> (not earned yet)</span>`}</span>`).join("")}</div>`;
 }
 function planView() {
-  if (!S.subs.length) return `<div class="narrow col" style="padding-top:12px">${coach("plan", 130, `Your game plan is empty. Tell me what you pay for and I'll call the plays.`)}<button class="btn go wide" data-act="addMore">Add my subscriptions ${ICON.arrow}</button></div>`;
   const sm = planSummary();
+  const hist = ui.planTab === "history";
+  const seg = `<div class="seg" role="tablist" aria-label="My Plan" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:420px">
+    <button role="tab" data-act="planTab" data-v="plan" aria-pressed="${!hist}" aria-selected="${!hist}">Game plan${sm.open.length ? ` (${sm.lead.length + sm.more.length})` : ""}</button>
+    <button role="tab" data-act="planTab" data-v="history" aria-pressed="${hist}" aria-selected="${hist}">History${S.history.length ? ` (${S.history.length})` : ""}</button></div>`;
+  if (!S.subs.length && !S.history.length) return `<div class="narrow col" style="padding-top:12px">${coach("plan", 130, `Your game plan is empty. Tell me what you pay for and I'll call the plays.`)}<button class="btn go wide" data-act="addMore">Add my subscriptions ${ICON.arrow}</button></div>`;
   const allDone = sm.lead.length === 0;
-  const say = allDone ? (sm.done.length ? `That's the whole plan. You're saving about <b>${yr(sm.saved)}</b> a year! I'll give you a heads-up when anything changes.` : `Good news: I don't see any moves to make right now. I'll keep watching for price increases and changes.`)
-    : sm.done.length ? `Boom! Keep it rolling. ${sm.lead.length} play${sm.lead.length > 1 ? "s" : ""} left.` : `Here ${sm.lead.length > 1 ? `are your ${sm.lead.length} plays` : "is your play"}. Start with number 1.`;
+  const say = hist ? `Look at you go! Here's everything you've done so far.`
+    : allDone ? (S.history.length ? `That's the whole plan. You're saving about <b>${yr(sm.saved)}</b> a year! I'll give you a heads-up when anything changes.` : `Good news: I don't see any moves to make right now. I'll keep watching for price increases and changes.`)
+    : S.history.length ? `Boom! Keep it rolling. ${sm.lead.length + sm.more.length} play${sm.lead.length + sm.more.length > 1 ? "s" : ""} left.` : `Here ${sm.lead.length > 1 ? `are your ${sm.lead.length} plays` : "is your play"}. Start with number 1.`;
   const total = S.subs.reduce((a, s) => a + (subPrice(s) || 0), 0);
-  return `<div class="layout"><div class="col" style="gap:16px">
-    <div class="page-head">${subi(sm.done.length && (allDone || S.lastDone) ? "cheer" : "plan", 112, true)}<div class="grow col" style="gap:6px"><h1>Your game plan</h1><div class="bubble" style="margin:0">${say}</div></div></div>
-    <div class="save-card"><div><div class="lab">${allDone ? "You're saving" : "You could save"}</div><div class="big">${yr(allDone ? sm.saved : sm.couldSave + sm.saved)} a year</div>${!allDone && sm.saved ? `<div class="lab">${yr(sm.saved)} already locked in</div>` : ""}</div>
-      <svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#ffc93c" stroke="#fff" stroke-width="3"/><text x="24" y="32" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="22" fill="#142f73">$</text></svg></div>
+  const main = hist ? historyHtml(sm) : `
+    <div class="save-card"><div><div class="lab">${allDone ? "You're saving" : "You could still save"}</div><div class="big">${yr(allDone ? sm.saved : sm.couldSave)} a year</div>${!allDone && sm.saved ? `<div class="lab">Plus ${yr(sm.saved)} a year already saved</div>` : ""}</div>${COIN}</div>
     ${sm.lead.map((p, i) => playHtml(p, i + 1)).join("")}
     ${sm.more.length ? `<details class="more" ${ui.openMore ? "open" : ""} data-tog="openMore"><summary>More plays (${sm.more.length}) ▾</summary><div class="col">${sm.more.map(p => playHtml(p)).join("")}</div></details>` : ""}
-    ${sm.done.length ? `<h2 style="font-size:20px;margin-top:6px">Done</h2>${sm.done.map(p => playHtml(p)).join("")}` : ""}
-    ${sm.keep.length ? `<div class="card col"><h2 style="font-size:18px">No moves needed for these</h2><div class="keep">${sm.keep.map(s => `<span>${logo(CATALOG[s.id], "logo sm")}${esc(CATALOG[s.id].name)}</span>`).join("")}</div></div>` : ""}
+    ${allDone && S.history.length ? `<button class="btn" data-act="planTab" data-v="history">See what you've done</button>` : ""}
+    ${sm.keep.length ? `<div class="card col"><h2 style="font-size:18px">No moves needed for these</h2><div class="keep">${sm.keep.map(s => `<span>${logo(CATALOG[s.id], "logo sm")}${esc(CATALOG[s.id].name)}</span>`).join("")}</div></div>` : ""}`;
+  return `<div class="layout"><div class="col" style="gap:16px">
+    <div class="page-head">${subi(hist || (S.history.length && (allDone || S.lastDone)) ? "cheer" : "plan", 112, true)}<div class="grow col" style="gap:6px"><h1>${hist ? "History" : "Your game plan"}</h1><div class="bubble" style="margin:0">${say}</div></div></div>
+    ${seg}${main}
   </div><aside class="side col">
-    <div class="card col"><div class="row"><span class="grow"><b>You pay now</b><div class="small muted">${S.subs.length} subscription${S.subs.length > 1 ? "s" : ""}</div></span><b style="font-size:22px">${total ? fmt(total) + "/mo" : "Add prices"}</b></div>
+    <div class="card col"><div class="row"><span class="grow"><b>You pay now</b><div class="small muted">${S.subs.length} subscription${S.subs.length === 1 ? "" : "s"}</div></span><b style="font-size:22px">${total ? fmt(total) + "/mo" : "Add prices"}</b></div>
       <button class="btn sm" data-act="addMore">Add or change subscriptions</button></div>
     <div class="card col"><b>Your badges</b>${badgesHtml(sm)}</div>
     ${S.optIn ? "" : `<div class="card col dyk"><div class="row">${subi("alert", 60)}<div class="grow"><b>Want a heads-up?</b><p class="small">I'll tell you about price increases, new features and policy changes for what you have.</p></div></div><button class="btn primary sm" data-act="tab" data-v="alerts">Turn on alerts</button></div>`}
@@ -667,6 +683,27 @@ function addSub(id) {
   const v = CATALOG[id]; const p = teamPlan(v);
   S.subs.push({ id, plan: p && p.id, price: null, use: "some" });
 }
+// Done it: apply the play to the list (cancel = off the list, switch = new plan, yearly = paid yearly) and file it under History.
+function finishPlay(id) {
+  const p = buildPlays().find(x => x.id === id); if (!p) return;
+  const s = S.subs.find(x => x.id === p.svc[0]); if (!s) return;
+  const before = { ...s }, v = CATALOG[s.id];
+  let effect, added = null;
+  if (p.kind === "switch" && p.to) { s.plan = p.to; s.price = null; effect = "switched"; }
+  else if (p.kind === "yearly") { s.billing = "yearly"; s.price = null; effect = "yearly"; }
+  else { S.subs = S.subs.filter(x => x.id !== s.id); effect = "removed";
+    if (p.alt && !S.subs.some(x => x.id === p.alt)) { addSub(p.alt); added = p.alt; } }
+  S.history.unshift({ id: p.id, svc: s.id, title: p.title, save: p.save, kind: p.kind, effect, added, at: new Date().toISOString(), before });
+  S.lastDone = Date.now(); go();
+  toast(effect === "removed" ? `Nice play! ${v.name} is off your list and in History.` : `Nice play! That's about ${yr(p.save)} a year.`);
+}
+function undoPlay(i) {
+  const h = S.history[i]; if (!h) return;
+  if (h.added) S.subs = S.subs.filter(x => x.id !== h.added);
+  const at = S.subs.findIndex(x => x.id === h.svc);
+  if (at >= 0) S.subs[at] = h.before; else S.subs.push(h.before);
+  S.history.splice(i, 1); go(); toast("Undone. It's back in your game plan.", "wave");
+}
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
   const a = b.dataset.act, v = b.dataset.v;
@@ -682,9 +719,11 @@ document.addEventListener("click", e => {
   else if (a === "use") { const s = S.subs.find(x => x.id === v); s.use = b.dataset.u; save(); const y = window.scrollY; render(); window.scrollTo(0, y); }
   else if (a === "finish") { S.step = "done"; S.tab = "plan"; go(); toTop(); toast("Your game plan is ready!", "plan"); }
   else if (a === "tab") { S.tab = v; ui.exCat = null; go(); toTop(); }
-  else if (a === "done") { S.plays[v] = "done"; S.lastDone = Date.now(); const p = buildPlays().find(x => x.id === v); go(); toast(`Nice play! That's about ${yr(p ? p.save : 0)} a year.`); }
+  else if (a === "done") { finishPlay(v); }
+  else if (a === "planTab") { ui.planTab = v; render(); toTop(); }
+  else if (a === "unskip") { Object.keys(S.plays).forEach(k => { if (S.plays[k] === "skip") delete S.plays[k]; }); ui.planTab = "plan"; go(); }
   else if (a === "skip") { S.plays[v] = "skip"; go(); toast("Got it. I won't bring that one up again.", "wave"); }
-  else if (a === "undo") { delete S.plays[v]; go(); }
+  else if (a === "undo") { undoPlay(+v); }
   else if (a === "addMore") { S.step = "pick"; go(); toTop(); }
   else if (a === "exCat") { ui.exCat = v || null; ui.exQ = ""; render(); toTop(); }
   else if (a === "open") openSheet(v);
