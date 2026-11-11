@@ -88,6 +88,7 @@ main { padding: 20px 0 110px; }
 .pill.free { background: var(--good-soft); color: var(--green-ink); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 2px solid var(--line-2); background: var(--card); font-weight: 800; font-size: 15px; cursor: pointer; }
+.chip.more-cats { border-style: dashed; color: var(--ink-2); }
 .chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
 :root[data-theme="dark"] .chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #0b1633; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #0b1633; } }
@@ -220,7 +221,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 1 · Nov 11, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 2 · Nov 11, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
@@ -502,10 +503,15 @@ function welcome() {
 }
 // Popular (Cuong, 2026-11-11): what his young adult testers say they have, then the v1 list. AAA left out on purpose.
 const POPULAR = [...new Set([...DATA.additions.popular_young_adults, ...L.POPULAR])].filter(id => id !== "aaa");
+const TOP_CATS = ["video", "music", "shopping", "food", "ai", "storage", "passwords", "fitness", "gaming", "mobile"];
 const POP = () => POPULAR.map(id => CATALOG[id]).filter(v => v && hereOk(v));
 function pickerHtml() {
   const mine = new Set(S.subs.map(s => s.id));
   const cats = [...new Set(ALL.filter(hereOk).map(v => v.category))].sort((a, b) => catName(a).localeCompare(catName(b)));
+  // Top 10 categories first (Cuong, 2026-11-11: the full list was overwhelming); the rest sit behind "More categories".
+  const top = TOP_CATS.filter(c => cats.includes(c)), rest = cats.filter(c => !top.includes(c));
+  const shownCats = ui.moreCats ? [...top, ...rest] : [...top, ...(rest.includes(ui.pickCat) ? [ui.pickCat] : [])];
+  const restCats = rest;
   const q = ui.pickQ.trim().toLowerCase();
   let list = q ? ALL.filter(v => hereOk(v) && v.name.toLowerCase().includes(q)) : ui.pickCat === "popular" ? POP() : ALL.filter(v => hereOk(v) && v.category === ui.pickCat);
   const keepOrder = !q && ui.pickCat === "popular";  // Popular keeps the testers' order
@@ -514,7 +520,8 @@ function pickerHtml() {
   list = list.slice(0, 60);
   return `<div class="col">
     <div class="search"><span aria-hidden="true">${ICON.search}</span><label class="sr" for="pq">Search subscriptions</label><input id="pq" class="input" placeholder="Search, like Netflix or Planet Fitness" value="${esc(ui.pickQ)}" data-inp="pickQ" autocomplete="off"></div>
-    <div class="chips" role="group" aria-label="Categories"><button class="chip" data-act="pickCat" data-v="popular" aria-pressed="${ui.pickCat === "popular" && !q}">Popular</button>${cats.map(c => `<button class="chip" data-act="pickCat" data-v="${c}" aria-pressed="${ui.pickCat === c && !q}">${esc(catName(c))}</button>`).join("")}</div>
+    <div class="chips" role="group" aria-label="Categories"><button class="chip" data-act="pickCat" data-v="popular" aria-pressed="${ui.pickCat === "popular" && !q}">Popular</button>${shownCats.map(c => `<button class="chip" data-act="pickCat" data-v="${c}" aria-pressed="${ui.pickCat === c && !q}">${esc(catName(c))}</button>`).join("")}
+      ${restCats.length ? `<button class="chip more-cats" data-act="moreCats" aria-expanded="${!!ui.moreCats}">${ui.moreCats ? "Fewer categories" : `More categories (${restCats.length})`}</button>` : ""}</div>
     <div class="pick-grid" id="pick-grid">${list.map(v => `<button class="tile" data-act="toggle" data-v="${v.id}" aria-pressed="${mine.has(v.id)}">${logo(v, "logo sm")}<span>${esc(v.name)}</span>${mine.has(v.id) ? `<span class="tick">${ICON.check}</span>` : ""}</button>`).join("") || `<p class="muted">Nothing matches that yet.</p>`}</div>
     <div class="sticky-go"><div class="narrow col">
       <button class="btn go wide" data-act="step" data-v="setup" ${S.subs.length ? "" : "disabled"}>${S.subs.length ? `Next with ${S.subs.length} picked` : "Pick at least one"} ${ICON.arrow}</button>
@@ -666,6 +673,7 @@ document.addEventListener("click", e => {
   else if (a === "home") { if (S.step === "done") { S.tab = "plan"; ui.exCat = null; } go(); toTop(); }
   else if (a === "exploreFirst") { S.step = "done"; S.tab = "explore"; if (!S.team) S.team = "me"; go(); toTop(); }
   else if (a === "team") { S.team = v; S.subs.forEach(s => { if (s.price == null || s.price === "") { const p = teamPlan(CATALOG[s.id]); if (p) s.plan = p.id; } }); go(); }
+  else if (a === "moreCats") { ui.moreCats = !ui.moreCats; render(); }
   else if (a === "pickCat") { ui.pickCat = v; ui.pickQ = ""; render(); }
   else if (a === "toggle") { const i = S.subs.findIndex(s => s.id === v); if (i >= 0) S.subs.splice(i, 1); else addSub(v); save();
     const y = window.scrollY; render(); window.scrollTo(0, y); }
