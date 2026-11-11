@@ -1,5 +1,5 @@
 {
-  "_about": "Scout's weekly report: what's hot inside services people already pay for. Real, dated, sourced picks only. At most one pick per service per week. Refresh weekly (checked 2026-11-11).",
+  "_about": "Scout's weekly report: what's hot inside services people already pay for. Real, dated, sourced picks only. At most one pick per service per week. Refresh weekly (checked 2026-11-11, Wednesday run).",
   "week": "2026-11-09",
   "items": [
     {
@@ -29,6 +29,15 @@
       "url": "https://www.timeout.com/usa/news/everything-coming-to-disney-and-hulu-in-november-2026-percy-jackson-visionquest-the-kardashians-110226",
       "cta": "Open Disney+",
       "country": "US"
+    },
+    {
+      "svc": "apple_tv",
+      "date": "2026-11-13",
+      "title": "\"12 12 12\" heist drama starts Nov 13",
+      "text": "Anthony Mackie and Jamie Dornan lead Apple TV's new heist series, out Friday, Nov 13. It's already in your Apple TV plan.",
+      "src": "9to5Mac, Everything new on Apple TV in November 2026",
+      "url": "https://9to5mac.com/2026/11/02/heres-everything-new-apple-tv-has-coming-in-november-2/",
+      "cta": "Open Apple TV"
     }
   ]
 }
