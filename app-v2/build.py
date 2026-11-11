@@ -49,7 +49,13 @@ src = open(os.path.join(HERE, "src", "app.html")).read()
 blob = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
 out = src.replace("/*__DATA__*/null", blob, 1)
 assert out != src, "data placeholder missing"
-open(os.path.join(HERE, "mosubi.html"), "w").write(out)
+# Home-screen icon (Subi, 2026-11-11): files sit beside v2/index.html on the public site.
+HOME = ('<link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">'
+        '<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">'
+        '<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
+        '<meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="apple-mobile-web-app-title" content="MoSuBi">')
+site = out.replace('<meta name="theme-color" content="#142f73">', '<meta name="theme-color" content="#142f73">\n' + HOME, 1)
+open(os.path.join(HERE, "mosubi.html"), "w").write(site)
 print(len(out), "bytes ->", os.path.join(HERE, "mosubi.html"))
 # Artifact copy: the Artifact host adds its own document shell, so drop ours.
 art = re.sub(r"<!doctype html>\s*<html[^>]*>\s*<head>|</head>\s*<body>|</body>\s*</html>\s*$", "", out, flags=re.I)
