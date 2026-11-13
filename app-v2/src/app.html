@@ -159,6 +159,7 @@ main { padding: 20px 0 110px; }
 
 /* plan */
 .page-head { display: flex; align-items: center; gap: 8px; }
+.page-head .subi { flex-shrink: 0; }
 .page-head .grow h1 { font-size: 30px; }
 .save-card { background: var(--hero); color: var(--hero-ink); border-radius: 22px; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .save-card .big { font-size: 36px; font-weight: 900; color: var(--green); line-height: 1.05; }
@@ -291,7 +292,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 13 · Nov 11, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 14 · Nov 12, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
@@ -591,7 +592,7 @@ function welcome() {
   if (st === "learn") return hero("plan", `Here's how I coach you. It takes about two minutes to set up.`) +
     `<div class="wrap narrow welcome"><figure class="explainer" id="explainer"><video controls playsinline preload="metadata" poster="mosubi-explainer.jpg" aria-label="MoSuBi in 15 seconds: a short video with sound"><source src="mosubi-explainer.mp4" type="video/mp4"></video><figcaption class="small muted">Watch: MoSuBi in 15 seconds (with sound)</figcaption></figure><div class="learn">
       <div class="card"><span class="ic">${ICON.list}</span><h3>Tap what you have</h3><p class="small muted">Pick your subscriptions from logos. No bank login, no typing.</p></div>
-      <div class="card"><span class="ic">${ICON.plan}</span><h3>Get your plays</h3><p class="small muted">A short to-do list: switch this, cancel that, try this free option.</p></div>
+      <div class="card"><span class="ic">${ICON.plan}</span><h3>Get your plays</h3><p class="small muted">A play is one simple move that saves you money: switch this, cancel that, try this free option. I call up to three at a time.</p></div>
       <div class="card"><span class="ic">${ICON.alarm}</span><h3>I watch for changes</h3><p class="small muted">Price increases, new features and policy changes for what you have.</p></div>
       <div class="card"><span class="ic">${ICON.gift}</span><h3>Always free</h3><p class="small muted">Everything in MoSuBi is free for everyone.</p></div>
     </div><button class="btn go wide" data-act="step" data-v="about">Build my game plan ${ICON.arrow}</button><button class="btn ghost" data-act="step" data-v="help">${ICON.back} Back</button></div>`;
@@ -697,7 +698,7 @@ function planView() {
     ${allDone && S.history.length ? `<button class="btn" data-act="planTab" data-v="history">See what you've done</button>` : ""}
     ${sm.keep.length ? `<div class="card col"><h2 style="font-size:18px">No moves needed for these</h2><div class="keep">${sm.keep.map(s => `<span>${logo(CATALOG[s.id], "logo sm")}${esc(CATALOG[s.id].name)}</span>`).join("")}</div></div>` : ""}`;
   return `<div class="layout"><div class="col" style="gap:16px">
-    <div class="page-head">${subi(hist || (S.history.length && (allDone || S.lastDone)) ? "cheer" : "plan", 112, true)}<div class="grow col" style="gap:6px"><h1>${hist ? "History" : "Your game plan"}</h1><div class="bubble" style="margin:0">${say}</div></div></div>
+    <div class="page-head">${subi(hist || (S.history.length && (allDone || S.lastDone)) ? "cheer" : "plan", 112, true)}<div class="grow col" style="gap:6px"><h1>${hist ? "History" : "Your game plan"}</h1>${hist ? "" : `<p class="small muted" style="margin:-4px 0 2px;font-weight:700">Plays are simple moves that save you money.</p>`}<div class="bubble" style="margin:0">${say}</div></div></div>
     ${hist ? "" : payCardHtml(total)}${seg}${main}
   </div><aside class="side col">
     ${huddleTeaser()}
