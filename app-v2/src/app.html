@@ -132,11 +132,15 @@ main { padding: 20px 0 110px; }
 .steps { display: flex; gap: 6px; }
 .steps i { height: 6px; flex: 1; border-radius: 3px; background: rgba(255,255,255,.22); }
 .steps i.on { background: var(--green); }
-.learn { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.learn .card { display: flex; flex-direction: column; gap: 8px; }
-.learn .card .ic { width: 42px; height: 42px; border-radius: 12px; background: var(--good-soft); display: grid; place-items: center; }
-.learn .card .ic svg { width: 24px; height: 24px; }
-@media (max-width: 420px) { .learn { grid-template-columns: 1fr; } }
+/* How MoSuBi works: a plain numbered list, not tiles, so nothing looks tappable (Cuong, 2026-11-13). */
+.learn { display: grid; gap: 0; counter-reset: step; }
+.learn .card { display: grid; grid-template-columns: 34px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; align-items: start; background: none; border: 0; border-radius: 0; box-shadow: none; padding: 14px 4px; border-bottom: 1px solid var(--line); counter-increment: step; }
+.learn .card:last-child { border-bottom: 0; }
+.learn .card .ic { grid-row: 1 / span 2; width: 34px; height: 34px; border-radius: 50%; background: none; border: 2px solid var(--ink-2); display: grid; place-items: center; font-weight: 900; font-size: 16px; color: var(--ink-2); }
+.learn .card .ic svg { display: none; }
+.learn .card .ic::before { content: counter(step); }
+.learn .card h3 { font-size: 18px; }
+.learn .card p { grid-column: 2; }
 
 /* picking */
 .pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
@@ -292,7 +296,7 @@ ul.feat { margin: 0; padding-left: 20px; line-height: 1.6; }
 <script>
 "use strict";
 const DATA = /*__DATA__*/null;
-const APP_VERSION = "MoSuBi v2 preview · Build 14 · Nov 12, 2026";
+const APP_VERSION = "MoSuBi v2 preview · Build 15 · Nov 12, 2026";
 const L = DATA.legacy;
 const STORE = "mosubi-v2";
 
