@@ -1,43 +1,34 @@
 {
-  "_about": "Scout's weekly report: what's hot inside services people already pay for. Real, dated, sourced picks only. At most one pick per service per week. Refresh weekly (checked 2026-11-18, Wednesday run).",
-  "week": "2026-11-16",
+  "_about": "Scout's weekly report: what's hot inside services people already pay for. Real, dated, sourced picks only. At most one pick per service per week. Refresh weekly (checked 2026-11-25, Wednesday run).",
+  "week": "2026-11-23",
   "items": [
     {
       "svc": "netflix",
-      "date": "2026-11-09",
-      "title": "\"Taken: Natalee Holloway\" is still Netflix's #1 English show",
-      "text": "7.2 million views in the week of Nov 9, its second week on top of the English TV list. It's already in your Netflix plan.",
-      "src": "Netflix Top 10 (Tudum), week of Nov 9, 2026",
-      "url": "https://www.netflix.com/tudum/top10/tv",
+      "date": "2026-11-16",
+      "title": "\"The Body\" is now Netflix's #1 English show",
+      "text": "9.5 million views in the week of Nov 16, rising to the top in its second week. It's already in your Netflix plan.",
+      "src": "Netflix Top 10 (Tudum), week of Nov 16, 2026",
+      "url": "https://www.netflix.com/tudum/articles/top-10-november-16-2026",
       "cta": "Watch on Netflix"
     },
     {
       "svc": "spotify",
-      "date": "2026-11-12",
-      "title": "\"BbY WOW\" by KAROL G, Judeline and rusowsky is #1 on Spotify worldwide",
-      "text": "About 33 million streams in the week of Nov 12, top of the Spotify Global weekly chart. Free to play with your Spotify plan.",
-      "src": "Spotify Global weekly chart via Soundcharts, week of Nov 12, 2026",
+      "date": "2026-11-19",
+      "title": "\"BbY WOW\" by KAROL G, Judeline and rusowsky is still #1 on Spotify worldwide",
+      "text": "About 32 million streams in the week of Nov 19, top of the Spotify Global weekly chart again. Free to play with your Spotify plan.",
+      "src": "Spotify Global weekly chart via Soundcharts, week of Nov 19, 2026",
       "url": "https://soundcharts.com/en/charts/spotify/global",
       "cta": "Open in Spotify"
     },
     {
       "svc": "disney_plus",
-      "date": "2026-11-20",
-      "title": "\"Percy Jackson and the Olympians\" season 3 lands this Friday",
-      "text": "Two-episode premiere on Friday, Nov 20, with new episodes on Nov 27 and after. Included with Disney+.",
-      "src": "Laughing Place, Everything coming to Disney+ in November 2026",
-      "url": "https://www.laughingplace.com/disney-entertainment/everything-coming-to-disney-plus-november-2026/",
+      "date": "2026-11-27",
+      "title": "\"Mickey's Home Alone\" holiday special streams Friday",
+      "text": "Mickey's new holiday special comes to Disney+ on Friday, Nov 27, the day after its Disney Jr. debut. A fun pick for the kids this holiday weekend, included with Disney+.",
+      "src": "The Main Street Mouse, New on Disney+ Thanksgiving weekend 2026",
+      "url": "https://themainstreetmouse.com/2026/11/25/new-on-disney-plus-thanksgiving-weekend-2026/",
       "cta": "Open Disney+",
       "country": "US"
-    },
-    {
-      "svc": "apple_tv",
-      "date": "2026-11-25",
-      "title": "\"Way of the Warrior Kid\" movie arrives Nov 25",
-      "text": "Apple TV's new action-drama movie comes out Wednesday, Nov 25, just in time for the holiday weekend. It's already in your Apple TV plan.",
-      "src": "9to5Mac, Everything new on Apple TV in November 2026",
-      "url": "https://9to5mac.com/2026/11/02/heres-everything-new-apple-tv-has-coming-in-november-2/",
-      "cta": "Open Apple TV"
     }
   ]
 }
